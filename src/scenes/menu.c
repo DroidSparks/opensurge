@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * menu.c - menu scene
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,8 +62,6 @@ static char menu[MENU_MAXOPTIONS][64];
 static int menuopt; /* current option */
 static font_t *menufnt[MENU_MAXOPTIONS];
 static actor_t *arrow;
-static int surge_entering;
-static actor_t *surge, *surgebg, *gametitle;
 static int quit;
 
 /* marquee */
@@ -111,24 +109,6 @@ void menu_init()
     /* background init */
     bgtheme = background_load(MENU_BGFILE);
 
-    /* main actors */
-    surge_entering = TRUE;
-
-    surge = actor_create();
-    actor_change_animation(surge, sprite_get_animation("SD_TITLESURGE", 0));
-    surge->position.x = (VIDEO_SCREEN_W-actor_image(surge)->w)/2 + 5;
-    surge->position.y = -15;
-
-    surgebg = actor_create();
-    actor_change_animation(surgebg, sprite_get_animation("SD_TITLEBG", 0));
-    surgebg->position.x = (VIDEO_SCREEN_W-actor_image(surgebg)->w)/2;
-    surgebg->position.y = surge->position.y+25;
-
-    gametitle = actor_create();
-    actor_change_animation(gametitle, sprite_get_animation("SD_TITLEGAMENAME", 0));
-    gametitle->position.x = (VIDEO_SCREEN_W-actor_image(gametitle)->w)/2;
-    gametitle->position.y = surge->position.y+actor_image(surge)->h-9;
-
     /* main menu */
     menuopt = 0;
     arrow = actor_create();
@@ -141,7 +121,7 @@ void menu_init()
 
     for(j=0; j<MENU_MAXOPTIONS; j++) {
         menufnt[j] = font_create("menu.main");
-        font_set_position(menufnt[j], v2d_new(112, gametitle->position.y+65+10*j));
+        font_set_position(menufnt[j], v2d_new(112, 172+10*j));
         font_set_text(menufnt[j], "%s", menu[j]);
     }
 
@@ -160,7 +140,7 @@ void menu_init()
 void menu_update()
 {
     int j;
-    float t = timer_get_ticks() * 0.001;
+    float t = timer_get_ticks() * 0.001f;
 
     /* game start */
     if(jump_to != NULL && fadefx_over()) {
@@ -176,7 +156,7 @@ void menu_update()
     }
 
     /* ignore/restore control */
-    if(t <= start_time + 2.0)
+    if(t <= start_time + 1.5)
         input_ignore(input);
     else if(!control_restored) {
         input_restore(input);
@@ -189,14 +169,6 @@ void menu_update()
     /* menu programming */
     if(jump_to || quit)
         return;
-
-    /* surge & stuff */
-    if(surge_entering && actor_animation_finished(surge)) {
-        surge_entering = FALSE;
-        actor_change_animation(surge, sprite_get_animation("SD_TITLESURGE", 1));
-        input_restore(input);
-    }
-    gametitle->visible = !surge_entering;
 
     /* current option */
     arrow->position.x = font_get_position(menufnt[menuopt]).x - 20 + 3*cos(2*PI * t);
@@ -254,13 +226,6 @@ void menu_render()
 
     /* marquee */
     marquee_render();
-
-    /* surge & stuff */
-    actor_render(surgebg, camera);
-    if(surge_entering)
-        image_clear(video_get_backbuffer(), image_rgb(0,0,0));
-    actor_render(surge, camera);
-    actor_render(gametitle, camera);
 }
 
 
@@ -281,9 +246,6 @@ void menu_release()
     /* main menu stuff */
     for(j=0; j<MENU_MAXOPTIONS; j++)
         font_destroy(menufnt[j]);
-    actor_destroy(surgebg);
-    actor_destroy(gametitle);
-    actor_destroy(surge);
 
     /* background */
     bgtheme = background_unload(bgtheme);

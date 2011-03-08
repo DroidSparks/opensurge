@@ -34,7 +34,6 @@ Alexandre Martins
 --- fade_effect.png
 --- hud.png
 --- intro.png
---- loading.png
 --- loop.png
 --- none.png
 --- null.png
@@ -83,3 +82,6 @@ Alexandre Martins & Colin Beard & qubodup (opengameart.org)
 
 Alexandre Martins & Gaivota
 --- rings.png
+
+Joao Victor & Alexandre Martins
+--- loading.png

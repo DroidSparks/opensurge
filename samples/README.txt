@@ -36,6 +36,7 @@ Mateus Reis
 --- door2.wav
 --- powerup.wav
 --- drown.wav
+--- neon_jetpack.wav
 
 Di Rodrigues
 --- 1up.ogg

@@ -135,8 +135,12 @@
       color: #d00;
     }
 
-    img {
+    img#icon {
       float: right;
+    }
+
+    #logo {
+      text-align: center;
     }
     -->
     </style>
@@ -147,8 +151,11 @@
 
 
   <!-- introduction -->
-  <h1>Open Surge</h1>
-  <img src="icon.png" alt="Icon" />
+  <!-- <h1>Open Surge</h1> -->
+  <div id="logo">
+    <img src="logo.png" alt="Logo" />
+  </div>
+  <img id="icon" src="icon.png" alt="Icon" />
 
   <p>Open Surge is a free and highly-moddable open-source game in a style inspired by games like "Sonic" the Hedgehog and Cave Story. It introduces a different style of gameplay called cooperative play, in which it's possible to control a group characters simultaneously. Unlike most sidescrollers, Open Surge provides a greater level of interaction between the player and the levels. It's more than just a jump'n'run; the user must come up with some strategy in order to get through the levels.</p>
   <p>Open Surge is written from the ground up in C language using the <a href="http://alleg.sourceforge.net/">Allegro game programming library</a> for graphics, sounds, player input and timers. It's being developed since 2008.</p>
@@ -328,7 +335,7 @@ cmake -G "Visual Studio 9 2008" .
   <h2><a id="credits" class="section">Credits</a></h2>
 
   <h3>License</h3>
-  <p>The code of this game is licensed under the GPL version 2. Its resources (graphics, sounds and levels) are licensed under the Creative Commons Attribution-ShareAlike 3.0. Please check the licenses folder for more information.</p>
+  <p>The code of this game is licensed under the GPL version 2. Its media (graphics, sounds and levels) is licensed under the Creative Commons Attribution-ShareAlike 3.0. Please check the licenses folder for more information.</p>
   <p>
 
   <h3>About this game</h3>
