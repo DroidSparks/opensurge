@@ -48,7 +48,7 @@ font "menu.small"
     truetype
     {
         source_file             "ttf/DejaVuSans.ttf"
-        size                    11
+        size                    12
         antialias
     }
 }

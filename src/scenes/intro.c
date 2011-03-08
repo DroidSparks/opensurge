@@ -54,9 +54,11 @@ static char *text =
  "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
  "GNU General Public License for more details.\n"
  "\n"
- "You should have received a copy of the GNU General Public License along\n"
- "with this program; if not, write to the Free Software Foundation, Inc.,\n"
- "51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n"
+ "You should have received a copy of the GNU General Public License\n"
+ "along with this program; if not, write to the Free Software Foundation,\n"
+ "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n"
+ "\n"
+ "Please check the licenses folder for more information.\n"
 ;
 
 
@@ -73,7 +75,7 @@ void intro_init()
     music_stop();
 
     fnt = font_create("menu.small");
-    font_set_text(fnt, "<color=aaaaaa>%s</color>", text);
+    font_set_text(fnt, "%s", text);
     font_set_position(fnt, v2d_new(5,5));
 }
 
