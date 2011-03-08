@@ -1,0 +1,15 @@
+// ---------------------------------------------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// File:   objects/default_companions.obj
+// Desc:   default player companions
+// Author: Alexandre
+// Date:   2011-02-09
+// ---------------------------------------------------------------------------
+
+#include "default_companions/surge.inc"
+#include "default_companions/neon.inc"
+#include "default_companions/charge.inc"
+#include "default_companions/tux.inc"
+#include "default_companions/none.inc"

@@ -1,0 +1,57 @@
+// Glasses
+sprite SD_GLASSES
+{
+    source_file     images/items.png
+    source_rect     51 23 16 55
+    frame_size      16 11
+    // hot_spot        8 5
+    hot_spot        8 10
+
+    // glasses
+    animation 0
+    {
+        repeat      TRUE
+        fps         8
+        data        0
+    }
+
+    // glasses
+    animation 1
+    {
+        repeat      TRUE
+        fps         8
+        data        1
+    }
+
+    // glasses
+    animation 2
+    {
+        repeat      TRUE
+        fps         8
+        data        2
+    }
+
+    // glasses
+    animation 3
+    {
+        repeat      TRUE
+        fps         8
+        data        3
+    }
+
+    // glasses
+    animation 4
+    {
+        repeat      TRUE
+        fps         8
+        data        4
+    }
+
+    // glasses
+    animation 5
+    {
+        repeat      TRUE
+        fps         8
+        data        5
+    }
+}

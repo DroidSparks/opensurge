@@ -1,0 +1,1 @@
+The scripts in this directory take care of basic funcionalities like the HUD, the character switching, etc. You MUST NOT modify the scripts in this folder! If you need a different functionality in a level you make, change the startup object to something you create.

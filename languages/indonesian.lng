@@ -1,0 +1,160 @@
+// ---------------------------------------------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// File:   languages/indonesian.lng
+// Desc:   Indonesian translation (encoding: utf-8)
+// Author: SurgeChris
+// ---------------------------------------------------------------------------
+
+// Meta data
+LANG_LANGUAGE               "Indonesia"
+LANG_AUTHOR                 "Christopher Martinus"
+LANG_LASTUPDATE             "2011-02-22"
+LANG_COMPATIBILITY          "0.2.0"
+
+
+// Colors
+COLOR_P1                    "0077ff"
+COLOR_P2                    "ff7700"
+COLOR_P3                    "ff0000"
+COLOR_INPUT                 "aaaaaa"
+COLOR_SPECIAL               "ffff00"
+
+
+// Main menu
+MENU_1PGAME                 "MULAI"
+MENU_CUSTOMQUESTS           "TAMBAHAN"
+MENU_OPTIONS                "PENGATURAN"
+MENU_EXIT                   "KELUAR"
+
+
+// Options
+OPTIONS_TITLE               "PENGATURAN"
+OPTIONS_YES                 "YA"
+OPTIONS_NO                  "TIDAK"
+OPTIONS_GRAPHICS            "GAMBAR"
+OPTIONS_FULLSCREEN          "Gambar penuh"
+OPTIONS_RESOLUTION          "Resolusi"
+OPTIONS_RESOLUTION_OPT1     "KECIL"
+OPTIONS_RESOLUTION_OPT2     "BIASA"
+OPTIONS_RESOLUTION_OPT3     "MAKSIMAL"
+OPTIONS_SMOOTHGFX           "Gambar halus"
+OPTIONS_FPS                 "Tunjukkan kecepatan"
+OPTIONS_GAME                "PERMAINAN"
+OPTIONS_LANGUAGE            "Ganti bahasa"
+OPTIONS_STAGESELECT         "Pemilihan level"
+OPTIONS_CREDITS             "Kredit"
+OPTIONS_BACK                "KEMBALI"
+
+
+// Stage Select
+STAGESELECT_TITLE           "PEMILIHAN LEVEL"
+STAGESELECT_MSG             "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali"
+STAGESELECT_PAGE            "Hal. %d/%d"
+STAGESELECT_ACT             "Babak"
+
+
+// Custom quests
+QUESTSELECT_TITLE           "PEMILIHAN MISI"
+QUESTSELECT_MSG             "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali"
+QUESTSELECT_PAGE            "Hal. %d/%d"
+QUESTSELECT_INFO            "<color=ffff00>Versi:</color> %s\n<color=ffff00>Pembuat:</color> %s\n<color=ffff00>Deskripsi:</color> %s"
+MENU_CQ_TUTORIAL            "Belajar bermain Open Surge!"
+MENU_CQ_EXTRA               "Level tambahan"
+
+
+// Credits
+CREDITS_TITLE               "KREDIT"
+CREDITS_KEY                 "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali"
+CREDITS_ACTIVE              "Tim"
+CREDITS_RETIRED             "Mantan Anggota"
+CREDITS_THANKS              "Terima kasih kepada"
+CREDITS_ALEXANDRE           "Pemimpin proyek, Pemrogram"
+CREDITS_DI                  "Musisi"
+CREDITS_COLIN               "Pengarang cerita, Moderator forum, Penggambar, Musisi"
+CREDITS_MATEUSREIS          "Pendesain efek suara, Musisi"
+CREDITS_JOHAN               "Musisi"
+CREDITS_CELDECEA            "Penggambar"
+CREDITS_JOAO                "Penggambar"
+CREDITS_CHRISTOPHER         "Pengelola Wiki, Terjemahan bhs. Indonesia"
+CREDITS_RUBEN               "Pendesain level"
+CREDITS_SSDW                "Terjemahan bhs. Belanda"
+CREDITS_LAINZ               "Terjemahan bhs. Spanyol"
+CREDITS_ARTHURBLOT          "Terjemahan bhs. Prancis"
+CREDITS_REIMUND             "Terjemahan bhs. Jerman"
+CREDITS_SZYMON              "Terjemahan bhs. Polandia"
+CREDITS_TOMIRES             "Terjemahan bhs. Czech"
+CREDITS_JOGAIT              "Terjemahan bhs. Portugal"
+CREDITS_NEOBLAST            "Porting Dreamcast"
+CREDITS_CHRISTIAN           "Porting Mac OS X"
+CREDITS_BASTIAN             "Penggambar"
+CREDITS_FRANCESCO           "Terjemahan bhs. Italia"
+
+
+// Quest names
+TUTORIAL_QUEST_NAME         "Latihan"
+EXTRA_LEVELS_NAME           "Level Tambahan"
+
+
+// Bonus levels
+BONUSMSG_TITLE              "BONUS"
+BONUSMSG_TEXT               "Level bonus belum ada ;)"
+
+
+// Confirm boxes
+    // Quit game?
+    CBOX_QUIT_QUESTION      "MAU KELUAR?"
+    CBOX_QUIT_OPTION1       "YA"
+    CBOX_QUIT_OPTION2       "TIDAK"
+
+
+// Input devices
+    // keyboard
+    INPUT_KEYB_DIRECTIONAL  "TOMBOL PANAH"
+    INPUT_KEYB_LEFT         "TOMBOL KIRI"
+    INPUT_KEYB_RIGHT        "TOMBOL KANAN"
+    INPUT_KEYB_UP           "TOMBOL ATAS"
+    INPUT_KEYB_DOWN         "TOMBOL BAWAH"
+    INPUT_KEYB_FIRE1        "TOMBOL SPASI"
+    INPUT_KEYB_FIRE2        "TOMBOL CTRL KIRI"
+    INPUT_KEYB_FIRE3        "ENTER"
+    INPUT_KEYB_FIRE4        "ESC"
+
+
+    // joystick
+    INPUT_JOY_DIRECTIONAL   "TOMBOL ARAH"
+    INPUT_JOY_LEFT          "TOMBOL KIRI"
+	INPUT_JOY_RIGHT			"TOMBOL KANAN"
+    INPUT_JOY_UP            "TOMBOL ATAS"
+    INPUT_JOY_DOWN          "TOMBOL BAWAH"
+    INPUT_JOY_FIRE1         "TOMBOL 1"
+    INPUT_JOY_FIRE2         "TOMBOL 2"
+    INPUT_JOY_FIRE3         "TOMBOL 3"
+    INPUT_JOY_FIRE4         "TOMBOL 4"
+
+
+// HUD (Heads-Up Display)
+HUD_SCORE                   "SKOR:"
+HUD_TIME                    "WAKTU: "
+HUD_COLLECTIBLES            "RING:"
+HUD_SPACES                  "      " // the same amount of spaces
+HUD_CLEARED_LINE1           "KAU TELAH"
+HUD_CLEARED_LINE2           "MELALUI"
+HUD_CLEARED_LINE2_ACT       "BABAK"
+HUD_CLEARED_COLLECTIBLES    "BONUS RING"
+HUD_CLEARED_TIME            "BONUS WAKTU"
+HUD_CLEARED_SECRET          "BONUS RAHASIA"
+HUD_CLEARED_TOTAL           "BONUS TOTAL"
+
+
+// Chilpoctli Temple Zone
+    // act 1
+    DESERT1_TITLE_0         "Selamat datang!" 
+    DESERT1_MSG_0           "Level mini ini menunjukkan brickset Open Surge milik Celdecea!"
+    DESERT1_TITLE_1         "TUJUAN" 
+    DESERT1_MSG_1           "Bagaimana menurutmu? Tujuannya tepat di depanmu!"
+    DESERT1_TITLE_2         "Rahasia" 
+    DESERT1_MSG_2           "Ini tempat untuk yang bisa melihat..."
+    DESERT1_TITLE_3         "Tersimpan"
+    DESERT1_MSG_3           "S"

@@ -1,0 +1,20 @@
+// ---------------------------------------------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// File:   quests/tutorial.qst
+// Desc:   tutorial quest: learn how to play
+// Author: OS Team
+// ---------------------------------------------------------------------------
+
+// quest properties
+name            "$TUTORIAL_QUEST_NAME"
+author          "OS Team"
+version         "1.0"
+description     "$MENU_CQ_TUTORIAL"
+image           "images/quest_tutorial.png"
+hidden 
+
+// level list (in order of appearance)
+level           "levels/tutorial_1.lev"
+level           "levels/tutorial_2.lev"

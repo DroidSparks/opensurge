@@ -1,0 +1,19 @@
+// ---------------------------------------------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// File:   quests/default.qst
+// Desc:   this is the default quest
+// Author: OS Team
+// ---------------------------------------------------------------------------
+
+// quest properties
+name            "Default quest"
+author          "OS Team"
+version         "1.0"
+description     "Default quest"
+image           "images/null.png"
+hidden
+
+// level list (in order of appearance)
+level           "levels/template.lev"

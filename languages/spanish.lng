@@ -1,0 +1,161 @@
+// ---------------------------------------------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// File:   languages/spanish.lng
+// Desc:   Spanish translation (encoding: utf-8)
+// Author: Santiago Tabarez
+// ---------------------------------------------------------------------------
+
+// Meta data
+LANG_LANGUAGE               "Español"
+LANG_AUTHOR                 "Santiago Tabarez"
+LANG_LASTUPDATE             "2011-03-03"
+LANG_COMPATIBILITY          "0.2.0"
+
+
+// Colors
+COLOR_P1                    "0077ff"
+COLOR_P2                    "ff7700"
+COLOR_P3                    "ff0000"
+COLOR_INPUT                 "aaaaaa"
+COLOR_SPECIAL               "ffff00"
+
+
+// Main menu
+MENU_1PGAME                 "INICIAR JUEGO"
+MENU_CUSTOMQUESTS           "EXTRAS"
+MENU_OPTIONS                "OPCIONES"
+MENU_EXIT                   "SALIR"
+
+
+// Options
+OPTIONS_TITLE               "OPCIONES"
+OPTIONS_YES                 "SI"
+OPTIONS_NO                  "NO"
+OPTIONS_GRAPHICS            "GRÁFICOS"
+OPTIONS_FULLSCREEN          "Pantalla Completa"
+OPTIONS_RESOLUTION          "Resolución"
+OPTIONS_RESOLUTION_OPT1     "MIN"
+OPTIONS_RESOLUTION_OPT2     "NORMAL"
+OPTIONS_RESOLUTION_OPT3     "MAX"
+OPTIONS_SMOOTHGFX           "Liso de gráficos"
+OPTIONS_FPS                 "Mostrar FPS"
+OPTIONS_GAME                "JUEGO"
+OPTIONS_LANGUAGE            "Cambiar idioma"
+OPTIONS_STAGESELECT         "Selecionar escena"
+OPTIONS_CREDITS             "Créditos"
+OPTIONS_BACK                "ATRÁS"
+
+
+// Stage Select
+STAGESELECT_TITLE           "SELECCIONAR ESCENA"
+STAGESELECT_MSG             "Presiona <color=ffff00>$INPUT_FIRE4</color> para cancelar"
+STAGESELECT_PAGE            "página %d/%d"
+STAGESELECT_ACT             "Acto"
+
+
+// Custom quests
+QUESTSELECT_TITLE           "SELECCIONAR BÚSQUEDA"
+QUESTSELECT_MSG             "Presiona <color=ffff00>$INPUT_FIRE4</color> para cancelar"
+QUESTSELECT_PAGE            "Página %d/%d"
+QUESTSELECT_INFO            "<color=ffff00>Versión:</color> %s\n<color=ffff00>Autor:</color> %s\n<color=ffff00>Descripción:</color> %s"
+MENU_CQ_TUTORIAL            "Aprende cómo jugar Open Surge"
+MENU_CQ_EXTRA               "Niveles Extra"
+
+
+// Credits
+CREDITS_TITLE               "CRÉDITOS"
+CREDITS_KEY                 "Presiona <color=ffff00>$INPUT_FIRE4</color> para regresar"
+CREDITS_ACTIVE              "Equipo del Proyecto"
+CREDITS_RETIRED             "Miembros Retirados"
+CREDITS_THANKS              "Gracias a"
+CREDITS_ALEXANDRE           "Líder del proyecto, Programador"
+CREDITS_DI                  "Músico"
+CREDITS_COLIN               "Diseñador de la historia, moderador del Foro, Artista, Músico"
+CREDITS_MATEUSREIS          "Diseñador de efectos de sonido, Músico"
+CREDITS_JOHAN               "Músico"
+CREDITS_CELDECEA            "Artista"
+CREDITS_JOAO                "Artista"
+CREDITS_CHRISTOPHER         "Administrador del Wiki, Traducción al Indonesio"
+CREDITS_RUBEN               "Diseñador de niveles"
+CREDITS_SSDW                "Traducción al Neerlandés"
+CREDITS_LAINZ               "Traducción al Español"
+CREDITS_ARTHURBLOT          "Traducción al Francés"
+CREDITS_REIMUND             "Traducción al Alemán"
+CREDITS_SZYMON              "Traducción al Polaco"
+CREDITS_TOMIRES             "Traducción al Checo"
+CREDITS_JOGAIT              "Traducción al Portugués (PT)"
+CREDITS_NEOBLAST            "Puerto Dreamcast"
+CREDITS_CHRISTIAN           "Puerto Mac OS X"
+CREDITS_BASTIAN             "Artista"
+CREDITS_FRANCESCO           "Traducción al Italiano"
+CREDITS_SANTIAGO            "Traducción al Español"
+
+
+// Quest names
+TUTORIAL_QUEST_NAME         "Tutorial"
+EXTRA_LEVELS_NAME           "Niveles Extra"
+
+
+// Bonus levels
+BONUSMSG_TITLE              "BONUS"
+BONUSMSG_TEXT               "Escenas de bono aún no implementadas ;)"
+
+
+// Confirm boxes
+    // Quit game?
+    CBOX_QUIT_QUESTION      "REALMENTE QUIERES SALIR?"
+    CBOX_QUIT_OPTION1       "SÍ"
+    CBOX_QUIT_OPTION2       "NO"
+
+
+// Input devices
+    // keyboard
+    INPUT_KEYB_DIRECTIONAL  "las TECLAS de DIRECCION"
+    INPUT_KEYB_LEFT         "la TECLA IZQ."
+    INPUT_KEYB_RIGHT        "la TECLA DER."
+    INPUT_KEYB_UP           "la TECLA ARRIBA"
+    INPUT_KEYB_DOWN         "la TECLA ABAJO"
+    INPUT_KEYB_FIRE1        "la BARRA de ESPACIO"
+    INPUT_KEYB_FIRE2        "la TECLA CTRL IZQ."
+    INPUT_KEYB_FIRE3        "INTRO"
+    INPUT_KEYB_FIRE4        "ESC"
+
+
+    // joystick
+    INPUT_JOY_DIRECTIONAL   "los BOTONES DIRECCIONALES"
+    INPUT_JOY_LEFT          "el BOTÓN IZQ."
+    INPUT_JOY_RIGHT         "el BOTÓN DER:"
+    INPUT_JOY_UP            "el BOTÓN ARRIBA"
+    INPUT_JOY_DOWN          "el BOTÓN ABAJO"
+    INPUT_JOY_FIRE1         "BOTÓN 1"
+    INPUT_JOY_FIRE2         "BOTÓN 2"
+    INPUT_JOY_FIRE3         "BOTÓN 3"
+    INPUT_JOY_FIRE4         "BOTÓN 4"
+
+
+// HUD (Heads-Up Display)
+HUD_SCORE                   "Puntos:"
+HUD_TIME                    "Tiempo: "
+HUD_COLLECTIBLES            "Anillos:"
+HUD_SPACES                  "      " // the same amount of spaces
+HUD_CLEARED_LINE1           "TU HAS"
+HUD_CLEARED_LINE2           "PASADO el"
+HUD_CLEARED_LINE2_ACT       "ACTO"
+HUD_CLEARED_COLLECTIBLES    "BONO de ANILLOS"
+HUD_CLEARED_TIME            "BONO de TIEMPO"
+HUD_CLEARED_SECRET          "BONO SECRETO"
+HUD_CLEARED_TOTAL           "TOTAL"
+
+
+// Chilpoctli Temple Zone
+    // act 1
+    DESERT1_TITLE_0         "Bienvenido" 
+    DESERT1_MSG_0           "Este mini nivel muestra el primer brickset Open Surge de Celdecea!"
+    DESERT1_TITLE_1         "META" 
+    DESERT1_MSG_1           "Qué pensabas? La meta está justo en frente!"
+    DESERT1_TITLE_2         "Secreto" 
+    DESERT1_MSG_2           "Este es un lugar para aquellos quienes puedan ver..."
+    DESERT1_TITLE_3         "Reservado"
+    DESERT1_MSG_3           "Un bucle irá aquí algún día."

@@ -1,0 +1,152 @@
+2xSaI
+~~~~~
+
+Copyright (c) Derek Liauw Kie Fa, 1999  
+Modifications for Allegro 3.9+ comptibility by Robert J Ohannessian.
+
+Comments, Suggestions, Questions, Bugs etc.:
+	derek-liauw@usa.net  
+	void_star_@excite.com
+
+Original web site: http://members.xoom.com/derek_liauw/                              
+
+This program is free for non-commercial use.                      
+
+
+Disclaimer
+----------
+#include <std_disclaimer.h>
+Use this program at your own risk. This program was not intended to do
+anything malicious, but we are not responsible for any damage or loss
+that may arise by the use of this program.
+
+
+What is 2xSaI ?
+---------------
+Images rendered by most emulators are lo-res, and when put on a hi-res
+monitor, the image is either really small, or really blocky when stretched.
+Today's computers are fast, so why not use some of that horsepower to make
+a beautiful, big, scaled image from the small one???
+2xSaI tries to do just that. I wasn't quite satisfied with Eagle (another
+good engine with similar goals), so I started with my own engine, 2xSaI.
+2xSaI is a one-pass engine which scales bitmap images by a factor of 2,
+while trying to keep the orginal smoothness and brightness of the original
+bitmap (in other words: reducing blockiness and bluriness to a minimum).
+2xSaI borrows some ideas from Dirk Stevens' Eagle Engine, but is
+(fundamentally) a lot different. It was originally created for (and is
+currently used in the dos port of) my favorite emulator, Snes9x. If you have
+any bright ideas, just let me know, and I'll see what I can do.
+
+
+How does it work?
+-----------------
+2xSaI doesn't use conventional methods to scale images. 2xSaI detects certain
+color patterns (actually just lines and edges) in the original bitmap. A 2x
+scaled image has 4 times the amount of pixels of the original one. Of those
+one is directly taken from the source bitmap. The other 3 pixels are "guessed",
+using the patterns I mentioned earlier. A better document describing how
+2xSaI works has yet to be written (when this 17 year old has some more time)...
+
+
+What language were the engines programmed in?
+---------------------------------------------
+All engines are coded in C. There are also MMX assembly
+versions of the 2xSaI and SuperEagle engines, but they
+aren't enabled yet. Wait for 0.93! 
+
+
+Some programs using one or more of the engines
+----------------------------------------------
+ZSNES
+Snes9x (Windows and DOS versions)
+SNeESE
+and others.
+
+
+How do I install it?
+--------------------
+If you are familiar with installing the Allegro WIPs, then
+it should be no problem. Simply locate and run the fix* script
+that corresponds to your platform/compiler, then run 'make'
+then 'make install'.
+
+Example:
+	fixdjgpp
+	make
+	make install
+
+
+How do I use it the library?
+----------------------------
+You should make sure that the library is linked to your program.
+For gcc, the lib name is lib2xsai.a (or lib2xsaid.a for the
+debug version), so you should like with the -l2xsai option.
+For MSVC, it's 2xsai.lib that should be linked with the executable
+(2xsaid.lib for the debug version).
+
+First, tell 2xSaI which color mode you'll be using via the
+Init_2xSaI(val) function. Then simply call Super2xSaI()
+or SuperEagle() within your program. See the API section
+for details.
+
+
+API:
+----
+
+Init_2xSaI(int bpp);
+	Initializes the bit flags for 2xSaI (all engines). You should
+	call this function before calling any other 2xSaI function.
+	Pass it the current color depth.
+
+Super2xSaI(BITMAP *src, BITMAP *dest, int source_x, int source_y, int dest_x,
+                                           int dest_y, int width, int height)
+	Will enlarge the source image and blit the result in the dest bitmap,
+	using the Super 2xSaI engine.
+	Arguments are like those of blit(). width and height are of the source
+	bitmap. If the destination bitmap isn't 2x the size of the source bitmap
+	one column or row of pixels will be skipped. Both source and destination
+	bitmaps must be of hte same color depth, of the same depth as passed to
+	Init_2xSaI(). This function supports clipping.
+
+void Super2xSaI_ex(uint8 *src, uint32 src_pitch, uint8 *unused, BITMAP *dest,
+                                                 uint32 width, uint32 height)
+
+	The old API for Super2xSaI. src is a pointer to the source pixel data.
+	src_pitch is the number of bytes in between 2 lines of the source.
+	dest is the final bitmap. It can be a video or system bitmap, sub bitmap,
+	plannar (mode-x) bitmap, or plain memory bitmap. The same restrictions
+	apply as Super2xSaI(). No clipping will be done by this function.
+
+
+SuperEagle(BITMAP *src, BITMAP *dest, int source_x, int source_y, int dest_x,
+                                           int dest_y, int width, int height)
+	Will enlarge the source image and blit the result in the dest bitmap,
+	using the Super Eagle engine.
+	Arguments are like those of blit(). width and height are of the source
+	bitmap. If the destination bitmap isn't 2x the size of the source bitmap
+	one column or row of pixels will be skipped. Both source and destination
+	bitmaps must be of hte same color depth, of the same depth as passed to
+	Init_2xSaI(). This function supports clipping.
+
+void SuperEagle_ex(uint8 *src, uint32 src_pitch, uint8 *unused, BITMAP *dest,
+                                                 uint32 width, uint32 height)
+
+	The old API for SuperEagle. src is a pointer to the source pixel data.
+	src_pitch is the number of bytes in between 2 lines of the source.
+	dest is the final bitmap. It can be a video or system bitmap, sub bitmap,
+	plannar (mode-x) bitmap, or plain memory bitmap. The same restrictions
+	apply as SuperEagle(). No clipping will be done by this function.
+
+
+
+Using the convert utility
+-------------------------
+
+Usage: convert <input.bmp> <output.bmp>
+<input.bmp> and <output.bmp> must be the first two parameters!
+       <input.bmp> must be an 8 or 24 bit PCX/BMP file.
+       <ouput.bmp> will be a 24 bit PCX/BMP file.
+
+
+
+

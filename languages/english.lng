@@ -1,0 +1,161 @@
+// ---------------------------------------------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// File:   languages/english.lng
+// Desc:   English translation (encoding: utf-8)
+// Author: Alexandre
+// ---------------------------------------------------------------------------
+
+// Meta data
+LANG_LANGUAGE               "English"
+LANG_AUTHOR                 "Alexandre Martins"
+LANG_LASTUPDATE             "2011-01-02"
+LANG_COMPATIBILITY          "0.2.0"
+
+
+// Colors
+COLOR_P1                    "0077ff"
+COLOR_P2                    "ff7700"
+COLOR_P3                    "ff0000"
+COLOR_INPUT                 "aaaaaa"
+COLOR_SPECIAL               "ffff00"
+
+
+// Main menu
+MENU_1PGAME                 "START GAME"
+MENU_CUSTOMQUESTS           "EXTRAS"
+MENU_OPTIONS                "OPTIONS"
+MENU_EXIT                   "EXIT"
+
+
+// Options
+OPTIONS_TITLE               "OPTIONS"
+OPTIONS_YES                 "YES"
+OPTIONS_NO                  "NO"
+OPTIONS_GRAPHICS            "GRAPHICS"
+OPTIONS_FULLSCREEN          "Fullscreen"
+OPTIONS_RESOLUTION          "Resolution"
+OPTIONS_RESOLUTION_OPT1     "TINY"
+OPTIONS_RESOLUTION_OPT2     "NORMAL"
+OPTIONS_RESOLUTION_OPT3     "MAX"
+OPTIONS_SMOOTHGFX           "Smooth graphics"
+OPTIONS_FPS                 "Show FPS"
+OPTIONS_GAME                "GAME"
+OPTIONS_LANGUAGE            "Change language"
+OPTIONS_STAGESELECT         "Stage select"
+OPTIONS_CREDITS             "Credits"
+OPTIONS_BACK                "BACK"
+
+
+// Stage Select
+STAGESELECT_TITLE           "STAGE SELECT"
+STAGESELECT_MSG             "Press <color=ffff00>$INPUT_FIRE4</color> to cancel"
+STAGESELECT_PAGE            "page %d/%d"
+STAGESELECT_ACT             "Act"
+
+
+// Custom quests
+QUESTSELECT_TITLE           "QUEST SELECT"
+QUESTSELECT_MSG             "Press <color=ffff00>$INPUT_FIRE4</color> to cancel"
+QUESTSELECT_PAGE            "page %d/%d"
+QUESTSELECT_INFO            "<color=ffff00>Version:</color> %s\n<color=ffff00>Author:</color> %s\n<color=ffff00>Description:</color> %s"
+MENU_CQ_TUTORIAL            "Learn how to play Open Surge"
+MENU_CQ_EXTRA               "Extra levels"
+
+
+// Credits
+CREDITS_TITLE               "CREDITS"
+CREDITS_KEY                 "Press <color=ffff00>$INPUT_FIRE4</color> to go back"
+CREDITS_ACTIVE              "Project Team"
+CREDITS_RETIRED             "Retired Members"
+CREDITS_THANKS              "Thanks to"
+CREDITS_ALEXANDRE           "Project leader, Programmer"
+CREDITS_DI                  "Musician"
+CREDITS_COLIN               "Story designer, Forum moderator, Artist, Musician"
+CREDITS_MATEUSREIS          "Sound effects designer, Musician"
+CREDITS_JOHAN               "Musician"
+CREDITS_CELDECEA            "Artist"
+CREDITS_JOAO                "Artist"
+CREDITS_CHRISTOPHER         "Wiki manager, Indonesian translation"
+CREDITS_RUBEN               "Level designer"
+CREDITS_SSDW                "Dutch translation"
+CREDITS_LAINZ               "Spanish translation"
+CREDITS_ARTHURBLOT          "French translation"
+CREDITS_REIMUND             "German translation"
+CREDITS_SZYMON              "Polish translation"
+CREDITS_TOMIRES             "Czech translation"
+CREDITS_JOGAIT              "Portuguese PT translation"
+CREDITS_NEOBLAST            "Dreamcast port"
+CREDITS_CHRISTIAN           "Mac OS X port"
+CREDITS_BASTIAN             "Artist"
+CREDITS_FRANCESCO           "Italian translation"
+CREDITS_SANTIAGO            "Spanish translation"
+
+
+// Quest names
+TUTORIAL_QUEST_NAME         "Tutorial"
+EXTRA_LEVELS_NAME           "Extra levels"
+
+
+// Bonus levels
+BONUSMSG_TITLE              "BONUS"
+BONUSMSG_TEXT               "Bonus stages not yet implemented ;)"
+
+
+// Confirm boxes
+    // Quit game?
+    CBOX_QUIT_QUESTION      "DO YOU REALLY WANT TO QUIT?"
+    CBOX_QUIT_OPTION1       "YES"
+    CBOX_QUIT_OPTION2       "NO"
+
+
+// Input devices
+    // keyboard
+    INPUT_KEYB_DIRECTIONAL  "the ARROW KEYS"
+    INPUT_KEYB_LEFT         "the LEFT KEY"
+    INPUT_KEYB_RIGHT        "the RIGHT KEY"
+    INPUT_KEYB_UP           "the UP KEY"
+    INPUT_KEYB_DOWN         "the DOWN KEY"
+    INPUT_KEYB_FIRE1        "the SPACE BAR"
+    INPUT_KEYB_FIRE2        "the LEFT CTRL KEY"
+    INPUT_KEYB_FIRE3        "ENTER"
+    INPUT_KEYB_FIRE4        "ESC"
+
+
+    // joystick
+    INPUT_JOY_DIRECTIONAL   "the DIRECTIONAL BUTTONS"
+    INPUT_JOY_LEFT          "the LEFT BUTTON"
+    INPUT_JOY_RIGHT         "the RIGHT BUTTON"
+    INPUT_JOY_UP            "the UP BUTTON"
+    INPUT_JOY_DOWN          "the DOWN BUTTON"
+    INPUT_JOY_FIRE1         "BUTTON 1"
+    INPUT_JOY_FIRE2         "BUTTON 2"
+    INPUT_JOY_FIRE3         "BUTTON 3"
+    INPUT_JOY_FIRE4         "BUTTON 4"
+
+
+// HUD (Heads-Up Display)
+HUD_SCORE                   "Score:"
+HUD_TIME                    "Time: "
+HUD_COLLECTIBLES            "Rings:"
+HUD_SPACES                  "      " // the same amount of spaces
+HUD_CLEARED_LINE1           "YOU HAVE"
+HUD_CLEARED_LINE2           "PASSED"
+HUD_CLEARED_LINE2_ACT       "ACT"
+HUD_CLEARED_COLLECTIBLES    "RING BONUS"
+HUD_CLEARED_TIME            "TIME BONUS"
+HUD_CLEARED_SECRET          "SECRET BONUS"
+HUD_CLEARED_TOTAL           "TOTAL"
+
+
+// Chilpoctli Temple Zone
+    // act 1
+    DESERT1_TITLE_0         "Welcome" 
+    DESERT1_MSG_0           "This mini level shows off Celdecea's first Open Surge brickset!"
+    DESERT1_TITLE_1         "GOAL" 
+    DESERT1_MSG_1           "What did you think? The goal is just ahead!"
+    DESERT1_TITLE_2         "Secret" 
+    DESERT1_MSG_2           "This is a place for those who can see..."
+    DESERT1_TITLE_3         "Reserved"
+    DESERT1_MSG_3           "A loop will go here some day."

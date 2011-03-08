@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Configuration script
+# Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+if [ -e ./CMakeLists.txt ]; then
+
+  # calling cmake
+  export _ALLEGRO_LIBS=`allegro-config --libs`
+  export _ALLEGRO_VERSION=`allegro-config --version`
+  cmake $@ .
+
+else
+
+  # path error?
+  PWD_DIR=`pwd`
+  SCRIPT_DIR=`echo $0 | sed 's,^\(.*\)/\(.*\)$,\1,g'`
+  ME=`echo $0 | sed 's,^\(.*\)/\(.*\)$,\2,g'`
+  REQUIRED_FILE="$SCRIPT_DIR/CMakeLists.txt"
+
+  if [ -e "$REQUIRED_FILE" ]; then
+    cd ${SCRIPT_DIR}
+    ./${ME} $@
+    cd ${PWD_DIR}
+  else
+    echo -e "Fatal error: \"$REQUIRED_FILE\" not found!"
+    echo "Please download the source package again."
+  fi
+
+fi
