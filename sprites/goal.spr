@@ -28,9 +28,9 @@ sprite SD_GOAL
 sprite SD_ENDSIGN
 {
     source_file     images/goal.png
-    source_rect     0 0 192 114
-    frame_size      48 57
-    hot_spot        24 57
+    source_rect     0 0 184 107
+    frame_size      46 54
+    hot_spot        23 53
 
     // idle (Gimacian)
     animation 0

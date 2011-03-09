@@ -2,7 +2,7 @@
 sprite SD_CHARGE
 {
     source_file     images/charge.png
-    source_rect     0 0 300 500
+    source_rect     0 0 300 600
     frame_size      50 50
     hot_spot        25 50
 
@@ -122,8 +122,8 @@ sprite SD_CHARGE
     animation 14
     {
         repeat      TRUE
-        fps         8
-        data        3 4 5 6 7 8 9 10
+        fps         4
+        data        61 62 63 64
     }
 
     // waiting
@@ -132,7 +132,7 @@ sprite SD_CHARGE
         repeat      TRUE
         fps         16
         data        41 41 41 41 37 37 38 38 39 39 40 40 40 40 39 40 40 40 40 39 38 37 42 42 43 43 44 44 45 45 45 45 44 45 45 45 45 44 43 42 37 37 38 38 39 39 40 40 40 40 39 40 40 40 40 39 38 37 42 42 43 43 44 44 45 45 45 45 44 45 46 47 47 47 48 47 47 48 47 47 48 47 48 47 48 47 47 48 47 47 47 47 47 47 47 47 47 47 47 47 47 47 47 47 47 47 47 47 47 
-        repeat_from 80
+	  repeat_from 80
     }
 
     // ceiling (being carried)
@@ -146,9 +146,9 @@ sprite SD_CHARGE
     // winning (victory)
     animation 17
     {
-        repeat      TRUE
+        repeat      FALSE
         fps         8
-        data        0
+        data        55 54 54 54 55 56 56 56 57 58 58 59 59 60
     }
 
     // climbing

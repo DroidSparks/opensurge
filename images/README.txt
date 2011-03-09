@@ -18,6 +18,9 @@ Brian Zablocky
 Joao Victor
 --- neon.png
 --- surge.png
+--- animals.png
+--- title.png
+--- goal.png
 
 Colin Beard
 --- charge.png
