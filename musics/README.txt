@@ -27,3 +27,4 @@ Mateus Reis
 
 Johan Brodd
 --- template.ogg
+--- silence.ogg
