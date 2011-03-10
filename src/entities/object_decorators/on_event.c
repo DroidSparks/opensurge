@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * on_event.c - Events: if an event is true, then the state is changed
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -26,6 +26,7 @@
 #include "../../core/video.h"
 #include "../../core/timer.h"
 #include "../../core/input.h"
+#include "../../core/audio.h"
 #include "../../scenes/level.h"
 #include "../player.h"
 
@@ -50,6 +51,7 @@ typedef struct onceilingcollision_t onceilingcollision_t;
 typedef struct onleftwallcollision_t onleftwallcollision_t;
 typedef struct onrightwallcollision_t onrightwallcollision_t;
 typedef struct onbutton_t onbutton_t;
+typedef struct onmusicplay_t onmusicplay_t;
 
 /* objectdecorator_onevent_t class */
 struct objectdecorator_onevent_t {
@@ -255,6 +257,15 @@ static eventstrategy_t* onbutton_new(const char *button_name, int (*check)(input
 static void onbutton_init(eventstrategy_t *event);
 static void onbutton_release(eventstrategy_t *event);
 static int onbutton_should_trigger_event(eventstrategy_t *event, object_t *object, player_t** team, int team_size, brick_list_t *brick_list, item_list_t *item_list, object_list_t *object_list);
+
+/* onmusicplay_t concrete strategy */
+struct onmusicplay_t {
+    eventstrategy_t base; /* implements eventstrategy_t */
+};
+static eventstrategy_t* onmusicplay_new();
+static void onmusicplay_init(eventstrategy_t *event);
+static void onmusicplay_release(eventstrategy_t *event);
+static int onmusicplay_should_trigger_event(eventstrategy_t *event, object_t *object, player_t** team, int team_size, brick_list_t *brick_list, item_list_t *item_list, object_list_t *object_list);
 
 
 /* ------------------------------------- */
@@ -501,6 +512,11 @@ objectmachine_t* objectdecorator_onbuttonpressed_new(objectmachine_t *decorated_
 objectmachine_t* objectdecorator_onbuttonup_new(objectmachine_t *decorated_machine, const char *button_name, const char *new_state_name)
 {
     return make_decorator(decorated_machine, new_state_name, onbutton_new(button_name, input_button_up));
+}
+
+objectmachine_t* objectdecorator_onmusicplay_new(objectmachine_t *decorated_machine, const char *new_state_name)
+{
+    return make_decorator(decorated_machine, new_state_name, onmusicplay_new());
 }
 
 /* ---------------------------------- */
@@ -1243,3 +1259,33 @@ int onbutton_should_trigger_event(eventstrategy_t *event, object_t *object, play
     player_t *player = enemy_get_observed_player(object);
     return me->check(player->actor->input, me->button);
 }
+
+/* onmusicplay_t strategy */
+eventstrategy_t* onmusicplay_new()
+{
+    onmusicplay_t *x = mallocx(sizeof *x);
+    eventstrategy_t *e = (eventstrategy_t*)x;
+
+    e->init = onmusicplay_init;
+    e->release = onmusicplay_release;
+    e->should_trigger_event = onmusicplay_should_trigger_event;
+
+    return e;
+}
+
+void onmusicplay_init(eventstrategy_t *event)
+{
+    ; /* empty */
+}
+
+void onmusicplay_release(eventstrategy_t *event)
+{
+    ; /* empty */
+}
+
+int onmusicplay_should_trigger_event(eventstrategy_t *event, object_t *object, player_t** team, int team_size, brick_list_t *brick_list, item_list_t *item_list, object_list_t *object_list)
+{
+    return music_is_playing();
+}
+
+

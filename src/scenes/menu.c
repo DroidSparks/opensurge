@@ -47,6 +47,8 @@
 /* private data */
 #define MENU_MUSICFILE  "musics/title.ogg"
 #define MENU_BGFILE     "themes/menu.bg"
+#define FADEIN_TIME     0.5f
+#define FADEOUT_TIME    0.5f
 
 /* menu screens */
 static input_t *input;
@@ -129,7 +131,7 @@ void menu_init()
     marquee_init();
 
     /* fade in */
-    fadefx_in(image_rgb(0,0,0), 1.5);
+    fadefx_in(image_rgb(0,0,0), FADEIN_TIME);
 }
 
 
@@ -156,7 +158,7 @@ void menu_update()
     }
 
     /* ignore/restore control */
-    if(t <= start_time + 1.5)
+    if(t <= start_time + FADEIN_TIME)
         input_ignore(input);
     else if(!control_restored) {
         input_restore(input);
@@ -283,19 +285,19 @@ void select_option(int opt)
         /* CUSTOM QUESTS */
         case 1:
             jump_to = storyboard_get_scene(SCENE_QUESTSELECT);
-            fadefx_out(image_rgb(0,0,0), 0.5);
+            fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
             break;
 
         /* OPTIONS */
         case 2:
             jump_to = storyboard_get_scene(SCENE_OPTIONS);
-            fadefx_out(image_rgb(0,0,0), 0.5);
+            fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
             return;
 
         /* EXIT */
         case 3:
             quit = TRUE;
-            fadefx_out(image_rgb(0,0,0), 0.5);
+            fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
             return;
     }
 }
@@ -307,7 +309,7 @@ void game_start(quest_t *q)
     quest_run(q, FALSE);
     jump_to = storyboard_get_scene(SCENE_QUEST);
     input_ignore(input);
-    fadefx_out(image_rgb(0,0,0), 0.5);
+    fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
 }
 
 

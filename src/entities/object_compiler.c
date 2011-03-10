@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * object_compiler.c - compiles object scripts
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -225,6 +225,7 @@ static void on_right_wall_collision(objectmachine_t** m, int n, const char **p, 
 static void on_button_down(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_button_pressed(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_button_up(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void on_music_play(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 
 /* variables */
 static void var_let(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -375,6 +376,7 @@ static entry_t command_table[] = {
     { "on_button_down", on_button_down },
     { "on_button_pressed", on_button_pressed },
     { "on_button_up", on_button_up },
+    { "on_music_play", on_music_play },
 
     /* variables */
     { "let", var_let },
@@ -1247,6 +1249,14 @@ void on_button_up(objectmachine_t** m, int n, const char **p, const parsetree_st
         *m = objectdecorator_onbuttonup_new(*m, p[0], p[1]);
     else
         COMPILE_ERROR("Object script error - on_button_up expects two parameters: button_name, new_state_name");
+}
+
+void on_music_play(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_onmusicplay_new(*m, p[0]);
+    else
+        COMPILE_ERROR("Object script error - on_music_play expects one parameter: new_state_name");
 }
 
 void change_closest_object_state(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)

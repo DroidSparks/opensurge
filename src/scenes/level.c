@@ -1516,6 +1516,9 @@ void level_clear(actor_t *end_sign)
     for(i=0; i<team_size; i++)
         input_ignore(team[i]->actor->input);
 
+    /* block music */
+    block_music = TRUE;
+
     /* success! */
     level_set_camera_focus(end_sign);
     level_hide_dialogbox();
@@ -1796,7 +1799,7 @@ void render_players(int bring_to_back)
 /* updates the music */
 void update_music()
 {
-    if(music != NULL && !level_cleared && !block_music) {
+    if(music != NULL && !block_music) {
 
         if(override_music && !sound_is_playing(override_music)) {
             override_music = NULL;
@@ -2064,7 +2067,7 @@ void render_powerups()
 
     for(i=0; i<c; i++) {
         if(visible[i])
-            image_draw(icon[i], video_get_backbuffer(), VIDEO_SCREEN_W - (icon[i]->w+5)*(i+1), 5, IF_NONE);
+            image_draw(icon[i], video_get_backbuffer(), VIDEO_SCREEN_W - icon[i]->w*(i+1) - 5*i - 15, 10, IF_NONE);
     }
 }
 
