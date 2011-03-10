@@ -44,6 +44,7 @@ void music_set_volume(float volume); /* 0.0 <= volume <= 1.0 (default) */
 float music_get_volume();
 int music_is_playing();
 int music_unref(const char *path); /* returns the number of active references */
+float music_duration(); /* in seconds */
 
 
 /* sample management */

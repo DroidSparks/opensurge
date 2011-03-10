@@ -238,6 +238,15 @@ int music_is_playing()
 }
 
 
+/*
+ * music_duration()
+ * Music duration, in seconds
+ */
+float music_duration()
+{
+    return current_music ? MUSIC_DURATION(current_music) : 0.0f;
+}
+
 
 
 

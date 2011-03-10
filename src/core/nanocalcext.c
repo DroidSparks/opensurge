@@ -82,6 +82,7 @@ static float f_date_mon() { return (float)(timeinfo()->tm_mon); }  /* months sin
 static float f_date_year() { return (float)(timeinfo()->tm_year); } /* years since 1900 */
 static float f_date_wday() { return (float)(timeinfo()->tm_wday); } /* days since Sunday; range: 0-6 */
 static float f_date_yday() { return (float)(timeinfo()->tm_yday); } /* days since January 1st; range: 0-365 */
+static float f_music_duration() { return music_duration(); }
 
 
 
@@ -136,6 +137,7 @@ void nanocalcext_register_bifs()
     nanocalc_register_bif_arity0("date_year", f_date_year);
     nanocalc_register_bif_arity0("date_wday", f_date_wday);
     nanocalc_register_bif_arity0("date_yday", f_date_yday);
+    nanocalc_register_bif_arity0("music_duration", f_music_duration);
 
     target = NULL;
 }

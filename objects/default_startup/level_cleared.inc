@@ -97,13 +97,25 @@ object ".default_startup.level_cleared.handle_music"
     state "fade_out"
     {
         set_music_volume "max(0, music_volume() - 1.0*dt())"
-        on_timeout 1.5 "end"
+        on_timeout 1.5 "goal"
+    }
+
+    state "goal"
+    {
+        set_music_volume "$vol"
+        play_music "musics/goal.ogg"
+        change_state "wait"
+    }
+
+    state "wait"
+    {
+        // music "double-click" bugfix
+        on_timeout "music_duration() * 0.95" "end"
     }
 
     state "end"
     {
-        set_music_volume "$vol"
-        play_music "musics/goal.ogg"
+        play_music "samples/1up.ogg"
         destroy
     }
 }
