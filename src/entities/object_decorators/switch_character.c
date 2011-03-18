@@ -60,7 +60,7 @@ objectmachine_t* objectdecorator_switchcharacter_new(objectmachine_t *decorated_
     obj->get_object_instance = objectdecorator_get_object_instance; /* inherits from superclass */
     dec->decorated_machine = decorated_machine;
 
-    me->name = name != NULL ? str_dup(name) : NULL;
+    me->name = (name != NULL && *name != 0) ? str_dup(name) : NULL;
     me->force_switch = force_switch;
 
     return obj;
