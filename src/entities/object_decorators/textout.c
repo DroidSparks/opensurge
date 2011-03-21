@@ -124,6 +124,9 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
     font_set_text(me->fnt, "%s", processed_text);
     free(processed_text);
 
+    /* symbol table tricks */
+    symboltable_set(st, "$_STRLEN", strlen(font_get_text(me->fnt))); /* store the length of the text in $_STRLEN */
+
     /* font position */
     pos = v2d_new(expression_evaluate(me->xpos), expression_evaluate(me->ypos));
     wpx = font_get_textsize(me->fnt).x;
