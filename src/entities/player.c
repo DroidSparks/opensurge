@@ -1050,7 +1050,7 @@ obstacle_t* item2obstacle(const item_t *item)
 obstacle_t* object2obstacle(const object_t *object)
 {
     const image_t *image = actor_image(object->actor);
-    int angle = ((256 - (object->obstacle_angle % 360) * 128) / 180) % 256;
+    int angle = (int)(256 - (object->obstacle_angle % 360) / 1.40625f) % 256;
     v2d_t position = v2d_subtract(object->actor->position, object->actor->hot_spot);
 
     return obstacle_create_solid(image, angle, position);

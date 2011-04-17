@@ -40,7 +40,9 @@ static int must_fadein;
 static font_t *fnt;
 
 static char *text = 
+ "<color=ffff00>"
  GAME_TITLE " version " GAME_VERSION_STRING "\n"
+ "</color>"
  "Copyright (C) " GAME_YEAR "  Open Surge Team\n"
  GAME_WEBSITE "\n"
  "\n"
