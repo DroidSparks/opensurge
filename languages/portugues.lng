@@ -161,7 +161,7 @@ HUD_CLEARED_TOTAL           "TOTAL"
 	
 // Opening cutscene
 OPENING_1               "Há muito tempo, os deuses antigos criaram um item sagrado e poderoso: o Cetro Dimensional."
-OPENING_2               "Tal cetro concede poder absoluto a quem o possuir"
+OPENING_2               "Tal cetro concede poderes absolutos a quem o possuir"
 OPENING_3               "e, como ele pode ser muito perigoso nas mãos erradas, os deuses o esconderam no Portão Dimensional."
 OPENING_4               "Gimacian the Dark é um feiticeiro maligno que necessita de escuridão para aumentar seus poderes."
 OPENING_5               "Ele sabe a localização do Portão Dimensional e tentará abri-lo usando os Anéis Dimensionais."
