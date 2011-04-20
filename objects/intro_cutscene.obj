@@ -1,0 +1,371 @@
+// introduction cutscene
+// by Joao Victor, SilverstepP, KZR, jobromedia, Alexandre
+
+object ".intro_startup"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    // main
+    state "main"
+    {
+        set_alpha 1.0
+        set_zindex 0.9999
+
+        create_child ".cutscene"
+        create_child ".intro_subtitles"
+        create_child ".intro_background"
+        create_child ".cutscene skipper
+
+        play_music "musics/intro_cutscene/Jobromedia-Intro.ogg" 0
+        change_state "start 1st slide"
+    }
+
+    // first slide
+    state "start 1st slide"
+    {
+        set_absolute_position 160 -180
+        set_animation "SD_INTROCUTSCENE_SLIDE1" 0
+        change_state "1st slide"
+    }
+
+    state "1st slide"
+    {
+        set_absolute_position xpos() min(-10,ypos()+12*dt())
+    }
+
+    state "show 2nd slide" // called by someone else
+    {
+        set_alpha max(0,alpha()-(1.0/1.5)*dt())
+        if alpha()<=0 "start 2nd slide"
+    }
+
+    // second slide
+    state "start 2nd slide"
+    {
+        set_absolute_position 160 0
+        set_animation "SD_INTROCUTSCENE_SLIDE2" 0
+        change_state "2nd slide"
+    }
+
+    state "2nd slide"
+    {
+        set_alpha min(1,alpha()+(1.0/1.5)*dt())
+    }
+
+    state "show 3rd slide" // called by someone else
+    {
+        set_alpha max(0,alpha()-(1.0/2.5)*dt())
+        if alpha()<=0 "start 3rd slide"
+    }
+
+    // third slide
+    state "start 3rd slide"
+    {
+        set_animation "SD_INTROCUTSCENE_SLIDE3" 0
+        set_absolute_position 320 0
+        change_state "3rd slide"
+    }
+
+    state "3rd slide"
+    {
+        set_alpha min(1,alpha()+(1.0/2.5)*dt())
+        set_absolute_position cond(alpha()>=0.5,max(160,xpos()-10*dt()),xpos()) ypos()
+    }
+
+    state "show 4th slide" // called by someone else
+    {
+        set_alpha max(0,alpha()-(1.0/1.5)*dt())
+        if alpha()<=0 "start 4th slide"
+    }
+
+    // fourth slide
+    state "start 4th slide"
+    {
+        set_absolute_position 160 0
+        set_animation "SD_INTROCUTSCENE_SLIDE4" 0
+        if "date_mday()==1 and date_mon()==3" "fools"
+        change_state "4th slide"
+    }
+
+    state "fools"
+    {
+        set_animation "SD_INTROCUTSCENE_SLIDE4_FOOLS" 0
+        change_state "4th slide"
+    }
+
+    state "4th slide"
+    {
+        set_alpha min(1,alpha()+(1.0/1.5)*dt())
+    }
+
+    state "show 5th slide" // called by someone else
+    {
+        set_alpha max(0,alpha()-(1.0/4.5)*dt())
+    }
+}
+
+object ".intro_subtitles"
+{
+    requires 0.2.0
+    always_active
+    detach_from_camera
+
+    // state detection
+    state "main"
+    {
+        set_absolute_position 0 0
+        set_zindex infinity()+999
+
+        let "$strlen = 0"
+        if "$text == 9" "length9"
+        if "$text == 8" "length8"
+        if "$text == 7" "length7"
+        if "$text == 6" "length6"
+        if "$text == 5" "length5"
+        if "$text == 4" "length4"
+        if "$text == 3" "length3"
+        if "$text == 2" "length2"
+        change_state "length1"
+    }
+
+    // synchronization issues
+    state "show 2nd slide"
+    {
+        change_closest_object_state ".intro_startup" "show 2nd slide"
+        return_to_previous_state
+    }
+
+    state "show 3rd slide"
+    {
+        change_closest_object_state ".intro_startup" "show 3rd slide"
+        change_state "wait_fade"
+    }
+
+    state "show 4th slide"
+    {
+        change_closest_object_state ".intro_startup" "show 4th slide"
+        change_state "wait_fade"
+    }
+
+    state "show 5th slide"
+    {
+        change_closest_object_state ".intro_startup" "show 5th slide"
+        change_state "wait_fade"
+    }
+
+    // wait or fade
+    state "wait_fade"
+    {
+        on_timeout 1.25 "main"
+    }
+
+    // detect length and play narration
+    state "length1"
+    {
+        let "$displaytime = 10"
+        textout "menu.small" -1000 -1000 "$OPENING_1"
+        let "$length = $_STRLEN"
+        let "$typerate = 1.5*$length/$displaytime"
+        let "$_introtextout = 1"
+        play_sample "musics/intro_cutscene/intro1.ogg"
+        change_state "text1"
+    }
+
+    state "length2"
+    {
+        let "$displaytime = 10"
+        textout "menu.small" -1000 -1000 "$OPENING_2"
+        let "$length = $_STRLEN"
+        let "$typerate = 1.5*$length/$displaytime"
+        let "$_introtextout = 2"
+        play_sample "musics/intro_cutscene/intro2.ogg"
+        change_state "text2"
+    }
+
+    state "length3"
+    {
+        let "$displaytime = 11"
+        textout "menu.small" -1000 -1000 "$OPENING_3"
+        let "$length = $_STRLEN"
+        let "$typerate = 1.5*$length/$displaytime"
+        let "$_introtextout = 3"
+        play_sample "musics/intro_cutscene/intro3.ogg"
+        change_state "text3"
+    }
+
+    state "length4"
+    {
+        let "$displaytime = 9"
+        textout "menu.small" -1000 -1000 "$OPENING_4"
+        let "$length = $_STRLEN"
+        let "$typerate = 1.5*$length/$displaytime"
+        let "$_introtextout = 4"
+        play_sample "musics/intro_cutscene/intro4.ogg"
+        change_state "text4"
+    }
+
+    state "length5"
+    {
+        let "$displaytime = 10"
+        textout "menu.small" -1000 -1000 "$OPENING_5"
+        let "$length = $_STRLEN"
+        let "$typerate = 1.5*$length/$displaytime"
+        let "$_introtextout = 5"
+        play_sample "musics/intro_cutscene/intro5.ogg"
+        change_state "text5"
+    }
+
+    state "length6"
+    {
+        let "$displaytime = 9"
+        textout "menu.small" -1000 -1000 "$OPENING_6"
+        let "$length = $_STRLEN"
+        let "$typerate = 1.5*$length/$displaytime"
+        let "$_introtextout = 6"
+        play_sample "musics/intro_cutscene/intro6.ogg"
+        change_state "text6"
+    }
+
+    state "length7"
+    {
+        let "$displaytime = 9"
+        textout "menu.small" -1000 -1000 "$OPENING_7"
+        let "$length = $_STRLEN"
+        let "$typerate = 1.5*$length/$displaytime"
+        let "$_introtextout = 7"
+        play_sample "musics/intro_cutscene/intro7.ogg"
+        change_state "text7"
+    }
+
+    state "length8"
+    {
+        let "$displaytime = 3"
+        textout "menu.small" -1000 -1000 "$OPENING_8"
+        let "$length = $_STRLEN"
+        let "$typerate = 1.5*$length/$displaytime"
+        let "$_introtextout = 8"
+        play_sample "musics/intro_cutscene/intro8.ogg"
+        change_state "text8"
+    }
+
+    state "length9"
+    {
+        let "$displaytime = 1.5"
+        textout "menu.small" -1000 -1000 "$OPENING_9"
+        let "$length = $_STRLEN"
+        let "$typerate = 1.5*$length/$displaytime"
+        let "$_introtextout = 9"
+        play_sample "musics/intro_cutscene/intro9.ogg"
+        change_state "text9"
+    }
+
+    // real text display
+    state "text1"
+    {
+        textout "menu.small" 2 210 "$OPENING_1" 316 0 $strlen
+        let "$strlen += $typerate*dt()"
+        let "$text = 2"
+        on_timeout "$displaytime" "wait_fade"
+    }
+
+    state "text2"
+    {
+        textout "menu.small" 2 210 "$OPENING_2" 316 0 $strlen
+        let "$strlen += $typerate*dt()"
+        let "$text = 3"
+        on_timeout "$displaytime" "wait_fade"
+    }
+
+    state "text3"
+    {
+        textout "menu.small" 2 210 "$OPENING_3" 316 0 $strlen
+        let "$strlen += $typerate*dt()"
+        let "$text = 4"
+        on_timeout "$displaytime * 0.45" "show 2nd slide"
+        on_timeout "$displaytime" "show 3rd slide"
+    }
+
+    state "text4"
+    {
+        textout "menu.small" 2 210 "$OPENING_4" 316 0 $strlen
+        let "$strlen += $typerate*dt()"
+        let "$text = 5"
+        on_timeout "$displaytime" "wait_fade"
+    }
+
+    state "text5"
+    {
+        textout "menu.small" 2 210 "$OPENING_5" 316 0 $strlen
+        let "$strlen += $typerate*dt()"
+        let "$text = 6"
+        on_timeout "$displaytime" "wait_fade"
+    }
+
+    state "text6"
+    {
+        textout "menu.small" 2 210 "$OPENING_6" 316 0 $strlen
+        let "$strlen += $typerate*dt()"
+        let "$text = 7"
+        on_timeout "$displaytime" "show 4th slide"
+    }
+
+    state "text7"
+    {
+        textout "menu.small" 2 210 "$OPENING_7" 316 0 $strlen
+        let "$strlen += $typerate*dt()"
+        let "$text = 8"
+        on_timeout "$displaytime" "show 5th slide"
+    }
+
+    state "text8"
+    {
+        textout "menu.small" 2 210 "$OPENING_8" 316 0 $strlen
+        let "$strlen += $typerate*dt()"
+        let "$text = 9"
+        on_timeout "$displaytime*2" "wait_fade"
+    }
+
+    state "text9"
+    {
+        textout "menu.small" 2 210 "$OPENING_9" 316 0 $strlen
+        let "$strlen += $typerate*dt()"
+        on_timeout "$displaytime*6" "end"
+    }
+
+    // end
+    state "end"
+    {
+        next_level
+    }
+}
+
+object ".cutscene skipper"
+{
+    requires 0.2.0
+    always_active
+
+    state "main"
+    {
+        on_button_pressed "fire1" "end"
+        on_button_pressed "fire3" "end"
+    }
+
+    state "end"
+    {
+        next_level
+    }
+}
+
+object ".intro_background"
+{
+    requires 0.2.0
+    detach_from_camera
+
+    state "main"
+    {
+        set_absolute_position 0 0
+        set_animation SD_FADEEFFECT 0
+    }
+}

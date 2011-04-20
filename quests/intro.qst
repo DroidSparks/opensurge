@@ -16,4 +16,4 @@ image           "images/null.png"
 hidden
 
 // level list (in order of appearance)
-level           "levels/intro.lev"
+level           "levels/cutscenes/intro.lev"

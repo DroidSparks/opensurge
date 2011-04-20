@@ -24,7 +24,9 @@ Joepotato28
 
 Mateus Reis
 --- citychill.ogg
+--- intro_cutscene/intro[1-9].ogg
 
 Johan Brodd
 --- template.ogg
 --- silence.ogg
+--- intro_cutscene/Jobromedia-Intro.ogg

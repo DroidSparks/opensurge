@@ -21,6 +21,8 @@ Joao Victor
 --- animals.png
 --- title.png
 --- goal.png
+--- intro_cutscene/heroes2.png
+--- intro_cutscene/happyaprilfoolsday.png
 
 Colin Beard
 --- charge.png
@@ -88,3 +90,9 @@ Alexandre Martins & Gaivota
 
 Joao Victor & Alexandre Martins
 --- loading.png
+
+Joao Victor & Blarumyrran & Azoris (opengameart.org)
+--- intro_cutscene/dimensionalgate.png
+--- intro_cutscene/dimensionalring.png
+--- intro_cutscene/heroes.png
+--- intro_cutscene/scepter.png

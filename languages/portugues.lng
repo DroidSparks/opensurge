@@ -89,6 +89,7 @@ CREDITS_NEOBLAST            "Port para o Dreamcast"
 CREDITS_XENO                "Port para o Mac OS X"
 CREDITS_BASTIAN             "Artista"
 CREDITS_FRANCESCO           "Tradução para o Italiano"
+CREDITS_SANTIAGO            "Tradução para o Espanhol"
 
 
 // Quest names
@@ -157,3 +158,14 @@ HUD_CLEARED_TOTAL           "TOTAL"
     DESERT1_MSG_2           "Este é um lugar para aqueles que podem ver..."
     DESERT1_TITLE_3         "Reservado"
     DESERT1_MSG_3           "Haverá um loop aqui algum dia."
+	
+// Opening cutscene
+OPENING_1               "Há muito tempo, os deuses antigos criaram um item sagrado e poderoso: o Cetro Dimensional."
+OPENING_2               "Tal cetro concede poder absoluto a quem o possuir"
+OPENING_3               "e, como ele pode ser muito perigoso nas mãos erradas, os deuses o esconderam no Portão Dimensional."
+OPENING_4               "Gimacian the Dark é um feiticeiro maligno que necessita de escuridão para aumentar seus poderes."
+OPENING_5               "Ele sabe a localização do Portão Dimensional e tentará abri-lo usando os Anéis Dimensionais."
+OPENING_6               "Se ele obtiver tal poder, regerá o universo, e nada poderá detê-lo."
+OPENING_7               "Surge e seus amigos devem impedir que Gimacian the Dark abra o portal."
+OPENING_8               "Caso contrário, a realidade como a conhecemos..."
+OPENING_9				"acabará!"
