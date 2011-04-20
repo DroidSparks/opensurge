@@ -145,9 +145,9 @@ sprite SD_NEON
     // winning (victory)
     animation 17
     {
-        repeat      TRUE
+        repeat      FALSE
         fps         8
-        data        0
+        data        50 51 52 53 54 55 56
     }
 
     // jetpack
