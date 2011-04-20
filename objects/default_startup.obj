@@ -44,6 +44,8 @@ object ".default_startup"
     state "enable_hud"
     {
         let "$_hide_hud = 0"
+        let "$_disable_character_switching = 0"
+
         create_child ".default_startup.hud"
         create_child ".default_startup.switch_character"
         create_child ".default_startup.pause"
