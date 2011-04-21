@@ -96,3 +96,7 @@ Joao Victor & Blarumyrran & Azoris (opengameart.org)
 --- intro_cutscene/dimensionalring.png
 --- intro_cutscene/heroes.png
 --- intro_cutscene/scepter.png
+
+Redshrike
+--- redshrike_tiles1.png
+--- redshrike_tiles2.png
