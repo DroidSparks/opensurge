@@ -52,7 +52,7 @@ image_t *image_load(const char *path)
 
     if(NULL == (img = resourcemanager_find_image(path))) {
         resource_filepath(abs_path, path, sizeof(abs_path), RESFP_READ);
-        logfile_message("image_load(%s)", abs_path);
+        logfile_message("image_load('%s')", abs_path);
 
         /* build the image object */
         img = mallocx(sizeof *img);
@@ -118,7 +118,7 @@ void image_save(const image_t *img, const char *path)
     BITMAP *tmp;
 
     resource_filepath(abs_path, path, sizeof(abs_path), RESFP_WRITE);
-    logfile_message("image_save(%p,%s)", img, abs_path);
+    logfile_message("image_save(%p,'%s')", img, abs_path);
 
     switch(bpp) {
         case 8:
