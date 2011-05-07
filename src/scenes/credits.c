@@ -74,6 +74,8 @@ static char credits_text[] =
     "J0nnJ0nes\n"
     "Felicia-Val\n"
     "Joepotato28\n"
+    "Alberto Pessoa\n"
+    "SuperTux Team\n"
     "\n"
 
     "\n<color=ffff00>$CREDITS_RETIRED</color>\n\n"

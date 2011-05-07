@@ -23,6 +23,7 @@ Joao Victor
 --- goal.png
 --- intro_cutscene/heroes2.png
 --- intro_cutscene/happyaprilfoolsday.png
+--- easterneon.png
 
 Colin Beard
 --- charge.png
