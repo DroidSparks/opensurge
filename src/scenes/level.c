@@ -3043,43 +3043,41 @@ void editor_grid_render()
 {
     if(editor_grid_enabled) {
         int i, j;
-        image_t *grid, *grid2;
+        image_t *grid;
         uint32 color;
         v2d_t v, topleft = v2d_subtract(editor_camera, v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2));
+        topleft.x = ((int)topleft.x / EDITOR_GRID_W) * EDITOR_GRID_W;
+        topleft.y = ((int)topleft.y / EDITOR_GRID_H) * EDITOR_GRID_H;
 
         /* creating the grid image */
         grid = image_create(EDITOR_GRID_W, EDITOR_GRID_H);
-        color = image_rgb(0,96,128);
+        color = image_rgb(0,128,160);
         image_clear(grid, video_get_maskcolor());
         for(i=0; i<grid->h; i++)
             image_putpixel(grid, grid->w-1, i, color);
         for(i=0; i<grid->w; i++)
             image_putpixel(grid, i, grid->h-1, color);
 
-        grid2 = image_create(EDITOR_GRID_W, EDITOR_GRID_H);
-        color = image_rgb(0,160,192);
-        image_clear(grid2, video_get_maskcolor());
-        for(i=0; i<grid2->h; i++)
-            image_putpixel(grid2, grid2->w-1, i, color);
-        for(i=0; i<grid2->w; i++)
-            image_putpixel(grid2, i, grid2->h-1, color);
-
         /* drawing the grid... */
         for(i=0; i<=VIDEO_SCREEN_W/EDITOR_GRID_W; i++) {
             for(j=0; j<=VIDEO_SCREEN_H/EDITOR_GRID_H; j++) {
-                if(((i/8 % 2) ^ (1 - (j/8 % 2))) == 0) {
-                    v = v2d_subtract(editor_grid_snap(v2d_new(i*grid->w, j*grid->h)), topleft);
-                    image_draw(grid, video_get_backbuffer(), (int)v.x, (int)v.y, IF_NONE);
-                }
-                else {
-                    v = v2d_subtract(editor_grid_snap(v2d_new(i*grid2->w, j*grid2->h)), topleft);
-                    image_draw(grid2, video_get_backbuffer(), (int)v.x, (int)v.y, IF_NONE);
-                }
+                v = v2d_subtract(editor_grid_snap(v2d_new(i*grid->w, j*grid->h)), topleft);
+                image_draw(grid, video_get_backbuffer(), (int)v.x, (int)v.y, IF_NONE);
             }
         }
 
+        /* drawing the 64x64 grid */
+        color = image_rgb(0,192,124);
+        for(i=(((int)topleft.y) % VIDEO_SCREEN_H) % (EDITOR_GRID_H*8)-1; i<VIDEO_SCREEN_H; i+=(EDITOR_GRID_H*8)) {
+            for(j=0; j<VIDEO_SCREEN_W; j++)
+                image_putpixel(video_get_backbuffer(), j, i, color);
+        }
+        for(i=(((int)topleft.x) % VIDEO_SCREEN_W) % (EDITOR_GRID_W*8)-1; i<VIDEO_SCREEN_W; i+=(EDITOR_GRID_W*8)) {
+            for(j=0; j<VIDEO_SCREEN_H; j++)
+                image_putpixel(video_get_backbuffer(), i, j, color);
+        }
+
         /* done! */
-        image_destroy(grid2);
         image_destroy(grid);
     }
 }
