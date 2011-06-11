@@ -60,7 +60,7 @@ static char *text =
  "along with this program; if not, write to the Free Software Foundation,\n"
  "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n"
  "\n"
- "Please check the licenses folder for more information.\n"
+ "This game was made using the Open Surge Engine.\n"
 ;
 
 
