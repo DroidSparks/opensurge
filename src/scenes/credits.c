@@ -53,7 +53,6 @@ static char credits_text[] =
     "Colin Beard:\n$CREDITS_COLIN\n\n"
     "Mateus Reis:\n$CREDITS_MATEUSREIS\n\n"
     "Johan Brodd:\n$CREDITS_JOHAN\n\n"
-    "Brian Zablocky:\n$CREDITS_CELDECEA\n\n"
     "Joao Victor:\n$CREDITS_JOAO\n\n"
     "Christopher Martinus:\n$CREDITS_CHRISTOPHER\n\n"
     "Ruben Caceres:\n$CREDITS_RUBEN\n\n"
@@ -64,6 +63,7 @@ static char credits_text[] =
     "Sascha de waal:\n$CREDITS_SSDW\n\n"
     "Francesco Sciusco:\n$CREDITS_FRANCESCO\n\n"
     "Santiago Tabarez:\n$CREDITS_SANTIAGO\n\n"
+    "Raxillan:\n$CREDITS_RAXILLAN\n\n"
 
     "\n<color=ffff00>$CREDITS_THANKS</color>\n\n"
     "SourceForge.net\n"
@@ -84,6 +84,7 @@ static char credits_text[] =
     "Bastian von Halem:\n$CREDITS_BASTIAN\n\n"
     "Lainz:\n$CREDITS_LAINZ\n\n"
     "Jogait:\n$CREDITS_JOGAIT\n\n"
+    "Brian Zablocky:\n$CREDITS_CELDECEA\n\n"
 ;
 
 
