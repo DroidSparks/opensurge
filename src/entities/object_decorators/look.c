@@ -143,7 +143,7 @@ void look_left(objectdecorator_look_t *me)
     objectmachine_t *obj = (objectmachine_t*)me;
     object_t *object = obj->get_object_instance(obj);
 
-    object->actor->mirror &= ~IF_HFLIP;
+    object->actor->mirror |= IF_HFLIP;
 }
 
 void look_right(objectdecorator_look_t *me)
@@ -151,7 +151,7 @@ void look_right(objectdecorator_look_t *me)
     objectmachine_t *obj = (objectmachine_t*)me;
     object_t *object = obj->get_object_instance(obj);
 
-    object->actor->mirror |= IF_HFLIP;
+    object->actor->mirror &= ~IF_HFLIP;
 }
 
 void look_at_player(objectdecorator_look_t *me)
