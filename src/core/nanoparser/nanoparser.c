@@ -1386,7 +1386,13 @@ char* r_trim(char *s)
     if(NULL != (p=strrchr(s, '\t')))
         *p = 0;
 
-    return p;
+    if(NULL != (p=strrchr(s, '\r')))
+        *p = 0;
+
+    if(NULL != (p=strrchr(s, '\n')))
+        *p = 0;
+
+    return s;
 }
 
 void* malloc_x(size_t bytes)

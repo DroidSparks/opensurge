@@ -40,7 +40,7 @@ static int must_fadein;
 static font_t *fnt;
 
 static char *text = 
- "<color=ffff00>"
+ "<color=ff8000>"
  GAME_TITLE " version " GAME_VERSION_STRING "\n"
  "</color>"
  "Copyright (C) " GAME_YEAR "  Open Surge Team\n"
@@ -112,6 +112,9 @@ void intro_update()
         }
         fadefx_out(image_rgb(0,0,0), 1.0f);
     }
+
+    if(music_is_playing())
+        music_stop();
 }
 
 

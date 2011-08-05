@@ -82,7 +82,7 @@ void langselect_init()
     option = 0;
     quit = FALSE;
     scene_time = 0;
-    before_the_intro_screen = timer_get_ticks() < 5000;
+    before_the_intro_screen = timer_get_ticks() < 15000;
     input = input_create_user();
 
     page_label = font_create("menu.text");
@@ -90,8 +90,8 @@ void langselect_init()
 
     title[0] = font_create("menu.title");
     title[1] = font_create("menu.title");
-    font_set_text(title[0], "SELECT YOUR");
-    font_set_text(title[1], "LANGUAGE");
+    font_set_text(title[0], "$LANGSELECT_TITLE1");
+    font_set_text(title[1], "$LANGSELECT_TITLE2");
     font_set_position(title[0], v2d_new((VIDEO_SCREEN_W - font_get_textsize(title[0]).x)/2,10));
     font_set_position(title[1], v2d_new((VIDEO_SCREEN_W - font_get_textsize(title[1]).x)/2, font_get_position(title[0]).y + font_get_textsize(title[1]).y + 10));
 
@@ -168,13 +168,13 @@ void langselect_update()
     }
 
     /* page label */
-    font_set_text(page_label, "page %d/%d", 1+option/LANG_MAXPERPAGE, 1+max(0,lngcount-1)/LANG_MAXPERPAGE);
+    font_set_text(page_label, "$LANGSELECT_PAGE", 1+option/LANG_MAXPERPAGE, 1+max(0,lngcount-1)/LANG_MAXPERPAGE);
     pos.x = VIDEO_SCREEN_W - font_get_textsize(page_label).x - 10;
     pos.y = VIDEO_SCREEN_H - font_get_textsize(page_label).y - 3;
     font_set_position(page_label, pos);
 
     /* author label */
-    font_set_text(author_label, "<color=ffff00>Translation by:</color> %s", lngdata[option].author);
+    font_set_text(author_label, "$LANGSELECT_AUTHOR", lngdata[option].author);
     pos.x = 10;
     pos.y = VIDEO_SCREEN_H - font_get_textsize(author_label).y - 3;
     font_set_position(author_label, pos);

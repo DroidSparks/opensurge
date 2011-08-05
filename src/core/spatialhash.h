@@ -26,8 +26,8 @@
 #include "logfile.h"
 
 /* utilities */
-#define SPATIALHASH_GRID_WIDTH      14
-#define SPATIALHASH_GRID_HEIGHT     7
+#define SPATIALHASH_GRID_WIDTH      140
+#define SPATIALHASH_GRID_HEIGHT     21
 
 /* spatialhash_<typename> class: pretty much like C++ templates */
 #define SPATIALHASH_GENERATE_CODE(T) \
@@ -72,7 +72,7 @@ spatialhash_##T* spatialhash_##T##_create_ex(T* (*destroy_element_strategy)(T*),
 /* creates a new spatial hash */ \
 spatialhash_##T* spatialhash_##T##_create(T* (*destroy_element_strategy)(T*), int (*get_element_xpos)(const T*), int (*get_element_ypos)(const T*), int (*get_element_width)(const T*), int (*get_element_height)(const T*)) /* destroy_element_strategy may be NULL */ \
 { \
-    return spatialhash_##T##_create_ex(destroy_element_strategy, get_element_xpos, get_element_ypos, get_element_width, get_element_height, 9030, 3010); \
+    return spatialhash_##T##_create_ex(destroy_element_strategy, get_element_xpos, get_element_ypos, get_element_width, get_element_height, 90300, 9030); \
 } \
 /* destroys an existing spatial hash */ \
 spatialhash_##T* spatialhash_##T##_destroy(spatialhash_##T *sh) \

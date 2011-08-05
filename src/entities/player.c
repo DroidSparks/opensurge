@@ -147,8 +147,10 @@ player_t *player_create(const char *character_name)
     p->underwater_timer = 0.0f;
 
     /* character system */
-    if(str_icmp(c->companion_object_name, "") != 0)
-        level_create_enemy(c->companion_object_name, v2d_new(0, 0));
+    if(str_icmp(c->companion_object_name, "") != 0) {
+        object_t *companion = level_create_enemy(c->companion_object_name, v2d_new(0, 0));
+        companion->created_from_editor = FALSE;
+    }
 
     physicsactor_set_acc(p->pa, physicsactor_get_acc(p->pa) * c->multiplier.acc);
     physicsactor_set_dec(p->pa, physicsactor_get_dec(p->pa) * c->multiplier.dec);

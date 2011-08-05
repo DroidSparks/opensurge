@@ -15,9 +15,9 @@ LANG_COMPATIBILITY          "0.2.0"
 
 
 // Colors
-COLOR_P1                    "0077ff"
-COLOR_P2                    "ff7700"
-COLOR_P3                    "ff0000"
+COLOR_P1                    "ff8000"
+COLOR_P2                    "bf7a0d"
+COLOR_P3                    "aca5a5"
 COLOR_INPUT                 "aaaaaa"
 COLOR_SPECIAL               "ffff00"
 
@@ -30,7 +30,7 @@ MENU_EXIT                   "EXIT"
 
 
 // Options
-OPTIONS_TITLE               "OPTIONS"
+OPTIONS_TITLE               "<color=$COLOR_P1>OPTIONS</color>"
 OPTIONS_YES                 "YES"
 OPTIONS_NO                  "NO"
 OPTIONS_GRAPHICS            "GRAPHICS"
@@ -49,14 +49,14 @@ OPTIONS_BACK                "BACK"
 
 
 // Stage Select
-STAGESELECT_TITLE           "STAGE SELECT"
+STAGESELECT_TITLE           "<color=$COLOR_P1>STAGE SELECT</color>"
 STAGESELECT_MSG             "Press <color=ffff00>$INPUT_FIRE4</color> to cancel"
 STAGESELECT_PAGE            "page %d/%d"
 STAGESELECT_ACT             "Act"
 
 
 // Custom quests
-QUESTSELECT_TITLE           "QUEST SELECT"
+QUESTSELECT_TITLE           "<color=$COLOR_P1>QUEST SELECT</color>"
 QUESTSELECT_MSG             "Press <color=ffff00>$INPUT_FIRE4</color> to cancel"
 QUESTSELECT_PAGE            "page %d/%d"
 QUESTSELECT_INFO            "<color=ffff00>Version:</color> %s\n<color=ffff00>Author:</color> %s\n<color=ffff00>Description:</color> %s"
@@ -64,8 +64,15 @@ MENU_CQ_TUTORIAL            "Learn how to play Open Surge"
 MENU_CQ_EXTRA               "Extra levels"
 
 
+// Languages (please do not translate!)
+LANGSELECT_TITLE1           "<color=$COLOR_P1>SELECT YOUR</color>"
+LANGSELECT_TITLE2           "<color=$COLOR_P1>LANGUAGE</color>"
+LANGSELECT_AUTHOR           "<color=ffff00>Translation by:</color> %s"
+LANGSELECT_PAGE             "page %d/%d"
+
+
 // Credits
-CREDITS_TITLE               "CREDITS"
+CREDITS_TITLE               "<color=$COLOR_P1>CREDITS</color>"
 CREDITS_KEY                 "Press <color=ffff00>$INPUT_FIRE4</color> to go back"
 CREDITS_ACTIVE              "Project Team"
 CREDITS_RETIRED             "Retired Members"
@@ -163,12 +170,12 @@ HUD_CLEARED_TOTAL           "TOTAL"
 	
 	
 // Opening cutscene
-OPENING_1				"A long time ago, the ancient gods have created a sacred and powerful item, the Dimensional Scepter."	
+OPENING_1				"A long time ago, the ancient gods have created a sacred and powerful item: the <color=$COLOR_P1>Dimensional Scepter</color>."
 OPENING_2				"This scepter grants ultimate power to anyone who possesses it, "
-OPENING_3				"and since it can be very dangerous in the wrong hands, the gods have hidden it in the Dimensional Gate."
-OPENING_4				"Gimacian the Dark is an evil wizard who needs darkness to increase his powers."
-OPENING_5				"He knows where the Dimensional Gate is located and he will try to open it using the Dimensional Rings." 
+OPENING_3				"and since it can be very dangerous in the wrong hands, the gods have hidden it in the <color=$COLOR_P1>Dimensional Gate</color>."
+OPENING_4				"<color=$COLOR_P1>Gimacian the Dark</color> is an evil wizard who needs darkness to increase his powers."
+OPENING_5				"He knows where the <color=$COLOR_P1>Dimensional Gate</color> is located and he will try to open it using the <color=$COLOR_P1>Dimensional Rings</color>." 
 OPENING_6				"If he gets that power, he will rule the universe, and nothing will be able to stop him." 
-OPENING_7				"Surge and his friends must prevent Gimacian the Dark from opening the gate,"
+OPENING_7				"<color=$COLOR_P1>Surge</color> and his friends must prevent Gimacian the Dark from opening the gate,"
 OPENING_8				"or existence as we know it"
 OPENING_9				"will be over!"
