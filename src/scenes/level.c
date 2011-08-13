@@ -141,6 +141,7 @@ static int quit_level;
 static image_t *quit_level_img;
 static bgtheme_t *backgroundtheme;
 static int must_load_another_level;
+static int must_restart_this_level;
 static float dead_player_timeout;
 
 /* player data */
@@ -843,6 +844,7 @@ void level_init()
     quit_level_img = image_create(video_get_backbuffer()->w, video_get_backbuffer()->h);
     backgroundtheme = NULL;
     must_load_another_level = FALSE;
+    must_restart_this_level = FALSE;
     dead_player_timeout = 0;
     team_size = 0;
     for(i=0; i<TEAM_MAX; i++)
@@ -905,6 +907,13 @@ void level_update()
     if(must_load_another_level) {
         must_load_another_level = FALSE;
         restart(FALSE);
+        return;
+    }
+
+    /* must restart the current level? */
+    if(must_restart_this_level) {
+        must_restart_this_level = FALSE;
+        restart(TRUE);
         return;
     }
 
@@ -1621,7 +1630,7 @@ void level_pause()
  */
 void level_restart()
 {
-    restart(FALSE);
+    must_restart_this_level = TRUE; /* schedules restart */
 }
 
 
