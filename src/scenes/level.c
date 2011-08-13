@@ -169,6 +169,7 @@ static void level_load(const char *filepath);
 static void level_unload();
 static void level_save(const char *filepath);
 static int traverse_level(const parsetree_statement_t* stmt);
+static void level_interpret_line(const char *line);
 
 /* internal methods */
 static int inside_screen(int x, int y, int w, int h, int margin);
@@ -433,6 +434,13 @@ void level_load(const char *filepath)
     nanoparser_traverse_program(prog, traverse_level);
     prog = nanoparser_deconstruct_tree(prog);
 
+    /* traversing the level file *//*
+    char line[1024];
+    while(fgets(line, 1024, stdin)) {
+        line[strlen(line)-1] = 0; * no newlines, please! *
+        interpret_line(line);
+    }*/
+
     /* players */
     if(team_size == 0) {
         /* default players */
@@ -548,7 +556,7 @@ void level_save(const char *filepath)
     "bgtheme \"%s\"\n"
     "spawn_point %d %d\n",
     GAME_TITLE, GAME_VERSION, GAME_SUB_VERSION, GAME_WIP_VERSION,
-    name, author, version, GAME_VERSION, GAME_SUB_VERSION, GAME_WIP_VERSION, act, theme, bgtheme,
+    str_addslashes(name), author, version, GAME_VERSION, GAME_SUB_VERSION, GAME_WIP_VERSION, act, theme, bgtheme,
     (int)spawn_point.x, (int)spawn_point.y);
 
     /* music? */
@@ -562,13 +570,13 @@ void level_save(const char *filepath)
     /* startup objects? */
     fprintf(fp, "startup");
     for(its=startupobject_list; its; its=its->next)
-        fprintf(fp, " \"%s\"", its->object_name);
+        fprintf(fp, " \"%s\"", str_addslashes(its->object_name));
     fprintf(fp, "\n");
 
     /* players */
     fprintf(fp, "players");
     for(i=0; i<team_size; i++)
-        fprintf(fp, " \"%s\"", team[i]->name);
+        fprintf(fp, " \"%s\"", str_addslashes(team[i]->name));
     fprintf(fp, "\n");
 
     /* read only? */
@@ -577,8 +585,12 @@ void level_save(const char *filepath)
 
     /* dialog regions */
     fprintf(fp, "\n// dialog regions (xpos ypos width height title message)\n");
-    for(i=0; i<dialogregion_size; i++)
-        fprintf(fp, "dialogbox %d %d %d %d \"%s\" \"%s\"\n", dialogregion[i].rect_x, dialogregion[i].rect_y, dialogregion[i].rect_w, dialogregion[i].rect_h, dialogregion[i].title, dialogregion[i].message);
+    for(i=0; i<dialogregion_size; i++) {
+        char title[1024], message[1024];
+        str_cpy(title, str_addslashes(dialogregion[i].title), sizeof(title));
+        str_cpy(message, str_addslashes(dialogregion[i].message), sizeof(message));
+        fprintf(fp, "dialogbox %d %d %d %d \"%s\" \"%s\"\n", dialogregion[i].rect_x, dialogregion[i].rect_y, dialogregion[i].rect_w, dialogregion[i].rect_h, title, message);
+    }
 
     /* brick list */
     fprintf(fp, "\n// brick list\n");
@@ -605,6 +617,42 @@ void level_save(const char *filepath)
     brick_list = entitymanager_release_retrieved_brick_list(brick_list);
     item_list = entitymanager_release_retrieved_item_list(item_list);
     object_list = entitymanager_release_retrieved_object_list(object_list);
+}
+
+/*
+ * level_interpret_line()
+ * Interprets a line from the .lev file
+ */
+void level_interpret_line(const char *line)
+{
+    int param_count;
+    char *param[1024], *identifier;
+    char tmp[1024], *p, *q;
+    int i;
+
+    /* skip spaces */
+    for(p=(char*)line; isspace((int)*p); p++);
+    if(0 == *p) return;
+
+    /* reading the identifier */
+    for(q=tmp; *p && !isspace(*p) && q<tmp+1024; *q++ = *p++); *q=0;
+    identifier = str_dup(tmp);
+
+    /* skip spaces */
+    for(; isspace((int)*p); p++);
+    param_count = 0;
+
+    /* read the arguments */
+    if(0 != *p) {
+        int quotes;
+        while(*p && param_count<1024) {
+            quotes = (*p == '"') && !!(p++);
+            for(q=tmp; *p && ((!quotes && !isspace(*p)) || (quotes && !(*p == '"' && *(p-1) != '\\'))) && q<tmp+1024; *q++ = *p++); *q=0;
+            quotes = (*p == '"') && !!(p++);
+            param[param_count++] = str_dup(tmp);
+            for(; isspace((int)*p); p++); /* skip spaces */
+        }
+    }
 }
 
 /*
