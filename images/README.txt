@@ -21,9 +21,11 @@ Joao Victor
 --- animals.png
 --- title.png
 --- goal.png
---- intro_cutscene/heroes2.png
---- intro_cutscene/happyaprilfoolsday.png
+--- heroes.png
+--- happyaprilfoolsday.png
+--- gimacian_and_the_ring.png
 --- easterneon.png
+--- heroes.png
 
 Colin Beard
 --- charge.png
@@ -31,6 +33,7 @@ Colin Beard
 --- more_shields.png
 --- pause.png
 --- template.png
+--- scepter.png
 
 Alexandre Martins
 --- arrow_right.png
@@ -48,6 +51,12 @@ Alexandre Martins
 --- stars.png
 --- upper.png
 --- whitebg.png
+--- rain.png
+--- squarebg2.png
+
+Ramon
+--- dimensional_gate.png
+--- dimensionalring.png
 
 Christopher Martinus
 --- acts.png
@@ -91,13 +100,15 @@ Alexandre Martins & Gaivota
 
 Joao Victor & Alexandre Martins
 --- loading.png
-
-Joao Victor & Blarumyrran & Azoris (opengameart.org)
---- intro_cutscene/dimensionalgate.png
---- intro_cutscene/dimensionalring.png
---- intro_cutscene/heroes.png
---- intro_cutscene/scepter.png
+--- title.png
 
 Redshrike
 --- redshrike_tiles1.png
 --- redshrike_tiles2.png
+--- introplat.png
+
+treeform (opengameart.org)
+--- violet.png
+
+LFA (opengameart.org)
+--- fog.jpg
