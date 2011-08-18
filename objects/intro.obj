@@ -66,25 +66,27 @@ object ".intro_startup"
     state "start 3rd slide"
     {
         set_animation "SD_INTROCUTSCENE_SLIDE3" 0
+        create_child ".intro_rain"
         set_absolute_position 320 0
         change_state "3rd slide"
     }
 
     state "3rd slide"
     {
-        set_alpha min(1,alpha()+(1.0/2.5)*dt())
+        set_alpha $_slide_alpha=min(1,alpha()+(1.0/2.5)*dt())
         set_absolute_position cond(alpha()>=0.5,max(160,xpos()-10*dt()),xpos()) ypos()
     }
 
     state "show 4th slide" // called by someone else
     {
-        set_alpha max(0,alpha()-(1.0/1.5)*dt())
+        set_alpha $_slide_alpha=max(0,alpha()-(1.0/1.5)*dt())
         if alpha()<=0 "start 4th slide"
     }
 
     // fourth slide
     state "start 4th slide"
     {
+        change_closest_object_state .intro_rain destroy
         set_absolute_position 0 0
         set_animation "SD_INTROCUTSCENE_SLIDE4" 0
         let $_base_x=240
@@ -524,6 +526,34 @@ object .intro_scepter_spark
     state show {
         show
         return_to_previous_state
+    }
+
+    state destroy {
+        destroy
+    }
+}
+
+object .intro_rain {
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state main {
+        set_zindex 0.99991
+        set_alpha 0
+        set_animation SD_INTROCUTSCENE_SLIDE3RAIN 0
+        change_state wrap
+    }
+
+    state move {
+        set_alpha $_slide_alpha/2
+        move 0 2.5*screen_height()
+        if ypos()>=0 wrap
+    }
+
+    state wrap {
+        set_absolute_position 0 -height()/2
+        change_state move
     }
 
     state destroy {

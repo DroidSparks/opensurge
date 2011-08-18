@@ -81,7 +81,22 @@ sprite SD_INTROCUTSCENE_SLIDE3
         data        0
     }
 }
+// Rain
+sprite SD_INTROCUTSCENE_SLIDE3RAIN
+{
+    source_file     images/rain.png
+    source_rect     0 0 320 480
+    frame_size      320 480
+    hot_spot        0 0
 
+    // default
+    animation 0
+    {
+        repeat      TRUE
+        fps         8
+        data        0
+    }
+}
 
 // clouds
 sprite SD_INTROCUTSCENE_SLIDE4
