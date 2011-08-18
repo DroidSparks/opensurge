@@ -37,7 +37,7 @@
 
 /* credits text */
 static char credits_text[] =
-    "\n<color=00ff00>"
+    "\n<color=ff8000>"
     GAME_TITLE
     " version "
     GAME_VERSION_STRING
@@ -70,8 +70,9 @@ static char credits_text[] =
     "allegro.cc\n"
     "OpenGameArt.org\n"
     "GagaGames.com.br\n"
-    "Rsonist88\n"
-    "J0nnJ0nes\n"
+    "Ramon\n"
+    "Redshrike\n"
+    "lunarrush\n"
     "Felicia-Val\n"
     "Joepotato28\n"
     "Alberto Pessoa\n"

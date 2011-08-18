@@ -41,11 +41,14 @@ static image_t* bg;
 
 static char *text = 
  "<color=ff8000>"
- GAME_TITLE " version " GAME_VERSION_STRING "\n"
- "</color>"
- "Copyright (C) " GAME_YEAR "  Open Surge Team\n"
+ GAME_TITLE " version " GAME_VERSION_STRING
+ "</color>\n"
+ "<color=ffffff>"
+ "Copyright (C) " GAME_YEAR "  Open Surge Team"
+ "</color>\n"
+ "<color=ffffff>"
  GAME_WEBSITE "\n"
- "\n"
+ "</color>\n"
  "This program is free software; you can redistribute it and/or modify\n"
  "it under the terms of the GNU General Public License as published by\n"
  "the Free Software Foundation; either version 2 of the License, or\n"

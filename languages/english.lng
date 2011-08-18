@@ -170,12 +170,12 @@ HUD_CLEARED_TOTAL           "TOTAL"
 	
 	
 // Opening cutscene
-OPENING_1				"A long time ago, the ancient gods have created a sacred and powerful item: the <color=$COLOR_P1>Dimensional Scepter</color>."
+OPENING_1				"A long time ago, the ancient gods have created a sacred and powerful item: the <color=ff8000>Dimensional Scepter</color>."
 OPENING_2				"This scepter grants ultimate power to anyone who possesses it, "
-OPENING_3				"and since it can be very dangerous in the wrong hands, the gods have hidden it in the <color=$COLOR_P1>Dimensional Gate</color>."
-OPENING_4				"<color=$COLOR_P1>Gimacian the Dark</color> is an evil wizard who needs darkness to increase his powers."
-OPENING_5				"He knows where the <color=$COLOR_P1>Dimensional Gate</color> is located and he will try to open it using the <color=$COLOR_P1>Dimensional Rings</color>." 
+OPENING_3				"and since it can be very dangerous in the wrong hands, the gods have hidden it in the <color=ff8000>Dimensional Gate</color>."
+OPENING_4				"<color=ff8000>Gimacian the Dark</color> is an evil wizard who needs darkness to increase his powers."
+OPENING_5				"He knows where the <color=ff8000>Dimensional Gate</color> is located and he will try to open it using the <color=ff8000>Dimensional Rings</color>." 
 OPENING_6				"If he gets that power, he will rule the universe, and nothing will be able to stop him." 
-OPENING_7				"<color=$COLOR_P1>Surge</color> and his friends must prevent Gimacian the Dark from opening the gate,"
+OPENING_7				"<color=ff8000>Surge</color> and his friends must prevent <color=ff8000>Gimacian the Dark</color> from opening the gate,"
 OPENING_8				"or existence as we know it"
 OPENING_9				"will be over!"

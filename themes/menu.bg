@@ -17,9 +17,9 @@ background
 
     sprite
     {
-        source_file     images/squarebg.png
-        source_rect     0 0 48 48
-        frame_size      48 48
+        source_file     images/squarebg2.png
+        source_rect     0 0 60 60
+        frame_size      60 60
 
         animation
         {

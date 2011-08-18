@@ -173,5 +173,22 @@ sprite SD_SURGE
         fps         8
         data        46
     }
+
+    // with sun glasses
+    animation 21
+    {
+        repeat      TRUE
+        fps         8
+        data        42
+    }
+    
+    // holding his sun glasses
+    animation 22
+    {
+        repeat      FALSE
+        fps         8
+        data        42 41 40
+        repeat_from 2
+    }
 }
 
