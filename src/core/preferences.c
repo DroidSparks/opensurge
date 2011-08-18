@@ -74,6 +74,7 @@ int preferences_init()
 
 
 /* accessors and mutators */
+int preferences_file_exists() { return filepath_exists(get_preferences_fullpath()); }
 int preferences_get_videoresolution() { return data.videoresolution; }
 void preferences_set_videoresolution(int resolution) { data.videoresolution = resolution; save(); }
 int preferences_get_fullscreen() { return data.fullscreen; }

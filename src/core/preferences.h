@@ -24,6 +24,7 @@
 
 /* initializes this module */
 int preferences_init(); /* returns TRUE if a previous preferences file exists, FALSE otherwise */
+int preferences_file_exists();
 
 /* accessors */
 int preferences_get_videoresolution(); /* returns a VIDEORESOLUTION_* value (see video.h) */

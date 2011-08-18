@@ -82,7 +82,7 @@ void langselect_init()
     option = 0;
     quit = FALSE;
     scene_time = 0;
-    before_the_intro_screen = timer_get_ticks() < 15000;
+    before_the_intro_screen = !preferences_file_exists();
     input = input_create_user();
 
     page_label = font_create("menu.text");
@@ -168,13 +168,13 @@ void langselect_update()
     }
 
     /* page label */
-    font_set_text(page_label, "$LANGSELECT_PAGE", 1+option/LANG_MAXPERPAGE, 1+max(0,lngcount-1)/LANG_MAXPERPAGE);
+    font_set_text(page_label, lang_get("LANGSELECT_PAGE"), 1+option/LANG_MAXPERPAGE, 1+max(0,lngcount-1)/LANG_MAXPERPAGE);
     pos.x = VIDEO_SCREEN_W - font_get_textsize(page_label).x - 10;
     pos.y = VIDEO_SCREEN_H - font_get_textsize(page_label).y - 3;
     font_set_position(page_label, pos);
 
     /* author label */
-    font_set_text(author_label, "$LANGSELECT_AUTHOR", lngdata[option].author);
+    font_set_text(author_label, lang_get("LANGSELECT_AUTHOR"), lngdata[option].author);
     pos.x = 10;
     pos.y = VIDEO_SCREEN_H - font_get_textsize(author_label).y - 3;
     font_set_position(author_label, pos);
@@ -334,4 +334,3 @@ int sort_cmp(const void *a, const void *b)
     if(str_icmp(q[1]->title, "English") == 0) return 1;
     return str_icmp(q[0]->title, q[1]->title);
 }
-
