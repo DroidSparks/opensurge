@@ -168,8 +168,8 @@ static font_t *dlgbox_title, *dlgbox_message;
 static void level_load(const char *filepath);
 static void level_unload();
 static void level_save(const char *filepath);
-static int traverse_level(const parsetree_statement_t* stmt);
-static void level_interpret_line(const char *line);
+static void level_interpret_line(const char *filename, int fileline, const char *line);
+static void level_interpret_parsed_line(const char *filename, int fileline, const char *identifier, int param_count, const char **param);
 
 /* internal methods */
 static int inside_screen(int x, int y, int w, int h, int margin);
@@ -399,8 +399,8 @@ static editor_action_list_t* editor_action_delete_list(editor_action_list_t *lis
  */
 void level_load(const char *filepath)
 {
-    char abs_path[1024];
-    parsetree_program_t *prog;
+    char abs_path[1024], line[1024];
+    FILE* fp;
 
     setlocale(LC_NUMERIC, "C"); /* bugfix */
     logfile_message("level_load(\"%s\")", filepath);
@@ -430,16 +430,17 @@ void level_load(const char *filepath)
     init_startup_object_list();
 
     /* traversing the level file */
-    prog = nanoparser_construct_tree(abs_path);
-    nanoparser_traverse_program(prog, traverse_level);
-    prog = nanoparser_deconstruct_tree(prog);
-
-    /* traversing the level file *//*
-    char line[1024];
-    while(fgets(line, 1024, stdin)) {
-        line[strlen(line)-1] = 0; * no newlines, please! *
-        interpret_line(line);
-    }*/
+    fp = fopen(abs_path, "r");
+    if(fp != NULL) {
+        int ln = 0;
+        while(fgets(line, sizeof(line) / sizeof(char), fp)) {
+            line[strlen(line)-1] = 0; /* no newlines, please! */
+            level_interpret_line(abs_path, ++ln, line);
+        }
+        fclose(fp);
+    }
+    else
+        fatal_error("Can\'t open level file \"%s\".", abs_path);
 
     /* players */
     if(team_size == 0) {
@@ -623,7 +624,7 @@ void level_save(const char *filepath)
  * level_interpret_line()
  * Interprets a line from the .lev file
  */
-void level_interpret_line(const char *line)
+void level_interpret_line(const char *filename, int fileline, const char *line)
 {
     int param_count;
     char *param[1024], *identifier;
@@ -635,47 +636,40 @@ void level_interpret_line(const char *line)
     if(0 == *p) return;
 
     /* reading the identifier */
-    for(q=tmp; *p && !isspace(*p) && q<tmp+1024; *q++ = *p++); *q=0;
+    for(q=tmp; *p && !isspace(*p) && q<tmp+1023; *q++ = *p++); *q=0;
     identifier = str_dup(tmp);
 
     /* skip spaces */
     for(; isspace((int)*p); p++);
-    param_count = 0;
 
     /* read the arguments */
+    param_count = 0;
     if(0 != *p) {
         int quotes;
         while(*p && param_count<1024) {
-            quotes = (*p == '"') && !!(p++);
-            for(q=tmp; *p && ((!quotes && !isspace(*p)) || (quotes && !(*p == '"' && *(p-1) != '\\'))) && q<tmp+1024; *q++ = *p++); *q=0;
+            quotes = (*p == '"') && !!(p++); /* short-circuit AND */
+            for(q=tmp; *p && ((!quotes && !isspace(*p)) || (quotes && !(*p == '"' && *(p-1) != '\\'))) && q<tmp+1023; *q++ = *p++); *q=0;
             quotes = (*p == '"') && !!(p++);
             param[param_count++] = str_dup(tmp);
             for(; isspace((int)*p); p++); /* skip spaces */
         }
     }
+
+    /* interpret the line */
+    level_interpret_parsed_line(filename, fileline, identifier, param_count, (const char**)param);
+
+    /* free the stuff */
+    for(i=0; i<param_count; i++)
+        free(param[i]);
+    free(identifier);
 }
 
 /*
- * traverse_level()
- * Level reader
+ * level_interpret_parsed_line()
+ * Interprets a line parsed by level_interpret_line()
  */
-int traverse_level(const parsetree_statement_t* stmt)
+void level_interpret_parsed_line(const char *filename, int fileline, const char *identifier, int param_count, const char **param)
 {
-    const char* identifier = nanoparser_get_identifier(stmt);
-    const parsetree_parameter_t* param_list = nanoparser_get_parameter_list(stmt);
-    int i, j, param_count;
-    const char** param;
-
-    /* read the parameters */
-    param_count = nanoparser_get_number_of_parameters(param_list);
-    param = mallocx(param_count * (sizeof *param));
-    for(i=0; i<param_count; i++) {
-        const parsetree_parameter_t* p;
-        p = nanoparser_get_nth_parameter(param_list, 1+i);
-        nanoparser_expect_string(p, "Level loader - string parameters are expected for every command");
-        param[i] = nanoparser_get_string(p);
-    }
-
     /* interpreting the command */
     if(str_icmp(identifier, "theme") == 0) {
         if(param_count == 1) {
@@ -834,6 +828,7 @@ int traverse_level(const parsetree_statement_t* stmt)
     }
     else if(str_icmp(identifier, "startup") == 0) {
         if(param_count > 0) {
+            int i;
             for(i=param_count-1; i>=0; i--)
                 add_to_startup_object_list(param[i]);
         }
@@ -842,29 +837,26 @@ int traverse_level(const parsetree_statement_t* stmt)
     }
     else if(str_icmp(identifier, "players") == 0) {
         if(param_count > 0) {
+            int i, j;
             for(i=0; i<param_count; i++) {
                 if(team_size < TEAM_MAX) {
                     for(j=0; j<team_size; j++) {
                         if(str_icmp(team[j]->name, param[i]) == 0)
-                            fatal_error("Level loader - duplicate entry of player '%s'\nin '%s' near line %d", param[i], nanoparser_get_file(stmt), nanoparser_get_line_number(stmt));
+                            fatal_error("Level loader - duplicate entry of player '%s'\nin '%s' near line %d", param[i], filename, fileline);
                     }
 
                     logfile_message("loading player '%s'...", param[i]);
                     team[team_size++] = player_create(param[i]);
                 }
                 else
-                    fatal_error("Level loader - can't have more than %d players per level\nin '%s' near line %d", TEAM_MAX, nanoparser_get_file(stmt), nanoparser_get_line_number(stmt));
+                    fatal_error("Level loader - can't have more than %d players per level\nin '%s' near line %d", TEAM_MAX, filename, fileline);
             }
         }
         else
             logfile_message("Level loader - command 'players' expects one or more parameters: character_name1 [, character_name2 [, ... [, character_nameN] ... ] ]");
     }
     else
-        logfile_message("Level loader - unknown command '%s'\nin '%s' near line %d", identifier, nanoparser_get_file(stmt), nanoparser_get_line_number(stmt));
-
-    /* bye! */
-    free(param);
-    return 0;
+        logfile_message("Level loader - unknown command '%s'\nin '%s' near line %d", identifier, filename, fileline);
 }
 
 

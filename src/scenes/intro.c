@@ -37,7 +37,7 @@
 static float elapsed_time;
 static void load_intro_quest();
 static int must_fadein;
-static font_t *fnt;
+static image_t* bg;
 
 static char *text = 
  "<color=ff8000>"
@@ -63,6 +63,7 @@ static char *text =
  "This game was made using the Open Surge Engine.\n"
 ;
 
+static image_t* create_background();
 
 /* public functions */
 
@@ -75,10 +76,7 @@ void intro_init()
     elapsed_time = 0.0f;
     must_fadein = TRUE;
     music_stop();
-
-    fnt = font_create("menu.small");
-    font_set_text(fnt, "%s", text);
-    font_set_position(fnt, v2d_new(5,5));
+    bg = create_background();
 }
 
 
@@ -88,7 +86,7 @@ void intro_init()
  */
 void intro_release()
 {
-    font_destroy(fnt);
+    image_destroy(bg);
 }
 
 
@@ -125,10 +123,7 @@ void intro_update()
  */
 void intro_render()
 {
-    v2d_t camera = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
-
-    image_clear(video_get_backbuffer(), image_rgb(0,0,0));
-    font_render(fnt, camera);
+    image_blit(bg, video_get_backbuffer(), 0, 0, 0, 0, bg->w, bg->h);
 }
 
 
@@ -143,4 +138,21 @@ void load_intro_quest()
     resource_filepath(abs_path, "quests/intro.qst", sizeof(abs_path), RESFP_READ);
     quest_run(load_quest(abs_path), FALSE);
     scenestack_push(storyboard_get_scene(SCENE_QUEST));
+}
+
+/* creates the background */
+image_t* create_background()
+{
+    image_t* img = image_create(VIDEO_SCREEN_W, VIDEO_SCREEN_H);
+    font_t *fnt = font_create("menu.small");
+    v2d_t camera = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
+
+    image_clear(video_get_backbuffer(), image_rgb(0,0,0));
+    font_set_text(fnt, "%s", text);
+    font_set_position(fnt, v2d_new(5,5));
+    font_render(fnt, camera);
+    image_blit(video_get_backbuffer(), img, 0, 0, 0, 0, video_get_backbuffer()->w, video_get_backbuffer()->h);
+
+    font_destroy(fnt);
+    return img;
 }
