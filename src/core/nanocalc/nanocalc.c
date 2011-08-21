@@ -521,7 +521,7 @@ static float exprtree_binaryop_eval(exprtree_t *tree)
     else if(strcmp(op, "mod") == 0)
         return fabs(val2) > 1e-5 ? fmod(val1, val2) : 0.0f;
     else if(strcmp(op, "^") == 0)
-        return val1 >= 0.0f ? pow(val1, val2) : -pow(-val1, val2);
+        return pow(val1, val2);
     else if(strcmp(op, "==") == 0)
         return fabs(val1-val2) <= 1e-5 ? 1.0f : 0.0f;
     else if(strcmp(op, "<>") == 0)
