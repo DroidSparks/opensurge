@@ -30,6 +30,7 @@ object ".default_startup.opening_animation"
         create_child ".default_startup.opening_animation.bottomstrip"
         create_child ".default_startup.opening_animation.title"
         create_child ".default_startup.opening_animation.subtext"
+        create_child ".default_startup.opening_animation.subtexthideoverlay"
         create_child ".default_startup.opening_animation.act"
         destroy
     }
@@ -254,6 +255,7 @@ object ".default_startup.opening_animation.title"
     state "appear"
     {
         set_absolute_position "max(100, xpos()-$speed*dt())" "ypos()"
+        textout "hud_title" 1 1 "<color=000000>$LEVEL_NAME</color>" 210
         textout "hud_title" 0 0 "$LEVEL_NAME" 210
         on_timeout 2.175 "disappear"
     }
@@ -261,6 +263,7 @@ object ".default_startup.opening_animation.title"
     state "disappear"
     {
         set_absolute_position "xpos()+$speed*dt()" "ypos()"
+        textout "hud_title" 1 1 "<color=000000>$LEVEL_NAME</color>" 210
         textout "hud_title" 0 0 "$LEVEL_NAME" 210
         on_timeout 1.0 "destroy"
     }
@@ -296,6 +299,7 @@ object ".default_startup.opening_animation.subtext"
     {
         set_absolute_position "max(50, xpos()-$speed*dt())" "ypos()"
         let "$x -= 100*dt()"
+        textout "hud_subtext" "1+min($x, 0)" 1 "<color=000000>Surge!!! Neon!!! Charge!!! Surge!!! Neon!!! Charge!!! Surge!!! Neon!!! Charge!!! Surge!!! Neon!!! Charge!!! Surge!!! Neon!!! Charge!!!</color>"
         textout "hud_subtext" "min($x, 0)" 0 "Surge!!! Neon!!! Charge!!! Surge!!! Neon!!! Charge!!! Surge!!! Neon!!! Charge!!! Surge!!! Neon!!! Charge!!! Surge!!! Neon!!! Charge!!!"
         on_timeout 2.175 "disappear"
     }
@@ -311,6 +315,45 @@ object ".default_startup.opening_animation.subtext"
         destroy
     }
 }
+
+object ".default_startup.opening_animation.subtexthideoverlay"
+{
+    requires 0.2.0
+    always_active
+    detach_from_camera
+
+    state "main"
+    {
+        set_animation "SD_HUDSUBTEXTHIDEOVERLAY" 0
+        set_zindex "$_ds_op_zindex + 0.045"
+        set_absolute_position -90 "ypos()"
+        let "$speed = 900"
+        change_state "cooldown"
+    }
+
+    state "cooldown"
+    {
+        on_timeout 0.625 "appear"
+    }
+
+    state "appear"
+    {
+        set_absolute_position "min(0, xpos()+$speed*dt())" "ypos()"
+        on_timeout 2.375 "disappear"
+    }
+
+    state "disappear"
+    {
+        set_absolute_position "xpos()-$speed*dt()" "ypos()"
+        on_timeout 1.0 "destroy"
+    }
+
+    state "destroy"
+    {
+        destroy
+    }
+}
+
 
 object ".default_startup.opening_animation.act"
 {

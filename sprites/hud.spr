@@ -62,6 +62,22 @@ sprite SD_HUDBOTTOMSTRIP
     }
 }
 
+// Subtext hide overlay
+sprite SD_HUDSUBTEXTHIDEOVERLAY
+{
+    source_file     images/hud.png
+    source_rect     320 0 40 240
+    frame_size      40 240
+    hot_spot        0 0
+
+    animation 0
+    {
+        repeat      TRUE
+        fps         8
+        data        0
+    }
+}
+
 // Heads (life counter)
 sprite SD_HUDHEAD
 {

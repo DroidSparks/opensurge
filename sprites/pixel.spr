@@ -1,0 +1,16 @@
+// A single pixel
+sprite SD_PIXEL
+{
+    source_file     images/blackscreen.png
+    source_rect     0 0 1 1
+    frame_size      1 1
+    hot_spot        0 0
+
+    // idle
+    animation 0
+    {
+        repeat      TRUE
+        fps         8
+        data        0
+    }
+}
