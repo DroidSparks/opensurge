@@ -82,17 +82,27 @@
 
     table {
       margin: 10px auto 10px auto;
-      border: 1px solid #ff7733;
-      border-collapse: collapse;
       width: 70%;
+      border-radius: 15px;
+      background-color: #ffddaa;
+    }
+
+    table thead {
     }
 
     table th {
       font-weight: bold;
-      background-color: #ffbb77;
-      border-bottom: 1px solid #ff7733;
       padding: 5px 10px 5px 10px;
       text-align: left;
+      background-color: #ffbb77;
+    }
+
+    table th:first-child {
+      border-top-left-radius: 15px;
+    }
+
+    table th:last-child {
+      border-top-right-radius: 15px;
     }
 
     table td {
@@ -191,19 +201,22 @@
 
   <h3>Menu options</h3>
   <ul>
-    <li><strong>Start Game:</strong> starts the regular 1-player mode game;</li>
-    <li><strong>Extras:</strong> one can play on custom levels too! Basically a quest is a sequence of levels;</li>
+    <li><strong>Start Game:</strong> starts the 1-player game mode;</li>
+    <li><strong>Extras:</strong> extra levels;</li>
     <li><strong>Options:</strong> configures the game;</li>
     <li><strong>Exit:</strong> quits the game.</li>
   </ul>
 
   <h3>Moving the characters</h3>
   <p>You can play using your keyboard or a joystick. If you decide to use a joystick, make sure it has at least 2 axis and 4 buttons. Plug it before you start the game! If you want to play using your keyboard, see the table below to know how you can control the characters at any level:</p>
-  <table>
+  <table cellspacing="0">
+   <thead>
     <tr>
       <th>Key</th>
       <th>Effect</th>
     </tr>
+   </thead>
+   <tbody>
     <tr>
       <td>Arrow keys</td>
       <td>Move</td>
@@ -232,6 +245,7 @@
       <td>F6</td>
       <td>Ignore/restore joystick input</td>
     </tr>
+   </tbody>
   </table>
 
   <h3>Cooperative play</h3>
