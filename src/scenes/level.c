@@ -875,7 +875,7 @@ void level_init()
     video_display_loading_screen();
 
     /* main init */
-    gravity = 800;
+    gravity = 787.5;
     level_width = level_height = 0;
     level_timer = 0;
     dialogregion_size = 0;
