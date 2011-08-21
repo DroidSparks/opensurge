@@ -5,7 +5,7 @@
 // File:   objects/default_startup.obj
 // Desc:   default startup object. Takes care of the HUD and stuff.
 // Author: Alexandre
-// Date:   2010-12-20, 2010-12-21, 2011-01-01
+// Date:   2010-12-20, 2010-12-21, 2011-01-01, 2011-08-21
 // ---------------------------------------------------------------------------
 
 // You MUST NOT modify this script! If you need a different functionality
@@ -17,11 +17,12 @@
 #include "default_startup/switch_character.inc"
 #include "default_startup/pause.inc"
 #include "default_startup/quit.inc"
+#include "default_startup/tools/collision_mask.inc"
 
 // ----------------------------------------------
 // This object is created by default
 // in every level that contains the
-// startup ".default_startup" line
+// 'startup ".default_startup"' line
 // ----------------------------------------------
 object ".default_startup"
 {
@@ -31,8 +32,11 @@ object ".default_startup"
     state "main"
     {
         hide
+
         create_child ".default_startup.opening_animation"
         create_child ".default_startup.level_cleared"
+        create_child ".tool.collision_mask"
+
         change_state "cooldown"
     }
 
@@ -50,6 +54,7 @@ object ".default_startup"
         create_child ".default_startup.switch_character"
         create_child ".default_startup.pause"
         create_child ".default_startup.quit"
+
         destroy
     }
 }
