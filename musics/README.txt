@@ -10,6 +10,7 @@ Di Rodrigues
 --- gameover.ogg
 --- waterworks.ogg
 --- goal.ogg
+--- calm.ogg
 
 SilverstepP and Joepotato28
 --- miniboss.ogg
