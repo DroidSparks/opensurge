@@ -40,6 +40,7 @@
 #include "object_decorators/set_obstacle.h"
 #include "object_decorators/set_alpha.h"
 #include "object_decorators/set_angle.h"
+#include "object_decorators/set_scale.h"
 #include "object_decorators/showhide.h"
 #include "object_decorators/enemy.h"
 #include "object_decorators/move_player.h"
@@ -118,6 +119,7 @@ static void set_animation_speed_factor(objectmachine_t** m, int n, const char **
 static void set_obstacle(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void set_alpha(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void set_angle(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void set_scale(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void set_absolute_position(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void hide(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void show(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -266,6 +268,7 @@ static entry_t command_table[] = {
     { "set_obstacle", set_obstacle },
     { "set_alpha", set_alpha },
     { "set_angle", set_angle },
+    { "set_scale", set_scale },
     { "set_absolute_position", set_absolute_position },
     { "hide", hide },
     { "show", show },
@@ -671,6 +674,14 @@ void set_angle(objectmachine_t** m, int n, const char **p, const parsetree_state
         *m = objectdecorator_setangle_new(*m, EXPRESSION(p[0]));
     else
         COMPILE_ERROR("Object script error - set_angle expects one parameter: angle (0 <= angle < 360)");
+}
+
+void set_scale(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 2)
+        *m = objectdecorator_setscale_new(*m, EXPRESSION(p[0]), EXPRESSION(p[1]));
+    else
+        COMPILE_ERROR("Object script error - set_scale expects two parameters: scale_x, scale_y");
 }
 
 void hide(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)

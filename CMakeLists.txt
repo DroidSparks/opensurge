@@ -213,6 +213,7 @@ SET(
   src/entities/object_decorators/set_absolute_position.c
   src/entities/object_decorators/set_alpha.c
   src/entities/object_decorators/set_angle.c
+  src/entities/object_decorators/set_scale.c
   src/entities/object_decorators/set_animation.c
   src/entities/object_decorators/set_obstacle.c
   src/entities/object_decorators/set_player_speed.c
@@ -385,6 +386,7 @@ IF(WIN32)
       src/entities/object_decorators/set_absolute_position.h
       src/entities/object_decorators/set_alpha.h
       src/entities/object_decorators/set_angle.h
+      src/entities/object_decorators/set_scale.h
       src/entities/object_decorators/set_animation.h
       src/entities/object_decorators/set_obstacle.h
       src/entities/object_decorators/set_player_speed.h
