@@ -51,6 +51,8 @@ static float f_hotspot_x() { return target->actor->hot_spot.x; } /* x-position o
 static float f_hotspot_y() { return target->actor->hot_spot.y; } /* y-position of the hotspot */
 static float f_alpha() { return target->actor->alpha; } /* alpha of the target object */
 static float f_angle() { return target->actor->angle * 180.0f / PI; } /* angle of the target object */
+static float f_scale_x() { return target->actor->scale.x; } /* scale x */
+static float f_scale_y() { return target->actor->scale.y; } /* scale y */
 static float f_animation_frame() { return floor(target->actor->animation_frame); } /* animation frame */
 static float f_animation_speed_factor() { return target->actor->animation_speed_factor; }
 static float f_animation_repeats() { return target->actor->animation->repeat ? 1.0f : 0.0f; }
@@ -106,6 +108,8 @@ void nanocalcext_register_bifs()
     nanocalc_register_bif_arity0("hotspot_y", f_hotspot_y);
     nanocalc_register_bif_arity0("alpha", f_alpha);
     nanocalc_register_bif_arity0("angle", f_angle);
+    nanocalc_register_bif_arity0("scale_x", f_scale_x);
+    nanocalc_register_bif_arity0("scale_y", f_scale_y);
     nanocalc_register_bif_arity0("direction", f_direction);
     nanocalc_register_bif_arity0("animation_frame", f_animation_frame);
     nanocalc_register_bif_arity0("animation_speed_factor", f_animation_speed_factor);
