@@ -123,6 +123,7 @@ Alexandre Martins & Gaivota
 Joao Victor & Alexandre Martins
 --- loading.png
 --- title.png
+--- dialogs.png
 
 Redshrike
 --- redshrike_tiles1.png

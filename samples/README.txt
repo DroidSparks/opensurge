@@ -57,6 +57,7 @@ Alexandre Martins
 --- spikes_disappearing.wav
 --- destroypop.wav
 --- damaged.wav
+--- talk.wav
 
 d1337r
 --- deny.wav

@@ -1,0 +1,42 @@
+#include "dialogbox/dialogbox.inc"
+
+// for a complete documentation, please read
+// dialogbox/dialogbox.inc
+
+object balloon.example
+{
+    requires 0.2.0
+    category Balloon
+    annotation "An example balloon"
+
+    state main
+    {
+        set_animation DIALOGBOX_BALLOON 0
+        elliptical_trajectory 0 10 0 1 0
+        on_player_collision display_balloon
+    }
+
+    state display_balloon
+    {
+        let $_dialogbox_text_id=0
+        let $_dialogbox_avatar_id=1
+        create_child .dialogbox.default
+        change_state wait
+    }
+
+    state wait
+    {
+        disable_player_movement
+    }
+
+    state .dialogbox:on_destroy
+    {
+        enable_player_movement
+        change_state activate_again
+    }
+
+    state activate_again
+    {
+        on_timeout 2.0 main
+    }
+}
