@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * textout.c - text output
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -48,6 +48,7 @@ static void render(objectmachine_t *obj, v2d_t camera_position);
 
 objectmachine_t* make_decorator(objectmachine_t *decorated_machine, textoutstyle_t style, const char *font_name, expression_t *xpos, expression_t *ypos, const char *text, expression_t *max_width, expression_t *index_of_first_char, expression_t *length);
 
+static int tagged_strlen(const char *s);
 
 /* public methods */
 
@@ -125,7 +126,7 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
     free(processed_text);
 
     /* symbol table tricks */
-    symboltable_set(st, "$_STRLEN", strlen(font_get_text(me->fnt))); /* store the length of the text in $_STRLEN */
+    symboltable_set(st, "$_STRLEN", tagged_strlen(font_get_text(me->fnt))); /* store the length of the text in $_STRLEN */
 
     /* font position */
     pos = v2d_new(expression_evaluate(me->xpos), expression_evaluate(me->ypos));
@@ -178,4 +179,20 @@ objectmachine_t* make_decorator(objectmachine_t *decorated_machine, textoutstyle
     me->length = length;
 
     return obj;
+}
+
+
+/* stuff */
+static int tagged_strlen(const char *s)
+{
+    const char *p;
+    int k = 0, in_tag = FALSE;
+
+    for(p=s; *p; p++) {
+        if(*p == '<') { in_tag = TRUE; continue; }
+        else if(*p == '>') { in_tag = FALSE; continue; }
+        k += in_tag ? 0 : 1;
+    }
+
+    return k;
 }

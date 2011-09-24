@@ -39,6 +39,7 @@ object ".fade_effect"
         let "$speed = 1.0 / max(0.1, $_fade_duration)"
 
         // select the desired effect
+        set_alpha "cond($_fade_in, 1.0, 0.0)"
         if $_fade_in in
         change_state out
     }

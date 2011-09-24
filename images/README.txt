@@ -26,6 +26,15 @@ Joao Victor
 --- gimacian_and_the_ring.png
 --- easterneon.png
 --- heroes.png
+--- levels/1/boss.png
+--- levels/1/_example1.png
+--- levels/1/_example2.png
+--- levels/1/fish.png
+--- levels/1/mosquito.png
+--- levels/1/nonsolids0.png
+--- levels/1/nonsolids1.png
+--- levels/1/nonsolids2.png
+--- levels/1/wolfredo.png
 
 Colin Beard
 --- charge.png
@@ -34,6 +43,7 @@ Colin Beard
 --- pause.png
 --- template.png
 --- scepter.png
+--- levels/1/springfling.png
 
 Alexandre Martins
 --- arrow_right.png
@@ -60,6 +70,18 @@ Ramon
 
 Christopher Martinus
 --- acts.png
+
+Mateus Reis
+--- levels/1/background.png
+
+Joao Victor & Mateus Reis
+--- levels/1/waterfall.png
+
+Chritstopher Martinus, Joao Victor, Mateus Reis
+--- levels/1/brickset.png
+
+Mateus Reis, bart (opengameart.org), Alexandre
+--- levels/1/sky.png
 
 d1337r
 --- dialogbox.png
@@ -112,3 +134,6 @@ treeform (opengameart.org)
 
 LFA (opengameart.org)
 --- fog.jpg
+
+Andrew Pociask
+--- levels/1/mountains.png
