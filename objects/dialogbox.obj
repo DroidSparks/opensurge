@@ -18,7 +18,7 @@ object balloon.example
 
     state display_balloon
     {
-        let $_dialogbox_text_id=0
+        let $_dialogbox_text_id=1
         let $_dialogbox_avatar_id=1
         create_child .dialogbox.default
         change_state wait
@@ -38,5 +38,120 @@ object balloon.example
     state activate_again
     {
         on_timeout 2.0 main
+    }
+}
+
+object balloon.example2
+{
+    requires 0.2.0
+    category Balloon
+    annotation "An example balloon (advanced)"
+
+    state main
+    {
+        set_animation DIALOGBOX_BALLOON 0
+        elliptical_trajectory 0 10 0 1 0
+        on_player_collision display_balloon
+    }
+
+    state display_balloon
+    {
+        create_child .dialogbox.balloon.advancedexample // a customized dialog
+        change_state wait
+    }
+
+    state wait
+    {
+        disable_player_movement
+    }
+
+    state .dialogbox:on_destroy
+    {
+        enable_player_movement
+        change_state activate_again
+    }
+
+    state activate_again
+    {
+        on_timeout 2.0 main
+    }
+}
+
+// --------------------------------------
+
+object .dialogbox.balloon.advancedexample
+{
+    requires 0.2.0
+    always_active
+    detach_from_camera
+
+    state main
+    {
+        let $step=0
+        let $_dialogbox_text_id=1
+        let $_dialogbox_avatar_id=1
+
+        hide
+        create_child .dialogbox.base.background[slide_from_top] 0 0 background
+        create_child .dialogbox.base.avatar 0 0 avatar
+        create_child .dialogbox.base.text[typewriter] 0 0 text
+        create_child .dialogbox.base.button 0 0 button
+        change_state wait
+    }
+
+    state wait
+    {
+    }
+
+    state .dialogbox.base.background:on_appear
+    {
+        change_child_state text start
+        change_state wait
+    }
+
+    state .dialogbox.base.background:on_disappear
+    {
+        change_child_state background destroy
+        change_child_state avatar destroy
+        change_child_state text destroy
+        change_child_state button destroy
+        change_parent_state .dialogbox:on_destroy
+        destroy
+    }
+
+    state .dialogbox.base.text:on_complete
+    {
+        let $step+=1
+        let $_dialogbox_text_id+=1
+        let $_dialogbox_avatar_id+=1
+
+        change_child_state button continue
+        if $step<2 wants_to_refresh
+
+        change_child_state button stop
+        change_state completed
+    }
+
+    state wants_to_refresh
+    {
+        on_button_pressed fire1 refresh
+    }
+
+    state refresh
+    {
+        change_child_state text refresh
+        change_child_state avatar refresh
+        change_state wait
+    }
+
+    state completed
+    {
+        on_button_pressed fire1 disappear
+    }
+
+    state disappear
+    {
+        change_child_state background disappear
+        change_state wait
     }
 }

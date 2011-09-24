@@ -179,3 +179,26 @@ OPENING_6				"If he gets that power, he will rule the universe, and nothing will
 OPENING_7				"<color=ff8000>Surge</color> and his friends must prevent <color=ff8000>Gimacian the Dark</color> from opening the gate,"
 OPENING_8				"or existence as we know it"
 OPENING_9				"will be over!"
+
+// Dialog boxes
+    // test
+    DIALOGBOX_MESSAGE_0     ""
+    DIALOGBOX_MESSAGE_1     "Hello! This is a <color=ffff00>dialog box</color>! Testing a long, long string. I have nothing else to say."
+    DIALOGBOX_MESSAGE_2     "Really?"
+
+    // cutscene 1: <color=$COLOR_P1>Surge</color> and Neon
+    DIALOGBOX_MESSAGE_100   "Ahh, this is the life, eh buddy?"
+    DIALOGBOX_MESSAGE_101   "yeah..."
+    DIALOGBOX_MESSAGE_102   "Do you think that we--"
+    DIALOGBOX_MESSAGE_103   "Uh?!?"
+    DIALOGBOX_MESSAGE_104   "<color=$COLOR_P2>Neon</color>, stay here!"
+    DIALOGBOX_MESSAGE_105   "Do you think this has to do with these strange disappearances?"
+    DIALOGBOX_MESSAGE_106   "I don't know, buddy. I'm going to go see what the racket is, just to avoid these... things are..."
+    DIALOGBOX_MESSAGE_107   "But <color=$COLOR_P1>Surge</color>, you'll get hurt! I want to help!"
+    DIALOGBOX_MESSAGE_108   "No, <color=$COLOR_P2>Neon</color>! Wait here and stay on your guard. I can't allow you to get hurt by these things."
+    DIALOGBOX_MESSAGE_109   "but <color=$COLOR_P1>Surge</color>..."
+    DIALOGBOX_MESSAGE_110   "Fine..."
+    DIALOGBOX_MESSAGE_111   "Let's meet up at the waterfall then. Just stay on your guard. Remember, if it gets to be too much, just run."
+    DIALOGBOX_MESSAGE_112   "Okay, but you be careful too!"
+    DIALOGBOX_MESSAGE_113   "I will. Now, hurry!"
+    DIALOGBOX_MESSAGE_114   "Go!"
