@@ -11,6 +11,7 @@ Di Rodrigues
 --- waterworks.ogg
 --- goal.ogg
 --- calm.ogg
+--- drowning.ogg
 
 SilverstepP and Joepotato28
 --- miniboss.ogg
