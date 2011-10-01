@@ -45,47 +45,45 @@ static char credits_text[] =
     GAME_WEBSITE
     "\n\n"
 
-    "\n<color=ffff00>Open Surge " GAME_VERSION_STRING "</color>\n\n"
-
     "\n<color=ffff00>$CREDITS_ACTIVE</color>\n\n"
     "Alexandre Martins:\n$CREDITS_ALEXANDRE\n\n"
     "Di Rodrigues:\n$CREDITS_DI\n\n"
-    "Colin Beard:\n$CREDITS_COLIN\n\n"
-    "Mateus Reis:\n$CREDITS_MATEUSREIS\n\n"
-    "Johan Brodd:\n$CREDITS_JOHAN\n\n"
     "Joao Victor:\n$CREDITS_JOAO\n\n"
-    "Christopher Martinus:\n$CREDITS_CHRISTOPHER\n\n"
+    "Mateus Reis:\n$CREDITS_MATEUSREIS\n\n"
+    "Colin Beard:\n$CREDITS_COLIN\n\n"
     "Ruben Caceres:\n$CREDITS_RUBEN\n\n"
+
+    "\n<color=ffff00>$CREDITS_CONTRIB</color>\n\n"
+
+    "Johan Brodd:\n$CREDITS_JOHAN\n\n"
+    "Christopher Martinus:\n$CREDITS_CHRISTOPHER\n\n"
+    "Ramon Qua Nasc:\n$CREDITS_RAMON\n\n"
+    "Sascha de waal:\n$CREDITS_SSDW\n\n"
     "Arthur Blot:\n$CREDITS_ARTHURBLOT\n\n"
     "Reimund Renner:\n$CREDITS_REIMUND\n\n"
     "Szymon Weihs:\n$CREDITS_SZYMON\n\n"
     "Tomires:\n$CREDITS_TOMIRES\n\n"
-    "Sascha de waal:\n$CREDITS_SSDW\n\n"
     "Francesco Sciusco:\n$CREDITS_FRANCESCO\n\n"
     "Santiago Tabarez:\n$CREDITS_SANTIAGO\n\n"
     "Raxillan:\n$CREDITS_RAXILLAN\n\n"
+
+    "\n<color=ffff00>$CREDITS_RETIRED</color>\n\n"
+    "Brian Zablocky:\n$CREDITS_CELDECEA\n\n"
 
     "\n<color=ffff00>$CREDITS_THANKS</color>\n\n"
     "SourceForge.net\n"
     "allegro.cc\n"
     "OpenGameArt.org\n"
     "GagaGames.com.br\n"
-    "Ramon\n"
     "Redshrike\n"
     "lunarrush\n"
     "Felicia-Val\n"
     "Joepotato28\n"
     "Alberto Pessoa\n"
     "SuperTux Team\n"
+    "SuperTuxKart Team\n"
+    "Lainz\n"
     "\n"
-
-    "\n<color=ffff00>$CREDITS_RETIRED</color>\n\n"
-    "Neoblast:\n$CREDITS_NEOBLAST\n\n"
-    "Christian Zigotzky\n$CREDITS_CHRISTIAN\n\n"
-    "Bastian von Halem:\n$CREDITS_BASTIAN\n\n"
-    "Lainz:\n$CREDITS_LAINZ\n\n"
-    "Jogait:\n$CREDITS_JOGAIT\n\n"
-    "Brian Zablocky:\n$CREDITS_CELDECEA\n\n"
 ;
 
 
