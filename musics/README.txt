@@ -12,6 +12,8 @@ Di Rodrigues
 --- goal.ogg
 --- calm.ogg
 --- drowning.ogg
+--- we_will_never_fight_alone_1.ogg
+--- we_will_never_fight_alone_2.ogg
 
 SilverstepP and Joepotato28
 --- miniboss.ogg
