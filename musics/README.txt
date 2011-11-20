@@ -34,3 +34,4 @@ Johan Brodd
 --- template.ogg
 --- silence.ogg
 --- intro_cutscene/Jobromedia-Intro.ogg
+--- sharp.ogg
