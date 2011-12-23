@@ -1,0 +1,319 @@
+<color=ffff00>$CREDITS_ACTIVE</color>
+
+Alexandre Martins:
+$CREDITS_ALEXANDRE
+
+Di Rodrigues:
+$CREDITS_DI
+
+Joao Victor:
+$CREDITS_JOAO
+
+Mateus Reis:
+$CREDITS_MATEUSREIS
+
+Colin Beard:
+$CREDITS_COLIN
+
+Ruben Caceres:
+$CREDITS_RUBEN
+
+
+<color=ffff00>$CREDITS_CONTRIB</color>
+
+Johan Brodd:
+$CREDITS_JOHAN
+
+Christopher Martinus:
+$CREDITS_CHRISTOPHER
+
+Ramon Qua Nasc:
+$CREDITS_RAMON
+
+Sascha de waal:
+$CREDITS_SSDW
+
+Arthur Blot:
+$CREDITS_ARTHURBLOT
+
+Reimund Renner:
+$CREDITS_REIMUND
+
+Szymon Weihs:
+$CREDITS_SZYMON
+
+Tomires:
+$CREDITS_TOMIRES
+
+Francesco Sciusco:
+$CREDITS_FRANCESCO
+
+Santiago Tabarez:
+$CREDITS_SANTIAGO
+
+Raxillan:
+$CREDITS_RAXILLAN
+
+
+<color=ffff00>$CREDITS_RETIRED</color>
+
+Brian Zablocky:
+$CREDITS_CELDECEA
+
+
+<color=ffff00>$CREDITS_THANKS</color>
+
+SourceForge.net
+allegro.cc
+OpenGameArt.org
+GagaGames.com.br
+Redshrike
+lunarrush
+Felicia-Val
+Joepotato28
+Alberto Pessoa
+SuperTux Team
+SuperTuxKart Team
+Lainz
+
+
+<color=ff8000>$CREDITS_RES_TITLE</color>
+
+$CREDITS_RES_TEXT
+
+<color=ffff00>$CREDITS_RES_IMAGES</color>
+
+Joao Victor
+--- images/neon.png
+--- images/surge.png
+--- images/animals.png
+--- images/title.png
+--- images/goal.png
+--- images/heroes.png
+--- images/happyaprilfoolsday.png
+--- images/gimacian_and_the_ring.png
+--- images/easterneon.png
+--- images/heroes.png
+--- images/levels/1/boss.png
+--- images/levels/1/_example1.png
+--- images/levels/1/_example2.png
+--- images/levels/1/fish.png
+--- images/levels/1/mosquito.png
+--- images/levels/1/nonsolids0.png
+--- images/levels/1/nonsolids1.png
+--- images/levels/1/nonsolids2.png
+--- images/levels/1/wolfredo.png
+
+Colin Beard
+--- images/charge.png
+--- images/even_more_shields.png
+--- images/more_shields.png
+--- images/pause.png
+--- images/template.png
+--- images/scepter.png
+--- images/levels/1/springfling.png
+
+Brian Zablocky
+--- images/blue_door.png
+--- images/bumper.png
+--- images/checkpoint_orb.png
+--- images/desert1.png
+--- images/grassland_template.png
+--- images/item_boxes.png
+--- images/lady_bugsy.png
+--- images/ring_shields.png
+--- images/spikes.png
+--- images/spring_pads.png
+--- images/switches.png
+
+Alexandre Martins
+--- images/arrow_right.png
+--- images/blackscreen.png
+--- images/cutscene.png
+--- images/editorbg.png
+--- images/fade_effect.png
+--- images/hud.png
+--- images/intro.png
+--- images/loop.png
+--- images/none.png
+--- images/null.png
+--- images/quest_tutorial.png
+--- images/special.png
+--- images/stars.png
+--- images/upper.png
+--- images/whitebg.png
+--- images/rain.png
+--- images/squarebg2.png
+
+Ramon
+--- images/dimensional_gate.png
+--- images/dimensionalring.png
+
+Christopher Martinus
+--- images/acts.png
+
+Mateus Reis
+--- images/levels/1/background.png
+
+Joao Victor & Mateus Reis
+--- images/levels/1/waterfall.png
+
+Chritstopher Martinus, Joao Victor, Mateus Reis
+--- images/levels/1/brickset.png
+
+Mateus Reis, bart (opengameart.org), Alexandre
+--- images/levels/1/sky.png
+
+d1337r
+--- images/dialogbox.png
+--- images/teleporter.png
+
+MTK358
+--- images/goal_sign.png
+
+Ste Pickford
+--- images/font.png
+--- images/powerfest.png
+
+pfunked (opengameart.org)
+--- images/smallfont.png
+
+Constantin (supertuxkart-team)
+--- images/tux.png
+
+Daniel Cook (lostgarden.com)
+--- images/explosion.png (CC-BY 3.0)
+
+Christopher Martinus & Colin Beard
+--- images/dnadoors.png
+
+Colin Beard & Mateus Reis
+--- images/animalprison.png
+
+Alexandre Martins & Brian Zablocky
+--- images/quest_extra.png
+--- images/sir_bugsy.png
+--- images/squarebg.png
+
+Alexandre Martins & Colin Beard & qubodup (opengameart.org)
+--- images/editor.png
+
+Alexandre Martins & Gaivota
+--- images/rings.png
+
+Joao Victor & Alexandre Martins
+--- images/loading.png
+--- images/title.png
+--- images/dialogs.png
+
+Redshrike
+--- images/redshrike_tiles1.png
+--- images/redshrike_tiles2.png
+--- images/introplat.png
+
+treeform (opengameart.org)
+--- images/violet.png
+
+LFA (opengameart.org)
+--- images/fog.jpg
+
+Andrew Pociask
+--- images/levels/1/mountains.png
+
+<color=ffff00>$CREDITS_RES_MUSICS</color>
+
+Di Rodrigues
+--- musics/title.ogg
+--- musics/options.ogg
+--- musics/speed.ogg
+--- musics/invincible.ogg
+--- musics/gameover.ogg
+--- musics/waterworks.ogg
+--- musics/goal.ogg
+--- musics/calm.ogg
+--- musics/drowning.ogg
+--- musics/we_will_never_fight_alone_1.ogg
+--- musics/we_will_never_fight_alone_2.ogg
+
+Colin Beard & Joepotato28
+--- musics/miniboss.ogg
+
+Colin Beard
+--- musics/puzzling.ogg
+--- musics/boss.ogg
+--- musics/gimacianstheme.ogg
+
+Joepotato28
+--- musics/magmamines.ogg
+
+Mateus Reis
+--- musics/citychill.ogg
+--- musics/intro_cutscene/intro[1-9].ogg
+
+Johan Brodd
+--- musics/template.ogg
+--- musics/silence.ogg
+--- musics/intro_cutscene/Jobromedia-Intro.ogg
+--- musics/sharp.ogg
+
+<color=ffff00>$CREDITS_RES_SAMPLES</color>
+
+Mateus Reis
+--- samples/break.wav
+--- samples/checkpoint.wav
+--- samples/jump.wav
+--- samples/spring.wav
+--- samples/bosshit.wav
+--- samples/brake.wav
+--- samples/break.wav
+--- samples/drown.wav
+--- samples/ring.wav
+--- samples/ringless.wav
+--- samples/ringcount.wav
+--- samples/select.wav
+--- samples/select_2.wav
+--- samples/return.wav
+--- samples/spin.wav
+--- samples/spindash1.wav
+--- samples/spindash2.wav
+--- samples/choose.wav
+--- samples/bigring.wav
+--- samples/endsign.wav
+--- samples/glasses.wav
+--- samples/teleporter.wav
+--- samples/teleporter_backwards.wav
+--- samples/water_in.wav
+--- samples/water_out.wav
+--- samples/death.wav
+--- samples/spikes.wav
+--- samples/switch.wav
+--- samples/bigring.wav
+--- samples/door1.wav
+--- samples/door2.wav
+--- samples/powerup.wav
+--- samples/drown.wav
+--- samples/neon_jetpack.wav
+
+Di Rodrigues
+--- samples/1up.ogg
+
+Colin Beard
+--- samples/shield.wav
+--- samples/acidshield.wav
+--- samples/fireshield.wav
+--- samples/thundershield.wav
+--- samples/watershield.wav
+--- samples/windshield.wav
+--- samples/bubbleget.wav
+--- samples/bumper.wav
+--- samples/cash.wav
+
+Alexandre Martins
+--- samples/spikes_appearing.wav
+--- samples/spikes_disappearing.wav
+--- samples/destroypop.wav
+--- samples/damaged.wav
+--- samples/talk.wav
+
+d1337r
+--- samples/deny.wav

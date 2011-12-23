@@ -31,64 +31,14 @@
 #include "../core/scene.h"
 #include "../core/soundfactory.h"
 #include "../core/font.h"
+#include "../core/osspec.h"
+#include "../core/logfile.h"
 #include "../entities/actor.h"
 #include "../entities/background.h"
 
 
-/* credits text */
-static char credits_text[] =
-    "\n<color=ff8000>"
-    GAME_TITLE
-    " version "
-    GAME_VERSION_STRING
-    "</color>\n"
-    GAME_WEBSITE
-    "\n\n"
-
-    "\n<color=ffff00>$CREDITS_ACTIVE</color>\n\n"
-    "Alexandre Martins:\n$CREDITS_ALEXANDRE\n\n"
-    "Di Rodrigues:\n$CREDITS_DI\n\n"
-    "Joao Victor:\n$CREDITS_JOAO\n\n"
-    "Mateus Reis:\n$CREDITS_MATEUSREIS\n\n"
-    "Colin Beard:\n$CREDITS_COLIN\n\n"
-    "Ruben Caceres:\n$CREDITS_RUBEN\n\n"
-
-    "\n<color=ffff00>$CREDITS_CONTRIB</color>\n\n"
-
-    "Johan Brodd:\n$CREDITS_JOHAN\n\n"
-    "Christopher Martinus:\n$CREDITS_CHRISTOPHER\n\n"
-    "Ramon Qua Nasc:\n$CREDITS_RAMON\n\n"
-    "Sascha de waal:\n$CREDITS_SSDW\n\n"
-    "Arthur Blot:\n$CREDITS_ARTHURBLOT\n\n"
-    "Reimund Renner:\n$CREDITS_REIMUND\n\n"
-    "Szymon Weihs:\n$CREDITS_SZYMON\n\n"
-    "Tomires:\n$CREDITS_TOMIRES\n\n"
-    "Francesco Sciusco:\n$CREDITS_FRANCESCO\n\n"
-    "Santiago Tabarez:\n$CREDITS_SANTIAGO\n\n"
-    "Raxillan:\n$CREDITS_RAXILLAN\n\n"
-
-    "\n<color=ffff00>$CREDITS_RETIRED</color>\n\n"
-    "Brian Zablocky:\n$CREDITS_CELDECEA\n\n"
-
-    "\n<color=ffff00>$CREDITS_THANKS</color>\n\n"
-    "SourceForge.net\n"
-    "allegro.cc\n"
-    "OpenGameArt.org\n"
-    "GagaGames.com.br\n"
-    "Redshrike\n"
-    "lunarrush\n"
-    "Felicia-Val\n"
-    "Joepotato28\n"
-    "Alberto Pessoa\n"
-    "SuperTux Team\n"
-    "SuperTuxKart Team\n"
-    "Lainz\n"
-    "\n"
-;
-
-
-
 /* private data */
+#define CREDITS_FILE               "config/credits.dat"
 #define CREDITS_BGFILE             "themes/credits.bg"
 static image_t *box;
 static int quit;
@@ -96,6 +46,16 @@ static font_t *title, *text, *back;
 static input_t *input;
 static int line_count;
 static bgtheme_t *bgtheme;
+static char credits_header[] =
+    "\n<color=ff8000>"
+    GAME_TITLE
+    " version "
+    GAME_VERSION_STRING
+    "</color>\n"
+    GAME_WEBSITE
+    "\n\n";
+
+static char* read_credits_file();
 
 
 
@@ -109,6 +69,7 @@ static bgtheme_t *bgtheme;
 void credits_init()
 {
     const char *p;
+    char *credits_text = read_credits_file();
 
     /* initializing stuff... */
     quit = FALSE;
@@ -123,7 +84,7 @@ void credits_init()
     font_set_position(back, v2d_new(10, VIDEO_SCREEN_H - font_get_textsize(back).y - 5));
 
     text = font_create("menu.text");
-    font_set_text(text, "%s", credits_text);
+    font_set_text(text, "%s\n%s", credits_header, credits_text);
     font_set_width(text, 300);
     font_set_position(text, v2d_new(10, VIDEO_SCREEN_H));
     for(line_count=1,p=font_get_text(text); *p; p++)
@@ -135,6 +96,9 @@ void credits_init()
     bgtheme = background_load(CREDITS_BGFILE);
 
     fadefx_in(image_rgb(0,0,0), 1.0);
+
+    /* done! */
+    free(credits_text);
 }
 
 
@@ -222,3 +186,36 @@ void credits_render()
     font_render(back, cam);
 }
 
+
+
+
+
+
+
+/* private stuff */
+
+/* reads the contents of CREDITS_FILE */
+char* read_credits_file()
+{
+    char *buf, filename[1024];
+    FILE* fp;
+    long size;
+
+    resource_filepath(filename, CREDITS_FILE, sizeof filename, RESFP_READ);
+    if(NULL == (fp = fopen(filename, "r"))) {
+        fatal_error("Can't open '%s' for reading.", CREDITS_FILE);
+        return NULL;
+    }
+
+    fseek(fp, 0, SEEK_END);
+    size = ftell(fp);
+    rewind(fp);
+
+    buf = mallocx(1 + size);
+    buf[size] = 0;
+    if(fread(buf, 1, size, fp) != size)
+        logfile_message("Warning: invalid return value of fread() when reading '%s'", CREDITS_FILE);
+
+    fclose(fp);
+    return buf;
+}

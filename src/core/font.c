@@ -263,7 +263,7 @@ void font_set_text(font_t *f, const char *fmt, ...)
     char *p, *q;
 
     va_start(args, fmt);
-    vsprintf(buf, fmt, args);
+    vsnprintf(buf, (FONT_TEXTMAXLENGTH*2)/3, fmt, args);
     va_end(args);
 
     while(has_variables_to_expand(buf))

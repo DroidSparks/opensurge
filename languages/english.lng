@@ -97,6 +97,12 @@ CREDITS_FRANCESCO           "Italian translation"
 CREDITS_SANTIAGO            "Spanish translation"
 CREDITS_RAXILLAN            "Russian translation"
 
+CREDITS_RES_TITLE           "Credits per individual resources"
+CREDITS_RES_TEXT            "Unless explicitly told otherwise, the files listed below are licensed under the Creative Commons Attribution-ShareAlike 3.0 (CC-BY-SA 3.0)."
+CREDITS_RES_IMAGES          "Images"
+CREDITS_RES_MUSICS          "Musics"
+CREDITS_RES_SAMPLES         "Sound effects"
+
 
 // Quest names
 TUTORIAL_QUEST_NAME         "Tutorial"
