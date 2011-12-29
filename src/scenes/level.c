@@ -2631,8 +2631,8 @@ int editor_want_to_activate()
  */
 void editor_render_background()
 {
-    float x = VIDEO_SCREEN_W/editor_bgimage->w;
-    float y = VIDEO_SCREEN_H/editor_bgimage->h;
+    float x = (float)VIDEO_SCREEN_W/editor_bgimage->w;
+    float y = (float)VIDEO_SCREEN_H/editor_bgimage->h;
     image_draw_scaled(editor_bgimage, video_get_backbuffer(), 0, 0, v2d_new(x,y), IF_NONE);
 }
 

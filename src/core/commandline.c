@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * commandline.c - command line parser
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -74,9 +74,9 @@ commandline_t commandline_parse(int argc, char **argv)
                 "    --help                    displays this message\n"
                 "    --version                 shows the version of this program\n"
                 "    --fullscreen              fullscreen mode\n"
-                "    --resolution X            sets the window size, where X = TINY (%dx%d), NORMAL (%dx%d) or MAX (adapts to your desktop)\n"
+                "    --resolution X            sets the window size, where X = 1 (%dx%d), 2 (%dx%d), 3 (%dx%d) or 4 (%dx%d)\n"
                 "    --smooth                  improves the graphic quality (*)\n"
-                "    --tiny                    small game window (improves the speed **). This is the same as --resolution TINY\n"
+                "    --tiny                    small game window (improves the speed **). This is the same as --resolution 1\n"
                 "    --show-fps                shows the FPS (frames per second) counter\n"
                 "    --level \"FILEPATH\"        runs the level located at FILEPATH\n"
                 "    --quest \"FILEPATH\"        runs the quest located at FILEPATH\n"
@@ -91,6 +91,7 @@ commandline_t commandline_parse(int argc, char **argv)
                 "Please read the user manual for more information.\n",
             GAME_TITLE, GAME_UNIXNAME,
             VIDEO_SCREEN_W, VIDEO_SCREEN_H, VIDEO_SCREEN_W*2, VIDEO_SCREEN_H*2,
+            VIDEO_SCREEN_W*3, VIDEO_SCREEN_H*3, VIDEO_SCREEN_W*4, VIDEO_SCREEN_H*4,
             DEFAULT_LANGUAGE_FILEPATH);
             exit(0);
         }
@@ -102,12 +103,14 @@ commandline_t commandline_parse(int argc, char **argv)
 
         else if(str_icmp(argv[i], "--resolution") == 0) {
             if(++i < argc) {
-                if(str_icmp(argv[i], "TINY") == 0)
+                if(str_icmp(argv[i], "1") == 0)
                     cmd.video_resolution = VIDEORESOLUTION_1X;
-                else if(str_icmp(argv[i], "NORMAL") == 0)
+                else if(str_icmp(argv[i], "2") == 0)
                     cmd.video_resolution = VIDEORESOLUTION_2X;
-                else if(str_icmp(argv[i], "MAX") == 0)
-                    cmd.video_resolution = VIDEORESOLUTION_MAX;
+                else if(str_icmp(argv[i], "3") == 0)
+                    cmd.video_resolution = VIDEORESOLUTION_3X;
+                else if(str_icmp(argv[i], "4") == 0)
+                    cmd.video_resolution = VIDEORESOLUTION_4X;
                 else
                     display_message("WARNING: invalid resolution (%s).", argv[i]);
             }

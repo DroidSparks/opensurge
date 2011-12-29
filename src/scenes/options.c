@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * options.c - options screen
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -460,7 +460,7 @@ int group_smooth_is_highlighted(group_t *g)
 
 void group_smooth_update(group_t *g)
 {
-    int resolution = (video_get_resolution() == VIDEORESOLUTION_1X) ? VIDEORESOLUTION_2X : video_get_resolution();
+    int resolution = (video_get_resolution() == VIDEORESOLUTION_1X || video_get_resolution() == VIDEORESOLUTION_3X) ? VIDEORESOLUTION_2X : video_get_resolution();
 
     /* base class */
     group_highlightable_update(g);
@@ -623,10 +623,14 @@ void group_resolution_update(group_t *g)
                         sound_play( soundfactory_get("select") );
                         break;
                     case VIDEORESOLUTION_2X:
-                        video_changemode(VIDEORESOLUTION_MAX, video_is_smooth(), video_is_fullscreen());
+                        video_changemode(VIDEORESOLUTION_3X, video_is_smooth(), video_is_fullscreen());
                         sound_play( soundfactory_get("select") );
                         break;
-                    case VIDEORESOLUTION_MAX:
+                    case VIDEORESOLUTION_3X:
+                        video_changemode(VIDEORESOLUTION_4X, video_is_smooth(), video_is_fullscreen());
+                        sound_play( soundfactory_get("select") );
+                        break;
+                    case VIDEORESOLUTION_4X:
                         video_changemode(VIDEORESOLUTION_1X, video_is_smooth(), video_is_fullscreen());
                         sound_play( soundfactory_get("select") );
                         break;
@@ -639,14 +643,22 @@ void group_resolution_update(group_t *g)
                         sound_play( soundfactory_get("select") );
                         break;
                     case VIDEORESOLUTION_2X:
-                        video_changemode(VIDEORESOLUTION_MAX, video_is_smooth(), video_is_fullscreen());
+                        video_changemode(VIDEORESOLUTION_3X, video_is_smooth(), video_is_fullscreen());
+                        sound_play( soundfactory_get("select") );
+                        break;
+                    case VIDEORESOLUTION_3X:
+                        video_changemode(VIDEORESOLUTION_4X, video_is_smooth(), video_is_fullscreen());
                         sound_play( soundfactory_get("select") );
                         break;
                 }
             }
             if(input_button_pressed(input, IB_LEFT)) {
                 switch(video_get_resolution()) {
-                    case VIDEORESOLUTION_MAX:
+                    case VIDEORESOLUTION_4X:
+                        video_changemode(VIDEORESOLUTION_3X, video_is_smooth(), video_is_fullscreen());
+                        sound_play( soundfactory_get("select") );
+                        break;
+                    case VIDEORESOLUTION_3X:
                         video_changemode(VIDEORESOLUTION_2X, video_is_smooth(), video_is_fullscreen());
                         sound_play( soundfactory_get("select") );
                         break;
@@ -663,7 +675,7 @@ void group_resolution_update(group_t *g)
 void group_resolution_render(group_t *g, v2d_t camera_position)
 {
     font_t *f;
-    char v[3][80];
+    char v[4][80];
 
     /* base class */
     group_highlightable_render(g, camera_position);
@@ -675,18 +687,23 @@ void group_resolution_render(group_t *g, v2d_t camera_position)
     str_cpy(v[0], lang_get("OPTIONS_RESOLUTION_OPT1"), sizeof(v[0]));
     str_cpy(v[1], lang_get("OPTIONS_RESOLUTION_OPT2"), sizeof(v[1]));
     str_cpy(v[2], lang_get("OPTIONS_RESOLUTION_OPT3"), sizeof(v[2]));
+    str_cpy(v[3], lang_get("OPTIONS_RESOLUTION_OPT4"), sizeof(v[3]));
 
     switch(video_get_resolution()) {
         case VIDEORESOLUTION_1X:
-            font_set_text(f, "<color=ffff00>%s</color> %s %s", v[0], v[1], v[2]);
+            font_set_text(f, "<color=ffff00>%s</color> %s %s %s", v[0], v[1], v[2], v[3]);
             break;
 
         case VIDEORESOLUTION_2X:
-            font_set_text(f, "%s <color=ffff00>%s</color> %s", v[0], v[1], v[2]);
+            font_set_text(f, "%s <color=ffff00>%s</color> %s %s", v[0], v[1], v[2], v[3]);
             break;
 
-        case VIDEORESOLUTION_MAX:
-            font_set_text(f, "%s %s <color=ffff00>%s</color>", v[0], v[1], v[2]);
+        case VIDEORESOLUTION_3X:
+            font_set_text(f, "%s %s <color=ffff00>%s</color> %s", v[0], v[1], v[2], v[3]);
+            break;
+
+        case VIDEORESOLUTION_4X:
+            font_set_text(f, "%s %s %s <color=ffff00>%s</color>", v[0], v[1], v[2], v[3]);
             break;
     }
 

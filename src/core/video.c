@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * video.c - video manager
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -55,6 +55,10 @@ static int window_active = TRUE;
 static void losangle(image_t *img, int x, int y, int r, int col);
 static void draw_to_screen(image_t *img);
 static void setup_color_depth(int bpp);
+
+/* playarea video size (usually, 320x240) */
+static const v2d_t default_playarea_size = { 320, 240 }; /* this is set on stone! TODO: load these parameters from a file? */
+static v2d_t playarea_size = { 320, 240 }; /* represents the size of the playarea. This may change (eg, is the user on the level editor?) */
 
 /* Fade-in & fade-out */
 #define FADEFX_NONE            0
@@ -131,6 +135,7 @@ void video_changemode(int resolution, int smooth, int fullscreen)
     logfile_message("video_changemode(%d,%d,%d)", resolution, smooth, fullscreen);
 
     /* resolution */
+    playarea_size = (resolution == VIDEORESOLUTION_EDT) ? video_get_window_size() : default_playarea_size;
     video_resolution = resolution;
 
     /* fullscreen */
@@ -143,7 +148,7 @@ void video_changemode(int resolution, int smooth, int fullscreen)
             logfile_message("can't use smooth graphics in the 256 color mode (8 bpp)");
             video_smooth = FALSE;
         }
-        else if(video_resolution == VIDEORESOLUTION_1X || video_resolution == VIDEORESOLUTION_EDT) {
+        else if(video_resolution == VIDEORESOLUTION_1X || video_resolution == VIDEORESOLUTION_3X || video_resolution == VIDEORESOLUTION_EDT) {
             logfile_message("can't use smooth graphics using resolution %d", video_resolution);
             video_smooth = FALSE;
         }
@@ -218,6 +223,17 @@ int video_is_fullscreen()
 
 
 /*
+ * video_get_playarea_size()
+ * Returns the size of the playarea.
+ * Usually, it's 320x240
+ */
+v2d_t video_get_playarea_size()
+{
+    return playarea_size;
+}
+
+
+/*
  * video_get_window_size()
  * Returns the window size, based on
  * the current resolution
@@ -225,7 +241,6 @@ int video_is_fullscreen()
 v2d_t video_get_window_size()
 {
     int width=VIDEO_SCREEN_W, height=VIDEO_SCREEN_H;
-    int dw, dh; /* desktop resolution */
 
     switch(video_resolution) {
         case VIDEORESOLUTION_1X:
@@ -238,7 +253,18 @@ v2d_t video_get_window_size()
             height = 2*VIDEO_SCREEN_H;
             break;
 
-        case VIDEORESOLUTION_MAX:
+        case VIDEORESOLUTION_3X:
+            width = 3*VIDEO_SCREEN_W;
+            height = 3*VIDEO_SCREEN_H;
+            break;
+
+        case VIDEORESOLUTION_4X:
+            width = 4*VIDEO_SCREEN_W;
+            height = 4*VIDEO_SCREEN_H;
+            break;
+
+        /*case VIDEORESOLUTION_MAX: {
+            int dw, dh;
             if(get_desktop_resolution(&dw, &dh) == 0) {
                 int scale = min((int)(dw/VIDEO_SCREEN_W), (int)(dh/VIDEO_SCREEN_H));
                 width = scale*VIDEO_SCREEN_W;
@@ -249,6 +275,7 @@ v2d_t video_get_window_size()
                 height = VIDEO_SCREEN_H;
             }
             break;
+        }*/
 
         case VIDEORESOLUTION_EDT:
             width = VIDEO_SCREEN_W;
@@ -368,8 +395,37 @@ void video_render()
             break;
         }
 
+        /* triple size */
+        case VIDEORESOLUTION_3X:
+        {
+            image_t *tmp = window_surface;
+            v2d_t scale = v2d_new((float)tmp->w / (float)video_get_backbuffer()->w, (float)tmp->h / (float)video_get_backbuffer()->h);
+            image_draw_scaled(video_get_backbuffer(), tmp, 0, 0, scale, IF_NONE);
+            draw_to_screen(tmp);
+            break;
+        }
+
+        /* quadruple size */
+        case VIDEORESOLUTION_4X:
+        {
+            image_t *tmp = window_surface;
+            image_t *half = window_surface_half;
+
+            if(video_is_smooth()) {
+                filter_blit(video_get_backbuffer(), half, FILTER_2XSAI);
+                filter_blit(half, tmp, FILTER_2XSAI);
+            }
+            else {
+                fast2x_blit(video_get_backbuffer(), half);
+                fast2x_blit(half, tmp);
+            }
+
+            draw_to_screen(tmp);
+            break;
+        }
+
         /* maximum size */
-        case VIDEORESOLUTION_MAX:
+        /*case VIDEORESOLUTION_MAX:
         {
             image_t *tmp = window_surface;
 
@@ -386,9 +442,9 @@ void video_render()
 
             draw_to_screen(tmp);
             break;
-        }
+        }*/
 
-        /* editor */
+        /* level editor */
         case VIDEORESOLUTION_EDT:
         {
             draw_to_screen(video_get_backbuffer());
@@ -502,7 +558,7 @@ void video_display_loading_screen()
 {
     image_t *img = image_load(LOADINGSCREEN_FILE);
     image_blit(img, video_get_backbuffer(), 0, 0, 0, 0, img->w, img->h);
-    image_unref(LOADINGSCREEN_FILE);;
+    image_unref(LOADINGSCREEN_FILE);
 
     video_render();
 }
@@ -600,7 +656,7 @@ void draw_to_screen(image_t *img)
     if(img->data == NULL) {
         logfile_message("Can't use video resolution %d", video_get_resolution());
         video_showmessage("Can't use video resolution %d", video_get_resolution());
-        video_changemode(VIDEORESOLUTION_1X, video_is_smooth(), video_is_fullscreen());
+        video_changemode(VIDEORESOLUTION_2X, video_is_smooth(), video_is_fullscreen());
     }
     else
         blit(img->data, screen, 0, 0, 0, 0, img->w, img->h);
