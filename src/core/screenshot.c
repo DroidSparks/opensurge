@@ -44,7 +44,7 @@ void screenshot_init()
     m[IB_FIRE1] = KEY_EQUALS;
     m[IB_FIRE2] = KEY_PRTSCR;
 
-    in = input_create_keyboard(m);
+    in = input_create_keyboard(m, 8);
 }
 
 

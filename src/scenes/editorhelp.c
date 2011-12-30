@@ -88,7 +88,7 @@ void editorhelp_init()
     image_clear(buf, image_rgb(0,0,0));
     image_draw_trans(video_get_backbuffer(), buf, 0, 0, 0.15f, IF_NONE);
 
-    in = input_create_keyboard(keybmap);
+    in = input_create_keyboard(keybmap, 8);
 
     sound_play( soundfactory_get("select") );
 }

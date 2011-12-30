@@ -54,7 +54,7 @@ void input_ignore_joystick(int ignore); /* ignores the input received from a joy
 int input_is_joystick_ignored();
 
 input_t *input_create_computer(); /* computer-controlled "input" */
-input_t *input_create_keyboard(int keybmap[]); /* keyboard */
+input_t *input_create_keyboard(int keybmap[], int keybmap_len); /* keyboard */
 input_t *input_create_mouse(); /* mouse */
 input_t *input_create_joystick(); /* joystick */
 input_t *input_create_user(); /* user's custom input device */

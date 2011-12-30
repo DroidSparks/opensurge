@@ -282,8 +282,10 @@ int input_button_up(input_t *in, inputbutton_t button)
  *
  * keybmap: array of IB_MAX integers. Use NULL
  *          to use the default settings.
+ *
+ * keybmap_len: numer of elements of keybmap
  */
-input_t *input_create_keyboard(int keybmap[])
+input_t *input_create_keyboard(int keybmap[], int keybmap_len)
 {
     input_t *in = mallocx(sizeof *in);
     int i;
@@ -297,7 +299,7 @@ input_t *input_create_keyboard(int keybmap[])
     if(keybmap) {
         /* custom keyboard map */
         for(i=0; i<IB_MAX; i++)
-            in->keybmap[i] = keybmap[i];
+            in->keybmap[i] = i < keybmap_len ? keybmap[i] : 0;
     }
     else {
         /* default settings */

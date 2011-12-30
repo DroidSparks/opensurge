@@ -2184,9 +2184,9 @@ void editor_init()
 
     /* creating objects */
     editor_bgimage = image_load(EDITOR_BGFILE);
-    editor_keyboard = input_create_keyboard(editor_keybmap);
-    editor_keyboard2 = input_create_keyboard(editor_keybmap2);
-    editor_keyboard3 = input_create_keyboard(editor_keybmap3);
+    editor_keyboard = input_create_keyboard(editor_keybmap, 8);
+    editor_keyboard2 = input_create_keyboard(editor_keybmap2, 8);
+    editor_keyboard3 = input_create_keyboard(editor_keybmap3, 8);
     editor_mouse = input_create_mouse();
     editor_cursor_font = font_create("default");
     editor_properties_font = font_create("default");
