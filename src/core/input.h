@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * input.h - input management
- * Copyright (C) 2008-2009  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -29,7 +29,7 @@ typedef enum inputbutton_t inputbutton_t;
 typedef struct input_t input_t;
 
 /* available buttons */
-#define IB_MAX              8   /* number of buttons */
+#define IB_MAX              12   /* number of buttons */
 enum inputbutton_t {
     IB_UP,      /* up */
     IB_DOWN,    /* down */
@@ -38,7 +38,11 @@ enum inputbutton_t {
     IB_FIRE1,   /* jump */
     IB_FIRE2,   /* switch character */
     IB_FIRE3,   /* pause */
-    IB_FIRE4    /* quit */
+    IB_FIRE4,   /* quit */
+    IB_FIRE5,
+    IB_FIRE6,
+    IB_FIRE7,
+    IB_FIRE8
 };
 
 /* public methods */

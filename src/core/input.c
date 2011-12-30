@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * input.c - input management
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -160,6 +160,10 @@ void input_update()
                 it->data->state[IB_FIRE2] = (mouse_b & 2);
                 it->data->state[IB_FIRE3] = (mouse_b & 4);
                 it->data->state[IB_FIRE4] = FALSE;
+                it->data->state[IB_FIRE5] = FALSE;
+                it->data->state[IB_FIRE6] = FALSE;
+                it->data->state[IB_FIRE7] = FALSE;
+                it->data->state[IB_FIRE8] = FALSE;
                 break;
             }
 
@@ -173,6 +177,10 @@ void input_update()
                     it->data->state[IB_FIRE2] = joy[0].button[1].b;
                     it->data->state[IB_FIRE3] = joy[0].button[2].b;
                     it->data->state[IB_FIRE4] = joy[0].button[3].b;
+                    it->data->state[IB_FIRE5] = (joy[0].num_buttons >= 5) ? joy[0].button[4].b : FALSE;
+                    it->data->state[IB_FIRE6] = (joy[0].num_buttons >= 6) ? joy[0].button[5].b : FALSE;
+                    it->data->state[IB_FIRE7] = (joy[0].num_buttons >= 7) ? joy[0].button[6].b : FALSE;
+                    it->data->state[IB_FIRE8] = (joy[0].num_buttons >= 8) ? joy[0].button[7].b : FALSE;
                 }
                 break;
             }
@@ -189,6 +197,10 @@ void input_update()
                     it->data->state[IB_FIRE2] |= joy[0].button[1].b;
                     it->data->state[IB_FIRE3] |= joy[0].button[2].b;
                     it->data->state[IB_FIRE4] |= joy[0].button[3].b;
+                    it->data->state[IB_FIRE5] |= (joy[0].num_buttons >= 5) ? joy[0].button[4].b : FALSE;
+                    it->data->state[IB_FIRE6] |= (joy[0].num_buttons >= 6) ? joy[0].button[5].b : FALSE;
+                    it->data->state[IB_FIRE7] |= (joy[0].num_buttons >= 7) ? joy[0].button[6].b : FALSE;
+                    it->data->state[IB_FIRE8] |= (joy[0].num_buttons >= 8) ? joy[0].button[7].b : FALSE;
                 }
                 break;
             }
@@ -297,6 +309,10 @@ input_t *input_create_keyboard(int keybmap[])
         in->keybmap[IB_FIRE2] = KEY_LCONTROL;
         in->keybmap[IB_FIRE3] = KEY_ENTER;
         in->keybmap[IB_FIRE4] = KEY_ESC;
+        in->keybmap[IB_FIRE5] = KEY_W;
+        in->keybmap[IB_FIRE6] = KEY_A;
+        in->keybmap[IB_FIRE7] = KEY_S;
+        in->keybmap[IB_FIRE8] = KEY_D;
     }
 
     input_register(in);
@@ -402,6 +418,10 @@ input_t *input_create_user()
     in->keybmap[IB_FIRE2] = KEY_LCONTROL;
     in->keybmap[IB_FIRE3] = KEY_ENTER;
     in->keybmap[IB_FIRE4] = KEY_ESC;
+    in->keybmap[IB_FIRE5] = KEY_W;
+    in->keybmap[IB_FIRE6] = KEY_A;
+    in->keybmap[IB_FIRE7] = KEY_S;
+    in->keybmap[IB_FIRE8] = KEY_D;
 
     /* done! */
     input_register(in);
