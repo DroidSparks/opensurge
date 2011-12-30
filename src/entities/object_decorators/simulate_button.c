@@ -87,6 +87,14 @@ objectmachine_t* make_decorator(objectmachine_t *decorated_machine, const char *
         me->button = IB_FIRE3;
     else if(str_icmp(button_name, "fire4") == 0)
         me->button = IB_FIRE4;
+    else if(str_icmp(button_name, "fire5") == 0)
+        me->button = IB_FIRE5;
+    else if(str_icmp(button_name, "fire6") == 0)
+        me->button = IB_FIRE6;
+    else if(str_icmp(button_name, "fire7") == 0)
+        me->button = IB_FIRE7;
+    else if(str_icmp(button_name, "fire8") == 0)
+        me->button = IB_FIRE8;
     else
         fatal_error("Invalid button '%s' in simulate_button", button_name);
 

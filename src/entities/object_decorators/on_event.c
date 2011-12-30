@@ -1233,6 +1233,14 @@ eventstrategy_t* onbutton_new(const char *button_name, int (*check)(input_t*,inp
         x->button = IB_FIRE3;
     else if(str_icmp(button_name, "fire4") == 0)
         x->button = IB_FIRE4;
+    else if(str_icmp(button_name, "fire5") == 0)
+        x->button = IB_FIRE5;
+    else if(str_icmp(button_name, "fire6") == 0)
+        x->button = IB_FIRE6;
+    else if(str_icmp(button_name, "fire7") == 0)
+        x->button = IB_FIRE7;
+    else if(str_icmp(button_name, "fire8") == 0)
+        x->button = IB_FIRE8;
     else
         fatal_error(
             "Invalid button '%s' in on_button_%s event",
