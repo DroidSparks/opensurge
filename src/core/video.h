@@ -50,6 +50,7 @@ int video_is_fullscreen();
 v2d_t video_get_playarea_size(); /* usually, 320x240 */
 v2d_t video_get_window_size(); /* the real size of the window, in pixels */
 void video_display_loading_screen();
+const image_t* video_get_window_surface();
 
 
 /* backbuffer */

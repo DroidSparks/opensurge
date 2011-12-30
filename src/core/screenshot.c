@@ -58,7 +58,7 @@ void screenshot_update()
     /* take the snapshot! (press the '=' key or the 'printscreen' key) */
     if(input_button_pressed(in, IB_FIRE1) || input_button_pressed(in, IB_FIRE2)) {
         char *file = next_available_filename();
-        image_save(video_get_backbuffer(), file);
+        image_save(video_get_window_surface(), file);
         video_showmessage("'screenshots/%s' saved", basename(file));
         logfile_message("New screenshot: %s", file);
     }

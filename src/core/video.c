@@ -564,6 +564,15 @@ void video_display_loading_screen()
 }
 
 
+/*
+ * video_get_window_surface()
+ * The window surface (read-only)
+ */
+const image_t* video_get_window_surface()
+{
+    return window_surface;
+}
+
 
 /* private stuff */
 
