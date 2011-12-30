@@ -31,6 +31,7 @@ int preferences_get_videoresolution(); /* returns a VIDEORESOLUTION_* value (see
 int preferences_get_fullscreen(); /* fullscreen mode? */
 int preferences_get_smooth(); /* display smooth graphics? */
 int preferences_get_showfps(); /* show fps? */
+int preferences_get_usegamepad(); /* use gamepad? */
 const char* preferences_get_languagepath(); /* returns the language filepath */
 
 /* mutators */
@@ -40,5 +41,6 @@ void preferences_set_fullscreen(int fullscreen);
 void preferences_set_smooth(int smooth);
 void preferences_set_showfps(int fullscreen);
 void preferences_set_languagepath(const char *filepath);
+void preferences_set_usegamepad(int usegamepad);
 
 #endif

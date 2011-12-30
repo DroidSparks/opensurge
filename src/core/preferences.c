@@ -31,7 +31,7 @@
 
 /* constants */
 #define PREFERENCES_FILE                            "preferences.dat"
-#define PREFERENCES_SIGNATURE                       "OSPREF02"
+#define PREFERENCES_SIGNATURE                       "OSPREF03"
 
 
 /* file structure */
@@ -49,6 +49,7 @@ struct {
     int smooth;
     int showfps;
     char languagepath[1024];
+    int usegamepad;
 
 } data;
 
@@ -85,6 +86,8 @@ int preferences_get_showfps() { return data.showfps; }
 void preferences_set_showfps(int showfps) { data.showfps = showfps; save(); }
 const char *preferences_get_languagepath() { return data.languagepath; }
 void preferences_set_languagepath(const char *filepath) { str_cpy(data.languagepath, filepath, sizeof(data.languagepath)); save(); }
+int preferences_get_usegamepad() { return data.usegamepad; }
+void preferences_set_usegamepad(int usegamepad) { data.usegamepad = usegamepad; save(); }
 
 
 
@@ -116,6 +119,7 @@ void set_defaults()
     data.fullscreen = FALSE;
     data.smooth = FALSE;
     data.showfps = FALSE;
+    data.usegamepad = FALSE;
     str_cpy(data.languagepath, DEFAULT_LANGUAGE_FILEPATH, sizeof(data.languagepath));
 }
 

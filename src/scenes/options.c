@@ -222,6 +222,7 @@ void save_preferences()
     preferences_set_fullscreen( video_is_fullscreen() );
     preferences_set_smooth( video_is_smooth() );
     preferences_set_showfps( video_is_fps_visible() );
+    preferences_set_usegamepad( !input_is_joystick_ignored() );
 }
 
 

@@ -52,6 +52,7 @@ commandline_t commandline_parse(int argc, char **argv)
     cmd.smooth_graphics = preferences_get_smooth();
     cmd.fullscreen = preferences_get_fullscreen();
     cmd.show_fps = preferences_get_showfps();
+    cmd.use_gamepad = preferences_get_usegamepad();
     str_cpy(cmd.language_filepath, preferences_get_languagepath(), sizeof(cmd.language_filepath));
     cmd.color_depth = max(16, desktop_color_depth());
     cmd.custom_level = FALSE;
@@ -78,6 +79,7 @@ commandline_t commandline_parse(int argc, char **argv)
                 "    --smooth                  improves the graphic quality (*)\n"
                 "    --tiny                    small game window (improves the speed **). This is the same as --resolution 1\n"
                 "    --show-fps                shows the FPS (frames per second) counter\n"
+                "    --use-gamepad             use a gamepad\n"
                 "    --level \"FILEPATH\"        runs the level located at FILEPATH\n"
                 "    --quest \"FILEPATH\"        runs the quest located at FILEPATH\n"
                 "    --color-depth X           sets the color depth to X bits/pixel, where X = 16, 24 or 32\n"
@@ -140,6 +142,9 @@ commandline_t commandline_parse(int argc, char **argv)
 
         else if(str_icmp(argv[i], "--show-fps") == 0)
             cmd.show_fps = TRUE;
+
+        else if(str_icmp(argv[i], "--use-gamepad") == 0)
+            cmd.use_gamepad = TRUE;
 
         else if(str_icmp(argv[i], "--level") == 0) {
             if(++i < argc) {

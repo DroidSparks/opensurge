@@ -188,6 +188,7 @@ void init_managers(commandline_t cmd)
     video_show_fps(cmd.show_fps);
     audio_init();
     input_init();
+    input_ignore_joystick(!cmd.use_gamepad);
     resourcemanager_init();
 }
 
