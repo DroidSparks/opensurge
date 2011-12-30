@@ -53,12 +53,12 @@
 
 #define CHANGE_ANIM(id) { \
     animation_t *an = sprite_get_animation(charactersystem_get(p->name)->animation.sprite_name, charactersystem_get(p->name)->animation.id); \
-    float xsp = fabs(p->actor->speed.x / 60.0f), sf = 1.0f; \
+    /*float xsp = fabs(p->actor->speed.x / 60.0f), sf = 1.0f;*/ \
     actor_change_animation(p->actor, an); \
-    if( strcmp( #id, "walking" ) == 0 ) sf = 0.5f * 60.0f / ( 8 * max(1, 8 - xsp) ); \
-    else if( strcmp( #id, "running" ) == 0 ) sf = 0.5f * 60.0f / ( 8 * max(1, 8 - xsp) ); \
-    else if( strcmp( #id, "jumping" ) == 0 ) sf = 0.5f * 60.0f / ( 8 * max(1, 5 - xsp) ); \
-    else if( strcmp( #id, "rolling" ) == 0 ) sf = 0.5f * 60.0f / ( 8 * max(1, 5 - xsp) );  \
+    /*if( strcmp( #id, "walking" ) == 0 ) sf = 0.5f * 60.0f / ( 8 * max(1, 8 - xsp) );*/ \
+    /*else if( strcmp( #id, "running" ) == 0 ) sf = 0.5f * 60.0f / ( 8 * max(1, 8 - xsp) );*/ \
+    /*else if( strcmp( #id, "jumping" ) == 0 ) sf = 0.5f * 60.0f / ( 8 * max(1, 5 - xsp) );*/ \
+    /*else if( strcmp( #id, "rolling" ) == 0 ) sf = 0.5f * 60.0f / ( 8 * max(1, 5 - xsp) );*/  \
     /* sf = 60.0f / ( an->fps * max(1, 8 - xsp) ); */ \
     /* actor_change_animation_speed_factor(p->actor, sf); */ \
 }

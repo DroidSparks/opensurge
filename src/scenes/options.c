@@ -53,7 +53,7 @@ static bgtheme_t *bgtheme;
 static void save_preferences();
 
 /* group tree */
-#define OPTIONS_MAX                     8
+#define OPTIONS_MAX                     9
 static int option; /* this is the current option. It lies in the interval [ 0 .. OPTIONS_MAX-1 ] */
 static group_t *root;
 static group_t *create_grouptree();
@@ -234,7 +234,7 @@ void save_preferences()
 
 
 /* <<abstract>> Fixed label */
-void group_fixedlabel_init(group_t *g, char *lang_key)
+static void group_fixedlabel_init(group_t *g, char *lang_key)
 {
     group_label_init(g);
     g->data = mallocx(256 * sizeof(char));
@@ -242,19 +242,19 @@ void group_fixedlabel_init(group_t *g, char *lang_key)
     font_set_text(g->font, lang_get(lang_key));
 }
 
-void group_fixedlabel_release(group_t *g)
+static void group_fixedlabel_release(group_t *g)
 {
     free((char*)(g->data));
     group_label_release(g);
 }
 
-void group_fixedlabel_update(group_t *g)
+static void group_fixedlabel_update(group_t *g)
 {
     group_label_update(g);
     font_set_text(g->font, lang_get((char*)(g->data)));
 }
 
-void group_fixedlabel_render(group_t *g, v2d_t camera_position)
+static void group_fixedlabel_render(group_t *g, v2d_t camera_position)
 {
     group_label_render(g, camera_position);
 }
@@ -266,7 +266,7 @@ typedef struct group_highlightable_data_t {
     char lang_key[256];
 } group_highlightable_data_t;
 
-void group_highlightable_init(group_t *g, char *lang_key, int option_index)
+static void group_highlightable_init(group_t *g, char *lang_key, int option_index)
 {
     group_highlightable_data_t *data;
 
@@ -279,19 +279,19 @@ void group_highlightable_init(group_t *g, char *lang_key, int option_index)
     str_cpy(data->lang_key, lang_key, sizeof(data->lang_key));
 }
 
-void group_highlightable_release(group_t *g)
+static void group_highlightable_release(group_t *g)
 {
     free((group_highlightable_data_t*)(g->data));
     group_label_release(g);
 }
 
-int group_highlightable_is_highlighted(group_t *g) /* "inheritance" in C */
+static int group_highlightable_is_highlighted(group_t *g) /* "inheritance" in C */
 {
     group_highlightable_data_t *data = (group_highlightable_data_t*)(g->data);
     return (option == data->option_index);
 }
 
-void group_highlightable_update(group_t *g)
+static void group_highlightable_update(group_t *g)
 {
     group_highlightable_data_t *data = (group_highlightable_data_t*)(g->data);
 
@@ -303,7 +303,7 @@ void group_highlightable_update(group_t *g)
     }
 }
 
-void group_highlightable_render(group_t *g, v2d_t camera_position)
+static void group_highlightable_render(group_t *g, v2d_t camera_position)
 {
     group_label_render(g, camera_position);
 }
@@ -313,78 +313,78 @@ void group_highlightable_render(group_t *g, v2d_t camera_position)
 
 
 /* Root node */
-void group_root_init(group_t *g)
+static void group_root_init(group_t *g)
 {
     group_label_init(g);
     font_set_text(g->font, "");
     font_set_position(g->font, v2d_new(0, 25));
 }
 
-void group_root_release(group_t *g)
+static void group_root_release(group_t *g)
 {
     group_label_release(g);
 }
 
-void group_root_update(group_t *g)
+static void group_root_update(group_t *g)
 {
     group_label_update(g);
 }
 
-void group_root_render(group_t *g, v2d_t camera_position)
+static void group_root_render(group_t *g, v2d_t camera_position)
 {
     group_label_render(g, camera_position);
 }
 
-group_t* group_root_create()
+static group_t *group_root_create()
 {
     return group_create(group_root_init, group_root_release, group_root_update, group_root_render);
 }
 
 
 /* "Graphics" label */
-void group_graphics_init(group_t *g)
+static void group_graphics_init(group_t *g)
 {
     group_fixedlabel_init(g, "OPTIONS_GRAPHICS");
 }
 
-void group_graphics_release(group_t *g)
+static void group_graphics_release(group_t *g)
 {
     group_fixedlabel_release(g);
 }
 
-void group_graphics_update(group_t *g)
+static void group_graphics_update(group_t *g)
 {
     group_fixedlabel_update(g);
 }
 
-void group_graphics_render(group_t *g, v2d_t camera_position)
+static void group_graphics_render(group_t *g, v2d_t camera_position)
 {
     group_fixedlabel_render(g, camera_position);
 }
 
-group_t *group_graphics_create()
+static group_t *group_graphics_create()
 {
     return group_create(group_graphics_init, group_graphics_release, group_graphics_update, group_graphics_render);
 }
 
 
 /* "Fullscreen" label */
-void group_fullscreen_init(group_t *g)
+static void group_fullscreen_init(group_t *g)
 {
     group_highlightable_init(g, "OPTIONS_FULLSCREEN", 1);
 }
 
-void group_fullscreen_release(group_t *g)
+static void group_fullscreen_release(group_t *g)
 {
     group_highlightable_release(g);
 }
 
-int group_fullscreen_is_highlighted(group_t *g)
+static int group_fullscreen_is_highlighted(group_t *g)
 {
     return group_highlightable_is_highlighted(g);
 }
 
-void group_fullscreen_update(group_t *g)
+static void group_fullscreen_update(group_t *g)
 {
     /* base class */
     group_highlightable_update(g);
@@ -412,7 +412,7 @@ void group_fullscreen_update(group_t *g)
     }
 }
 
-void group_fullscreen_render(group_t *g, v2d_t camera_position)
+static void group_fullscreen_render(group_t *g, v2d_t camera_position)
 {
     font_t *f;
     char v[2][80];
@@ -436,29 +436,29 @@ void group_fullscreen_render(group_t *g, v2d_t camera_position)
     font_destroy(f);
 }
 
-group_t *group_fullscreen_create()
+static group_t *group_fullscreen_create()
 {
     return group_create(group_fullscreen_init, group_fullscreen_release, group_fullscreen_update, group_fullscreen_render);
 }
 
 
 /* "Smooth Graphics" label */
-void group_smooth_init(group_t *g)
+static void group_smooth_init(group_t *g)
 {
     group_highlightable_init(g, "OPTIONS_SMOOTHGFX", 2);
 }
 
-void group_smooth_release(group_t *g)
+static void group_smooth_release(group_t *g)
 {
     group_highlightable_release(g);
 }
 
-int group_smooth_is_highlighted(group_t *g)
+static int group_smooth_is_highlighted(group_t *g)
 {
     return group_highlightable_is_highlighted(g);
 }
 
-void group_smooth_update(group_t *g)
+static void group_smooth_update(group_t *g)
 {
     int resolution = (video_get_resolution() == VIDEORESOLUTION_1X || video_get_resolution() == VIDEORESOLUTION_3X) ? VIDEORESOLUTION_2X : video_get_resolution();
 
@@ -488,7 +488,7 @@ void group_smooth_update(group_t *g)
     }
 }
 
-void group_smooth_render(group_t *g, v2d_t camera_position)
+static void group_smooth_render(group_t *g, v2d_t camera_position)
 {
     font_t *f;
     char v[2][80];
@@ -512,29 +512,29 @@ void group_smooth_render(group_t *g, v2d_t camera_position)
     font_destroy(f);
 }
 
-group_t *group_smooth_create()
+static group_t *group_smooth_create()
 {
     return group_create(group_smooth_init, group_smooth_release, group_smooth_update, group_smooth_render);
 }
 
 
 /* "Show FPS" label */
-void group_fps_init(group_t *g)
+static void group_fps_init(group_t *g)
 {
     group_highlightable_init(g, "OPTIONS_FPS", 3);
 }
 
-void group_fps_release(group_t *g)
+static void group_fps_release(group_t *g)
 {
     group_highlightable_release(g);
 }
 
-int group_fps_is_highlighted(group_t *g)
+static int group_fps_is_highlighted(group_t *g)
 {
     return group_highlightable_is_highlighted(g);
 }
 
-void group_fps_update(group_t *g)
+static void group_fps_update(group_t *g)
 {
     /* base class */
     group_highlightable_update(g);
@@ -562,7 +562,7 @@ void group_fps_update(group_t *g)
     }
 }
 
-void group_fps_render(group_t *g, v2d_t camera_position)
+static void group_fps_render(group_t *g, v2d_t camera_position)
 {
     font_t *f;
     char v[2][80];
@@ -586,29 +586,29 @@ void group_fps_render(group_t *g, v2d_t camera_position)
     font_destroy(f);
 }
 
-group_t *group_fps_create()
+static group_t *group_fps_create()
 {
     return group_create(group_fps_init, group_fps_release, group_fps_update, group_fps_render);
 }
 
 
 /* "Resolution" label */
-void group_resolution_init(group_t *g)
+static void group_resolution_init(group_t *g)
 {
     group_highlightable_init(g, "OPTIONS_RESOLUTION", 0);
 }
 
-void group_resolution_release(group_t *g)
+static void group_resolution_release(group_t *g)
 {
     group_highlightable_release(g);
 }
 
-int group_resolution_is_highlighted(group_t *g)
+static int group_resolution_is_highlighted(group_t *g)
 {
     return group_highlightable_is_highlighted(g);
 }
 
-void group_resolution_update(group_t *g)
+static void group_resolution_update(group_t *g)
 {
     /* base class */
     group_highlightable_update(g);
@@ -672,7 +672,7 @@ void group_resolution_update(group_t *g)
     }
 }
 
-void group_resolution_render(group_t *g, v2d_t camera_position)
+static void group_resolution_render(group_t *g, v2d_t camera_position)
 {
     font_t *f;
     char v[4][80];
@@ -711,54 +711,54 @@ void group_resolution_render(group_t *g, v2d_t camera_position)
     font_destroy(f);
 }
 
-group_t *group_resolution_create()
+static group_t *group_resolution_create()
 {
     return group_create(group_resolution_init, group_resolution_release, group_resolution_update, group_resolution_render);
 }
 
 /* "Game" label */
-void group_game_init(group_t *g)
+static void group_game_init(group_t *g)
 {
     group_fixedlabel_init(g, "OPTIONS_GAME");
 }
 
-void group_game_release(group_t *g)
+static void group_game_release(group_t *g)
 {
     group_fixedlabel_release(g);
 }
 
-void group_game_update(group_t *g)
+static void group_game_update(group_t *g)
 {
     group_fixedlabel_update(g);
 }
 
-void group_game_render(group_t *g, v2d_t camera_position)
+static void group_game_render(group_t *g, v2d_t camera_position)
 {
     group_fixedlabel_render(g, camera_position);
 }
 
-group_t *group_game_create()
+static group_t *group_game_create()
 {
     return group_create(group_game_init, group_game_release, group_game_update, group_game_render);
 }
 
 /* "Change Language" label */
-void group_changelanguage_init(group_t *g)
+static void group_changelanguage_init(group_t *g)
 {
     group_highlightable_init(g, "OPTIONS_LANGUAGE", 4);
 }
 
-void group_changelanguage_release(group_t *g)
+static void group_changelanguage_release(group_t *g)
 {
     group_highlightable_release(g);
 }
 
-int group_changelanguage_is_highlighted(group_t *g)
+static int group_changelanguage_is_highlighted(group_t *g)
 {
     return group_highlightable_is_highlighted(g);
 }
 
-void group_changelanguage_update(group_t *g)
+static void group_changelanguage_update(group_t *g)
 {
     /* base class */
     group_highlightable_update(g);
@@ -774,33 +774,33 @@ void group_changelanguage_update(group_t *g)
     }
 }
 
-void group_changelanguage_render(group_t *g, v2d_t camera_position)
+static void group_changelanguage_render(group_t *g, v2d_t camera_position)
 {
     group_highlightable_render(g, camera_position);
 }
 
-group_t *group_changelanguage_create()
+static group_t *group_changelanguage_create()
 {
     return group_create(group_changelanguage_init, group_changelanguage_release, group_changelanguage_update, group_changelanguage_render);
 }
 
 /* "Credits" label */
-void group_credits_init(group_t *g)
+static void group_credits_init(group_t *g)
 {
-    group_highlightable_init(g, "OPTIONS_CREDITS", 6);
+    group_highlightable_init(g, "OPTIONS_CREDITS", 7);
 }
 
-void group_credits_release(group_t *g)
+static void group_credits_release(group_t *g)
 {
     group_highlightable_release(g);
 }
 
-int group_credits_is_highlighted(group_t *g)
+static int group_credits_is_highlighted(group_t *g)
 {
     return group_highlightable_is_highlighted(g);
 }
 
-void group_credits_update(group_t *g)
+static void group_credits_update(group_t *g)
 {
     /* base class */
     group_highlightable_update(g);
@@ -816,33 +816,33 @@ void group_credits_update(group_t *g)
     }
 }
 
-void group_credits_render(group_t *g, v2d_t camera_position)
+static void group_credits_render(group_t *g, v2d_t camera_position)
 {
     group_highlightable_render(g, camera_position);
 }
 
-group_t *group_credits_create()
+static group_t *group_credits_create()
 {
     return group_create(group_credits_init, group_credits_release, group_credits_update, group_credits_render);
 }
 
 /* "Stage Select" label */
-void group_stageselect_init(group_t *g)
+static void group_stageselect_init(group_t *g)
 {
-    group_highlightable_init(g, "OPTIONS_STAGESELECT", 5);
+    group_highlightable_init(g, "OPTIONS_STAGESELECT", 6);
 }
 
-void group_stageselect_release(group_t *g)
+static void group_stageselect_release(group_t *g)
 {
     group_highlightable_release(g);
 }
 
-int group_stageselect_is_highlighted(group_t *g)
+static int group_stageselect_is_highlighted(group_t *g)
 {
     return group_highlightable_is_highlighted(g);
 }
 
-void group_stageselect_update(group_t *g)
+static void group_stageselect_update(group_t *g)
 {
     /* base class */
     group_highlightable_update(g);
@@ -858,33 +858,33 @@ void group_stageselect_update(group_t *g)
     }
 }
 
-void group_stageselect_render(group_t *g, v2d_t camera_position)
+static void group_stageselect_render(group_t *g, v2d_t camera_position)
 {
     group_highlightable_render(g, camera_position);
 }
 
-group_t *group_stageselect_create()
+static group_t *group_stageselect_create()
 {
     return group_create(group_stageselect_init, group_stageselect_release, group_stageselect_update, group_stageselect_render);
 }
 
 /* "Back" label */
-void group_back_init(group_t *g)
+static void group_back_init(group_t *g)
 {
-    group_highlightable_init(g, "OPTIONS_BACK", 7);
+    group_highlightable_init(g, "OPTIONS_BACK", 8);
 }
 
-void group_back_release(group_t *g)
+static void group_back_release(group_t *g)
 {
     group_highlightable_release(g);
 }
 
-int group_back_is_highlighted(group_t *g)
+static int group_back_is_highlighted(group_t *g)
 {
     return group_highlightable_is_highlighted(g);
 }
 
-void group_back_update(group_t *g)
+static void group_back_update(group_t *g)
 {
     /* base class */
     group_highlightable_update(g);
@@ -900,15 +900,90 @@ void group_back_update(group_t *g)
     }
 }
 
-void group_back_render(group_t *g, v2d_t camera_position)
+static void group_back_render(group_t *g, v2d_t camera_position)
 {
     group_highlightable_render(g, camera_position);
 }
 
-group_t *group_back_create()
+static group_t *group_back_create()
 {
     return group_create(group_back_init, group_back_release, group_back_update, group_back_render);
 }
+
+
+/* "Enable Gamepad" label */
+static void group_gamepad_init(group_t *g)
+{
+    group_highlightable_init(g, "OPTIONS_GAMEPAD", 5);
+}
+
+static void group_gamepad_release(group_t *g)
+{
+    group_highlightable_release(g);
+}
+
+static int group_gamepad_is_highlighted(group_t *g)
+{
+    return group_highlightable_is_highlighted(g);
+}
+
+static void group_gamepad_update(group_t *g)
+{
+    /* base class */
+    group_highlightable_update(g);
+
+    /* derived class */
+    if(group_gamepad_is_highlighted(g)) {
+        if(!fadefx_is_fading()) {
+            if(input_button_pressed(input, IB_FIRE1) || input_button_pressed(input, IB_FIRE3)) {
+                sound_play( soundfactory_get("select") );
+                input_ignore_joystick(!input_is_joystick_ignored());
+            }
+            if(input_button_pressed(input, IB_RIGHT)) {
+                if(!input_is_joystick_ignored()) {
+                    sound_play( soundfactory_get("select") );
+                    input_ignore_joystick(TRUE);
+                }
+            }
+            if(input_button_pressed(input, IB_LEFT)) {
+                if(input_is_joystick_ignored()) {
+                    sound_play( soundfactory_get("select") );
+                    input_ignore_joystick(FALSE);
+                }
+            }
+        }
+    }
+}
+
+static void group_gamepad_render(group_t *g, v2d_t camera_position)
+{
+    font_t *f;
+    char v[2][80];
+
+    /* base class */
+    group_highlightable_render(g, camera_position);
+
+    /* derived class */
+    f = font_create("menu.text");
+    font_set_position(f, v2d_new(175, font_get_position(g->font).y));
+
+    str_cpy(v[0], lang_get("OPTIONS_YES"), sizeof(v[0]));
+    str_cpy(v[1], lang_get("OPTIONS_NO"), sizeof(v[1]));
+
+    if(!input_is_joystick_ignored())
+        font_set_text(f, "<color=ffff00>%s</color>  %s", v[0], v[1]);
+    else
+        font_set_text(f, "%s  <color=ffff00>%s</color>", v[0], v[1]);
+
+    font_render(f, camera_position);
+    font_destroy(f);
+}
+
+static group_t *group_gamepad_create()
+{
+    return group_create(group_gamepad_init, group_gamepad_release, group_gamepad_update, group_gamepad_render);
+}
+
 
 
 
@@ -922,7 +997,7 @@ group_t *create_grouptree()
 {
     group_t *root;
     group_t *graphics, *fullscreen, *resolution, *smooth, *fps;
-    group_t *game, *changelanguage, *credits, *stageselect;
+    group_t *game, *gamepad, *changelanguage, *credits, *stageselect;
     group_t *back;
 
     /* section: graphics */
@@ -937,11 +1012,13 @@ group_t *create_grouptree()
     group_addchild(graphics, fps);
 
     /* section: game */
+    gamepad = group_gamepad_create();
     changelanguage = group_changelanguage_create();
     credits = group_credits_create();
     stageselect = group_stageselect_create();
     game = group_game_create();
     group_addchild(game, changelanguage);
+    group_addchild(game, gamepad);
     group_addchild(game, stageselect);
     group_addchild(game, credits);
 

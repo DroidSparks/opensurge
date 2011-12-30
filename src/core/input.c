@@ -84,7 +84,7 @@ void input_init()
 
     /* joystick */
     got_joystick = FALSE;
-    ignore_joystick = FALSE;
+    ignore_joystick = TRUE;
     if(install_joystick(JOY_TYPE_AUTODETECT) == 0) {
         if(num_joysticks > 0 && joy[0].num_sticks > 0 && joy[0].stick[0].num_axis >= 2 && joy[0].num_buttons >= 4) {
             logfile_message("Joystick installed successfully!");
