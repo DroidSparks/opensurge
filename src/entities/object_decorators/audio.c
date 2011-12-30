@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * audio.c - Audio commands
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@ typedef struct playsamplestrategy_t playsamplestrategy_t;
 typedef struct playmusicstrategy_t playmusicstrategy_t;
 typedef struct playlevelmusicstrategy_t playlevelmusicstrategy_t;
 typedef struct setmusicvolumestrategy_t setmusicvolumestrategy_t;
+typedef struct stopsamplestrategy_t stopsamplestrategy_t;
 
 /* objectdecorator_audio_t class */
 struct objectdecorator_audio_t {
@@ -86,6 +87,16 @@ static audiostrategy_t* playlevelmusicstrategy_new();
 static void playlevelmusicstrategy_update(audiostrategy_t *s);
 static void playlevelmusicstrategy_release(audiostrategy_t *s);
 
+/* stop_sample strategy */
+struct stopsamplestrategy_t {
+    audiostrategy_t base;
+    sound_t *sfx; /* sample to be stoped */
+};
+
+static audiostrategy_t* stopsamplestrategy_new(const char *sample_name);
+static void stopsamplestrategy_update(audiostrategy_t *s);
+static void stopsamplestrategy_release(audiostrategy_t *s);
+
 /* private methods */
 static void init(objectmachine_t *obj);
 static void release(objectmachine_t *obj);
@@ -117,6 +128,11 @@ objectmachine_t* objectdecorator_playlevelmusic_new(objectmachine_t *decorated_m
 objectmachine_t* objectdecorator_setmusicvolume_new(objectmachine_t *decorated_machine, expression_t *vol)
 {
     return make_decorator(decorated_machine, setmusicvolumestrategy_new(vol));
+}
+
+objectmachine_t* objectdecorator_stopsample_new(objectmachine_t *decorated_machine, const char *sample_name)
+{
+    return make_decorator(decorated_machine, stopsamplestrategy_new(sample_name));
 }
 
 
@@ -305,4 +321,28 @@ void setmusicvolumestrategy_release(audiostrategy_t *s)
 {
     setmusicvolumestrategy_t *me = (setmusicvolumestrategy_t*)s;
     expression_destroy(me->vol);
+}
+
+/* ------------------------ */
+
+audiostrategy_t* stopsamplestrategy_new(const char *sample_name)
+{
+    stopsamplestrategy_t *s = mallocx(sizeof *s);
+    ((audiostrategy_t*)s)->update = stopsamplestrategy_update;
+    ((audiostrategy_t*)s)->release = stopsamplestrategy_release;
+
+    s->sfx = sound_load(sample_name);
+
+    return (audiostrategy_t*)s;
+}
+
+void stopsamplestrategy_update(audiostrategy_t *s)
+{
+    stopsamplestrategy_t *me = (stopsamplestrategy_t*)s;
+    sound_stop(me->sfx);
+}
+
+void stopsamplestrategy_release(audiostrategy_t *s)
+{
+    /* empty */
 }

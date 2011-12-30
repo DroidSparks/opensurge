@@ -251,6 +251,7 @@ static void audio_play_sample(objectmachine_t** m, int n, const char **p, const 
 static void audio_play_music(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void audio_play_level_music(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void audio_set_music_volume(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void audio_stop_sample(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 
 /* -------------------------------------- */
 
@@ -400,6 +401,7 @@ static entry_t command_table[] = {
 
     /* audio commands */
     { "play_sample", audio_play_sample },
+    { "stop_sample", audio_stop_sample },
     { "play_music", audio_play_music },
     { "play_level_music", audio_play_level_music },
     { "set_music_volume", audio_set_music_volume },
@@ -1366,6 +1368,14 @@ void audio_set_music_volume(objectmachine_t** m, int n, const char **p, const pa
         *m = objectdecorator_setmusicvolume_new(*m, EXPRESSION(p[0]));
     else
         COMPILE_ERROR("Object script error - set_music_volume expects one parameter: volume");
+}
+
+void audio_stop_sample(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_stopsample_new(*m, p[0]);
+    else
+        COMPILE_ERROR("Object script error - stop_sample expects one parameter: sample name");
 }
 
 void show_dialog_box(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)

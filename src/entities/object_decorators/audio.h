@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * Audio.h - Audio commands
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -29,6 +29,7 @@ objectmachine_t* objectdecorator_playsample_new(objectmachine_t *decorated_machi
 objectmachine_t* objectdecorator_playmusic_new(objectmachine_t *decorated_machine, const char *music_name, expression_t *loop);
 objectmachine_t* objectdecorator_playlevelmusic_new(objectmachine_t *decorated_machine);
 objectmachine_t* objectdecorator_setmusicvolume_new(objectmachine_t *decorated_machine, expression_t *vol);
+objectmachine_t* objectdecorator_stopsample_new(objectmachine_t *decorated_machine, const char *sample_name);
 
 #endif
 
