@@ -143,7 +143,7 @@ void input_update()
         switch(it->data->type) {
             case IT_KEYBOARD: {
                 for(i=0; i<IB_MAX; i++)
-                    it->data->state[i] = key[ it->data->keybmap[i] ];
+                    it->data->state[i] = it->data->keybmap[i] > 0 ? key[ it->data->keybmap[i] ] : FALSE;
                 break;
             }
 
@@ -187,7 +187,7 @@ void input_update()
 
             case IT_USER: {
                 for(i=0; i<IB_MAX; i++)
-                    it->data->state[i] = key[ it->data->keybmap[i] ];
+                    it->data->state[i] = it->data->keybmap[i] > 0 ? key[ it->data->keybmap[i] ] : FALSE;
                 if(input_joystick_available()) {
                     it->data->state[IB_UP] |= joy[0].stick[0].axis[1].d1;
                     it->data->state[IB_DOWN] |= joy[0].stick[0].axis[1].d2;
