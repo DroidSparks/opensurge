@@ -527,6 +527,7 @@ void input_change_mapping(inputuserdefined_t *in, const char* inputmap_name)
 {
     input_clear((input_t*)in);
     in->inputmap = inputmap_get(inputmap_name ? inputmap_name : DEFAULT_INPUTMAP_NAME);
+    ((input_t*)in)->update((input_t*)in);
 }
 
 /*

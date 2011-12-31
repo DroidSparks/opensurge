@@ -24,7 +24,6 @@
 
 #include "base/objectdecorator.h"
 
-/* in a script, it's recommendable to change the state after you call set_player_inputmap */
 objectmachine_t* objectdecorator_setplayerinputmap_new(objectmachine_t *decorated_machine, const char *button_name);
 
 #endif
