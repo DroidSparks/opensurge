@@ -47,7 +47,7 @@ static float pause_timer;
  */
 void pause_init()
 {
-    pause_input = input_create_user();
+    pause_input = input_create_user(NULL);
     pause_buf = image_create(video_get_backbuffer()->w, video_get_backbuffer()->h);
     pause_ready = FALSE;
     pause_quit = FALSE;

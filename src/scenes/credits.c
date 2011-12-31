@@ -73,7 +73,7 @@ void credits_init()
 
     /* initializing stuff... */
     quit = FALSE;
-    input = input_create_user();
+    input = input_create_user(NULL);
 
     title = font_create("menu.title");
     font_set_text(title, "%s", lang_get("CREDITS_TITLE"));

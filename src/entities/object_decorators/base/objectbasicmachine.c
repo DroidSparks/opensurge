@@ -77,10 +77,11 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
 
 void render(objectmachine_t *obj, v2d_t camera_position)
 {
-    actor_t *act = obj->get_object_instance(obj)->actor;
+    actor_t *act = ((objectbasicmachine_t*)obj)->object->actor; /*obj->get_object_instance(obj)->actor;*/
     v2d_t p = act->position;
 
-    act->position = v2d_new( (int)act->position.x , (int)act->position.y );
+    act->position.x = (int)act->position.x;
+    act->position.y = (int)act->position.y;
     actor_render(act, camera_position);
     act->position = p;
 }

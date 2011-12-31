@@ -251,10 +251,10 @@ Mateus Reis
 --- musics/intro_cutscene/intro[1-9].ogg
 
 Johan Brodd
---- musics/template.ogg
---- musics/silence.ogg
---- musics/intro_cutscene/Jobromedia-Intro.ogg
---- musics/sharp.ogg
+--- musics/template.ogg (public domain)
+--- musics/silence.ogg (public domain)
+--- musics/intro_cutscene/Jobromedia-Intro.ogg (public domain)
+--- musics/sharp.ogg (public domain)
 
 <color=ffff00>$CREDITS_RES_SAMPLES</color>
 

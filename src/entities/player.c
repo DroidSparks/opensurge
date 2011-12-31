@@ -102,7 +102,7 @@ player_t *player_create(const char *character_name)
     p->disable_collectible_loss = FALSE;
     p->disable_animation_control = FALSE;
     p->attacking = FALSE;
-    p->actor->input = input_create_user();
+    p->actor->input = input_create_user(NULL);
     CHANGE_ANIM(stopped);
 
     /* auxiliary variables */

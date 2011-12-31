@@ -26,7 +26,12 @@
 
 /* forward declarations */
 typedef enum inputbutton_t inputbutton_t;
-typedef struct input_t input_t;
+typedef struct input_t input_t; /* input_t is the base class */
+typedef struct inputmouse_t inputmouse_t; /* the following are derived from input_t */
+typedef struct inputkeyboard_t inputkeyboard_t;
+typedef struct inputjoystick_t inputjoystick_t;
+typedef struct inputcomputer_t inputcomputer_t;
+typedef struct inputuserdefined_t inputuserdefined_t;
 
 /* available buttons */
 #define IB_MAX              12   /* number of buttons */
@@ -49,15 +54,17 @@ enum inputbutton_t {
 void input_init();
 void input_update();
 void input_release();
-int input_joystick_available(); /* a joystick is available AND the user wants to use it */
-void input_ignore_joystick(int ignore); /* ignores the input received from a joystick (if available) */
-int input_is_joystick_ignored();
 
-input_t *input_create_computer(); /* computer-controlled "input" */
+int input_joystick_available(); /* a joystick is available AND the user wants to use it */
+void input_ignore_joystick(int ignore); /* ignores the input received from joysticks (if they're available) */
+int input_is_joystick_ignored();
+int input_number_of_plugged_joysticks();
+
+input_t *input_create_computer(); /* computer-controlled "input": will return an inputcomputer_t*, which is also an input_t* */
 input_t *input_create_keyboard(int keybmap[], int keybmap_len); /* keyboard */
 input_t *input_create_mouse(); /* mouse */
 input_t *input_create_joystick(); /* joystick */
-input_t *input_create_user(); /* user's custom input device */
+input_t *input_create_user(const char* inputmap_name); /* user's custom input device (set inputmap_name to NULL to use a default mapping) */
 void input_destroy(input_t *in);
 
 int input_button_down(input_t *in, inputbutton_t button);
@@ -69,6 +76,11 @@ void input_ignore(input_t *in);
 void input_restore(input_t *in);
 int input_is_ignored(input_t *in);
 void input_clear(input_t *in);
-v2d_t input_get_xy(input_t *in);
+
+/* these will only work for a mouse input device */
+v2d_t input_get_xy(inputmouse_t *in);
+
+/* the following will only work for an user customized input device */
+void input_change_mapping(inputuserdefined_t *in, const char* inputmap_name); /* set inputmap_name to NULL to use a default mapping */
 
 #endif

@@ -90,7 +90,7 @@ void questselect_init()
     option = 0;
     scene_time = 0;
     state = QUESTSTATE_NORMAL;
-    input = input_create_user();
+    input = input_create_user(NULL);
 
     title = font_create("menu.title");
     font_set_text(title, lang_get("QUESTSELECT_TITLE"));

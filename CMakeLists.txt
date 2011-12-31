@@ -144,6 +144,7 @@ SET(
   src/core/fontext.c
   src/core/image.c
   src/core/input.c
+  src/core/inputmap.c
   src/core/lang.c
   src/core/logfile.c
   src/core/nanocalcext.c
@@ -219,6 +220,7 @@ SET(
   src/entities/object_decorators/set_player_speed.c
   src/entities/object_decorators/set_player_animation.c
   src/entities/object_decorators/set_player_position.c
+  src/entities/object_decorators/set_player_inputmap.c
   src/entities/object_decorators/dialog_box.c
   src/entities/object_decorators/walk.c
   src/entities/object_decorators/observe_player.c
@@ -315,6 +317,7 @@ IF(WIN32)
       src/core/hashtable.h
       src/core/image.h
       src/core/input.h
+      src/core/inputmap.h
       src/core/lang.h
       src/core/logfile.h
       src/core/nanocalcext.h
@@ -392,6 +395,7 @@ IF(WIN32)
       src/entities/object_decorators/set_player_speed.h
       src/entities/object_decorators/set_player_animation.h
       src/entities/object_decorators/set_player_position.h
+      src/entities/object_decorators/set_player_inputmap.h
       src/entities/object_decorators/dialog_box.h
       src/entities/object_decorators/walk.h
       src/entities/object_decorators/observe_player.h

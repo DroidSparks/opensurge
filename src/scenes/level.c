@@ -1823,7 +1823,7 @@ void reconfigure_players_input_devices()
     for(i=0; i<team_size; i++) {
         input_destroy(team[i]->actor->input);
         if(team[i] == player) {
-            team[i]->actor->input = input_create_user();
+            team[i]->actor->input = input_create_user(NULL);
             input_simulate_button_down(team[i]->actor->input, IB_FIRE2); /* bugfix (character switching) */
         }
         else
@@ -2338,9 +2338,9 @@ void editor_update()
         return;
     }   
 
-    /* mouse cursor */
-    editor_cursor.x = clip(input_get_xy(editor_mouse).x, 0, VIDEO_SCREEN_W-cursor_arrow->w);
-    editor_cursor.y = clip(input_get_xy(editor_mouse).y, 0, VIDEO_SCREEN_H-cursor_arrow->h);
+    /* mouse cursor. note: editor_mouse is a input_t*, but also a inputmouse_t*, so it's safe to cast it */
+    editor_cursor.x = clip(input_get_xy((inputmouse_t*)editor_mouse).x, 0, VIDEO_SCREEN_W-cursor_arrow->w);
+    editor_cursor.y = clip(input_get_xy((inputmouse_t*)editor_mouse).y, 0, VIDEO_SCREEN_H-cursor_arrow->h);
 
     /* new spawn point */
     if(input_button_pressed(editor_mouse, IB_FIRE1) && input_button_down(editor_keyboard, IB_FIRE3)) {

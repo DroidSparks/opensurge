@@ -50,6 +50,7 @@
 #include "object_decorators/set_player_animation.h"
 #include "object_decorators/set_player_speed.h"
 #include "object_decorators/set_player_position.h"
+#include "object_decorators/set_player_inputmap.h"
 #include "object_decorators/hit_player.h"
 #include "object_decorators/kill_player.h"
 #include "object_decorators/children.h"
@@ -142,6 +143,7 @@ static void disable_player_movement(objectmachine_t** m, int n, const char **p, 
 static void set_player_xspeed(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void set_player_yspeed(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void set_player_position(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void set_player_inputmap(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void bounce_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void observe_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void observe_current_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -293,6 +295,7 @@ static entry_t command_table[] = {
     { "set_player_xspeed", set_player_xspeed },
     { "set_player_yspeed", set_player_yspeed },
     { "set_player_position", set_player_position },
+    { "set_player_inputmap", set_player_inputmap },
     { "bounce_player", bounce_player },
     { "observe_player", observe_player },
     { "observe_current_player", observe_current_player },
@@ -1464,6 +1467,14 @@ void set_player_position(objectmachine_t** m, int n, const char **p, const parse
         *m = objectdecorator_setplayerposition_new(*m, EXPRESSION(p[0]), EXPRESSION(p[1]));
     else
         COMPILE_ERROR("Object script error - set_player_position expects two parameters: xpos, ypos");
+}
+
+void set_player_inputmap(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_setplayerinputmap_new(*m, p[0]);
+    else
+        COMPILE_ERROR("Object script error - set_player_inputmap expects one parameter: inputmap_name");
 }
 
 void bounce_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)

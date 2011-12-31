@@ -83,7 +83,7 @@ void langselect_init()
     quit = FALSE;
     scene_time = 0;
     before_the_intro_screen = !preferences_file_exists();
-    input = input_create_user();
+    input = input_create_user(NULL);
 
     page_label = font_create("menu.text");
     author_label = font_create("menu.text");

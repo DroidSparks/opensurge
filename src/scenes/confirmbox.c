@@ -65,7 +65,7 @@ void confirmbox_init()
     box = sprite_get_image(sprite_get_animation("SD_CONFIRMBOX", 0), 0);
     boxpos = v2d_new( (VIDEO_SCREEN_W-box->w)/2 , VIDEO_SCREEN_H );
 
-    input = input_create_user();
+    input = input_create_user(NULL);
     arrow = actor_create();
     actor_change_animation(arrow, sprite_get_animation("SD_GUIARROW", 0));
 

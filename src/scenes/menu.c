@@ -104,7 +104,7 @@ void menu_init()
     start_time = timer_get_ticks()*0.001;
     control_restored = FALSE;
     jump_to = NULL;
-    input = input_create_user();
+    input = input_create_user(NULL);
     input_ignore(input);
     music_play( music_load(MENU_MUSICFILE) , INFINITY);
 

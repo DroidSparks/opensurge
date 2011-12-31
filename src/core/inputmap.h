@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
- * objectdecorator.h - Abstract decorator class: the Decorator Design pattern is applied to the objects
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * inputmap.h - customized input mappings
+ * Copyright (C) 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,20 +19,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _OD_OBJECTDECORATOR_H
-#define _OD_OBJECTDECORATOR_H
+#ifndef _INPUTMAP_H
+#define _INPUTMAP_H
 
-#include "objectmachine.h"
+#include "input.h"
 
-/* <<abstract>> object decorator class */
-typedef struct objectdecorator_t objectdecorator_t;
-struct objectdecorator_t {
-    objectmachine_t base; /* objectdecorator_t implements the objectmachine_t interface */
-    objectmachine_t *decorated_machine; /* what are we decorating? */
+/* public methods */
+void inputmap_init();
+void inputmap_release();
+
+/* controllers: custom key mapping */
+/* they're scripts located at the config/ folder */
+typedef struct inputmap_t inputmap_t;
+struct inputmap_t {
+    char* name; /* controller name */
+
+    struct inputmap_keyboard_t {
+        int enabled;
+        int scancode[IB_MAX]; /* scancode of button IB_* */
+    } keyboard; /* keyboard mapping */
+
+    struct inputmap_joystick_t {
+        int enabled;
+        int id;
+        int button[IB_MAX];
+    } joystick; /* joystick mapping */
 };
 
-/* not all methods are abstract, though */
-object_t* objectdecorator_get_object_instance(objectmachine_t *obj);
+const inputmap_t* inputmap_get(const char* name);
 
 #endif
-

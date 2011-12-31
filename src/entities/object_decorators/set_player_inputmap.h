@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
- * objectdecorator.h - Abstract decorator class: the Decorator Design pattern is applied to the objects
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * set_player_inputmap.h - defines a new input mapping for a player
+ * Copyright (C) 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,20 +19,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _OD_OBJECTDECORATOR_H
-#define _OD_OBJECTDECORATOR_H
+#ifndef _OD_SETPLAYERINPUTMAP_H
+#define _OD_SETPLAYERINPUTMAP_H
 
-#include "objectmachine.h"
+#include "base/objectdecorator.h"
 
-/* <<abstract>> object decorator class */
-typedef struct objectdecorator_t objectdecorator_t;
-struct objectdecorator_t {
-    objectmachine_t base; /* objectdecorator_t implements the objectmachine_t interface */
-    objectmachine_t *decorated_machine; /* what are we decorating? */
-};
-
-/* not all methods are abstract, though */
-object_t* objectdecorator_get_object_instance(objectmachine_t *obj);
+/* in a script, it's recommendable to change the state after you call set_player_inputmap */
+objectmachine_t* objectdecorator_setplayerinputmap_new(objectmachine_t *decorated_machine, const char *button_name);
 
 #endif
 

@@ -73,7 +73,7 @@ void options_init()
     option = 0;
     quit = FALSE;
     scene_time = 0;
-    input = input_create_user();
+    input = input_create_user(NULL);
     jump_to = NULL;
     fadein = TRUE;
 

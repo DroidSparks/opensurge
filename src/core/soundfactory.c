@@ -111,7 +111,7 @@ int traverse(const parsetree_statement_t *stmt)
         logfile_message("soundfactory: loaded sample '%s'", sound_name);
     }
     else
-        fatal_error("soundfactory: unknown identifier '%s' at the sound definition file. Valid keywords: 'sample'");
+        fatal_error("soundfactory: unknown identifier '%s' at the sound definition file. Valid keywords: 'sample'", identifier);
 
     return 0;
 }

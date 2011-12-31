@@ -100,7 +100,7 @@ void stageselect_init()
     option = 0;
     scene_time = 0;
     state = STAGESTATE_NORMAL;
-    input = input_create_user();
+    input = input_create_user(NULL);
 
     title = font_create("menu.title");
     font_set_text(title, lang_get("STAGESELECT_TITLE"));
