@@ -66,6 +66,7 @@
 //      KEY_SCRLOCK, KEY_NUMLOCK, KEY_CAPSLOCK
 //
 //      KEY_EQUALS_PAD, KEY_BACKQUOTE, KEY_SEMICOLON, KEY_COMMAND (Mac OS X)
+//      KEY_NONE (ignore the key)
 //
 
 
