@@ -22,7 +22,7 @@
 //     {
 //         <button_name>     <joystick_button_name> // a list of lines like this
 //                                                  // <button_name> may be: fire1, fire2, ..., fire7, fire8
-//                                                  // <joystick_button_name> may be: 0, 1, 2 ...
+//                                                  // <joystick_button_name> may be: BUTTON_1, BUTTON_2, ..., BUTTON_8
 //     }
 // }
 //
