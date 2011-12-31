@@ -54,6 +54,8 @@ static int joybtncode_of(const char* joybtn_name);
 
 /* key names */
 static const char* key_names[] = {
+    "KEY_NONE",
+
     "KEY_A",
     "KEY_B",
     "KEY_C",
@@ -191,6 +193,7 @@ static const char* key_names[] = {
 
 /* scancodes */
 static const int key_codes[] = {
+    0,
     KEY_A,
     KEY_B,
     KEY_C,
@@ -579,29 +582,29 @@ inputmapnode_t* inputmapnode_create(const char* name)
 
     /* defaults */
     f->data->keyboard.enabled = FALSE;
-    f->data->keyboard.scancode[IB_UP] = KEY_UP;
-    f->data->keyboard.scancode[IB_RIGHT] = KEY_RIGHT;
-    f->data->keyboard.scancode[IB_DOWN] = KEY_DOWN;
-    f->data->keyboard.scancode[IB_LEFT] = KEY_LEFT;
-    f->data->keyboard.scancode[IB_FIRE1] = KEY_SPACE;
-    f->data->keyboard.scancode[IB_FIRE2] = KEY_LCONTROL;
-    f->data->keyboard.scancode[IB_FIRE3] = KEY_ENTER;
-    f->data->keyboard.scancode[IB_FIRE4] = KEY_ESC;
-    f->data->keyboard.scancode[IB_FIRE5] = KEY_W;
-    f->data->keyboard.scancode[IB_FIRE6] = KEY_A;
-    f->data->keyboard.scancode[IB_FIRE7] = KEY_S;
-    f->data->keyboard.scancode[IB_FIRE8] = KEY_D;
+    f->data->keyboard.scancode[IB_UP] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_RIGHT] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_DOWN] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_LEFT] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_FIRE1] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_FIRE2] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_FIRE3] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_FIRE4] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_FIRE5] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_FIRE6] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_FIRE7] = keycode_of("KEY_NONE");
+    f->data->keyboard.scancode[IB_FIRE8] = keycode_of("KEY_NONE");
 
     f->data->joystick.enabled = FALSE;
     f->data->joystick.id = 0;
-    f->data->joystick.button[IB_FIRE1] = 0;
-    f->data->joystick.button[IB_FIRE2] = 1;
-    f->data->joystick.button[IB_FIRE3] = 2;
-    f->data->joystick.button[IB_FIRE4] = 3;
-    f->data->joystick.button[IB_FIRE5] = 4;
-    f->data->joystick.button[IB_FIRE6] = 5;
-    f->data->joystick.button[IB_FIRE7] = 6;
-    f->data->joystick.button[IB_FIRE8] = 7;
+    f->data->joystick.button[IB_FIRE1] = INFINITY;
+    f->data->joystick.button[IB_FIRE2] = INFINITY;
+    f->data->joystick.button[IB_FIRE3] = INFINITY;
+    f->data->joystick.button[IB_FIRE4] = INFINITY;
+    f->data->joystick.button[IB_FIRE5] = INFINITY;
+    f->data->joystick.button[IB_FIRE6] = INFINITY;
+    f->data->joystick.button[IB_FIRE7] = INFINITY;
+    f->data->joystick.button[IB_FIRE8] = INFINITY;
 
     return f;
 }
