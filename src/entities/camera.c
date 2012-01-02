@@ -75,7 +75,7 @@ void camera_init()
  */
 void camera_update()
 {
-    float threshold = 10;
+    const float threshold = 10;
     float dt = timer_get_delta();
     v2d_t ds;
 

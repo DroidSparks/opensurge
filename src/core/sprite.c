@@ -40,7 +40,7 @@ static void validate_sprite(spriteinfo_t *spr); /* validates the sprite */
 static void validate_animation(animation_t *anim); /* validates the animation */
 static void register_sprite(const char *sprite_name, spriteinfo_t *spr); /* adds spr to the hash table */
 static spriteinfo_t *spriteinfo_new(); /* creates a new spriteinfo_t instance */
-static animation_t *animation_new(); /* creates a new animation_t instance */
+static animation_t *animation_new(int anim_id); /* creates a new animation_t instance */
 static animation_t *animation_delete(animation_t *anim); /* deletes anim */
 static void load_sprite_images(spriteinfo_t *spr); /* loads the sprite by reading the spritesheet */
 static void fix_sprite_animations(spriteinfo_t *spr); /* fixes the animations of the given sprite */
@@ -234,10 +234,11 @@ spriteinfo_t *spriteinfo_new()
  * animation_new()
  * Creates a new empty animation_t instance
  */
-animation_t *animation_new()
+animation_t *animation_new(int anim_id)
 {
     animation_t *anim = mallocx(sizeof *anim);
 
+    anim->id = anim_id;
     anim->repeat = FALSE;
     anim->fps = 8.0f;
     anim->frame_count = 0;
@@ -498,7 +499,7 @@ int traverse_sprite_attributes(const parsetree_statement_t *stmt, void *spritein
 
         s->animation_count = max(s->animation_count, anim_id+1);
         s->animation_data = reallocx(s->animation_data, sizeof(animation_t*) * s->animation_count); /* TODO: watch this! It may generate garbage in the middle. */
-        s->animation_data[anim_id] = animation_new();
+        s->animation_data[anim_id] = animation_new(anim_id);
         nanoparser_traverse_program_ex(nanoparser_get_program(p2), s->animation_data[anim_id], traverse_animation_attributes);
         validate_animation(s->animation_data[anim_id]);
     }

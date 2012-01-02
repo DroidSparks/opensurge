@@ -26,6 +26,7 @@
 #include "video.h"
 #include "audio.h"
 #include "timer.h"
+#include "input.h"
 #include "../scenes/level.h"
 #include "../entities/actor.h"
 #include "../entities/player.h"
@@ -58,6 +59,7 @@ static float f_animation_speed_factor() { return target->actor->animation_speed_
 static float f_animation_repeats() { return target->actor->animation->repeat ? 1.0f : 0.0f; }
 static float f_animation_fps() { return (float)target->actor->animation->fps; }
 static float f_animation_frame_count() { return (float)target->actor->animation->frame_count; }
+static float f_animation_id() { return (float)target->actor->animation->id; }
 static float f_zindex() { return target->zindex; }
 static float f_spawnpoint_x() { return target->actor->spawn_point.x; }
 static float f_spawnpoint_y() { return target->actor->spawn_point.y; }
@@ -85,6 +87,7 @@ static float f_date_year() { return (float)(timeinfo()->tm_year); } /* years sin
 static float f_date_wday() { return (float)(timeinfo()->tm_wday); } /* days since Sunday; range: 0-6 */
 static float f_date_yday() { return (float)(timeinfo()->tm_yday); } /* days since January 1st; range: 0-365 */
 static float f_music_duration() { return music_duration(); }
+static float f_number_of_joysticks() { return input_number_of_plugged_joysticks(); }
 
 
 
@@ -116,6 +119,7 @@ void nanocalcext_register_bifs()
     nanocalc_register_bif_arity0("animation_repeats", f_animation_repeats);
     nanocalc_register_bif_arity0("animation_fps", f_animation_fps);
     nanocalc_register_bif_arity0("animation_frame_count", f_animation_frame_count);
+    nanocalc_register_bif_arity0("animation_id", f_animation_id);
     nanocalc_register_bif_arity0("zindex", f_zindex);
     nanocalc_register_bif_arity0("spawnpoint_x", f_spawnpoint_x);
     nanocalc_register_bif_arity0("spawnpoint_y", f_spawnpoint_y);
@@ -142,6 +146,7 @@ void nanocalcext_register_bifs()
     nanocalc_register_bif_arity0("date_wday", f_date_wday);
     nanocalc_register_bif_arity0("date_yday", f_date_yday);
     nanocalc_register_bif_arity0("music_duration", f_music_duration);
+    nanocalc_register_bif_arity0("number_of_joysticks", f_number_of_joysticks);
 
     target = NULL;
 }

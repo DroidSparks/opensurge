@@ -15,6 +15,7 @@ object ".default_startup.pause"
 
     state "main"
     {
+        hide
         on_button_pressed "fire3" "paused"
     }
 

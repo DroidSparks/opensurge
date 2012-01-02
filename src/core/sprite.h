@@ -33,6 +33,7 @@ typedef struct spriteinfo_t spriteinfo_t;
 /* animation */
 /* this represents an animation */
 struct animation_t {
+    int id; /* id of the animation */
     int repeat; /* repeat animation? */
     float fps; /* frames per second */
     int frame_count; /* how many frames does this animation have? */

@@ -15,6 +15,7 @@ object ".default_startup.quit"
 
     state "main"
     {
+        hide
         on_button_pressed "fire4" "quit"
     }
 

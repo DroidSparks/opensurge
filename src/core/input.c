@@ -69,8 +69,6 @@ struct inputuserdefined_t {
 };
 static void inputuserdefined_update(input_t* in);
 
-#define DEFAULT_INPUTMAP_NAME           "default"
-
 
 
 
@@ -88,6 +86,7 @@ struct input_list_t {
 
 
 /* private data */
+#define DEFAULT_INPUTMAP_NAME           "default"
 static input_list_t *inlist;
 static int got_joystick;
 static int ignore_joystick;
@@ -125,9 +124,9 @@ void input_init()
     plugged_joysticks = 0;
     if(install_joystick(JOY_TYPE_AUTODETECT) == 0) {
         if(num_joysticks > 0 && are_all_joysticks_valid()) {
-            logfile_message("Joystick installed successfully!");
             got_joystick = TRUE;
             plugged_joysticks = num_joysticks;
+            logfile_message("Joystick(s) installed successfully! Number of plugged joysticks: %d", plugged_joysticks);
         }
         else if(num_joysticks <= 0) {
             logfile_message("No joystick has been detected.");
@@ -253,7 +252,7 @@ int input_button_up(input_t *in, inputbutton_t button)
  * keybmap: array of IB_MAX integers. Use NULL
  *          to use the default settings.
  *
- * keybmap_len: numer of elements of keybmap
+ * keybmap_len: number of elements of keybmap
  */
 input_t *input_create_keyboard(int keybmap[], int keybmap_len)
 {
@@ -638,7 +637,7 @@ void inputkeyboard_update(input_t* in)
     int i;
 
     for(i=0; i<IB_MAX; i++)
-        in->state[i] = me->keybmap[i] > 0 ? key[ me->keybmap[i] ] : FALSE;
+        in->state[i] = (me->keybmap[i] > 0) ? key[ me->keybmap[i] ] : FALSE;
 }
 
 void inputjoystick_update(input_t* in)
@@ -684,14 +683,14 @@ void inputuserdefined_update(input_t* in)
         in->state[IB_DOWN] |= joy[k].stick[0].axis[1].d2;
         in->state[IB_LEFT] |= joy[k].stick[0].axis[0].d1;
         in->state[IB_RIGHT] |= joy[k].stick[0].axis[0].d2;
-        in->state[IB_FIRE1] |= (joy[k].num_buttons > im->joystick.button[0]) ? joy[k].button[ im->joystick.button[0] ].b : FALSE;
-        in->state[IB_FIRE2] |= (joy[k].num_buttons > im->joystick.button[1]) ? joy[k].button[ im->joystick.button[1] ].b : FALSE;
-        in->state[IB_FIRE3] |= (joy[k].num_buttons > im->joystick.button[2]) ? joy[k].button[ im->joystick.button[2] ].b : FALSE;
-        in->state[IB_FIRE4] |= (joy[k].num_buttons > im->joystick.button[3]) ? joy[k].button[ im->joystick.button[3] ].b : FALSE;
-        in->state[IB_FIRE5] |= (joy[k].num_buttons > im->joystick.button[4]) ? joy[k].button[ im->joystick.button[4] ].b : FALSE;
-        in->state[IB_FIRE6] |= (joy[k].num_buttons > im->joystick.button[5]) ? joy[k].button[ im->joystick.button[5] ].b : FALSE;
-        in->state[IB_FIRE7] |= (joy[k].num_buttons > im->joystick.button[6]) ? joy[k].button[ im->joystick.button[6] ].b : FALSE;
-        in->state[IB_FIRE8] |= (joy[k].num_buttons > im->joystick.button[7]) ? joy[k].button[ im->joystick.button[7] ].b : FALSE;
+        in->state[IB_FIRE1] |= (joy[k].num_buttons > im->joystick.button[IB_FIRE1]) ? joy[k].button[ im->joystick.button[IB_FIRE1] ].b : FALSE;
+        in->state[IB_FIRE2] |= (joy[k].num_buttons > im->joystick.button[IB_FIRE2]) ? joy[k].button[ im->joystick.button[IB_FIRE2] ].b : FALSE;
+        in->state[IB_FIRE3] |= (joy[k].num_buttons > im->joystick.button[IB_FIRE3]) ? joy[k].button[ im->joystick.button[IB_FIRE3] ].b : FALSE;
+        in->state[IB_FIRE4] |= (joy[k].num_buttons > im->joystick.button[IB_FIRE4]) ? joy[k].button[ im->joystick.button[IB_FIRE4] ].b : FALSE;
+        in->state[IB_FIRE5] |= (joy[k].num_buttons > im->joystick.button[IB_FIRE5]) ? joy[k].button[ im->joystick.button[IB_FIRE5] ].b : FALSE;
+        in->state[IB_FIRE6] |= (joy[k].num_buttons > im->joystick.button[IB_FIRE6]) ? joy[k].button[ im->joystick.button[IB_FIRE6] ].b : FALSE;
+        in->state[IB_FIRE7] |= (joy[k].num_buttons > im->joystick.button[IB_FIRE7]) ? joy[k].button[ im->joystick.button[IB_FIRE7] ].b : FALSE;
+        in->state[IB_FIRE8] |= (joy[k].num_buttons > im->joystick.button[IB_FIRE8]) ? joy[k].button[ im->joystick.button[IB_FIRE8] ].b : FALSE;
     }
 }
 

@@ -1209,7 +1209,7 @@ void level_update()
         if(level_cleared)
             camera_move_to(v2d_add(camera_focus->position, v2d_new(0, -90)), 0.17);
         else if(!got_dying_player)
-            camera_move_to(camera_focus->position, 0.10);
+            camera_move_to(camera_focus->position, 0); /* the camera will be locked on its focus (usually, the player) */
 
         camera_update();
     }
