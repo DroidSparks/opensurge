@@ -67,6 +67,7 @@ object ".intro_startup"
     {
         set_animation "SD_INTROCUTSCENE_SLIDE3" 0
         create_child ".intro_rain"
+        create_child ".intro_thunder"
         set_absolute_position 320 0
         change_state "3rd slide"
     }
@@ -111,7 +112,7 @@ object ".intro_startup"
     state "show 5th slide" // called by someone else
     {
         set_absolute_position max(-640,xpos()-12*dt()) ypos()
-        on_timeout 9.0 haha
+        on_timeout 11.0 haha
     }
 
     state haha {
@@ -131,7 +132,7 @@ object ".intro_surge"
         set_absolute_position $_base_x+20 $_base_y-4
         look_at_player
         set_alpha $_base_alpha
-        if ($t+=dt())>=8 main2
+        if ($t+=dt())>=7.8 main2
     }
 
     state main2 {
@@ -178,7 +179,7 @@ object ".intro_animal"
 
     state main {
         set_animation SD_INTROCUTSCENE_SLIDE4ANIMAL $id=$_slide4animal
-        set_animation_speed_factor cond($id==0,1,0)
+        set_animation_speed_factor 0*cond($id==0,1,0)
         set_zindex 0.999905+0.000001*(5-$id)
         look_at_player
 
@@ -188,7 +189,7 @@ object ".intro_animal"
     }
 
     state go {
-        set_absolute_position $_base_x+$dx $_base_y-cond($id==0,1,0)*abs((12+($id-2)^2)*cos(2*pi()*($t+=dt())+2*pi()*$id/5))
+        set_absolute_position $_base_x+$dx $_base_y-0*cond($id==0,1,0)*abs((12+($id-2)^2)*cos(2*pi()*($t+=dt())+2*pi()*$id/5))
         set_alpha $_base_alpha
     }
 }
@@ -395,7 +396,7 @@ object ".intro_subtitles"
         textout "menu.small" 2 210 "$OPENING_6" 316 0 $strlen
         let "$strlen += $typerate/0.8*dt()"
         let "$text = 7"
-        on_timeout "$displaytime*0.8" "show 4th slide"
+        on_timeout "$displaytime*0.9" "show 4th slide"
     }
 
     state "text7"
@@ -540,21 +541,99 @@ object .intro_rain {
     always_active
 
     state main {
+        create_child .intro_rain2 0 0 rain2
         set_zindex 0.99991
         set_alpha 0
         set_animation SD_INTROCUTSCENE_SLIDE3RAIN 0
-        change_state wrap
+        change_state wrap_y
     }
 
     state move {
-        set_alpha $_slide_alpha/2
-        move 0 2.5*screen_height()
-        if ypos()>=0 wrap
+        set_alpha $_slide_alpha
+        move -1*screen_width() 2.5*screen_height()
+        if xpos()<-width()/2 wrap_x
+        if ypos()>=0 wrap_y
     }
 
-    state wrap {
-        set_absolute_position 0 -height()/2
+    state wrap_x {
+        set_absolute_position 0 ypos()
         change_state move
+    }
+
+    state wrap_y {
+        set_absolute_position xpos() -height()/2
+        change_state move
+    }
+
+    state destroy {
+        change_child_state rain2 destroy
+        destroy
+    }
+}
+
+object .intro_rain2 {
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state main {
+        set_zindex 0.99991
+        set_alpha 0
+        set_animation SD_INTROCUTSCENE_SLIDE3RAIN 0
+        change_state wrap_y
+    }
+
+    state move {
+        set_alpha $_slide_alpha
+        move -1*screen_width()/2 2.5*screen_height()
+        if xpos()<-width()/2 wrap_x
+        if ypos()>=0 wrap_y
+    }
+
+    state wrap_x {
+        set_absolute_position 0 ypos()
+        change_state move
+    }
+
+    state wrap_y {
+        set_absolute_position xpos() -height()/2
+        change_state move
+    }
+
+    state destroy {
+        destroy
+    }
+}
+
+object ".intro_thunder"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state main {
+        hide
+        set_absolute_position 0 0
+        on_timeout 13.7 go
+    }
+
+    state go {
+        set_zindex 0.99992
+        set_alpha 0.5
+        set_animation SD_FADEEFFECT_WHITE 0
+        change_state loop
+    }
+
+    state loop {
+        show
+        on_timeout 0.7 destroy
+        on_timeout 0.05 loop2
+    }
+
+    state loop2 {
+        hide
+        on_timeout 0.7 destroy
+        on_timeout 0.05 loop
     }
 
     state destroy {

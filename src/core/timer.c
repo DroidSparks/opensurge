@@ -50,7 +50,7 @@
 
 
 /* constants */
-#define MIN_FRAME_INTERVAL 16 /* (1/16) * 1000 ~ 63 fps max */
+#define MIN_FRAME_INTERVAL 15 /* (1/15) * 1000 ~ 67 fps max */
 #define MAX_FRAME_INTERVAL 17 /* (1/17) * 1000 ~ 58 fps min */
 
 
@@ -58,6 +58,7 @@
 static int partial_fps, fps_accum, fps;
 static uint32 last_time;
 static float delta;
+static int yield_cpu;
 
 #ifdef USE_ALLEGRO_TIMERS
 static volatile uint32 elapsed_time;
@@ -72,7 +73,7 @@ static uint32 get_tick_count(); /* platform-specific code */
  * timer_init()
  * Initializes the Time Handler
  */
-void timer_init()
+void timer_init(int optimize_cpu_usage)
 {
     logfile_message("timer_init()");
 
@@ -80,6 +81,9 @@ void timer_init()
     logfile_message("Installing Allegro timers...");
     if(install_timer() != 0)
         logfile_message("install_timer() failed: %s", allegro_error);
+
+    /* should we optimize the cpu usage? */
+    yield_cpu = optimize_cpu_usage;
 
     /* initializing... */
     partial_fps = 0;
@@ -118,8 +122,17 @@ void timer_update()
         delta_time = (current_time > last_time) ? (current_time - last_time) : 0;
         last_time = (current_time >= last_time) ? last_time : current_time;
 
-        if(delta_time < MIN_FRAME_INTERVAL)
-            rest(0); /* we don't like having the cpu usage at 100%. will the OS make our process active again on time? */
+        if(delta_time < MIN_FRAME_INTERVAL) {
+            if(yield_cpu) {
+                /* we don't like having the cpu usage at 100%. will the OS make our process active again on time? */
+#ifndef __WIN32__
+                /*rest(0);*/ /* if we use rest(0), probably not... */
+                rest(1);
+#else
+                Sleep(1);
+#endif
+            }
+        }
         else
             break;
     }
@@ -187,18 +200,6 @@ uint32 timer_get_ticks()
 int timer_get_fps()
 {
     return fps;
-}
-
-
-/*
- * timer_yield()
- * let the operating system do
- * other things besides processing
- * this game
- */
-void timer_yield()
-{
-    rest(0);
 }
 
 

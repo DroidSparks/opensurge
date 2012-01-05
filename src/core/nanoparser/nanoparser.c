@@ -809,9 +809,11 @@ parsetree_program_t* parsetree_program_new(parsetree_statement_t *stmt, parsetre
 
 parsetree_program_t* parsetree_program_delete(parsetree_program_t *prog)
 {
-    if(prog != NULL) {
-        prog->statement = parsetree_statement_delete(prog->statement);
-        prog->next = parsetree_program_delete(prog->next);
+    parsetree_program_t *next = NULL;
+
+    for(; prog; prog = next) { /* we should avoid using recursion here... 'prog' can be HUGE! */
+        next = prog->next;
+        parsetree_statement_delete(prog->statement);
         free(prog);
     }
 

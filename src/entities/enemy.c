@@ -43,8 +43,8 @@
 #include "brick.h"
 
 /* private stuff */
-#define MAX_OBJECTS                     1024
-#define MAX_CATEGORIES                  1024
+#define MAX_OBJECTS                     10240
+#define MAX_CATEGORIES                  10240
 #define ROOT_CATEGORY                   category_table.category[0] /* all objects belong to the root category */
 
 typedef parsetree_program_t objectcode_t;
@@ -120,6 +120,9 @@ void objects_init()
     /* creating a lookup table to find objects fast */
     lookup_table = hashtable_objectcode_t_create(NULL);
     nanoparser_traverse_program_ex(objects, (void*)lookup_table, fill_lookup_table);
+
+    /* done! */
+    logfile_message("All objects have been loaded!");
 }
 
 /*

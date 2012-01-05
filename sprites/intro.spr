@@ -81,12 +81,13 @@ sprite SD_INTROCUTSCENE_SLIDE3
         data        0
     }
 }
+
 // Rain
 sprite SD_INTROCUTSCENE_SLIDE3RAIN
 {
     source_file     images/rain.png
-    source_rect     0 0 320 480
-    frame_size      320 480
+    source_rect     0 0 640 480
+    frame_size      640 480
     hot_spot        0 0
 
     // default

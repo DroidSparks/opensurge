@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * timer.h - time handler
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,7 +25,7 @@
 #include "global.h"
 
 /* time handler */
-void timer_init();
+void timer_init(int optimize_cpu_usage); /* receives a boolean */
 void timer_update();
 void timer_release();
 

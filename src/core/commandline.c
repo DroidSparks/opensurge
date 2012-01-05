@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * commandline.c - command line parser
- * Copyright (C) 2010-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,12 +51,15 @@ commandline_t commandline_parse(int argc, char **argv)
     cmd.video_resolution = preferences_get_videoresolution();
     cmd.smooth_graphics = preferences_get_smooth();
     cmd.fullscreen = preferences_get_fullscreen();
-    cmd.show_fps = preferences_get_showfps();
-    cmd.use_gamepad = preferences_get_usegamepad();
-    str_cpy(cmd.language_filepath, preferences_get_languagepath(), sizeof(cmd.language_filepath));
     cmd.color_depth = max(16, desktop_color_depth());
+    cmd.show_fps = preferences_get_showfps();
     cmd.custom_level = FALSE;
+    str_cpy(cmd.custom_level_path, "", sizeof(cmd.custom_level_path));
     cmd.custom_quest = FALSE;
+    str_cpy(cmd.custom_quest_path, "", sizeof(cmd.custom_quest_path));
+    str_cpy(cmd.language_filepath, preferences_get_languagepath(), sizeof(cmd.language_filepath));
+    cmd.use_gamepad = preferences_get_usegamepad();
+    cmd.optimize_cpu_usage = FALSE;
 
     /* logfile */
     logfile_message("game arguments:");
@@ -78,19 +81,20 @@ commandline_t commandline_parse(int argc, char **argv)
                 "    --resolution X            sets the window size, where X = 1 (%dx%d), 2 (%dx%d), 3 (%dx%d) or 4 (%dx%d)\n"
                 "    --smooth                  improves the graphic quality (*)\n"
                 "    --tiny                    small game window (improves the speed **). This is the same as --resolution 1\n"
+                "    --color-depth X           sets the color depth to X bits/pixel, where X = 16, 24 or 32\n"
                 "    --show-fps                shows the FPS (frames per second) counter\n"
-                "    --use-gamepad             use a gamepad\n"
+                "    --use-gamepad             play using a gamepad\n"
                 "    --level \"FILEPATH\"        runs the level located at FILEPATH\n"
                 "    --quest \"FILEPATH\"        runs the quest located at FILEPATH\n"
-                "    --color-depth X           sets the color depth to X bits/pixel, where X = 16, 24 or 32\n"
                 "    --language \"FILEPATH\"     sets the language file to FILEPATH (for example, %s)\n"
+                "    --optimize-cpu-usage      reduces CPU usage (experimental)\n"
                 "\n"
                 "(*) This option may be used to improve the graphic quality using a special algorithm.\n"
                 "    You should NOT use this option on slow computers, since it may imply a severe performance hit.\n"
                 "\n"
                 "(**) This option should be used on slow computers.\n"
                 "\n"
-                "Please read the user manual for more information.\n",
+                "Please read the user manual for more information.",
             GAME_TITLE, GAME_UNIXNAME,
             VIDEO_SCREEN_W, VIDEO_SCREEN_H, VIDEO_SCREEN_W*2, VIDEO_SCREEN_H*2,
             VIDEO_SCREEN_W*3, VIDEO_SCREEN_H*3, VIDEO_SCREEN_W*4, VIDEO_SCREEN_H*4,
@@ -99,7 +103,7 @@ commandline_t commandline_parse(int argc, char **argv)
         }
 
         else if(str_icmp(argv[i], "--version") == 0) {
-            display_message("%s %d.%d.%d\n", GAME_TITLE, GAME_VERSION, GAME_SUB_VERSION, GAME_WIP_VERSION);
+            display_message("%s %d.%d.%d", GAME_TITLE, GAME_VERSION, GAME_SUB_VERSION, GAME_WIP_VERSION);
             exit(0);
         }
 
@@ -134,7 +138,7 @@ commandline_t commandline_parse(int argc, char **argv)
             if(++i < argc) {
                 cmd.color_depth = atoi(argv[i]);
                 if(/*cmd.color_depth != 8 &&*/ cmd.color_depth != 16 && cmd.color_depth != 24 && cmd.color_depth != 32) {
-                    display_message("WARNING: invalid color depth (%d). Changing to %d...\n", cmd.color_depth, 16);
+                    display_message("WARNING: invalid color depth (%d). Changing to %d...", cmd.color_depth, 16);
                     cmd.color_depth = 16;
                 }
             }
@@ -145,6 +149,9 @@ commandline_t commandline_parse(int argc, char **argv)
 
         else if(str_icmp(argv[i], "--use-gamepad") == 0)
             cmd.use_gamepad = TRUE;
+
+        else if(str_icmp(argv[i], "--optimize_cpu_usage") == 0)
+            cmd.optimize_cpu_usage = TRUE;
 
         else if(str_icmp(argv[i], "--level") == 0) {
             if(++i < argc) {
@@ -173,7 +180,7 @@ commandline_t commandline_parse(int argc, char **argv)
         }
 
         else { /* unknown option */
-            display_message("%s: bad command line option \"%s\".\nRun %s --help to get more information.\n", GAME_UNIXNAME, argv[i], GAME_UNIXNAME);
+            display_message("%s: bad command line option \"%s\".\nRun %s --help to get more information.", GAME_UNIXNAME, argv[i], GAME_UNIXNAME);
             exit(0);
         }
 
