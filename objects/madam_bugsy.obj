@@ -1,0 +1,286 @@
+// ----------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// Madam Bugsy
+//
+// Lady Bugsy was originally developed by Celdecea
+// (ported to the scripting engine by Alexandre)
+// Madam Bugsy is an enhanced version of Lady Bugsy
+// by Johan Brodd.
+//
+// Changelog:
+// 2011-12-31 - madam bugsy first version
+// 2010-11-06 - second version
+// 2010-10-31 - first version
+// ----------------------------------------
+
+object "Madam Bugsy"
+{
+    requires 0.2.0
+
+    state "main"
+    {
+        // my constants
+        let "$ANIM_IDLE = 0"
+        let "$ANIM_MOVING_LEFT = 1"
+        let "$ANIM_MOVING_RIGHT = 2"
+        let "$ANIM_SHOOTING_LEFT = 3"
+        let "$ANIM_SHOOTING_RIGHT = 4"
+        let "$LEFT = 0"
+        let "$RIGHT = 1"
+        let "$SHOTS_PER_ROUND = 10"
+        let "$RELOAD_TIME = 5.0"
+        let "$VOLLEY_GAP = 0.05"
+        let "$VOLLEY_GAP_A = 0.15"
+        let "$VOLLEY_GAP_B = 0.25"
+        let "$VOLLEY_GAP_C = 0.05"
+        let "$VOLLEY_GAP_D = 0.1"
+        // Random timer.
+        let "$RT = 0"
+        let "$RA = 0"
+        let "$WALK_SPEED = 70"
+        let "$SCORE = 250"
+        let "$EXTRAAMMO = 10"
+
+        // internal data
+        let "$direction = $LEFT" // current direction
+        let "$shots_fired = 0" // number of shots fired
+        let "$oldx = xpos()" // previous x position
+
+        // ready... go!
+        change_state go
+    }
+
+    state "go"
+    {
+        // default behavior
+        set_animation "SD_LADYBUGSY" "cond($direction==$LEFT, $ANIM_MOVING_LEFT, $ANIM_MOVING_RIGHT)"
+        walk $WALK_SPEED
+        enemy $SCORE
+        gravity
+        
+        // specify rounds to fire.
+        let "$EXTRAAMMO = -7 + random(25)"
+        let "$SHOTS_PER_ROUND = 10 + $EXTRAAMMO"
+        
+        // detect direction
+        let "$direction = cond(xpos() == $oldx, $direction, cond(xpos() > $oldx, $RIGHT, $LEFT))"
+        let "$oldx = xpos()"
+
+        // enemy weapon is loaded
+        on_timeout $RELOAD_TIME weapon_is_loaded
+    }
+
+    state "weapon_is_loaded"
+    {
+        // default behavior
+        enemy $SCORE
+        gravity
+
+        // detect direction
+        let "$direction = cond(xpos() == $oldx, $direction, cond(xpos() > $oldx, $RIGHT, $LEFT))"
+        let "$oldx = xpos()"
+
+        // ready to fire!
+        on_animation_finished ready_to_fire
+        on_timeout $VOLLEY_GAP ready_to_fire
+
+        // finished shooting
+        if "$shots_fired >= $SHOTS_PER_ROUND + random(7)" finished_shooting        
+    }
+
+    state "finished_shooting"
+    {
+        let "$shots_fired = 0"
+        change_state go
+    }
+
+    state "ready_to_fire"
+    {
+        // creating the bullet
+        let "$_bullet_sx = 200 * cond($direction == $LEFT, 0-1, 1)" // bullet horizontal speed
+        let "$_bullet_sy = 0" // bullet vertical speed
+        create_child ".Madam Bugsy - Slime Bullet" 0 -15
+        create_child ".Madam Bugsy - Slime Bullet B" 0 -15
+        create_child ".Madam Bugsy - Slime Bullet C" 0 -15
+        play_sample "shot"
+
+        // will shoot again later
+        let "$shots_fired += 1"
+        set_animation SD_LADYBUGSY "cond($direction == $LEFT, $ANIM_SHOOTING_LEFT, $ANIM_SHOOTING_RIGHT)"
+        set_animation_frame 0
+        change_state weapon_is_loaded
+    }
+}
+
+object ".Madam Bugsy - Slime Bullet"
+{
+    requires 0.2.0
+    destroy_if_far_from_play_area
+
+    state "main"
+    {
+        // my constants
+        let "$ANIM_BLANK_LEFT = 0"
+        let "$ANIM_BLANK_RIGHT = 1"
+        let "$ANIM_LEFT = 2"
+        let "$ANIM_RIGHT = 3"
+        let "$LEFT = 0"
+        let "$RIGHT = 1"
+        let "$SLIME_DELAY = 0.45"
+
+        // initializing...
+        let "$sx = $_bullet_sx" // bullet horizontal speed
+        let "$sy = $_bullet_sy - random(30)" // bullet vertical speed
+        let "$direction = cond($sx <= 0, $LEFT, $RIGHT)" // direction
+
+        // ready... go!
+        change_state blank
+    }
+
+    state "blank"
+    {
+        set_animation "SD_SLIMEBULLET" "cond($direction==$LEFT, $ANIM_BLANK_LEFT, $ANIM_BLANK_RIGHT)"
+        move $sx $sy
+        on_brick_collision dead
+        on_player_collision hit
+
+        on_timeout $SLIME_DELAY slime
+    }
+
+    state "slime"
+    {
+        set_animation "SD_SLIMEBULLET" "cond($direction==$LEFT, $ANIM_LEFT, $ANIM_RIGHT)"
+        move $sx $sy
+        on_brick_collision dead
+        on_player_collision hit
+
+        set_zindex 0.6
+    }
+
+    state "hit"
+    {
+        hit_player
+        change_state dead
+    }
+
+    state "dead"
+    {
+        destroy
+    }
+}
+
+object ".Madam Bugsy - Slime Bullet B"
+{
+    requires 0.2.0
+    destroy_if_far_from_play_area
+
+    state "main"
+    {
+        // my constants
+        let "$ANIM_BLANK_LEFT = 0"
+        let "$ANIM_BLANK_RIGHT = 1"
+        let "$ANIM_LEFT = 2"
+        let "$ANIM_RIGHT = 3"
+        let "$LEFT = 0"
+        let "$RIGHT = 1"
+        let "$SLIME_DELAY = 0.45"
+
+        // initializing...
+        let "$sx = $_bullet_sx" // bullet horizontal speed
+        let "$sy = $_bullet_sy -50 + random(30)" // bullet vertical speed
+        let "$direction = cond($sx <= 0, $LEFT, $RIGHT)" // direction
+
+        // ready... go!
+        change_state blank
+    }
+
+    state "blank"
+    {
+        set_animation "SD_SLIMEBULLET" "cond($direction==$LEFT, $ANIM_BLANK_LEFT, $ANIM_BLANK_RIGHT)"
+        move $sx $sy
+        on_brick_collision dead
+        on_player_collision hit
+
+        on_timeout $SLIME_DELAY slime
+    }
+
+    state "slime"
+    {
+        set_animation "SD_SLIMEBULLET" "cond($direction==$LEFT, $ANIM_LEFT, $ANIM_RIGHT)"
+        move $sx $sy
+        on_brick_collision dead
+        on_player_collision hit
+
+        set_zindex 0.6
+    }
+
+    state "hit"
+    {
+        hit_player
+        change_state dead
+    }
+
+    state "dead"
+    {
+        destroy
+    }
+}
+
+object ".Madam Bugsy - Slime Bullet C"
+{
+    requires 0.2.0
+    destroy_if_far_from_play_area
+
+    state "main"
+    {
+        // my constants
+        let "$ANIM_BLANK_LEFT = 0"
+        let "$ANIM_BLANK_RIGHT = 1"
+        let "$ANIM_LEFT = 2"
+        let "$ANIM_RIGHT = 3"
+        let "$LEFT = 0"
+        let "$RIGHT = 1"
+        let "$SLIME_DELAY = 0.45"
+
+        // initializing...
+        let "$sx = $_bullet_sx" // bullet horizontal speed
+        let "$sy = $_bullet_sy - 80 + random(30)" // bullet vertical speed
+        let "$direction = cond($sx <= 0, $LEFT, $RIGHT)" // direction
+
+        // ready... go!
+        change_state blank
+    }
+
+    state "blank"
+    {
+        set_animation "SD_SLIMEBULLET" "cond($direction==$LEFT, $ANIM_BLANK_LEFT, $ANIM_BLANK_RIGHT)"
+        move $sx $sy
+        on_brick_collision dead
+        on_player_collision hit
+
+        on_timeout $SLIME_DELAY slime
+    }
+
+    state "slime"
+    {
+        set_animation "SD_SLIMEBULLET" "cond($direction==$LEFT, $ANIM_LEFT, $ANIM_RIGHT)"
+        move $sx $sy
+        on_brick_collision dead
+        on_player_collision hit
+
+        set_zindex 0.6
+    }
+
+    state "hit"
+    {
+        hit_player
+        change_state dead
+    }
+
+    state "dead"
+    {
+        destroy
+    }
+}
