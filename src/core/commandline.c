@@ -150,7 +150,7 @@ commandline_t commandline_parse(int argc, char **argv)
         else if(str_icmp(argv[i], "--use-gamepad") == 0)
             cmd.use_gamepad = TRUE;
 
-        else if(str_icmp(argv[i], "--optimize_cpu_usage") == 0)
+        else if(str_icmp(argv[i], "--optimize-cpu-usage") == 0)
             cmd.optimize_cpu_usage = TRUE;
 
         else if(str_icmp(argv[i], "--level") == 0) {
