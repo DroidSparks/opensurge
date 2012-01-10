@@ -1912,7 +1912,7 @@ void render_water()
     int waterlevel = 6408; /* level coordinates */
     uint32 watercolor = image_rgb(0,128,255);
     int y = waterlevel - ( (int)camera_get_position().y - VIDEO_SCREEN_H/2 );
-    image_waterfx( video_get_backbuffer(), y, watercolor );
+    /*image_waterfx( video_get_backbuffer(), y, watercolor );*/
 }
 
 
