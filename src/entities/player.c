@@ -502,7 +502,7 @@ void player_drown(player_t *player)
         player->actor->speed = v2d_new(0, 0);
         player->pa_old_state = physicsactor_get_state(player->pa);
         physicsactor_drown(player->pa);
-        sound_play( soundfactory_get("drowned") );
+        sound_play( soundfactory_get("drown") );
     }
 }
 
@@ -514,6 +514,7 @@ void player_drown(player_t *player)
 void player_breathe(player_t *player)
 {
     if(player->underwater && physicsactor_get_state(player->pa) != PAS_BREATHING) {
+        player_reset_underwater_timer(player);
         player->actor->speed = v2d_new(0, 0);
         player->pa_old_state = physicsactor_get_state(player->pa);
         physicsactor_breathe(player->pa);

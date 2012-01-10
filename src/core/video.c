@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * video.c - video manager
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -570,7 +570,14 @@ void video_display_loading_screen()
  */
 const image_t* video_get_window_surface()
 {
-    return window_surface;
+    switch(video_get_resolution()) {
+        case VIDEORESOLUTION_1X:
+        case VIDEORESOLUTION_EDT:
+            return video_get_backbuffer(); /* this "gambiarra" saves some processing... */
+
+        default:
+            return window_surface;
+    }
 }
 
 

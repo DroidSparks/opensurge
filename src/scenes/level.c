@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * level.c - code for the game levels
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -185,6 +185,7 @@ static void render_powerups(); /* gui / hud related */
 static void render_dlgbox(); /* dialog boxes */
 static void update_dlgbox(); /* dialog boxes */
 static void reconfigure_players_input_devices();
+static void render_water();
 
 
 
@@ -1270,6 +1271,9 @@ void level_render()
     /* entities */
     render_entities(major_bricks, major_items, major_enemies);
 
+    /* water */
+    render_water();
+
     /* foreground */
     background_render_fg(backgroundtheme, camera_get_position());
 
@@ -1902,6 +1906,14 @@ void render_hud(enemy_list_t *major_enemies)
 }
 
 
+/* renders water */
+void render_water()
+{
+    int waterlevel = 6408; /* level coordinates */
+    uint32 watercolor = image_rgb(0,128,255);
+    int y = waterlevel - ( (int)camera_get_position().y - VIDEO_SCREEN_H/2 );
+    image_waterfx( video_get_backbuffer(), y, watercolor );
+}
 
 
 

@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * image.h - image interface
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -65,5 +65,8 @@ void image_draw_scaled(const image_t *src, image_t *dest, int x, int y, v2d_t sc
 void image_draw_rotated(const image_t *src, image_t *dest, int x, int y, int cx, int cy, float ang, uint32 flags);
 void image_draw_trans(const image_t *src, image_t *dest, int x, int y, float alpha, uint32 flags);
 void image_draw_lit(const image_t *src, image_t *dest, int x, int y, uint32 color, float alpha, uint32 flags);
+
+/* special effects */
+void image_waterfx(image_t *img, int y, uint32 color); /* pixels below y will have a water effect */
 
 #endif

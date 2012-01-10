@@ -183,7 +183,7 @@ void init_basic_stuff()
  */
 void init_managers(commandline_t cmd)
 {
-    timer_init(TRUE); /*cmd.optimize_cpu_usage);*/
+    timer_init(cmd.optimize_cpu_usage);
     video_init(get_window_title(), cmd.video_resolution, cmd.smooth_graphics, cmd.fullscreen, cmd.color_depth);
     video_show_fps(cmd.show_fps);
     audio_init();

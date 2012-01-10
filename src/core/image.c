@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * image.c - image implementation
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -34,11 +34,23 @@
 #include "resourcemanager.h"
 #include "util.h"
 
-/* useful macros */
+/* useful stuff */
 #define IS_PNG(path) (str_icmp((path)+strlen(path)-4, ".png") == 0)
+typedef int (*fast_getpixel_funptr)(BITMAP*,int,int);
+typedef void (*fast_putpixel_funptr)(BITMAP*,int,int,int);
+typedef int (*fast_makecol_funptr)(int,int,int);
+typedef int (*fast_getr_funptr)(int);
+typedef int (*fast_getg_funptr)(int);
+typedef int (*fast_getb_funptr)(int);
 
 /* private stuff */
 static void maskcolor_bugfix(image_t *img);
+static fast_getpixel_funptr fast_getpixel_fun(); /* returns a function. this won't do any clipping, so take care. */
+static fast_putpixel_funptr fast_putpixel_fun(); /* returns a function. this won't do any clipping, so take care. */
+static fast_makecol_funptr fast_makecol_fun(); /* returns a function */
+static fast_getr_funptr fast_getr_fun(); /* returns a function */
+static fast_getg_funptr fast_getg_fun(); /* returns a function */
+static fast_getb_funptr fast_getb_fun(); /* returns a function */
 
 /*
  * image_load()
@@ -412,20 +424,11 @@ int image_pixelperfect_collision(const image_t *img1, const image_t *img2, int x
 {
     int i, j;
     uint32 mask = video_get_maskcolor();
-    int (*fast_getpixel)(BITMAP*,int,int);
+    int (*fast_getpixel)(BITMAP*,int,int) = fast_getpixel_fun();
 
     /* optimizing */
     if(img1->w * img1->h > img2->w * img2->h)
         return image_pixelperfect_collision(img2, img1, x2, y2, x1, y1);
-
-    /* fast getpixel routine */
-    switch(video_get_color_depth()) {
-        case 8:  fast_getpixel = _getpixel;   break;
-        case 16: fast_getpixel = _getpixel16; break;
-        case 24: fast_getpixel = _getpixel24; break;
-        case 32: fast_getpixel = _getpixel32; break;
-        default: fast_getpixel = getpixel; break;
-    }
 
     /* loop */
     for(i=0; i<img1->h; i++) { /* i-th row */
@@ -444,6 +447,38 @@ int image_pixelperfect_collision(const image_t *img1, const image_t *img2, int x
     return FALSE;
 }
 
+/*
+ * image_waterfx()
+ * pixels below y will have a water effect
+ */
+void image_waterfx(image_t *img, int y, uint32 color)
+{
+    fast_getpixel_funptr fast_getpixel = fast_getpixel_fun();
+    fast_putpixel_funptr fast_putpixel = fast_putpixel_fun();
+    fast_makecol_funptr fast_makecol = fast_makecol_fun();
+    fast_getr_funptr fast_getr = fast_getr_fun();
+    fast_getg_funptr fast_getg = fast_getg_fun();
+    fast_getb_funptr fast_getb = fast_getb_fun();
+    int col, wr, wg, wb; /* don't use uint8 */
+    int i, j;
+
+    /* adjust y */
+    y = clip(y, 0, img->h);
+
+    /* water color */
+    wr = fast_getr(color);
+    wg = fast_getg(color);
+    wb = fast_getb(color);
+
+    /* fast blending algorithm (alpha = 0.5) */
+    for(j=y; j<img->h; j++) {
+        for(i=0; i<img->w; i++) {
+            col = fast_getpixel(img->data, i, j);
+            fast_putpixel(img->data, i, j, fast_makecol((fast_getr(col) + wr)>>1, (fast_getg(col) + wg)>>1, (fast_getb(col) + wb)>>1));
+        }
+    }
+}
+
 
 /* private methods */
 
@@ -455,16 +490,102 @@ int image_pixelperfect_collision(const image_t *img1, const image_t *img2, int x
 void maskcolor_bugfix(image_t *img)
 {
     int i, j;
+    fast_getpixel_funptr fast_getpixel = fast_getpixel_fun();
+    fast_putpixel_funptr fast_putpixel = fast_putpixel_fun();
     uint32 mask = video_get_maskcolor();
     uint8 pixel_r, pixel_g, pixel_b, mask_r, mask_g, mask_b;
     image_color2rgb(mask, &mask_r, &mask_g, &mask_b);
 
     for(j=0; j<img->h; j++) {
         for(i=0; i<img->w; i++) {
-            image_color2rgb(image_getpixel(img, i, j), &pixel_r, &pixel_g, &pixel_b);
+            image_color2rgb(fast_getpixel(img->data, i, j), &pixel_r, &pixel_g, &pixel_b);
             if(pixel_r == mask_r && pixel_g == mask_g && pixel_b == mask_b)
-                image_putpixel(img, i, j, mask);
+                fast_putpixel(img->data, i, j, mask);
         }
     }
 }
 
+
+/*
+ * fast_getpixel_ptr()
+ * Returns a fast getpixel function. It won't perform any
+ * clipping, so take care.
+ */
+fast_getpixel_funptr fast_getpixel_fun()
+{
+    switch(video_get_color_depth()) {
+        case 8:  return _getpixel;
+        case 15: return _getpixel15;
+        case 16: return _getpixel16;
+        case 24: return _getpixel24;
+        case 32: return _getpixel32;
+        default: return getpixel;
+    }
+}
+
+/*
+ * fast_putpixel_fun()
+ * Returns a fast putpixel function. It won't perform any
+ * clipping, so take care.
+ */
+fast_putpixel_funptr fast_putpixel_fun()
+{
+    switch(video_get_color_depth()) {
+        case 8:  return _putpixel;
+        case 15: return _putpixel15;
+        case 16: return _putpixel16;
+        case 24: return _putpixel24;
+        case 32: return _putpixel32;
+        default: return putpixel;
+    }
+}
+
+/* these other guys return color-depth appropriate functions
+   for Allegro's equivalent to makecol, getr, getg, getb */
+fast_makecol_funptr fast_makecol_fun()
+{
+    switch(video_get_color_depth()) {
+        case 8:  return makecol8;
+        case 15: return makecol15;
+        case 16: return makecol16;
+        case 24: return makecol24;
+        case 32: return makecol32;
+        default: return makecol;
+    }
+}
+
+fast_getr_funptr fast_getr_fun()
+{
+    switch(video_get_color_depth()) {
+        case 8:  return getr8;
+        case 15: return getr15;
+        case 16: return getr16;
+        case 24: return getr24;
+        case 32: return getr32;
+        default: return getr;
+    }
+}
+
+fast_getg_funptr fast_getg_fun()
+{
+    switch(video_get_color_depth()) {
+        case 8:  return getg8;
+        case 15: return getg15;
+        case 16: return getg16;
+        case 24: return getg24;
+        case 32: return getg32;
+        default: return getg;
+    }
+}
+
+fast_getb_funptr fast_getb_fun()
+{
+    switch(video_get_color_depth()) {
+        case 8:  return getb8;
+        case 15: return getb15;
+        case 16: return getb16;
+        case 24: return getb24;
+        case 32: return getb32;
+        default: return getb;
+    }
+}

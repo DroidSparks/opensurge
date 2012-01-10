@@ -1,13 +1,9 @@
-// ---------------------------------------------------------------------------
-// Open Surge Engine
-// http://opensnc.sourceforge.net
-//
-// File:   objects/default_startup/camera.inc
-// Desc:   the original camera of the engine just locks the player at the
-//         center of the screen. Can we make it better?
-// Author: Alexandre
-// Date:   2012-01-01
-// ---------------------------------------------------------------------------
+// =====================================
+// Open Surge
+// Version: 0.2.0
+// File: camera.inc
+// Required: Bleeding Edge 616
+// =====================================
 
 object ".default_startup.camera"
 {
@@ -16,52 +12,128 @@ object ".default_startup.camera"
 
     state "main"
     {
-        //hide
-        set_zindex 1
-set_animation SD_BLUERING 0
-
-        let "$LAG_FACTOR = 0.13" // the lower this value, the fastest the camera is
-        change_state "reposition"
-    }
-
-    state "reposition"
-    {
-        on_level_cleared "drop"
-
-        observe_active_player
-        attach_to_player 0 0
-        request_camera_focus
-
-        let "$cam_x = xpos()"
-        let "$cam_y = ypos()"
-
-        change_state "watch"
-    }
-
-    state "watch"
-    {
-        request_camera_focus
-        on_player_rect_collision -8 -16 8 16 watch //-$h_border -$v_border $h_border $v_border watch
-        change_state move
-    }
-
-    state move
-    {
-        request_camera_focus
-        let "$dx = player_xpos() - xpos()"
-        let "$dy = player_ypos() - ypos()"
-        let "$len = sqrt($dx^2 + $dy^2)"
-        let "$vel = $len / $LAG_FACTOR"
-        let "$dx = $vel * $dx / $len"
-        let "$dy = $vel * $dy / $len"
-        move $dx $dy
-        //on_player_rect_collision -8 -16 8 16 watch
-        if "floor(abs($dx)) <= 2 and floor(abs($dy)) <= 2" watch
-    }
-
-    state "drop"
-    {
-        drop_camera_focus
-        destroy
-    }
+		hide
+		
+		create_child ".default_startup.camera_focus_y_tracker"
+		create_child ".default_startup.camera_focus_x_tracker"
+		create_child ".default_startup.camera_focus"
+		create_child ".default_startup.camera.textout_is_your_best_friend"
+		change_state "track"
+	}
+	state "track"
+	{
+		let "$_player_x_to_center = player_xpos() - $_camera_focus_x"
+		let "$_player_y_to_center = player_ypos() - $_camera_focus_y"
+	}
 }
+
+object ".default_startup.camera.textout_is_your_best_friend"
+{
+	requires 0.2.0
+	always_active
+	detach_from_camera
+	state "main"
+	{
+		set_zindex 0.1
+		set_absolute_position 100 100
+		let "$x = player_xspeed()"
+		let "$y = player_yspeed()"
+		textout "Default" 0 0 "player_x_to_center: $_player_x_to_center"
+		textout "Default" 0 10 "player_y_to_center: $_player_y_to_center"
+		textout "Default" 0 20 "camera_focus_x: $_camera_focus_x"
+		textout "Default" 0 30 "camera_focus_y: $_camera_focus_y"
+		textout "Default" 0 40 "camera_focus_x2: $_camera_focus_x2"
+		textout "Default" 0 50 "camera_focus_y2: $_camera_focus_y2"
+		textout "Default" 0 60 "xspeed: $x"
+		textout "Default" 0 70 "yspeed: $y"
+	}
+}
+
+object ".default_startup.camera_focus_x_tracker"
+{
+	requires 0.2.0
+	always_active
+	
+	state "main"
+	{
+		hide
+		if "$_player_x_to_center > 8" "move_up_to_16_right"
+		if "$_player_x_to_center < -8" "move_up_to_16_left"
+	}
+	
+	state "move_up_to_16_right"
+	{
+		let "$_camera_focus_x2 += min(player_xpos() - $_camera_focus_x, 16)"
+		change_state "main"
+	}
+	
+	state "move_up_to_16_left"
+	{
+		let "$_camera_focus_x2 -= min($_camera_focus_x - player_xpos(), 16)"
+		change_state "main"
+	}
+}
+
+object ".default_startup.camera_focus_y_tracker"
+{
+	requires 0.2.0
+	always_active
+	
+	state "main"
+	{
+		hide
+		if "($_player_y_to_center > 32) and (player_yspeed() > 6)" "move_up_to_16_down"
+		if "($_player_y_to_center > 32) and (player_yspeed() <= 6)" "move_up_to_6_down"
+		if "($_player_y_to_center < -32) and (player_yspeed() > 6)" "move_up_to_16_up"
+		if "($_player_y_to_center < -32) and (player_yspeed() <= 6)" "move_up_to_6_up"
+	}
+	
+	state "move_up_to_6_down"
+	{
+		let "$_camera_focus_y2 += min(player_ypos() - $_camera_focus_y, 6)"
+		change_state "main"
+	}
+	
+	state "move_up_to_16_down"
+	{
+		let "$_camera_focus_y2 += min(player_ypos() - $_camera_focus_y, 16)"
+		change_state "main"
+	}
+	
+	state "move_up_to_6_up"
+	{
+		let "$_camera_focus_y2 -= min($_camera_focus_y - player_ypos(), 6)"
+		change_state "main"
+	}
+	
+	state "move_up_to_16_up"
+	{
+		let "$_camera_focus_y2 -= min($_camera_focus_y - player_ypos(), 16)"
+		change_state "main"
+	}
+}
+
+object ".default_startup.camera_focus"
+{
+	requires 0.2.0
+	always_active
+	
+	state "main"
+	{
+		set_animation "SD_CAMERA_HITBOX" 1
+		set_absolute_position player_xpos() player_ypos()
+		attach_to_player
+		let "$_camera_focus_x2 = player_xpos()"
+		let "$_camera_focus_y2 = player_ypos()"
+		request_camera_focus
+		change_state "listen"
+	}
+	
+	state "listen"
+	{
+		let "$_camera_focus_x = xpos()"
+		let "$_camera_focus_y = ypos()"
+		set_absolute_position $_camera_focus_x2 $_camera_focus_y2
+	}
+}
+
