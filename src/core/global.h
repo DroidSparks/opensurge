@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * global.h - global definitions
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,8 +22,9 @@
 #ifndef _GLOBAL_H
 #define _GLOBAL_H
 
-/* uncomment if this is the stable release of the game */
-/*#define GAME_STABLE_RELEASE*/
+/* if this is defined, set it to the bleeding edge release */
+/* otherwise, then we assume we're compiling the stable release */
+/*#define GAME_BUILD_VERSION      1*/
 
 /* Game data */
 #define GAME_UNIXNAME           "opensurge"
@@ -31,11 +32,16 @@
 #define GAME_VERSION            0
 #define GAME_SUB_VERSION        2
 #define GAME_WIP_VERSION        0
-#define GAME_VERSION_STRING     STRVALUE(GAME_VERSION) "." STRVALUE(GAME_SUB_VERSION) "." STRVALUE(GAME_WIP_VERSION)
 #define GAME_WEBSITE            "http://opensnc.sourceforge.net"
-#define GAME_YEAR               "2008-2011"
+#define GAME_YEAR               "2008-2012"
 #define GAME_UNIX_INSTALLDIR    "/usr/share/opensurge"
 #define GAME_UNIX_COPYDIR       "/usr/bin"
+
+#ifndef GAME_BUILD_VERSION
+#define GAME_VERSION_STRING     STRVALUE(GAME_VERSION) "." STRVALUE(GAME_SUB_VERSION) "." STRVALUE(GAME_WIP_VERSION)
+#else
+#define GAME_VERSION_STRING     STRVALUE(GAME_VERSION) "." STRVALUE(GAME_SUB_VERSION) "." STRVALUE(GAME_WIP_VERSION) " build " STRVALUE(GAME_BUILD_VERSION)
+#endif
 
 /* Global definitions and constants */
 #ifdef INFINITY

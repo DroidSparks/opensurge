@@ -2379,68 +2379,95 @@ void editor_update()
 
         switch(editor_cursor_entity_type) {
             /* brick */
-            case EDT_BRICK:
+            case EDT_BRICK: {
+                brick_t *candidate = NULL;
+
                 for(itb=major_bricks;itb;itb=itb->next) {
                     float a[4] = {itb->data->x, itb->data->y, itb->data->x + itb->data->brick_ref->image->w, itb->data->y + itb->data->brick_ref->image->h};
                     float b[4] = { editor_cursor.x+topleft.x , editor_cursor.y+topleft.y , editor_cursor.x+topleft.x+1 , editor_cursor.y+topleft.y+1 };
                     if(bounding_box(a,b)) {
-                        if(pick_object) {
-                            editor_cursor_entity_id = get_brick_id(itb->data);
-                            editor_layer = itb->data->layer;
-                        }
-                        else {
-                            editor_action_t eda = editor_action_entity_new(FALSE, EDT_BRICK, get_brick_id(itb->data), v2d_new(itb->data->x, itb->data->y));
-                            editor_action_commit(eda);
-                            editor_action_register(eda);
-                            break;
-                        }
+                        if(!candidate || (candidate && itb->data->brick_ref->zindex >= candidate->brick_ref->zindex))
+                            candidate = itb->data;
                     }
                 }
+
+                if(candidate != NULL) {
+                    if(pick_object) {
+                        editor_cursor_entity_id = get_brick_id(candidate);
+                        editor_layer = candidate->layer;
+                    }
+                    else {
+                        editor_action_t eda = editor_action_entity_new(FALSE, EDT_BRICK, get_brick_id(candidate), v2d_new(candidate->x, candidate->y));
+                        editor_action_commit(eda);
+                        editor_action_register(eda);
+                    }
+                }
+
                 break;
+            }
 
             /* item */
-            case EDT_ITEM:
+            case EDT_ITEM: {
+                item_t *candidate = NULL;
+
                 for(iti=major_items;iti;iti=iti->next) {
                     float a[4] = {iti->data->actor->position.x-iti->data->actor->hot_spot.x, iti->data->actor->position.y-iti->data->actor->hot_spot.y, iti->data->actor->position.x-iti->data->actor->hot_spot.x + actor_image(iti->data->actor)->w, iti->data->actor->position.y-iti->data->actor->hot_spot.y + actor_image(iti->data->actor)->h};
                     float b[4] = { editor_cursor.x+topleft.x , editor_cursor.y+topleft.y , editor_cursor.x+topleft.x+1 , editor_cursor.y+topleft.y+1 };
 
                     if(bounding_box(a,b)) {
-                        if(pick_object) {
-                            int index = editor_item_list_get_index(iti->data->type);
-                            if(index >= 0) {
-                                editor_cursor_itemid = index;
-                                editor_cursor_entity_id = editor_item_list[index];
-                            }
-                        }
-                        else {
-                            editor_action_t eda = editor_action_entity_new(FALSE, EDT_ITEM, iti->data->type, iti->data->actor->position);
-                            editor_action_commit(eda);
-                            editor_action_register(eda);
-                            break;
-                        }
+                        if(!candidate || (candidate && !(iti->data->bring_to_back)))
+                            candidate = iti->data;
                     }
                 }
+
+                if(candidate != NULL) {
+                    if(pick_object) {
+                        int index = editor_item_list_get_index(candidate->type);
+                        if(index >= 0) {
+                            editor_cursor_itemid = index;
+                            editor_cursor_entity_id = editor_item_list[index];
+                        }
+                    }
+                    else {
+                        editor_action_t eda = editor_action_entity_new(FALSE, EDT_ITEM, candidate->type, candidate->actor->position);
+                        editor_action_commit(eda);
+                        editor_action_register(eda);
+                    }
+                }
+
                 break;
+            }
 
             /* enemy */
-            case EDT_ENEMY:
+            case EDT_ENEMY: {
+                enemy_t *candidate = NULL;
+                int candidate_key;
+
                 for(ite=major_enemies;ite;ite=ite->next) {
                     float a[4] = {ite->data->actor->position.x-ite->data->actor->hot_spot.x, ite->data->actor->position.y-ite->data->actor->hot_spot.y, ite->data->actor->position.x-ite->data->actor->hot_spot.x + actor_image(ite->data->actor)->w, ite->data->actor->position.y-ite->data->actor->hot_spot.y + actor_image(ite->data->actor)->h};
                     float b[4] = { editor_cursor.x+topleft.x , editor_cursor.y+topleft.y , editor_cursor.x+topleft.x+1 , editor_cursor.y+topleft.y+1 };
                     int mykey = editor_enemy_name2key(ite->data->name);
                     if(mykey >= 0 && bounding_box(a,b)) {
-                        if(pick_object) {
-                            editor_cursor_entity_id = mykey;
-                        }
-                        else {
-                            editor_action_t eda = editor_action_entity_new(FALSE, EDT_ENEMY, mykey, ite->data->actor->position);
-                            editor_action_commit(eda);
-                            editor_action_register(eda);
-                            break;
+                        if(!candidate || (candidate && ite->data->zindex >= candidate->zindex)) {
+                            candidate = ite->data;
+                            candidate_key = mykey;
                         }
                     }
                 }
+
+                if(candidate != NULL) {
+                    if(pick_object) {
+                        editor_cursor_entity_id = candidate_key;
+                    }
+                    else {
+                        editor_action_t eda = editor_action_entity_new(FALSE, EDT_ENEMY, candidate_key, candidate->actor->position);
+                        editor_action_commit(eda);
+                        editor_action_register(eda);
+                    }
+                }
+
                 break;
+            }
 
             /* can't pick-up/delete a group */
             case EDT_GROUP:

@@ -594,7 +594,8 @@ const image_t* video_get_window_surface()
  */
 void filter_blit(image_t *src, image_t *dest, int filter)
 {
-    int i, j, k=2;
+    int i, j;
+    const int k=2;
 
     if(src->data == NULL || dest->data == NULL)
         return;
@@ -604,7 +605,7 @@ void filter_blit(image_t *src, image_t *dest, int filter)
             Super2xSaI(src->data, dest->data, 0, 0, 0, 0, src->w, src->h);
             for(i=0; i<dest->h; i++) { /* image fix */
                 for(j=0; j<k; j++)
-                    putpixel(dest->data, j, i, getpixel(dest->data, k, i));
+                    _putpixel(dest->data, j, i, _getpixel(dest->data, k, i));
             }
             break;
 
@@ -612,7 +613,7 @@ void filter_blit(image_t *src, image_t *dest, int filter)
             SuperEagle(src->data, dest->data, 0, 0, 0, 0, src->w, src->h);
             for(i=0; i<dest->h; i++) { /* image fix */
                 for(j=0; j<k; j++)
-                    putpixel(dest->data, dest->w-1-j, i, getpixel(dest->data, dest->w-1-k, i));
+                    _putpixel(dest->data, dest->w-1-j, i, _getpixel(dest->data, dest->w-1-k, i));
             }
             break;
     }

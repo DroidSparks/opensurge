@@ -301,11 +301,7 @@ void release_basic_stuff()
  */
 const char* get_window_title()
 {
-#ifndef GAME_STABLE_RELEASE
-    return GAME_TITLE " " GAME_VERSION_STRING " - bleeding edge version";
-#else
     return GAME_TITLE " " GAME_VERSION_STRING;
-#endif
 }
 
 /*
