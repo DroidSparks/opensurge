@@ -408,7 +408,7 @@ object ".default_startup.camera.y.air_checker"
 }
 
 // this object tells whether the camera is focusing
-// on the active player or not
+// the active player or not
 object ".default_startup.camera.focus_player"
 {
     requires 0.2.0
