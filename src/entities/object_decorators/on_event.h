@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * on_event.h - Events: if an event is true, then the state is changed
- * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -77,6 +77,10 @@ objectmachine_t* objectdecorator_onfloorcollision_new(objectmachine_t *decorated
 objectmachine_t* objectdecorator_onceilingcollision_new(objectmachine_t *decorated_machine, const char *new_state_name);
 objectmachine_t* objectdecorator_onleftwallcollision_new(objectmachine_t *decorated_machine, const char *new_state_name);
 objectmachine_t* objectdecorator_onrightwallcollision_new(objectmachine_t *decorated_machine, const char *new_state_name);
+
+/* camera events */
+objectmachine_t* objectdecorator_oncamerafocus_new(objectmachine_t *decorated_machine, const char *new_state_name);
+objectmachine_t* objectdecorator_oncamerafocusplayer_new(objectmachine_t *decorated_machine, const char *new_state_name);
 
 /* audio events */
 objectmachine_t* objectdecorator_onmusicplay_new(objectmachine_t *decorated_machine, const char *new_state_name);

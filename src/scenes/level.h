@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * level.h - code for the game levels
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -61,6 +61,7 @@ struct enemy_t* level_create_enemy(const char *name, v2d_t position);
 void level_add_to_score(int score);
 struct item_t* level_create_animal(v2d_t position);
 void level_set_camera_focus(struct actor_t *act);
+struct actor_t* level_get_camera_focus();
 int level_editmode();
 v2d_t level_size();
 float level_gravity();

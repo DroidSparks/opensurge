@@ -1,12 +1,11 @@
-// Hitboxes.
-sprite SD_CAMERA_HITBOX
+sprite SD_CAMERA
 {
-	source_file		images/camera_mask.png
-	source_rect     0 0 32 16
+	source_file		images/camera.png
+	source_rect     0 0 48 16
     frame_size      16 16
     hot_spot        8 8
 
-    // player
+    // x
     animation 0
     {
         repeat      TRUE
@@ -14,11 +13,19 @@ sprite SD_CAMERA_HITBOX
         data        0
     }
 	
-	// camera focus
+	// y
 	animation 1
 	{
 		repeat		TRUE
-		fps			1
+		fps			8
 		data		1
+	}
+
+	// cam
+	animation 2
+	{
+		repeat		TRUE
+		fps			8
+		data		2
 	}
 }

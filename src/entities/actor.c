@@ -238,8 +238,7 @@ int actor_orientedbox_collision(const actor_t *a, const actor_t *b)
  */
 int actor_pixelperfect_collision(const actor_t *a, const actor_t *b)
 {
-
-    if(fabs(a->angle) < EPSILON && fabs(b->angle) < EPSILON) {
+    if(fabs(a->angle) < EPSILON && fabs(b->angle) < EPSILON && a->mirror == IF_NONE && b->mirror == IF_NONE) {
         if(actor_collision(a, b)) {
             int x1, y1, x2, y2;
 

@@ -26,7 +26,12 @@ object ".default_startup.switch_character"
     state "main"
     {
         hide
-        change_state "stand by"
+        change_state "cooldown"
+    }
+
+    state "cooldown"
+    {
+        on_timeout 4.0 "stand by"
     }
 
     state "sleep"
@@ -44,7 +49,7 @@ object ".default_startup.switch_character"
     {
         observe_next_player
         switch_character
-        observe_current_player // switch_character may have failed (if the character is in the air, for example)
+        observe_active_player // switch_character may have failed (if the character is in the air, for example)
         change_state "stand by"
     }
 }

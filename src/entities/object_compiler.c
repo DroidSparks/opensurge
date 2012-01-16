@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * object_compiler.c - compiles object scripts
- * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -229,6 +229,8 @@ static void on_right_wall_collision(objectmachine_t** m, int n, const char **p, 
 static void on_button_down(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_button_pressed(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_button_up(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void on_camera_focus(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void on_camera_focus_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_music_play(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 
 /* variables */
@@ -383,6 +385,8 @@ static entry_t command_table[] = {
     { "on_button_down", on_button_down },
     { "on_button_pressed", on_button_pressed },
     { "on_button_up", on_button_up },
+    { "on_camera_focus", on_camera_focus },
+    { "on_camera_focus_player", on_camera_focus_player },
     { "on_music_play", on_music_play },
 
     /* variables */
@@ -1273,6 +1277,22 @@ void on_music_play(objectmachine_t** m, int n, const char **p, const parsetree_s
         *m = objectdecorator_onmusicplay_new(*m, p[0]);
     else
         COMPILE_ERROR("Object script error - on_music_play expects one parameter: new_state_name");
+}
+
+void on_camera_focus(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_oncamerafocus_new(*m, p[0]);
+    else
+        COMPILE_ERROR("Object script error - on_camera_focus expects one parameter: new_state_name");
+}
+
+void on_camera_focus_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_oncamerafocusplayer_new(*m, p[0]);
+    else
+        COMPILE_ERROR("Object script error - on_camera_focus_player expects one parameter: new_state_name");
 }
 
 void change_closest_object_state(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)

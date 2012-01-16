@@ -1511,6 +1511,15 @@ void level_set_camera_focus(actor_t *act)
 }
 
 
+/*
+ * level_gets_camera_focus()
+ * Gets the actor being focused by the camera
+ */
+actor_t* level_get_camera_focus()
+{
+    return camera_focus;
+}
+
 
 /*
  * level_editmode()
@@ -2441,7 +2450,7 @@ void editor_update()
             /* enemy */
             case EDT_ENEMY: {
                 enemy_t *candidate = NULL;
-                int candidate_key;
+                int candidate_key = 0;
 
                 for(ite=major_enemies;ite;ite=ite->next) {
                     float a[4] = {ite->data->actor->position.x-ite->data->actor->hot_spot.x, ite->data->actor->position.y-ite->data->actor->hot_spot.y, ite->data->actor->position.x-ite->data->actor->hot_spot.x + actor_image(ite->data->actor)->w, ite->data->actor->position.y-ite->data->actor->hot_spot.y + actor_image(ite->data->actor)->h};

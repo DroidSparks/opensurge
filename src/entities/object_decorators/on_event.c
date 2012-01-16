@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * on_event.c - Events: if an event is true, then the state is changed
- * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,6 +51,7 @@ typedef struct onceilingcollision_t onceilingcollision_t;
 typedef struct onleftwallcollision_t onleftwallcollision_t;
 typedef struct onrightwallcollision_t onrightwallcollision_t;
 typedef struct onbutton_t onbutton_t;
+typedef struct oncameraevent_t oncameraevent_t;
 typedef struct onmusicplay_t onmusicplay_t;
 
 /* objectdecorator_onevent_t class */
@@ -257,6 +258,22 @@ static eventstrategy_t* onbutton_new(const char *button_name, int (*check)(input
 static void onbutton_init(eventstrategy_t *event);
 static void onbutton_release(eventstrategy_t *event);
 static int onbutton_should_trigger_event(eventstrategy_t *event, object_t *object, player_t** team, int team_size, brick_list_t *brick_list, item_list_t *item_list, object_list_t *object_list);
+
+/* oncameraevent_t concrete strategy */
+struct oncameraevent_t {
+    eventstrategy_t base; /* implements eventstrategy_t */
+    const actor_t* (*multiplexer)(object_t*); /* returns the correct actor: this object or the observed player? */
+};
+static eventstrategy_t* oncameraevent_new(const actor_t* (*mux)(object_t*));
+static void oncameraevent_init(eventstrategy_t *event);
+static void oncameraevent_release(eventstrategy_t *event);
+static int oncameraevent_should_trigger_event(eventstrategy_t *event, object_t *object, player_t** team, int team_size, brick_list_t *brick_list, item_list_t *item_list, object_list_t *object_list);
+
+static const actor_t* oncameraevent_mux_object(object_t *o) { return o->actor; }
+static const actor_t* oncameraevent_mux_observedplayer(object_t *o) { return enemy_get_observed_player(o)->actor; }
+
+static eventstrategy_t* oncamerafocus_new() { return oncameraevent_new(oncameraevent_mux_object); }
+static eventstrategy_t* oncamerafocusplayer_new() { return oncameraevent_new(oncameraevent_mux_observedplayer); }
 
 /* onmusicplay_t concrete strategy */
 struct onmusicplay_t {
@@ -517,6 +534,16 @@ objectmachine_t* objectdecorator_onbuttonup_new(objectmachine_t *decorated_machi
 objectmachine_t* objectdecorator_onmusicplay_new(objectmachine_t *decorated_machine, const char *new_state_name)
 {
     return make_decorator(decorated_machine, new_state_name, onmusicplay_new());
+}
+
+objectmachine_t* objectdecorator_oncamerafocus_new(objectmachine_t *decorated_machine, const char *new_state_name)
+{
+    return make_decorator(decorated_machine, new_state_name, oncamerafocus_new());
+}
+
+objectmachine_t* objectdecorator_oncamerafocusplayer_new(objectmachine_t *decorated_machine, const char *new_state_name)
+{
+    return make_decorator(decorated_machine, new_state_name, oncamerafocusplayer_new());
 }
 
 /* ---------------------------------- */
@@ -1267,6 +1294,36 @@ int onbutton_should_trigger_event(eventstrategy_t *event, object_t *object, play
     player_t *player = enemy_get_observed_player(object);
     return me->check(player->actor->input, me->button);
 }
+
+/* oncameraevent_t strategy */
+eventstrategy_t* oncameraevent_new(const actor_t* (*mux)(object_t*))
+{
+    oncameraevent_t *x = mallocx(sizeof *x);
+    eventstrategy_t *e = (eventstrategy_t*)x;
+
+    x->multiplexer = mux;
+    e->init = oncameraevent_init;
+    e->release = oncameraevent_release;
+    e->should_trigger_event = oncameraevent_should_trigger_event;
+
+    return e;
+}
+
+void oncameraevent_init(eventstrategy_t *event)
+{
+    ; /* empty */
+}
+
+void oncameraevent_release(eventstrategy_t *event)
+{
+    ; /* empty */
+}
+
+int oncameraevent_should_trigger_event(eventstrategy_t *event, object_t *object, player_t** team, int team_size, brick_list_t *brick_list, item_list_t *item_list, object_list_t *object_list)
+{
+    return level_get_camera_focus() == ((oncameraevent_t*)event)->multiplexer(object);
+}
+
 
 /* onmusicplay_t strategy */
 eventstrategy_t* onmusicplay_new()

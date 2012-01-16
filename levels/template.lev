@@ -1421,6 +1421,21 @@ brick 0 352 6440
 brick 0 320 6440
 brick 1 512 6440
 brick 0 480 6440
+brick 0 560 6240
+brick 49 576 6256
+brick 50 560 6256
+brick 0 528 6240
+brick 49 544 6256
+brick 50 528 6256
+brick 0 496 6240
+brick 49 512 6256
+brick 50 496 6256
+brick 0 464 6240
+brick 49 480 6256
+brick 50 464 6256
+brick 0 432 6240
+brick 50 432 6256
+brick 49 448 6256
 brick 0 2608 6016
 brick 1 2672 6016
 brick 0 2640 6016
@@ -1503,6 +1518,12 @@ item 0 232 6416
 item 0 272 6416
 item 0 312 6416
 item 0 352 6416
+item 0 392 6352
+item 0 392 6288
+item 0 392 6224
+item 0 392 6160
+item 0 392 6096
+item 20 392 6440
 
 // object list
 object "Lady Bugsy" 4256 7576

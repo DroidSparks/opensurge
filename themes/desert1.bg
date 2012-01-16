@@ -7,13 +7,13 @@ background
     scroll_speed        -0.30 -0.04
     behavior            DEFAULT
     repeat_x            TRUE
-    repeat_y            FALSE
+    repeat_y            TRUE
 
     sprite
     {
         source_file     images/desert1.png
-        source_rect     0 730 470 50
-        frame_size      470 50
+        source_rect     0 730 470 45
+        frame_size      470 45
 
         animation
         {
@@ -184,6 +184,54 @@ background
     initial_position    0 70
     scroll_speed        -0.10 -0.04
     behavior            LINEAR -4.0 0.0
+    repeat_x            TRUE
+    repeat_y            FALSE
+
+    sprite
+    {
+        source_file     images/desert1.png
+        source_rect     0 400 470 40
+        frame_size      470 40
+
+        animation
+        {
+            repeat      TRUE
+            fps         8
+            data        0
+        }
+    }
+}
+
+// layer 8 (sky)
+background
+{
+    initial_position    0 30
+    scroll_speed        -0.10 -0.04
+    behavior            LINEAR -4.5 0.0
+    repeat_x            TRUE
+    repeat_y            FALSE
+
+    sprite
+    {
+        source_file     images/desert1.png
+        source_rect     0 400 470 40
+        frame_size      470 40
+
+        animation
+        {
+            repeat      TRUE
+            fps         8
+            data        0
+        }
+    }
+}
+
+// layer 9 (sky)
+background
+{
+    initial_position    0 -10
+    scroll_speed        -0.10 -0.04
+    behavior            LINEAR -5.0 0.0
     repeat_x            TRUE
     repeat_y            FALSE
 
