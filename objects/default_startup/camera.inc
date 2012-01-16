@@ -69,7 +69,7 @@ object ".default_startup.camera"
         unless "$_focusing_the_player" "lost_focus" // no, let's just wait.
 
         // yes, the active player is the focus of
-        // the camera! but wait... I want be the focus!
+        // the camera! but wait... I want to be the focus!
         change_child_state "cam_focusplayer" "@restore_focus" // this will make my state be changed to "restore_focus" immediately,
                                                               // not in the next frame (which would be the case if we called change_state)
     }
