@@ -129,5 +129,6 @@ void request_camera_focus(objectmachine_t *obj)
 
 void drop_camera_focus(objectmachine_t *obj)
 {
-    level_set_camera_focus( level_player()->actor );
+    if(level_get_camera_focus() == obj->get_object_instance(obj)->actor)
+        level_set_camera_focus( level_player()->actor );
 }

@@ -43,6 +43,7 @@ object ".default_startup.camera"
         // is the camera enabled?
         unless "$enabled" "loop"
         on_level_cleared "loop"
+        on_player_death "loop"
 
         // update position
         change_child_state "cam_x" "@update"
@@ -384,7 +385,6 @@ object ".default_startup.camera.y.air_checker"
 {
     requires 0.2.0
     always_active
-detach_from_camera
 
     state "main"
     {
