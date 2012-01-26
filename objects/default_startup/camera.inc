@@ -18,7 +18,7 @@ object ".default_startup.camera"
 
     state "main"
     {
-        //hide
+        hide
         set_animation SD_CAMERA 2
         set_zindex 1.1
         set_alpha 0.75
@@ -136,7 +136,7 @@ object ".default_startup.camera.x"
 
     state "main"
     {
-        //hide
+        hide
         set_animation SD_CAMERA 0
         set_zindex 1
         observe_active_player
@@ -200,7 +200,7 @@ object ".default_startup.camera.y"
 
     state "main"
     {
-        //hide
+        hide
         set_animation SD_CAMERA 1
         set_zindex 1
         create_child ".default_startup.camera.y.air_checker" 0 0 "air_checker"
@@ -208,7 +208,7 @@ object ".default_startup.camera.y"
         set_absolute_position player_xpos() player_ypos()
         let "$top_border = screen_height() * 0.285"
         let "$bottom_border = screen_height() * 0.571"
-        let "$ground_level = screen_height() * 0.429"
+        let "$ground_level = screen_height() * 0.5" //0.429"
         let "$l = screen_height() / 2"
         change_state "wait"
     }
