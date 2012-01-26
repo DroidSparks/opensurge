@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * renderqueue.h - render queue
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,6 +27,7 @@
 #include "brick.h"
 #include "item.h"
 #include "enemy.h"
+#include "actor.h"
 
 /* private stuff ;) */
 typedef union renderable_t renderable_t;
@@ -42,6 +43,7 @@ struct renderqueue_cell_t {
     renderable_t entity;
     float (*zindex)(renderable_t);
     void (*render)(renderable_t,v2d_t);
+    int (*ypos)(renderable_t);
 };
 
 typedef struct renderqueue_t renderqueue_t;
@@ -60,7 +62,7 @@ static int cmp_fun(const void *i, const void *j)
     const renderqueue_cell_t *b = (const renderqueue_cell_t*)j;
 
     if(fabs(a->zindex(a->entity) - b->zindex(b->entity)) < 1e-7)
-        return 0;
+        return a->ypos(a->entity) - b->ypos(b->entity);
     else if(a->zindex(a->entity) < b->zindex(b->entity))
         return -1;
     else
@@ -88,17 +90,23 @@ static float brick_zindex_offset(const brick_t *b)
 }
 
 /* private strategies */
-float zindex_particles(renderable_t r) { return 0.5f; }
-float zindex_player(renderable_t r) { return 0.5f; }
-float zindex_item(renderable_t r) { return 0.5f; }
-float zindex_object(renderable_t r) { return r.object->zindex; }
-float zindex_brick(renderable_t r) { return r.brick->brick_ref->zindex + brick_zindex_offset(r.brick); }
+static float zindex_particles(renderable_t r) { return 0.5f; }
+static float zindex_player(renderable_t r) { return 0.5f; }
+static float zindex_item(renderable_t r) { return 0.5f; }
+static float zindex_object(renderable_t r) { return r.object->zindex; }
+static float zindex_brick(renderable_t r) { return r.brick->brick_ref->zindex + brick_zindex_offset(r.brick); }
 
-void render_particles(renderable_t r, v2d_t camera_position) { particle_render_all(camera_position); }
-void render_player(renderable_t r, v2d_t camera_position) { player_render(r.player, camera_position); }
-void render_item(renderable_t r, v2d_t camera_position) { item_render(r.item, camera_position); }
-void render_object(renderable_t r, v2d_t camera_position) { enemy_render(r.object, camera_position); }
-void render_brick(renderable_t r, v2d_t camera_position) { brick_render(r.brick, camera_position); }
+static void render_particles(renderable_t r, v2d_t camera_position) { particle_render_all(camera_position); }
+static void render_player(renderable_t r, v2d_t camera_position) { player_render(r.player, camera_position); }
+static void render_item(renderable_t r, v2d_t camera_position) { item_render(r.item, camera_position); }
+static void render_object(renderable_t r, v2d_t camera_position) { enemy_render(r.object, camera_position); }
+static void render_brick(renderable_t r, v2d_t camera_position) { brick_render(r.brick, camera_position); }
+
+static int ypos_particles(renderable_t r) { return 0; }
+static int ypos_player(renderable_t r) { return (int)(r.player->actor->position.y); }
+static int ypos_item(renderable_t r) { return (int)(r.item->actor->position.y); }
+static int ypos_object(renderable_t r) { return (int)(r.object->actor->position.y); }
+static int ypos_brick(renderable_t r) { return r.brick->y; }
 
 
 
@@ -152,6 +160,7 @@ void renderqueue_enqueue_brick(brick_t *brick)
     node->cell.entity.brick = brick;
     node->cell.zindex = zindex_brick;
     node->cell.render = render_brick;
+    node->cell.ypos = ypos_brick;
     node->next = queue;
     queue = node;
     size++;
@@ -163,6 +172,7 @@ void renderqueue_enqueue_item(item_t *item)
     node->cell.entity.item = item;
     node->cell.zindex = zindex_item;
     node->cell.render = render_item;
+    node->cell.ypos = ypos_item;
     node->next = queue;
     queue = node;
     size++;
@@ -174,6 +184,7 @@ void renderqueue_enqueue_object(object_t *object)
     node->cell.entity.object = object;
     node->cell.zindex = zindex_object;
     node->cell.render = render_object;
+    node->cell.ypos = ypos_object;
     node->next = queue;
     queue = node;
     size++;
@@ -185,6 +196,7 @@ void renderqueue_enqueue_player(player_t *player)
     node->cell.entity.player = player;
     node->cell.zindex = zindex_player;
     node->cell.render = render_player;
+    node->cell.ypos = ypos_player;
     node->next = queue;
     queue = node;
     size++;
@@ -195,6 +207,7 @@ void renderqueue_enqueue_particles()
     renderqueue_t *node = mallocx(sizeof *node);
     node->cell.zindex = zindex_particles;
     node->cell.render = render_particles;
+    node->cell.ypos = ypos_particles;
     node->next = queue;
     queue = node;
     size++;
