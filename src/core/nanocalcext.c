@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * nanocalcext.c - nanocalc extensions
- * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -31,9 +31,11 @@
 #include "../entities/actor.h"
 #include "../entities/player.h"
 #include "../entities/enemy.h"
+#include "../entities/brick.h"
 
 /* private stuff ;) */
 #define PLAYER (enemy_get_observed_player(target))
+#define BRICK_AT(ox,oy) actor_brick_at(target->actor,target->brick_list,v2d_new(ox,oy))
 static object_t *target; /* target object */
 static const struct tm* timeinfo() { time_t raw = time(NULL); return localtime(&raw); }
 
@@ -88,6 +90,11 @@ static float f_date_wday() { return (float)(timeinfo()->tm_wday); } /* days sinc
 static float f_date_yday() { return (float)(timeinfo()->tm_yday); } /* days since January 1st; range: 0-365 */
 static float f_music_duration() { return music_duration(); }
 static float f_number_of_joysticks() { return input_number_of_plugged_joysticks(); }
+
+static float f_brick_exists(float offset_x, float offset_y) { return (NULL == BRICK_AT(offset_x, offset_y) ? 0.0f : 1.0f); } /* 1 = exists; 0 = otherwise */
+static float f_brick_type(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return b ? (float)(b->brick_ref->property) : -1.0f; } /* -1 if not exists */
+static float f_brick_angle(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return b ? (float)(b->brick_ref->angle) : -1.0f; } /* -1 if not exists */
+static float f_brick_layer(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return b ? (float)(b->layer) : -1.0f; } /* -1 if not exists */
 
 
 
@@ -147,6 +154,11 @@ void nanocalcext_register_bifs()
     nanocalc_register_bif_arity0("date_yday", f_date_yday);
     nanocalc_register_bif_arity0("music_duration", f_music_duration);
     nanocalc_register_bif_arity0("number_of_joysticks", f_number_of_joysticks);
+
+    nanocalc_register_bif_arity2("brick_exists", f_brick_exists);
+    nanocalc_register_bif_arity2("brick_type", f_brick_type);
+    nanocalc_register_bif_arity2("brick_angle", f_brick_angle);
+    nanocalc_register_bif_arity2("brick_layer", f_brick_layer);
 
     target = NULL;
 }

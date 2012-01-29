@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * actor.c - actor module
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,7 @@
 /* private data */
 static int floor_priority = TRUE; /* default behavior: priority(floor) > priority(wall) */
 static int slope_priority = TRUE; /* default behavior: priority(slope) > priority(floor) */
-static brick_t* brick_at(brick_list_t *list, v2d_t spot);
+static brick_t* brick_at(const brick_list_t *list, v2d_t spot);
 static int is_leftwall_disabled = FALSE;
 static int is_rightwall_disabled = FALSE;
 static int is_floor_disabled = FALSE;
@@ -450,16 +450,31 @@ void actor_sensors_ex(actor_t *act, v2d_t vup, v2d_t vupright, v2d_t vright, v2d
 }
 
 
+
+/*
+ * actor_brick_at()
+ * Gets a brick at a certain offset (may return NULL)
+ */
+const brick_t* actor_brick_at(actor_t *act, const brick_list_t *brick_list, v2d_t offset)
+{
+    return brick_at(brick_list, v2d_add(act->position, offset));
+}
+
+
+
+
+
+
 /* private stuff */
 
 /* brick_at(): given a list of bricks, returns
  * one that collides with the given spot
  * PS: this code ignores the bricks that are
  * not obstacles */
-static brick_t* brick_at(brick_list_t *list, v2d_t spot)
+static brick_t* brick_at(const brick_list_t *list, v2d_t spot)
 {
+    const brick_list_t *p;
     brick_t *ret = NULL;
-    brick_list_t *p;
     v2d_t offset;
     float br[4];
 
