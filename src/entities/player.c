@@ -236,6 +236,12 @@ void player_update(player_t *player, player_t **team, int team_size, brick_list_
     if(player->shield_type != SH_NONE)
         update_shield(player);
 
+    /* get underwater */
+    if(!(player->underwater) && player->actor->position.y >= level_waterlevel())
+        player_enter_water(player);
+    else if(player->underwater && player->actor->position.y < level_waterlevel())
+        player_leave_water(player);
+
     /* underwater? */
     if(player->underwater) {
         player->speedshoes_timer = max(player->speedshoes_timer, PLAYER_MAX_SPEEDSHOES); /* disable speed shoes */

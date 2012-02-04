@@ -32,6 +32,7 @@
 #include "../entities/player.h"
 #include "../entities/enemy.h"
 #include "../entities/brick.h"
+#include "../entities/camera.h"
 
 /* private stuff ;) */
 #define PLAYER (enemy_get_observed_player(target))
@@ -90,11 +91,14 @@ static float f_date_wday() { return (float)(timeinfo()->tm_wday); } /* days sinc
 static float f_date_yday() { return (float)(timeinfo()->tm_yday); } /* days since January 1st; range: 0-365 */
 static float f_music_duration() { return music_duration(); }
 static float f_number_of_joysticks() { return input_number_of_plugged_joysticks(); }
+static float f_camera_x() { return camera_get_position().x; }
+static float f_camera_y() { return camera_get_position().y; }
+static float f_waterlevel() { return (float)level_waterlevel(); }
 
 static float f_brick_exists(float offset_x, float offset_y) { return (NULL == BRICK_AT(offset_x, offset_y) ? 0.0f : 1.0f); } /* 1 = exists; 0 = otherwise */
-static float f_brick_type(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return b ? (float)(b->brick_ref->property) : -1.0f; } /* -1 if not exists */
-static float f_brick_angle(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return b ? (float)(b->brick_ref->angle) : -1.0f; } /* -1 if not exists */
-static float f_brick_layer(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return b ? (float)(b->layer) : -1.0f; } /* -1 if not exists */
+static float f_brick_type(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return (b && b->brick_ref) ? (float)(b->brick_ref->property) : 0.0f; }
+static float f_brick_angle(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return (b && b->brick_ref) ? (float)(b->brick_ref->angle) : 0.0f; }
+static float f_brick_layer(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return b ? (float)(b->layer) : 0.0f; }
 
 
 
@@ -154,6 +158,9 @@ void nanocalcext_register_bifs()
     nanocalc_register_bif_arity0("date_yday", f_date_yday);
     nanocalc_register_bif_arity0("music_duration", f_music_duration);
     nanocalc_register_bif_arity0("number_of_joysticks", f_number_of_joysticks);
+    nanocalc_register_bif_arity0("camera_x", f_camera_x);
+    nanocalc_register_bif_arity0("camera_y", f_camera_y);
+    nanocalc_register_bif_arity0("waterlevel", f_waterlevel);
 
     nanocalc_register_bif_arity2("brick_exists", f_brick_exists);
     nanocalc_register_bif_arity2("brick_type", f_brick_type);

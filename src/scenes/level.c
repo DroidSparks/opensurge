@@ -114,6 +114,8 @@ static void spawn_startup_objects();
 #define MAX_POWERUPS            10
 #define DLGBOX_MAXTIME          7000
 #define TEAM_MAX                16
+#define DEFAULT_WATERLEVEL      INFINITY
+#define DEFAULT_WATERCOLOR      image_rgb(0,32,192)
 
 /* level attributes */
 static char file[1024];
@@ -143,6 +145,8 @@ static bgtheme_t *backgroundtheme;
 static int must_load_another_level;
 static int must_restart_this_level;
 static float dead_player_timeout;
+static int waterlevel; /* in pixels */
+static uint32 watercolor;
 
 /* player data */
 static player_t *team[TEAM_MAX]; /* players */
@@ -423,6 +427,8 @@ void level_load(const char *filepath)
     requires[1] = GAME_SUB_VERSION;
     requires[2] = GAME_WIP_VERSION;
     readonly = FALSE;
+    waterlevel = DEFAULT_WATERLEVEL;
+    watercolor = DEFAULT_WATERCOLOR;
 
     /* entity manager */
     entitymanager_init();
@@ -585,6 +591,16 @@ void level_save(const char *filepath)
     if(readonly)
         fprintf(fp, "readonly\n");
 
+    /* water */
+    if(waterlevel != DEFAULT_WATERLEVEL)
+        fprintf(fp, "waterlevel %d\n", waterlevel);
+
+    if(watercolor != DEFAULT_WATERCOLOR) {
+        uint8 r, g, b;
+        image_color2rgb(watercolor, &r, &g, &b);
+        fprintf(fp, "watercolor %d %d %d\n", r, g, b);
+    }
+
     /* dialog regions */
     fprintf(fp, "\n// dialog regions (xpos ypos width height title message)\n");
     for(i=0; i<dialogregion_size; i++) {
@@ -743,6 +759,18 @@ void level_interpret_parsed_line(const char *filename, int fileline, const char 
             act = atoi(param[0]);
         else
             logfile_message("Level loader - command 'act' expects one parameter: act number");
+    }
+    else if(str_icmp(identifier, "waterlevel") == 0) {
+        if(param_count == 1)
+            waterlevel = atoi(param[0]);
+        else
+            logfile_message("Level loader - command 'waterlevel' expects one parameter: water level (y-coordinate, in pixels)");
+    }
+    else if(str_icmp(identifier, "watercolor") == 0) {
+        if(param_count == 3)
+            watercolor = image_rgb(atoi(param[0]), atoi(param[1]), atoi(param[2]));
+        else
+            logfile_message("Level loader - command 'watercolor' expects three parameters: red, green, blue");
     }
     else if(str_icmp(identifier, "spawn_point") == 0) {
         if(param_count == 2) {
@@ -1687,6 +1715,51 @@ void level_restart()
     must_restart_this_level = TRUE; /* schedules restart */
 }
 
+/*
+ * level_waterlevel()
+ * Returns the level of the water (the y-coordinate where the water begins)
+ */
+int level_waterlevel()
+{
+    return waterlevel;
+}
+
+/*
+ * level_set_waterlevel()
+ * Sets a new waterlevel
+ */
+void level_set_waterlevel(int ycoord)
+{
+    waterlevel = ycoord;
+}
+
+/*
+ * level_watercolor()
+ * Returns the color of the water
+ */
+uint32 level_watercolor()
+{
+    return watercolor;
+}
+
+/*
+ * level_set_watercolor()
+ * Sets a new watercolor
+ */
+void level_set_watercolor(uint32 color)
+{
+    watercolor = color;
+}
+
+
+
+
+
+
+
+
+
+
 
 /* private functions */
 
@@ -1918,10 +1991,9 @@ void render_hud(enemy_list_t *major_enemies)
 /* renders water */
 void render_water()
 {
-    int waterlevel = 6408; /* level coordinates */
-    uint32 watercolor = image_rgb(0,128,255);
     int y = waterlevel - ( (int)camera_get_position().y - VIDEO_SCREEN_H/2 );
-    /*image_waterfx( video_get_backbuffer(), y, watercolor );*/
+    if(y < VIDEO_SCREEN_H)
+        image_waterfx(video_get_backbuffer(), y, watercolor);
 }
 
 

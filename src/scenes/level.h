@@ -23,6 +23,7 @@
 #define _LEVEL_H
 
 #include "../core/v2d.h"
+#include "../core/global.h"
 
 /* forward declarations */
 struct image_t;
@@ -80,5 +81,9 @@ void level_jump_to_next_stage();
 void level_ask_to_leave();
 void level_pause();
 void level_restart();
+int level_waterlevel();
+uint32 level_watercolor();
+void level_set_waterlevel(int ycoord);
+void level_set_watercolor(uint32 color);
 
 #endif

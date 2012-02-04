@@ -16,6 +16,7 @@ music "musics/template.ogg"
 grouptheme "themes/template.grp"
 startup ".default_startup"
 players "Surge" "Neon" "Charge"
+waterlevel 6410
 
 // dialog regions (xpos ypos width height title message)
 

@@ -18,7 +18,7 @@
 #include "default_startup/pause.inc"
 #include "default_startup/quit.inc"
 #include "default_startup/camera.inc"
-#include "default_startup/tools/collision_mask.inc"
+#include "default_startup/water.inc"
 
 // ----------------------------------------------
 // This object is created by default
@@ -38,7 +38,7 @@ object ".default_startup"
         create_child ".default_startup.level_cleared"
         create_child ".default_startup.switch_character"
         create_child ".default_startup.camera"
-        create_child ".tool.collision_mask"
+        create_child ".default_startup.water"
 
         change_state "cooldown"
     }

@@ -309,8 +309,8 @@ object ".default_startup.camera.lookupdown"
     {
         hide
         observe_active_player
-        let "$top = -screen_height() * 0.464"
-        let "$bottom = screen_height() * 0.393"
+        let "$top = -screen_height() * 0.4" //0.464"
+        let "$bottom = screen_height() * 0.4" //393"
         let "$speed = screen_height() * 0.535"
         let "$timeout = 2.0" // seconds until the camera scrolls
         let "$y = 0"
