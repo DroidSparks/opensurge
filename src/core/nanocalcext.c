@@ -79,6 +79,7 @@ static float f_player_xspeed() { return PLAYER->actor->speed.x; }
 static float f_player_yspeed() { return PLAYER->actor->speed.y; }
 static float f_player_angle() { return PLAYER->actor->angle * 180.0f / PI; }
 static float f_player_direction() { return PLAYER->actor->mirror & IF_HFLIP ? -1.0f : 1.0f; }
+static float f_player_seconds_remaining_to_drown() { return player_seconds_remaining_to_drown(PLAYER); }
 static float f_music_volume() { return music_get_volume(); }
 static float f_music_is_playing() { return music_is_playing() ? 1.0f : 0.0f; }
 static float f_date_sec() { return (float)(timeinfo()->tm_sec); }  /* seconds after the minute; range: 0-59 */
@@ -142,6 +143,7 @@ void nanocalcext_register_bifs()
     nanocalc_register_bif_arity0("player_yspeed", f_player_yspeed);
     nanocalc_register_bif_arity0("player_angle", f_player_angle);
     nanocalc_register_bif_arity0("player_direction", f_player_direction);
+    nanocalc_register_bif_arity0("player_seconds_remaining_to_drown", f_player_seconds_remaining_to_drown);
     nanocalc_register_bif_arity0("screen_width", f_screen_width);
     nanocalc_register_bif_arity0("screen_height", f_screen_height);
     nanocalc_register_bif_arity0("width", f_width);

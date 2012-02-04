@@ -192,6 +192,7 @@ static eventstrategy_t* onplayerlookup_new() { return onplayerevent_new(player_i
 static eventstrategy_t* onplayerwait_new() { return onplayerevent_new(player_is_waiting); }
 static eventstrategy_t* onplayerwin_new() { return onplayerevent_new(player_is_winning); }
 static eventstrategy_t* onplayerintheair_new() { return onplayerevent_new(player_is_in_the_air); }
+static eventstrategy_t* onplayerunderwater_new() { return onplayerevent_new(player_is_underwater); }
 
 /* onplayershield_t concrete strategy */
 struct onplayershield_t {
@@ -430,12 +431,10 @@ objectmachine_t* objectdecorator_onplayerduck_new(objectmachine_t *decorated_mac
     return make_decorator(decorated_machine, new_state_name, onplayerduck_new());
 }
 
-
 objectmachine_t* objectdecorator_onplayerlookup_new(objectmachine_t *decorated_machine, const char *new_state_name)
 {
     return make_decorator(decorated_machine, new_state_name, onplayerlookup_new());
 }
-
 
 objectmachine_t* objectdecorator_onplayerwait_new(objectmachine_t *decorated_machine, const char *new_state_name)
 {
@@ -453,8 +452,10 @@ objectmachine_t* objectdecorator_onplayerintheair_new(objectmachine_t *decorated
     return make_decorator(decorated_machine, new_state_name, onplayerintheair_new());
 }
 
-
-
+objectmachine_t* objectdecorator_onplayerunderwater_new(objectmachine_t *decorated_machine, const char *new_state_name)
+{
+    return make_decorator(decorated_machine, new_state_name, onplayerunderwater_new());
+}
 
 objectmachine_t* objectdecorator_onnoshield_new(objectmachine_t *decorated_machine, const char *new_state_name)
 {

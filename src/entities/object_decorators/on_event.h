@@ -61,6 +61,7 @@ objectmachine_t* objectdecorator_onplayerlookup_new(objectmachine_t *decorated_m
 objectmachine_t* objectdecorator_onplayerwait_new(objectmachine_t *decorated_machine, const char *new_state_name);
 objectmachine_t* objectdecorator_onplayerwin_new(objectmachine_t *decorated_machine, const char *new_state_name);
 objectmachine_t* objectdecorator_onplayerintheair_new(objectmachine_t *decorated_machine, const char *new_state_name);
+objectmachine_t* objectdecorator_onplayerunderwater_new(objectmachine_t *decorated_machine, const char *new_state_name);
 
 /* player events: shields */
 objectmachine_t* objectdecorator_onnoshield_new(objectmachine_t *decorated_machine, const char *new_state_name);
