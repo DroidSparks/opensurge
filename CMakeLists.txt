@@ -1,6 +1,6 @@
 #
 # CMakeLists.txt - tells CMake how to build the game
-# Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+# Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -231,6 +231,7 @@ SET(
   src/entities/object_decorators/switch_character.c
   src/entities/object_decorators/load_level.c
   src/entities/object_decorators/restart_level.c
+  src/entities/object_decorators/save_level.c
   src/entities/object_decorators/camera_focus.c
 
   src/entities/items/util/itemutil.c
@@ -406,6 +407,7 @@ IF(WIN32)
       src/entities/object_decorators/switch_character.h
       src/entities/object_decorators/load_level.h
       src/entities/object_decorators/restart_level.h
+      src/entities/object_decorators/save_level.h
       src/entities/object_decorators/camera_focus.h
 
       src/entities/items/util/itemutil.h

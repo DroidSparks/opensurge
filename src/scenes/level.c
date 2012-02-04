@@ -1418,7 +1418,14 @@ player_t* level_player()
     return player;
 }
 
-
+/*
+ * level_persist()
+ * Persists (saves) the current level
+ */
+void level_persist()
+{
+    level_save(file);
+}
 
 /*
  * level_change_player()

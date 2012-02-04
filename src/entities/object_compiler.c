@@ -76,6 +76,7 @@
 #include "object_decorators/return_to_previous_state.h"
 #include "object_decorators/load_level.h"
 #include "object_decorators/restart_level.h"
+#include "object_decorators/save_level.h"
 #include "object_decorators/camera_focus.h"
 
 /* expression evaluator (nanocalc) helper */
@@ -246,6 +247,7 @@ static void next_level(objectmachine_t** m, int n, const char **p, const parsetr
 static void ask_to_leave(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void l_pause(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void restart_level(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void save_level(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void load_level(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void request_camera_focus(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void drop_camera_focus(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -402,6 +404,7 @@ static entry_t command_table[] = {
     { "ask_to_leave", ask_to_leave },
     { "pause", l_pause },
     { "restart_level", restart_level },
+    { "save_level", save_level },
     { "load_level", load_level },
     { "request_camera_focus", request_camera_focus },
     { "drop_camera_focus", drop_camera_focus },
@@ -731,6 +734,14 @@ void restart_level(objectmachine_t** m, int n, const char **p, const parsetree_s
         *m = objectdecorator_restartlevel_new(*m);
     else
         COMPILE_ERROR("Object script error - restart_level expects no parameters");
+}
+
+void save_level(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_savelevel_new(*m);
+    else
+        COMPILE_ERROR("Object script error - save_level expects no parameters");
 }
 
 void load_level(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
