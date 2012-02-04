@@ -20,7 +20,8 @@ object ".default_startup.water"
         create_child ".default_startup.water.level1"
         create_child ".default_startup.water.level2"
         create_child ".default_startup.water.splash_detector"
-//        create_child ".default_startup.water.drown_detector"
+        create_child ".default_startup.water.drown_detector"
+        create_child ".default_startup.water.bubble_creator"
         destroy
     }
 }
@@ -118,7 +119,7 @@ object ".default_startup.water.splash_detector"
 object ".default_startup.water.splash"
 {
     requires 0.2.0
-    always_active
+    destroy_if_far_from_play_area
 
     state "main"
     {
@@ -132,6 +133,151 @@ object ".default_startup.water.splash"
     state "wait"
     {
         on_animation_finished destroy
+    }
+
+    state "destroy"
+    {
+        destroy
+    }
+}
+
+// ---------------------------------------
+
+object ".default_startup.water.drown_detector"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state "main"
+    {
+        let "$seconds = 5" // time to show the counter
+
+        hide
+        set_zindex 1.1
+        set_alpha 1.0
+        set_animation SD_WATERCOUNTER 0
+        set_absolute_position screen_width()/2 screen_height()/2
+        change_state idle
+    }
+
+    state idle
+    {
+        unless "player_seconds_remaining_to_drown() <= $seconds" idle
+        let "$x = 0.0"
+        play_music "musics/drowning.ogg"
+        change_state display
+    }
+
+    state display
+    {
+        // nice effect
+        let "$x = cond($x >= 1.0, $x - 1.0, $x) + dt()"
+        set_scale 0.5+2*$x 0.5+2*$x
+        set_animation_frame "clamp(ceil(player_seconds_remaining_to_drown()), 0, $seconds)"
+        on_player_drown destroy
+
+        // no longer underwater?
+        hide
+        if "player_seconds_remaining_to_drown() > $seconds" restore
+        show
+        on_player_underwater display
+        hide
+        change_state restore
+    }
+
+    state restore
+    {
+        play_level_music
+        change_state idle
+    }
+
+    state destroy
+    {
+        hide
+        if "($t+=dt())<1.5" destroy
+        play_music "musics/silence.ogg" -1
+        destroy
+    }
+}
+
+// ---------------------------------------
+
+object ".default_startup.water.bubble_creator"
+{
+    requires 0.2.0
+    always_active
+
+    state "main"
+    {
+        hide
+        on_player_underwater uw
+        change_state nuw
+    }
+
+    state uw
+    {
+        attach_to_player 0 -15
+        on_player_drown drowned
+        attach_to_player 8*player_direction() -13
+        on_timeout "1.5+random(100)*0.01" create_bubble
+        on_player_underwater uw
+        change_state nuw
+    }
+
+    state nuw
+    {
+        on_player_underwater uw
+    }
+
+    state create_bubble
+    {
+        let "$_waterairbubble_anim = 0"
+        create_child .default_startup.water.bubble 0 0
+        if "random(3) == 0" uw
+        create_child .default_startup.water.bubble player_direction()*(3+random(3)) -2+random(5)
+        change_state uw
+    }
+
+    state drowned
+    {
+        on_timeout 0.1 create_bubble2
+    }
+
+    state create_bubble2
+    {
+        let "$_waterairbubble_anim = cond(random(2)==0,0,3)"
+        create_child .default_startup.water.bubble 0 0
+        if "random(3) == 0" drowned
+        let "$_waterairbubble_anim = cond(random(2)==0,0,3)"
+        create_child .default_startup.water.bubble -2+random(5) -2+random(5)
+        change_state uw
+    }
+}
+
+object ".default_startup.water.bubble"
+{
+    requires 0.2.0
+    destroy_if_far_from_play_area
+
+    state "main"
+    {
+        hide
+        if "ypos() - hotspot_y() <= waterlevel()" destroy
+        show
+
+        let $amp=2+random(2)
+        set_zindex 0.99
+        set_alpha 0.5
+        set_animation SD_WATERAIRBUBBLE $_waterairbubble_anim
+        change_state go
+    }
+
+    state "go"
+    {
+        elliptical_trajectory $amp 0 1 0
+        move 0 -30
+        if "ypos() - hotspot_y() <= waterlevel()" destroy
     }
 
     state "destroy"

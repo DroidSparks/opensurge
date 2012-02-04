@@ -83,7 +83,7 @@ sprite SD_SURGE
     {
         repeat      FALSE
         fps         8
-        data        20
+        data        18 //20
     }
 
     // ledge

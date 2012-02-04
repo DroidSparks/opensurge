@@ -41,7 +41,7 @@ character "Neon"
         dead                        8
         braking                     7
         ledge                       10
-        drowned                     16
+        drowned                     9
         breathing                   12
         waiting                     15
         ducking                     4

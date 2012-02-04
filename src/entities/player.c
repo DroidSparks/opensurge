@@ -65,7 +65,7 @@
 
 /* private data */
 #define PLAYER_MAX_BLINK            2.0  /* how many seconds does the player must blink if he/she gets hurt? */
-#define PLAYER_UNDERWATER_BREATH    10.0 /* how many seconds does the player can stay underwater before drowning? */
+#define PLAYER_UNDERWATER_BREATH    30.0 /* how many seconds does the player can stay underwater before drowning? */
 static int rings, hundred_rings;         /* shared rings */
 static int lives;                        /* shared lives */
 static int score;                        /* shared score */
@@ -567,7 +567,8 @@ void player_leave_water(player_t *player)
     physicsactor_t *pa = player->pa;
 
     if(player->underwater) {
-        player->actor->speed.y *= 2.0f;
+        if(!player_is_springing(player))
+            player->actor->speed.y *= 2.0f;
 
         physicsactor_set_acc(pa, physicsactor_get_acc(pa) * 2.0f);
         physicsactor_set_dec(pa, physicsactor_get_dec(pa) * 2.0f);

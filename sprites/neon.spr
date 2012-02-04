@@ -83,7 +83,7 @@ sprite SD_NEON
     {
         repeat      FALSE
         fps         8
-        data        0
+        data        13 //0
     }
 
     // ledge
