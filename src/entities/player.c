@@ -519,7 +519,7 @@ void player_drown(player_t *player)
  */
 void player_breathe(player_t *player)
 {
-    if(player->underwater && physicsactor_get_state(player->pa) != PAS_BREATHING) {
+    if(player->underwater && physicsactor_get_state(player->pa) != PAS_BREATHING && physicsactor_get_state(player->pa) != PAS_DROWNED && physicsactor_get_state(player->pa) != PAS_DEAD) {
         player_reset_underwater_timer(player);
         player->actor->speed = v2d_new(0, 0);
         player->pa_old_state = physicsactor_get_state(player->pa);

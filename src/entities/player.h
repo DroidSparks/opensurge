@@ -113,15 +113,15 @@ void player_bounce(player_t *player, struct actor_t *hazard);
 void player_kill(player_t *player);
 void player_spring(player_t *player);
 void player_roll(player_t *player);
-void player_drown(player_t *player);
 void player_lock_horizontally_for(player_t *player, float seconds);
 
 void player_enter_water(player_t *player);
 void player_leave_water(player_t *player);
 void player_breathe(player_t *player);
+void player_reset_underwater_timer(player_t *player);
+void player_drown(player_t *player);
 int player_is_underwater(const player_t *player);
 float player_seconds_remaining_to_drown(const player_t *player);
-void player_reset_underwater_timer(player_t *player);
 
 int player_is_in_the_air(const player_t *player);
 int player_is_attacking(const player_t *player);

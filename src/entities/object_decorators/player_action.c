@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * player_action.c - Makes the player perform some actions
- * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -44,6 +44,11 @@ static void springfy(player_t *player);
 static void roll(player_t *player);
 static void strong(player_t *player);
 static void weak(player_t *player);
+static void enterwater(player_t *player);
+static void leavewater(player_t *player);
+static void breathe(player_t *player);
+static void drown(player_t *player);
+static void resetunderwatertimer(player_t *player);
 
 
 
@@ -68,6 +73,31 @@ objectmachine_t* objectdecorator_strongplayer_new(objectmachine_t *decorated_mac
 objectmachine_t* objectdecorator_weakplayer_new(objectmachine_t *decorated_machine)
 {
     return make_decorator(decorated_machine, weak);
+}
+
+objectmachine_t* objectdecorator_playerenterwater_new(objectmachine_t *decorated_machine)
+{
+    return make_decorator(decorated_machine, enterwater);
+}
+
+objectmachine_t* objectdecorator_playerleavewater_new(objectmachine_t *decorated_machine)
+{
+    return make_decorator(decorated_machine, leavewater);
+}
+
+objectmachine_t* objectdecorator_playerbreathe_new(objectmachine_t *decorated_machine)
+{
+    return make_decorator(decorated_machine, breathe);
+}
+
+objectmachine_t* objectdecorator_playerdrown_new(objectmachine_t *decorated_machine)
+{
+    return make_decorator(decorated_machine, drown);
+}
+
+objectmachine_t* objectdecorator_playerresetunderwatertimer_new(objectmachine_t *decorated_machine)
+{
+    return make_decorator(decorated_machine, resetunderwatertimer);
 }
 
 
@@ -156,4 +186,29 @@ void strong(player_t *player)
 void weak(player_t *player)
 {
     player->attacking = FALSE;
+}
+
+void enterwater(player_t *player)
+{
+    player_enter_water(player);
+}
+
+void leavewater(player_t *player)
+{
+    player_leave_water(player);
+}
+
+void breathe(player_t *player)
+{
+    player_breathe(player);
+}
+
+void drown(player_t *player)
+{
+    player_drown(player);
+}
+
+void resetunderwatertimer(player_t *player)
+{
+    player_reset_underwater_timer(player);
 }

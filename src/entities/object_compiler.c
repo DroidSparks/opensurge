@@ -155,6 +155,11 @@ static void springfy_player(objectmachine_t** m, int n, const char **p, const pa
 static void roll_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void strong_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void weak_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void w_player_enter_water(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void w_player_leave_water(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void w_player_breathe(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void w_player_drown(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void w_player_reset_underwater_timer(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void switch_character(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void simulate_button_down(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void simulate_button_up(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -312,6 +317,11 @@ static entry_t command_table[] = {
     { "roll_player", roll_player },
     { "strong_player", strong_player },
     { "weak_player", weak_player },
+    { "player_enter_water", w_player_enter_water },
+    { "player_leave_water", w_player_leave_water },
+    { "player_breathe", w_player_breathe },
+    { "player_drown", w_player_drown },
+    { "player_reset_underwater_timer", w_player_reset_underwater_timer },
     { "switch_character", switch_character },
     { "simulate_button_down", simulate_button_down },
     { "simulate_button_up", simulate_button_up },
@@ -1636,6 +1646,46 @@ void weak_player(objectmachine_t** m, int n, const char **p, const parsetree_sta
         *m = objectdecorator_weakplayer_new(*m);
     else
         COMPILE_ERROR("Object script error - weak_player expects no parameters");
+}
+
+void w_player_enter_water(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_playerenterwater_new(*m);
+    else
+        COMPILE_ERROR("Object script error - player_enter_water expects no parameters");
+}
+
+void w_player_leave_water(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_playerleavewater_new(*m);
+    else
+        COMPILE_ERROR("Object script error - player_leave_water expects no parameters");
+}
+
+void w_player_breathe(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_playerbreathe_new(*m);
+    else
+        COMPILE_ERROR("Object script error - player_breathe expects no parameters");
+}
+
+void w_player_drown(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_playerdrown_new(*m);
+    else
+        COMPILE_ERROR("Object script error - player_drown expects no parameters");
+}
+
+void w_player_reset_underwater_timer(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_playerresetunderwatertimer_new(*m);
+    else
+        COMPILE_ERROR("Object script error - player_reset_underwater_timer expects no parameters");
 }
 
 void var_let(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)

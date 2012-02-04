@@ -81,7 +81,7 @@ sprite SD_WATERAIRBUBBLE
     {
         repeat      FALSE
         fps         8
-        data        0 1 2 3 4 5 6
+        data        0 0 0 0 0 0 0 0 1 2 3 4 5 6
     }
 
     // bloft!
@@ -98,5 +98,13 @@ sprite SD_WATERAIRBUBBLE
         repeat      TRUE
         fps         8
         data        2
+    }
+
+    // very small bubble
+    animation 4
+    {
+        repeat      TRUE
+        fps         8
+        data        0
     }
 }

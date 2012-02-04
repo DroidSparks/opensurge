@@ -1528,5 +1528,6 @@ item 20 392 6440
 
 // object list
 object "Lady Bugsy" 4256 7576
+object "water.air_source" 1528 7112
 
 // EOF

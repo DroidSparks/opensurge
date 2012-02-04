@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * player_action.h - Makes the player perform some actions
- * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -28,6 +28,11 @@ objectmachine_t* objectdecorator_springfyplayer_new(objectmachine_t *decorated_m
 objectmachine_t* objectdecorator_rollplayer_new(objectmachine_t *decorated_machine);
 objectmachine_t* objectdecorator_strongplayer_new(objectmachine_t *decorated_machine);
 objectmachine_t* objectdecorator_weakplayer_new(objectmachine_t *decorated_machine);
+objectmachine_t* objectdecorator_playerenterwater_new(objectmachine_t *decorated_machine);
+objectmachine_t* objectdecorator_playerleavewater_new(objectmachine_t *decorated_machine);
+objectmachine_t* objectdecorator_playerbreathe_new(objectmachine_t *decorated_machine);
+objectmachine_t* objectdecorator_playerdrown_new(objectmachine_t *decorated_machine);
+objectmachine_t* objectdecorator_playerresetunderwatertimer_new(objectmachine_t *decorated_machine);
 
 #endif
 
