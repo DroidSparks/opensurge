@@ -5,7 +5,7 @@
 // File:   objects/default_startup/water.inc
 // Desc:   water
 // Author: Alexandre
-// Date:   2011-02-04
+// Date:   2012-02-04
 // ---------------------------------------------------------------------------
 
 object ".default_startup.water"
@@ -155,7 +155,6 @@ object ".default_startup.water.drown_detector"
 
         hide
         set_zindex 1.1
-        set_alpha 1.0
         set_animation SD_WATERCOUNTER 0
         set_absolute_position screen_width()/2 screen_height()/2
         change_state idle
@@ -217,10 +216,9 @@ object ".default_startup.water.bubble_creator"
 
     state uw
     {
-        attach_to_player 0 -15
-        on_player_drown drowned
         attach_to_player 8*player_direction() -13
-        on_timeout "1.5+random(100)*0.01" create_bubble
+        on_player_drown drowned
+        on_timeout "1.0+random(100)*0.01" create_bubble
         on_player_underwater uw
         change_state nuw
     }
@@ -234,13 +232,14 @@ object ".default_startup.water.bubble_creator"
     {
         let "$_waterairbubble_anim = 0"
         create_child .default_startup.water.bubble 0 0
-        if "random(3) == 0" uw
+        if "random(4) > 0" uw
         create_child .default_startup.water.bubble player_direction()*(3+random(3)) -2+random(5)
         change_state uw
     }
 
     state drowned
     {
+        attach_to_player 0 -15
         on_timeout 0.1 create_bubble2
     }
 
@@ -248,10 +247,10 @@ object ".default_startup.water.bubble_creator"
     {
         let "$_waterairbubble_anim = cond(random(2)==0,0,3)"
         create_child .default_startup.water.bubble 0 0
-        if "random(3) == 0" drowned
+        if "random(2) == 0" drowned
         let "$_waterairbubble_anim = cond(random(2)==0,0,3)"
-        create_child .default_startup.water.bubble -2+random(5) -2+random(5)
-        change_state uw
+        create_child .default_startup.water.bubble 0 -2
+        change_state drowned
     }
 }
 
@@ -263,9 +262,6 @@ object ".default_startup.water.bubble"
     state "main"
     {
         hide
-        if "ypos() - hotspot_y() <= waterlevel()" destroy
-        show
-
         let $amp=2+random(2)
         set_zindex 0.99
         set_alpha 0.5
@@ -275,9 +271,9 @@ object ".default_startup.water.bubble"
 
     state "go"
     {
-        elliptical_trajectory $amp 0 1 0
-        move 0 -30
         if "ypos() - hotspot_y() <= waterlevel()" destroy
+        show
+        move "($amp*(2*pi())) * sin(2*pi()*($t+=dt()))" "-30" // the chain rule
     }
 
     state "destroy"
