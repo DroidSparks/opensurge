@@ -16,7 +16,6 @@ music "musics/template.ogg"
 grouptheme "themes/template.grp"
 startup ".default_startup"
 players "Surge" "Neon" "Charge"
-waterlevel 6410
 
 // dialog regions (xpos ypos width height title message)
 
@@ -1528,6 +1527,5 @@ item 20 392 6440
 
 // object list
 object "Lady Bugsy" 4256 7576
-object "water.air_source" 1528 7112
 
 // EOF
