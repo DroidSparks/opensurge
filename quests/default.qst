@@ -16,4 +16,5 @@ image           "images/null.png"
 hidden
 
 // level list (in order of appearance)
-level           "levels/template.lev"
+level           "levels/cutscenes/cutscene1.lev"
+level           "levels/sunshine.lev"

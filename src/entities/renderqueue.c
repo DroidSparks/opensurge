@@ -44,6 +44,7 @@ struct renderqueue_cell_t {
     float (*zindex)(renderable_t);
     void (*render)(renderable_t,v2d_t);
     int (*ypos)(renderable_t);
+    int (*type)(renderable_t);
 };
 
 typedef struct renderqueue_t renderqueue_t;
@@ -61,8 +62,12 @@ static int cmp_fun(const void *i, const void *j)
     const renderqueue_cell_t *a = (const renderqueue_cell_t*)i;
     const renderqueue_cell_t *b = (const renderqueue_cell_t*)j;
 
-    if(fabs(a->zindex(a->entity) - b->zindex(b->entity)) < 1e-7)
-        return a->ypos(a->entity) - b->ypos(b->entity);
+    if(fabs(a->zindex(a->entity) - b->zindex(b->entity)) < 1e-7) {
+        if(a->type(a->entity) == b->type(b->entity))
+            return a->ypos(a->entity) - b->ypos(b->entity);
+        else
+            return 0;
+    }
     else if(a->zindex(a->entity) < b->zindex(b->entity))
         return -1;
     else
@@ -107,6 +112,12 @@ static int ypos_player(renderable_t r) { return (int)(r.player->actor->position.
 static int ypos_item(renderable_t r) { return (int)(r.item->actor->position.y); }
 static int ypos_object(renderable_t r) { return (int)(r.object->actor->position.y); }
 static int ypos_brick(renderable_t r) { return r.brick->y; }
+
+static int type_particles(renderable_t r) { return 0; }
+static int type_player(renderable_t r) { return 1; }
+static int type_item(renderable_t r) { return 2; }
+static int type_object(renderable_t r) { return 3; }
+static int type_brick(renderable_t r) { return 4; }
 
 
 
@@ -161,6 +172,7 @@ void renderqueue_enqueue_brick(brick_t *brick)
     node->cell.zindex = zindex_brick;
     node->cell.render = render_brick;
     node->cell.ypos = ypos_brick;
+    node->cell.type = type_brick;
     node->next = queue;
     queue = node;
     size++;
@@ -173,6 +185,7 @@ void renderqueue_enqueue_item(item_t *item)
     node->cell.zindex = zindex_item;
     node->cell.render = render_item;
     node->cell.ypos = ypos_item;
+    node->cell.type = type_item;
     node->next = queue;
     queue = node;
     size++;
@@ -185,6 +198,7 @@ void renderqueue_enqueue_object(object_t *object)
     node->cell.zindex = zindex_object;
     node->cell.render = render_object;
     node->cell.ypos = ypos_object;
+    node->cell.type = type_object;
     node->next = queue;
     queue = node;
     size++;
@@ -197,6 +211,7 @@ void renderqueue_enqueue_player(player_t *player)
     node->cell.zindex = zindex_player;
     node->cell.render = render_player;
     node->cell.ypos = ypos_player;
+    node->cell.type = type_player;
     node->next = queue;
     queue = node;
     size++;
@@ -208,6 +223,7 @@ void renderqueue_enqueue_particles()
     node->cell.zindex = zindex_particles;
     node->cell.render = render_particles;
     node->cell.ypos = ypos_particles;
+    node->cell.type = type_particles;
     node->next = queue;
     queue = node;
     size++;
