@@ -130,8 +130,11 @@ enemy_t *enemy_get_child(enemy_t *enemy, const char *child_name);
 /* adds a child */
 void enemy_add_child(enemy_t *enemy, const char *child_name, enemy_t *child);
 
-/* removes a child from this object (the child is not deleted, though) */
+/* removes the link to a child from this object (the child is not deleted, though) */
 void enemy_remove_child(enemy_t *enemy, enemy_t *child);
+
+/* visits all my children */
+void enemy_visit_children(enemy_t *enemy, void *any_data, void (*fun)(enemy_t*,void*));
 
 /* returns the observed player */
 struct player_t *enemy_get_observed_player(enemy_t *enemy);

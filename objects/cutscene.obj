@@ -139,79 +139,12 @@ object ".cutscene_skipper"
     state main
     {
         hide
-        on_button_pressed fire3 end
+        //on_button_pressed fire3 end
         on_button_pressed fire4 end
     }
 
     state end
     {
         next_level
-    }
-}
-
-// component of the dialog box system
-object .dialogbox.base.background[cutscene]
-{
-    requires 0.2.0
-    always_active
-    detach_from_camera
-
-    state main
-    {
-        set_zindex 99999
-        set_animation DIALOGBOX_BACKGROUND 0
-        set_alpha 0.9
-
-        let $_dialogbox_base_bgx=(screen_width()-width())/2
-        let $_dialogbox_base_bgy=-height()
-        let $_dialogbox_base_bgw=width()
-        let $_dialogbox_base_bgh=height()
-        let $_dialogbox_base_bgz=zindex()
-        set_absolute_position $_dialogbox_base_bgx $_dialogbox_base_bgy
-
-        let $speed=screen_height()
-        change_state appearing
-    }
-
-    state disappear
-    {
-        change_state disappearing
-    }
-
-    state destroy
-    {
-        destroy
-    }
-
-    // --------------------------------------------
-
-    state appearing
-    {
-        let $_dialogbox_base_bgy=min(40,ypos()+$speed*dt())
-        set_absolute_position $_dialogbox_base_bgx=xpos() $_dialogbox_base_bgy
-        if ypos()>=40 appearance_is_complete
-    }
-
-    state disappearing
-    {
-        let $_dialogbox_base_bgy=ypos()-$speed*dt()
-        set_absolute_position $_dialogbox_base_bgx=xpos() $_dialogbox_base_bgy
-        if ypos()<=-height() disappearance_is_complete
-    }
-
-    state appearance_is_complete
-    {
-        change_parent_state .dialogbox.base.background:on_appear
-        change_state wait
-    }
-
-    state disappearance_is_complete
-    {
-        change_parent_state .dialogbox.base.background:on_disappear
-        change_state wait
-    }
-
-    state wait
-    {
     }
 }

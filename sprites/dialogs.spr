@@ -21,7 +21,7 @@ sprite DIALOGBOX_BUTTON
     source_file     images/dialogs.png
     source_rect     272 0 64 80
     frame_size      16 16
-    hot_spot        8 8
+    hot_spot        8 7
 
     animation 0
     {

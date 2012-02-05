@@ -61,6 +61,7 @@ static object_children_t* object_children_delete(object_children_t* list);
 static object_children_t* object_children_add(object_children_t* list, const char *name, enemy_t *data);
 static object_children_t* object_children_remove(object_children_t* list, enemy_t *data);
 static object_t* object_children_find(object_children_t* list, const char *name);
+static void object_children_visitall(object_children_t* list, void *any_data, void (*fun)(enemy_t*,void*));
 
 typedef struct { const char* name[MAX_OBJECTS]; int length; } object_name_data_t;
 typedef struct { const char* category[MAX_CATEGORIES]; int length; } object_category_data_t;
@@ -281,6 +282,15 @@ void enemy_add_child(enemy_t *enemy, const char *child_name, enemy_t *child)
 void enemy_remove_child(enemy_t *enemy, enemy_t *child)
 {
     enemy->children = object_children_remove(enemy->children, child);
+}
+
+/*
+ * enemy_visit_children()
+ * Calls fun for each of the children of the object. any_data is anything you want.
+ */
+void enemy_visit_children(enemy_t *enemy, void *any_data, void (*fun)(enemy_t*,void*))
+{
+    object_children_visitall(enemy->children, any_data, fun);
 }
 
 
@@ -605,4 +615,12 @@ object_children_t* object_children_remove(object_children_t* list, enemy_t *data
     }
     else
         return NULL;
+}
+
+void object_children_visitall(object_children_t* list, void *any_data, void (*fun)(enemy_t*,void*))
+{
+    object_children_t *it = list;
+
+    for(; it; it = it->next)
+        fun(it->data, any_data);
 }

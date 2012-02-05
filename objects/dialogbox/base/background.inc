@@ -18,6 +18,10 @@
 //
 // *) A "disappear" state, which will start the disappearing animation
 //
+// *) A "hide" state, which will hide the dialog box
+//
+// *) A "show" state, which will show the dialog box after it's been hidden
+//
 // *) Once the appearing animation is completed, change
 //    its parent state to ".dialogbox.base.background:on_appear"
 //
@@ -65,6 +69,20 @@ object .dialogbox.base.background
     state destroy
     {
         destroy
+    }
+
+    state hide
+    {
+        set_absolute_position $_dialogbox_base_bgx=infinity() $_dialogbox_base_bgy=infinity()
+        return_to_previous_state
+    }
+
+    state show
+    {
+        let $_dialogbox_base_bgx=(screen_width()-width())/2
+        let $_dialogbox_base_bgy=screen_height()-height()-10
+        set_absolute_position $_dialogbox_base_bgx $_dialogbox_base_bgy
+        return_to_previous_state
     }
 
     // --------------------------------------------
@@ -118,6 +136,20 @@ object .dialogbox.base.background[slide_from_bottom]
     state destroy
     {
         destroy
+    }
+
+    state hide
+    {
+        set_absolute_position $_dialogbox_base_bgx=infinity() $_dialogbox_base_bgy=infinity()
+        return_to_previous_state
+    }
+
+    state show
+    {
+        let $_dialogbox_base_bgx=(screen_width()-width())/2
+        let $_dialogbox_base_bgy=screen_height()-height()-10
+        set_absolute_position $_dialogbox_base_bgx $_dialogbox_base_bgy
+        return_to_previous_state
     }
 
     // --------------------------------------------
@@ -187,6 +219,20 @@ object .dialogbox.base.background[slide_from_top]
         destroy
     }
 
+    state hide
+    {
+        set_absolute_position $_dialogbox_base_bgx=infinity() $_dialogbox_base_bgy=infinity()
+        return_to_previous_state
+    }
+
+    state show
+    {
+        let $_dialogbox_base_bgx=(screen_width()-width())/2
+        let $_dialogbox_base_bgy=10
+        set_absolute_position $_dialogbox_base_bgx $_dialogbox_base_bgy
+        return_to_previous_state
+    }
+
     // --------------------------------------------
 
     state appearing
@@ -194,6 +240,87 @@ object .dialogbox.base.background[slide_from_top]
         let $_dialogbox_base_bgy=min(10,ypos()+$speed*dt())
         set_absolute_position $_dialogbox_base_bgx=xpos() $_dialogbox_base_bgy
         if ypos()>=10 appearance_is_complete
+    }
+
+    state disappearing
+    {
+        let $_dialogbox_base_bgy=ypos()-$speed*dt()
+        set_absolute_position $_dialogbox_base_bgx=xpos() $_dialogbox_base_bgy
+        if ypos()<=-height() disappearance_is_complete
+    }
+
+    state appearance_is_complete
+    {
+        change_parent_state .dialogbox.base.background:on_appear
+        change_state wait
+    }
+
+    state disappearance_is_complete
+    {
+        change_parent_state .dialogbox.base.background:on_disappear
+        change_state wait
+    }
+
+    state wait
+    {
+    }
+}
+
+// component of the dialog box system
+object .dialogbox.base.background[cutscene]
+{
+    requires 0.2.0
+    always_active
+    detach_from_camera
+
+    state main
+    {
+        set_zindex 99999
+        set_animation DIALOGBOX_BACKGROUND 0
+        set_alpha 0.9
+
+        let $_dialogbox_base_bgx=(screen_width()-width())/2
+        let $_dialogbox_base_bgy=-height()
+        let $_dialogbox_base_bgw=width()
+        let $_dialogbox_base_bgh=height()
+        let $_dialogbox_base_bgz=zindex()
+        set_absolute_position $_dialogbox_base_bgx $_dialogbox_base_bgy
+
+        let $speed=screen_height()
+        change_state appearing
+    }
+
+    state disappear
+    {
+        change_state disappearing
+    }
+
+    state destroy
+    {
+        destroy
+    }
+
+    state hide
+    {
+        set_absolute_position $_dialogbox_base_bgx=infinity() $_dialogbox_base_bgy=infinity()
+        return_to_previous_state
+    }
+
+    state show
+    {
+        let $_dialogbox_base_bgx=(screen_width()-width())/2
+        let $_dialogbox_base_bgy=40
+        set_absolute_position $_dialogbox_base_bgx $_dialogbox_base_bgy
+        return_to_previous_state
+    }
+
+    // --------------------------------------------
+
+    state appearing
+    {
+        let $_dialogbox_base_bgy=min(40,ypos()+$speed*dt())
+        set_absolute_position $_dialogbox_base_bgx=xpos() $_dialogbox_base_bgy
+        if ypos()>=40 appearance_is_complete
     }
 
     state disappearing

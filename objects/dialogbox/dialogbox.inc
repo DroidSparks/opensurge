@@ -88,6 +88,9 @@
 //    c) .dialogbox.base.text:on_complete
 //       Will be called when the full text is rendered to the screen.
 //
+//    d) .dialogbox.base.text:on_start
+//       Will be called when a text begins to be rendered on the screen.
+//
 // 3. Upon deletion, it's mandatory to change the state of its parent object to
 //    '.dialogbox:on_destroy' !
 //
@@ -164,10 +167,28 @@ object .dialogbox.example
         on_timeout 5.0 disappear
     }
 
+    state .dialogbox.base.text:on_start
+    {
+    }
+
     state disappear
     {
         // disappear
         change_child_state background disappear
+        change_state wait
+    }
+
+    state hide
+    {
+        // hide
+        change_child_state background hide
+        change_state wait
+    }
+
+    state show
+    {
+        // show the dialog box after it's been hidden
+        change_child_state background show
         change_state wait
     }
 }
@@ -216,6 +237,10 @@ object .dialogbox.default
         change_state completed
     }
 
+    state .dialogbox.base.text:on_start
+    {
+    }
+
     state completed
     {
         on_button_pressed fire1 disappear
@@ -224,6 +249,20 @@ object .dialogbox.default
     state disappear
     {
         change_child_state background disappear
+        change_state wait
+    }
+
+    state hide
+    {
+        // hide
+        change_child_state background hide
+        change_state wait
+    }
+
+    state show
+    {
+        // show the dialog box after it's been hidden
+        change_child_state background show
         change_state wait
     }
 }
@@ -270,6 +309,10 @@ object .dialogbox.default[no_avatar]
         change_state completed
     }
 
+    state .dialogbox.base.text:on_start
+    {
+    }
+
     state completed
     {
         on_button_pressed fire1 disappear
@@ -278,6 +321,20 @@ object .dialogbox.default[no_avatar]
     state disappear
     {
         change_child_state background disappear
+        change_state wait
+    }
+
+    state hide
+    {
+        // hide
+        change_child_state background hide
+        change_state wait
+    }
+
+    state show
+    {
+        // show the dialog box after it's been hidden
+        change_child_state background show
         change_state wait
     }
 }

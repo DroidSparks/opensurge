@@ -59,7 +59,7 @@ object .dialogbox.base.button
 
     state :continue
     {
-        play_sample samples/select.wav
+        play_sample samples/select_2.wav
         change_state hidden
     }
 

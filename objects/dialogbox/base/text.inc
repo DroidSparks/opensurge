@@ -20,6 +20,9 @@
 // *) When the text is fully visible, change its parent state to
 //    ".dialogbox.base.text:on_complete"
 //
+// *) When the text begins to get rendered, change its parent state to
+//    ".dialogbox.base.text:on_start"
+//
 // *) If $_dialogbox_text_id = <TEXT_ID>, it will display the
 //    DIALOGBOX_MESSAGE_<TEXT_ID> string, written in the .lng file
 //
@@ -41,6 +44,7 @@ object .dialogbox.base.text
 
     state start
     {
+        change_parent_state .dialogbox.base.text:on_start
         let $id=$_dialogbox_text_id
         change_state display
     }
@@ -90,6 +94,7 @@ object .dialogbox.base.text[typewriter]
     {
         create_child .dialogbox.base.text[typewriter].textadvancer
         create_child .dialogbox.base.text[typewriter].audio
+        change_parent_state .dialogbox.base.text:on_start
         let $id=$_dialogbox_text_id
         change_state display
     }
@@ -149,7 +154,7 @@ object .dialogbox.base.text[typewriter].audio
 
     state play
     {
-        play_sample samples/talk.wav
+        play_sample samples/talk.wav 0.5
         return_to_previous_state
     }
 }

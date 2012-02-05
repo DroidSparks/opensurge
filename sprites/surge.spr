@@ -2,7 +2,7 @@
 sprite SD_SURGE
 {
     source_file     images/surge.png
-    source_rect     0 0 512 512
+    source_rect     0 0 512 704
     frame_size      64 64
     hot_spot        32 63
 
@@ -83,7 +83,7 @@ sprite SD_SURGE
     {
         repeat      FALSE
         fps         8
-        data        18 //20
+        data        20
     }
 
     // ledge
@@ -189,6 +189,62 @@ sprite SD_SURGE
         fps         8
         data        42 41 40
         repeat_from 2
+    }
+
+    // relaxing, talking and smiling
+    animation 23
+    {
+        repeat      FALSE
+        fps         8
+        data        47 48 49 47 48 49 47 48 49 47 48 49 47
+    }
+
+    // relaxing, talking, smiling and looking to his side
+    animation 24
+    {
+        repeat      FALSE
+        fps         8
+        data        50 51 52 53 51 52 53 51 52 53 51 52 53 51 52 53
+    }
+
+    // relaxing, but no longer smiling
+    animation 25
+    {
+        repeat      FALSE
+        fps         8
+        data        54 55 56
+    }
+
+    // standing up
+    animation 26
+    {
+        repeat      FALSE
+        fps         8
+        data        57 58 59
+    }
+
+    // protesting!
+    animation 27
+    {
+        repeat      FALSE
+        fps         8
+        data        60 61 62 63 61 62 63 61 62 63 61
+    }
+
+    // criticism
+    animation 28
+    {
+        repeat      FALSE
+        fps         8
+        data        64 65 66 67 65 66 67 65 66 67 65 66 67 65 66 67 65 66 67 65 66 67 65 66 67 65 66 67 65
+    }
+
+    // relaxing
+    animation 29
+    {
+        repeat      TRUE
+        fps         8
+        data        49
     }
 }
 
