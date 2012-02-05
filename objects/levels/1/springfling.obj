@@ -71,11 +71,7 @@ object "Springfling"
 
         // land back on the floor (checks if pixel (xpos(),ypos()) is a brick)
         if "$yspeed <= 0" "in the air"
-        let "$_collisionmask_xpos = xpos()"
-        let "$_collisionmask_ypos = ypos()"
-        change_closest_object_state ".tool.collision_mask" "check"
-        if "$_collisionmask_gotbrick" "land"
-        //on_floor_collision "land" // not accurate enough. use collision masks instead
+        if brick_exists(0,0) land
     }
 
     state "land"

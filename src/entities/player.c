@@ -567,7 +567,7 @@ void player_leave_water(player_t *player)
     physicsactor_t *pa = player->pa;
 
     if(player->underwater) {
-        if(!player_is_springing(player))
+        if(!player_is_springing(player) && !player_is_dying(player))
             player->actor->speed.y *= 2.0f;
 
         physicsactor_set_acc(pa, physicsactor_get_acc(pa) * 2.0f);

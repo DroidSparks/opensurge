@@ -30,3 +30,14 @@ font "default_ttf"
         size                    13
     }
 }
+
+// general purpose truetype font with antialiasing
+font "default_ttf_aa"
+{
+    truetype
+    {
+        source_file             "ttf/DejaVuSans.ttf"
+        size                    13
+        antialias
+    }
+}

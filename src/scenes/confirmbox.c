@@ -69,13 +69,13 @@ void confirmbox_init()
     arrow = actor_create();
     actor_change_animation(arrow, sprite_get_animation("SD_GUIARROW", 0));
 
-    textfnt = font_create("default_ttf");
+    textfnt = font_create("default_ttf_aa");
     font_set_text(textfnt, "%s", text);
     font_set_width(textfnt, 164);
 
     for(i=0; i<option_count; i++) {
-        optionfnt[i][0] = font_create("default_ttf");
-        optionfnt[i][1] = font_create("default_ttf");
+        optionfnt[i][0] = font_create("default_ttf_aa");
+        optionfnt[i][1] = font_create("default_ttf_aa");
         font_set_text(optionfnt[i][0], option[i]);
         font_set_text(optionfnt[i][1], "<color=ffff00>%s</color>", option[i]);
     }
