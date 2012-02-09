@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * audio.c - audio module
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,6 @@
  */
 
 #include <allegro.h>
-#include <logg.h>
 #include <stdlib.h>
 #include "audio.h"
 #include "osspec.h"
@@ -30,13 +29,21 @@
 #include "timer.h"
 #include "util.h"
 
+#ifndef __USE_OPENAL__
+#include <logg.h>
+#else
+#include <AL/alure.h>
+#endif
+
 /* private definitions */
+#define IS_WAV(path)                (str_icmp((path)+strlen(path)-4, ".wav") == 0)
 #define IS_OGG(path)                (str_icmp((path)+strlen(path)-4, ".ogg") == 0)
 #define MUSIC_DURATION(m)           ((float)(m->stream->len) / (float)(m->stream->freq))
 #define SOUND_INVALID_VOICE         -1
 #define PREFERRED_NUMBER_OF_VOICES  32
 
-/* private structures */
+/* private stuff */
+#ifndef __USE_OPENAL__
 struct music_t {
     LOGG_Stream *stream;
     int loops_left;
@@ -48,17 +55,35 @@ struct sound_t {
     SAMPLE *data;
     int voice_id;
 };
+#else
+struct music_t {
+};
+
+struct sound_t {
+    ALuint buf; /* sound buffer */
+    ALuint *src; /* points to an element of src[] */
+    int loops_left;
+    int is_playing;
+};
+
+static int quiet;
+static ALuint src[PREFERRED_NUMBER_OF_VOICES]; /* audio sources. src[0] is the audio source for the music; the others are for sound_t's */
+static int src_count; /* number of valid elements of src[] */
+static int src_ptr; /* next src[] index to be used */
+
+static void eos_callback(void *userdata, ALuint source);
+#endif
+
 
 /* private stuff*/
 static music_t *current_music; /* music being played at the moment (NULL if none) */
-static void setup_voices();
-
 
 
 /*
  * music_load()
  * Loads a music from a file
  */
+#ifndef __USE_OPENAL__
 music_t *music_load(const char *path)
 {
     char abs_path[1024];
@@ -94,6 +119,12 @@ music_t *music_load(const char *path)
 
     return m;
 }
+#else
+music_t *music_load(const char *path)
+{
+    return NULL;
+}
+#endif
 
 
 
@@ -111,10 +142,17 @@ music_t *music_load(const char *path)
  * Note that 'music_ref()' must not exist.
  * Returns the no. of references to the music
  */
+#ifndef __USE_OPENAL__
 int music_unref(const char *path)
 {
     return resourcemanager_unref_music(path);
 }
+#else
+int music_unref(const char *path)
+{
+    return resourcemanager_unref_music(path);
+}
+#endif
 
 
 
@@ -123,6 +161,7 @@ int music_unref(const char *path)
  * Destroys a music. This is called automatically
  * while unloading the resource manager.
  */
+#ifndef __USE_OPENAL__
 void music_destroy(music_t *music)
 {
     if(music != NULL) {
@@ -130,6 +169,12 @@ void music_destroy(music_t *music)
         free(music);
     }
 }
+#else
+void music_destroy(music_t *music)
+{
+    ;
+}
+#endif
 
 
 /*
@@ -137,6 +182,7 @@ void music_destroy(music_t *music)
  * Plays the given music and loops [loop] times.
  * Set loop equal to INFINITY to make it loop forever.
  */
+#ifndef __USE_OPENAL__
 void music_play(music_t *music, int loop)
 {
     music_stop();
@@ -150,12 +196,19 @@ void music_play(music_t *music, int loop)
 
     current_music = music;
 }
+#else
+void music_play(music_t *music, int loop)
+{
+    ;
+}
+#endif
 
 
 /*
  * music_stop()
  * Stops the current music (if any)
  */
+#ifndef __USE_OPENAL__
 void music_stop()
 {
     if(current_music != NULL) {
@@ -167,12 +220,19 @@ void music_stop()
 
     current_music = NULL;
 }
+#else
+void music_stop()
+{
+    ;
+}
+#endif
 
 
 /*
  * music_pause()
  * Pauses the current music
  */
+#ifndef __USE_OPENAL__
 void music_pause()
 {
     if(current_music != NULL && !(current_music->is_paused)) {
@@ -180,6 +240,12 @@ void music_pause()
         voice_stop(current_music->stream->audio_stream->voice);
     }
 }
+#else
+void music_pause()
+{
+    ;
+}
+#endif
 
 
 
@@ -187,6 +253,7 @@ void music_pause()
  * music_resume()
  * Resumes the current music
  */
+#ifndef __USE_OPENAL__
 void music_resume()
 {
     if(current_music != NULL && current_music->is_paused) {
@@ -194,6 +261,12 @@ void music_resume()
         voice_start(current_music->stream->audio_stream->voice);
     }
 }
+#else
+void music_resume()
+{
+    ;
+}
+#endif
 
 
 /*
@@ -202,6 +275,7 @@ void music_resume()
  * 0.0f (quiet) <= volume <= 1.0f (loud)
  * default = 1.0f
  */
+#ifndef __USE_OPENAL__
 void music_set_volume(float volume)
 {
     if(current_music != NULL) {
@@ -210,6 +284,12 @@ void music_set_volume(float volume)
         voice_set_volume(current_music->stream->audio_stream->voice, current_music->stream->volume);
     }
 }
+#else
+void music_set_volume(float volume)
+{
+    ;
+}
+#endif
 
 
 /*
@@ -217,6 +297,7 @@ void music_set_volume(float volume)
  * Returns the volume of the current music.
  * 0.0f <= volume <= 1.0f
  */
+#ifndef __USE_OPENAL__
 float music_get_volume()
 {
     if(current_music != NULL)
@@ -224,6 +305,12 @@ float music_get_volume()
     else
         return 0.0f;
 }
+#else
+float music_get_volume()
+{
+    return 0.0f;
+}
+#endif
 
 
 
@@ -232,20 +319,34 @@ float music_get_volume()
  * Returns TRUE if a music is playing, FALSE
  * otherwise.
  */
+#ifndef __USE_OPENAL__
 int music_is_playing()
 {
     return (current_music != NULL) && !(current_music->is_paused) && (current_music->loops_left >= 0);
 }
+#else
+int music_is_playing()
+{
+    return FALSE;
+}
+#endif
 
 
 /*
  * music_duration()
  * Music duration, in seconds
  */
+#ifndef __USE_OPENAL__
 float music_duration()
 {
     return current_music ? MUSIC_DURATION(current_music) : 0.0f;
 }
+#else
+float music_duration()
+{
+    return 0.0f;
+}
+#endif
 
 
 
@@ -257,6 +358,7 @@ float music_duration()
  * sound_load()
  * Loads a sample from a file
  */
+#ifndef __USE_OPENAL__
 sound_t *sound_load(const char *path)
 {
     char abs_path[1024];
@@ -289,6 +391,53 @@ sound_t *sound_load(const char *path)
 
     return s;
 }
+#else
+sound_t *sound_load(const char *path)
+{
+    char abs_path[1024];
+    sound_t *s;
+
+    if(quiet)
+        return NULL;
+
+    if(NULL == (s = resourcemanager_find_sample(path))) {
+        resource_filepath(abs_path, path, sizeof(abs_path), RESFP_READ);
+        logfile_message("sound_load('%s')", abs_path);
+
+        /* build the sound object */
+        s = mallocx(sizeof *s);
+        s->loops_left = 0;
+        s->is_playing = FALSE;
+        s->src = NULL;
+
+        /* loading the sample */
+        if(!((IS_OGG(path) || IS_WAV(path)) && (s->buf = alureCreateBufferFromFile(abs_path)))) {
+            
+            if(IS_OGG(path) || IS_WAV(path))
+                logfile_message("sound_load() error: %s", alureGetErrorString());
+            else
+                logfile_message("sound_load() error: invalid file format '%s'", path);
+
+            free(s);
+            return NULL;
+        }
+
+        /* I don't know why, but I have to put this, or the game will crash */
+        sound_play_ex(s, 0, 1, 0, 0);
+
+        /* adding it to the resource manager */
+        resourcemanager_add_sample(path, s);
+        resourcemanager_ref_sample(path);
+
+        /* done! */
+        logfile_message("sound_load() ok");
+    }
+    else
+        resourcemanager_ref_sample(path);
+
+    return s;
+}
+#endif
 
 /*
  * sound_unref()
@@ -304,10 +453,17 @@ sound_t *sound_load(const char *path)
  * Note that 'sound_ref()' must not exist.
  * Returns the no. of references to the sample
  */
+#ifndef __USE_OPENAL__
 int sound_unref(const char *path)
 {
     return resourcemanager_unref_sample(path);
 }
+#else
+int sound_unref(const char *path)
+{
+    return resourcemanager_unref_sample(path);
+}
+#endif
 
 
 /*
@@ -315,23 +471,42 @@ int sound_unref(const char *path)
  * Releases the given sample. This is called
  * automatically while releasing the main hash
  */
+#ifndef __USE_OPENAL__
 void sound_destroy(sound_t *sample)
 {
     if(sample != NULL) {
+        sound_stop(sample);
         destroy_sample(sample->data);
         free(sample);
     }
 }
+#else
+void sound_destroy(sound_t *sample)
+{
+    if(sample != NULL) {
+        sound_stop(sample);
+        alDeleteBuffers(1, &(sample->buf));
+        free(sample);
+    }
+}
+#endif
 
 
 /*
  * sound_play()
  * Plays the given sample
  */
+#ifndef __USE_OPENAL__
 void sound_play(sound_t *sample)
 {
     sound_play_ex(sample, 1.0, 0.0, 1.0, 0);
 }
+#else
+void sound_play(sound_t *sample)
+{
+    sound_play_ex(sample, 1.0, 0.0, 1.0, 0);
+}
+#endif
 
 
 /*
@@ -343,18 +518,64 @@ void sound_play(sound_t *sample)
  * 1.0 = default frequency
  * 0 = no loops
  */
+#ifndef __USE_OPENAL__
 void sound_play_ex(sound_t *sample, float vol, float pan, float freq, int loop)
 {
     int id;
 
     if(sample) {
+        /* ajusting parameters */
         vol = clip(vol, 0.0, 1.0);
         pan = clip(pan, -1.0, 1.0);
         freq = max(freq, 0.0);
+        loop = (loop < 0) ? -1 : loop;
+
+        /* playing the sample */
         id = play_sample(sample->data, (int)(255.0*vol), min(255,128+(int)(128.0*pan)), (int)(1000.0*freq), loop);
         sample->voice_id = id < 0 ? SOUND_INVALID_VOICE : id;
     }
 }
+#else
+void sound_play_ex(sound_t *sample, float vol, float pan, float freq, int loop)
+{
+    if(sample) {
+        /* ajusting parameters */
+        vol = clip(vol, 0.0, 1.0);
+        pan = clip(pan, -1.0, 1.0);
+        freq = max(freq, 0.0);
+        loop = (loop < 0) ? -1 : loop;
+
+        /* find a sound source */
+        src_ptr = (src_ptr + 1) % src_count;
+        if(src_ptr == 0) src_ptr++; /* src[0] is for musics only */
+        sample->src = src + src_ptr;
+        alureStopSource(*(sample->src), AL_FALSE);
+
+        /* configuring... */
+        alSourcei(*(sample->src), AL_BUFFER, sample->buf);
+        alSourcef(*(sample->src), AL_GAIN, vol);
+        alSourcef(*(sample->src), AL_PITCH, freq); /* I hope this is correct... ;) */
+        alSource3f(*(sample->src), AL_POSITION, 2.0f * pan, 0.0f, 0.0f); /* ??????? */
+
+        /* playing the sample */
+        sample->loops_left = loop;
+        if(alurePlaySource(*(sample->src), eos_callback, (void*)sample) != AL_FALSE)
+            sample->is_playing = TRUE;
+    }
+}
+
+/* gets called when a sample finishes playing */
+void eos_callback(void *userdata, ALuint source)
+{
+    sound_t *sample = (sound_t*)userdata;
+    if(sample->loops_left > 0 && source == *(sample->src)) {
+        sample->loops_left--;
+        alurePlaySource(*(sample->src), eos_callback, (void*)sample);
+    }
+    else
+        sample->is_playing = FALSE;
+}
+#endif
 
 
 
@@ -362,17 +583,28 @@ void sound_play_ex(sound_t *sample, float vol, float pan, float freq, int loop)
  * sound_stop()
  * Stops a sample
  */
+#ifndef __USE_OPENAL__
 void sound_stop(sound_t *sample)
 {
     if(sample)
         stop_sample(sample->data);
 }
+#else
+void sound_stop(sound_t *sample)
+{
+    if(sample) {
+        alureStopSource(*(sample->src), AL_FALSE);
+        sample->is_playing = FALSE;
+    }
+}
+#endif
 
 
 /*
  * sound_is_playing()
  * Checks if a given sound is playing or not
  */
+#ifndef __USE_OPENAL__
 int sound_is_playing(sound_t *sample)
 {
     if(sample && sample->voice_id != SOUND_INVALID_VOICE)
@@ -380,6 +612,15 @@ int sound_is_playing(sound_t *sample)
     else
         return FALSE;
 }
+#else
+int sound_is_playing(sound_t *sample)
+{
+    if(sample)
+        return sample->is_playing;
+    else
+        return FALSE;
+}
+#endif
 
 
 
@@ -394,30 +635,92 @@ int sound_is_playing(sound_t *sample)
  * audio_init()
  * Initializes the Audio Manager
  */
-void audio_init(int nomusic)
+#ifndef __USE_OPENAL__
+void audio_init()
 {
-    logfile_message("audio_init()");
+    int voices;
+    logfile_message("audio_init(): using Allegro for audio playback...");
     current_music = NULL;
-    setup_voices();
-    logfile_message("audio_init() ok");
+
+    /* allocates a few voices */
+    voices = PREFERRED_NUMBER_OF_VOICES;
+    logfile_message("Reserving voices...");
+    while(voices > 4) {
+        reserve_voices(voices, 0);
+        if(install_sound(DIGI_AUTODETECT, MIDI_NONE, NULL) == 0) {
+            logfile_message("Reserved %d voices.", voices);
+            logfile_message("audio_init() ok");
+            return;
+        }
+        else
+            voices /= 2;
+    }
+    logfile_message("Warning: unable to reserve voices.\n%s\n", allegro_error);
 }
+#else
+void audio_init()
+{
+    int sources;
+    logfile_message("audio_init(): using OpenAL for audio playback...");
+
+    /* initialize the OpenAL device */
+    if(!alureInitDevice(NULL, NULL)) {
+        logfile_message("Failed to open OpenAL device: %s", alureGetErrorString());
+        quiet = TRUE;
+    }
+    else {
+        /* allocates a few audio sources */
+        sources = PREFERRED_NUMBER_OF_VOICES;
+        logfile_message("Generating audio sources...");
+        while(sources > 4) {
+            alGenSources(sources, src);
+            if(alGetError() == AL_NO_ERROR) {
+                logfile_message("%d sources have been generated.", src_count = sources);
+                logfile_message("audio_init() ok");
+                src_ptr = 0;
+                quiet = FALSE;
+                return;
+            }
+            else
+                sources /= 2;
+        }
+
+        logfile_message("Failed to generate audio sources: %s", alureGetErrorString());
+        alureShutdownDevice();
+        quiet = TRUE;
+    }
+}
+#endif
 
 
 /*
  * audio_release()
  * Releases the audio manager
  */
+#ifndef __USE_OPENAL__
 void audio_release()
 {
     logfile_message("audio_release()");
     logfile_message("audio_release() ok");
 }
+#else
+void audio_release()
+{
+    logfile_message("audio_release()");
+    if(!quiet) {
+        alDeleteSources(src_count, src);
+        alureShutdownDevice();
+    }
+    logfile_message("audio_release() ok");
+}
+#endif
 
 
 /*
  * audio_update()
  * Updates the audio manager
  */
+#ifndef __USE_OPENAL__
 void audio_update()
 {
     /* updating the music */
@@ -436,26 +739,10 @@ void audio_update()
         }
     }
 }
-
-
-/*
- * setup_voices()
- * Allocates a few voices
- */
-void setup_voices()
+#else
+void audio_update()
 {
-    int voices = PREFERRED_NUMBER_OF_VOICES;
-    logfile_message("Reserving voices...");
-
-    while(voices > 4) {
-        reserve_voices(voices, 0);
-        if(install_sound(DIGI_AUTODETECT, MIDI_NONE, NULL) == 0) {
-            logfile_message("Reserved %d voices.", voices);
-            return;
-        }
-        else
-            voices /= 2;
-    }
-
-    logfile_message("Warning: unable to reserve voices.\n%s\n", allegro_error);
+    if(!quiet)
+        alureUpdate();
 }
+#endif

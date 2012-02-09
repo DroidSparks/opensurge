@@ -114,6 +114,7 @@ void osspec_init()
     char tmp[1024];
     char subdirs[][32] = {   /* subfolders at $HOME/.$GAME_UNIXNAME/ */
         { "" },
+        { "characters" },
         { "config" },
         { "fonts" },
         { "images" },
@@ -126,8 +127,7 @@ void osspec_init()
         { "screenshots" },
         { "sprites" },
         { "themes" },
-        { "ttf" },
-        { "characters" }
+        { "ttf" }
     };
 
 

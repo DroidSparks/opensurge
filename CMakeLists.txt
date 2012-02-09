@@ -29,7 +29,7 @@ SET(CMAKE_BUILD_TYPE Release)
 MESSAGE("${GAME_NAME} version ${GAME_VERSION}")
 
 # configuring...
-SET(DEFS "")
+SET(DEFS "") # #define'd stuff
 #SET(CFLAGS_EXTRA "-g")
 SET(CFLAGS_EXTRA "")
 SET(CFLAGS "${CFLAGS} ${CMAKE_C_FLAGS}")
@@ -40,6 +40,15 @@ IF(UNIX)
   IF(NOT ALLEGRO_UNIX_LIBS)
     MESSAGE(FATAL_ERROR "Please do not invoke CMake directly. Run ./configure instead.")
   ENDIF(NOT ALLEGRO_UNIX_LIBS)
+ENDIF(UNIX)
+
+# extra options
+IF(UNIX)
+  # Under *nix, we prefer to use OpenAL instead of Allegro in order to handle the audio routines
+  # PulseAudio breaks the sound on Allegro games ...
+  OPTION(USE_OPENAL "Will use OpenAL, not Allegro, for audio playback" ON)
+ELSE(UNIX)
+  OPTION(USE_OPENAL "Will use OpenAL, not Allegro, for audio playback" OFF)
 ENDIF(UNIX)
 
 
@@ -109,6 +118,24 @@ FIND_LIBRARY(LALFONT NAMES alfont PATH "${CMAKE_LIBRARY_PATH}")
 IF(NOT LALFONT)
   MESSAGE(FATAL_ERROR "Fatal error: modified alfont not found! ${RTFM}")
 ENDIF(NOT LALFONT)
+
+# OpenAL & ALURE
+IF(USE_OPENAL)
+  FIND_LIBRARY(LOPENAL NAMES openal OpenAL OpenAL32 al PATH "${CMAKE_LIBRARY_PATH}")
+  IF(NOT LOPENAL)
+    MESSAGE(FATAL_ERROR "Fatal error: can't find OpenAL! ${RTFM}")
+  ENDIF(NOT LOPENAL)
+  FIND_LIBRARY(LALURE NAMES alure-static ALURE32-static PATH "${CMAKE_LIBRARY_PATH}")
+  IF(NOT LALURE)
+    MESSAGE(FATAL_ERROR "Fatal error: can't find ALURE! ${RTFM}")
+  ENDIF(NOT LALURE)
+  SET(DEFS ${DEFS} __USE_OPENAL__ ALURE_STATIC_LIBRARY)
+  SET(AUDIO_LIBS ${LALURE} ${LOPENAL} vorbisfile vorbis ogg stdc++)
+  MESSAGE(STATUS "Building using OpenAL for audio playback...")
+ELSE(USE_OPENAL)
+  SET(AUDIO_LIBS logg vorbisfile vorbis ogg)
+  MESSAGE(STATUS "Building using Allegro for audio playback...")
+ENDIF(USE_OPENAL)
 
 
 # RC compiler
@@ -290,7 +317,7 @@ IF(UNIX)
   SET(GAME_SRCS ${GAME_SRCS} src/misc/iconlin.c)
   ADD_EXECUTABLE(${GAME_UNIXNAME} ${GAME_SRCS})
   SET_TARGET_PROPERTIES(${GAME_UNIXNAME} PROPERTIES LINK_FLAGS ${ALLEGRO_UNIX_LIBS})
-  TARGET_LINK_LIBRARIES(${GAME_UNIXNAME} m logg vorbisfile vorbis ogg jpgalleg loadpng png z alfont alleg)
+  TARGET_LINK_LIBRARIES(${GAME_UNIXNAME} m ${AUDIO_LIBS} jpgalleg loadpng png z alfont alleg)
   SET_TARGET_PROPERTIES(${GAME_UNIXNAME} PROPERTIES COMPILE_FLAGS "-Wall -O2 ${CFLAGS} ${CFLAGS_EXTRA}")
 ENDIF(UNIX)
 
@@ -466,10 +493,10 @@ IF(WIN32)
   # Other properties
   IF(MSVC)
     SET_TARGET_PROPERTIES(${GAME_UNIXNAME} PROPERTIES COMPILE_FLAGS "/D_CRT_SECURE_NO_DEPRECATE /D__WIN32__ /D__MSVC__ ${CFLAGS} ${CFLAGS_EXTRA}")
-    TARGET_LINK_LIBRARIES(${GAME_UNIXNAME} logg vorbisfile vorbis ogg jpgalleg loadpng alfont alleg png z)
+    TARGET_LINK_LIBRARIES(${GAME_UNIXNAME} ${AUDIO_LIBS} jpgalleg loadpng alfont alleg png z)
   ELSE(MSVC)
-    SET_TARGET_PROPERTIES(${GAME_UNIXNAME} PROPERTIES COMPILE_FLAGS "-Wall -O2 ${CFLAGS} ${CFLAGS_EXTRA}")
-    TARGET_LINK_LIBRARIES(${GAME_UNIXNAME} m logg vorbisfile vorbis ogg jpgalleg loadpng alfont alleg png z)
+    SET_TARGET_PROPERTIES(${GAME_UNIXNAME} PROPERTIES COMPILE_FLAGS "-Wall -O2 -D__WIN32__ ${CFLAGS} ${CFLAGS_EXTRA}")
+    TARGET_LINK_LIBRARIES(${GAME_UNIXNAME} m ${AUDIO_LIBS} jpgalleg loadpng alfont alleg png z)
     EXECUTE_PROCESS(COMMAND ${CMAKE_RC_COMPILER} -O coff -o src/misc/iconwin.res -i src/misc/iconwin.rc)
     SET_TARGET_PROPERTIES(${GAME_UNIXNAME} PROPERTIES LINK_FLAGS "src/misc/iconwin.res")
   ENDIF(MSVC)
@@ -489,7 +516,7 @@ IF(UNIX)
 
   INSTALL(CODE "MESSAGE(\"Installing ${GAME_NAME} ${GAME_VERSION}... Make sure you have root privileges.\")")
   INSTALL(TARGETS ${GAME_UNIXNAME} RUNTIME DESTINATION ${GAME_INSTALL_DIR})
-  INSTALL(FILES license.txt readme.html DESTINATION ${GAME_INSTALL_DIR})
+  INSTALL(FILES license.txt readme.html bg.png icon.png logo_big.png logo.png DESTINATION ${GAME_INSTALL_DIR})
   INSTALL(DIRECTORY characters src objects sprites config images levels licenses musics quests samples screenshots themes languages fonts ttf DESTINATION ${GAME_INSTALL_DIR} PATTERN ".svn" EXCLUDE)
 
   INSTALL(CODE "MESSAGE(\"Creating files at ${GAME_FINAL_DIR}...\")")
