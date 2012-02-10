@@ -30,8 +30,8 @@ MESSAGE("${GAME_NAME} version ${GAME_VERSION}")
 
 # configuring...
 SET(DEFS "") # #define'd stuff
-#SET(CFLAGS_EXTRA "-g")
 SET(CFLAGS_EXTRA "")
+SET(CFLAGS_EXTRA "-g")
 SET(CFLAGS "${CFLAGS} ${CMAKE_C_FLAGS}")
 MESSAGE("Using CFLAGS='${CFLAGS}'")
 
@@ -516,7 +516,7 @@ IF(UNIX)
 
   INSTALL(CODE "MESSAGE(\"Installing ${GAME_NAME} ${GAME_VERSION}... Make sure you have root privileges.\")")
   INSTALL(TARGETS ${GAME_UNIXNAME} RUNTIME DESTINATION ${GAME_INSTALL_DIR})
-  INSTALL(FILES license.txt readme.html bg.png icon.png logo_big.png logo.png DESTINATION ${GAME_INSTALL_DIR})
+  INSTALL(FILES license.txt readme.html bg.png icon.png logo_big.png logo.png surge.png DESTINATION ${GAME_INSTALL_DIR})
   INSTALL(DIRECTORY characters src objects sprites config images levels licenses musics quests samples screenshots themes languages fonts ttf DESTINATION ${GAME_INSTALL_DIR} PATTERN ".svn" EXCLUDE)
 
   INSTALL(CODE "MESSAGE(\"Creating files at ${GAME_FINAL_DIR}...\")")
