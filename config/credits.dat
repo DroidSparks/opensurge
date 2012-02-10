@@ -105,6 +105,9 @@ Joao Victor
 --- images/levels/1/wolfredo.png
 --- images/extra/big_waterfall.png
 --- images/extra/surge_sigh.png
+--- ./icon.png
+--- ./logo.png
+--- ./logo_big.png
 
 Colin Beard
 --- images/charge.png
@@ -148,6 +151,7 @@ Alexandre Martins
 --- images/whitebg.png
 --- images/rain.png
 --- images/squarebg2.png
+--- ./bg.png
 
 Ramon
 --- images/dimensional_gate.png
@@ -227,6 +231,9 @@ LFA (opengameart.org)
 
 Andrew Pociask
 --- images/levels/1/mountains.png
+
+lainz
+--- ./surge.png
 
 <color=ffff00>$CREDITS_RES_MUSICS</color>
 
