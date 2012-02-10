@@ -36,6 +36,7 @@ static void release(objectmachine_t *obj);
 static void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *brick_list, item_list_t *item_list, object_list_t *object_list);
 static void render(objectmachine_t *obj, v2d_t camera_position);
 static void fix_objects(object_t *obj, void *any_data); /* will fix obj and its children (ie, set ptr->created_from_editor to TRUE) */
+static void unfix_objects(object_t *obj, void *any_data); /* will undo whatever fix_objects() did */
 
 
 
@@ -94,6 +95,7 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
 
     fix_objects(o, NULL);
     level_persist();
+    unfix_objects(o, NULL);
 
     decorated_machine->update(decorated_machine, team, team_size, brick_list, item_list, object_list);
 }
@@ -108,8 +110,16 @@ void render(objectmachine_t *obj, v2d_t camera_position)
     decorated_machine->render(decorated_machine, camera_position);
 }
 
+/* ---------------------------- */
+
 void fix_objects(object_t *obj, void *any_data)
 {
-    obj->created_from_editor = TRUE;
+    obj->created_from_editor ^= 0x10;
+    enemy_visit_children(obj, any_data, (void(*)(enemy_t*,void*))fix_objects);
+}
+
+void unfix_objects(object_t *obj, void *any_data)
+{
+    obj->created_from_editor ^= 0x10;
     enemy_visit_children(obj, any_data, (void(*)(enemy_t*,void*))fix_objects);
 }

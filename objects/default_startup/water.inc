@@ -5,7 +5,7 @@
 // File:   objects/default_startup/water.inc
 // Desc:   water
 // Author: Alexandre
-// Date:   2012-02-04
+// Date:   2012-02-04, 2012-02-10
 // ---------------------------------------------------------------------------
 
 object ".default_startup.water"
@@ -111,8 +111,14 @@ object ".default_startup.water.splash_detector"
     {
         set_absolute_position player_xpos() waterlevel()
         create_child .default_startup.water.splash 0 0
-        on_player_underwater uw
+        on_player_underwater splash_bubbles
         change_state nuw
+    }
+
+    state splash_bubbles
+    {
+        create_child .default_startup.water.splash_bubbles
+        change_state uw
     }
 }
 
@@ -126,13 +132,52 @@ object ".default_startup.water.splash"
         set_zindex 1.0
         set_alpha 0.75
         set_animation SD_WATERSPLASH 0
-        on_player_collision wait
-        destroy
+        change_state wait
     }
 
     state "wait"
     {
         on_animation_finished destroy
+    }
+
+    state "destroy"
+    {
+        destroy
+    }
+}
+
+object ".default_startup.water.splash_bubbles"
+{
+    requires 0.2.0
+    destroy_if_far_from_play_area
+
+    state "main"
+    {
+        hide
+        let "$timeout = 0.5"
+        set_absolute_position player_xpos()+8*player_direction() waterlevel()
+        change_state "create_bubble"
+    }
+
+    state "loop"
+    {
+        if "($t += dt()) >= $timeout" "destroy"
+        on_timeout "0.05 + 0.15 * ($t / $timeout)" "create_bubble"
+    }
+
+    state "create_bubble"
+    {
+        let "$_waterairbubble_anim = 4*random(2)"
+        create_child .default_startup.water.bubble -10+random(20) 10+(40*$t)+random(20)
+        let "$_waterairbubble_anim = 4*random(2)"
+        create_child .default_startup.water.bubble -10+random(20) 10+(40*$t)+random(20)
+        let "$_waterairbubble_anim = 4*random(2)"
+        create_child .default_startup.water.bubble -10+random(20) 10+(40*$t)+random(20)
+        let "$_waterairbubble_anim = 4*random(2)"
+        create_child .default_startup.water.bubble -10+random(20) 10+(40*$t)+random(20)
+        let "$_waterairbubble_anim = 4*random(2)"
+        create_child .default_startup.water.bubble -10+random(20) 10+(40*$t)+random(20)
+        change_state "loop"
     }
 
     state "destroy"
@@ -271,7 +316,7 @@ object ".default_startup.water.bubble"
 
     state "go"
     {
-        if "ypos() - hotspot_y() <= waterlevel()" destroy
+        if "ypos() - hotspot_y()/2 <= waterlevel()" destroy
         show
         move "($amp*(2*pi())) * sin(2*pi()*($t+=dt()))" "-30" // the chain rule
     }

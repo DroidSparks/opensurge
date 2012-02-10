@@ -108,7 +108,7 @@ static void render_object(renderable_t r, v2d_t camera_position) { enemy_render(
 static void render_brick(renderable_t r, v2d_t camera_position) { brick_render(r.brick, camera_position); }
 
 static int ypos_particles(renderable_t r) { return 0; }
-static int ypos_player(renderable_t r) { return (int)(r.player->actor->position.y); }
+static int ypos_player(renderable_t r) { return 0; /*(int)(r.player->actor->position.y);*/ }
 static int ypos_item(renderable_t r) { return (int)(r.item->actor->position.y); }
 static int ypos_object(renderable_t r) { return (int)(r.object->actor->position.y); }
 static int ypos_brick(renderable_t r) { return r.brick->y; }

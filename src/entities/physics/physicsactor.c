@@ -67,6 +67,7 @@ struct physicsactor_t
     input_t *input; /* input device */
     float wait_timer; /* the time, in seconds, that the physics actor is stopped */
     int winning_pose; /* winning pose enabled? */
+    float breathe_timer; /* if greater than zero, set animation to breathing */
 
     sensor_t *A_normal; /* sensors */
     sensor_t *B_normal;
@@ -193,6 +194,7 @@ physicsactor_t* physicsactor_create(v2d_t position)
     pa->input = input_create_computer();
     pa->wait_timer = 0.0f;
     pa->winning_pose = FALSE;
+    pa->breathe_timer = 0.0f;
 
     /* initializing some constants ;-) */
 
@@ -447,6 +449,7 @@ void physicsactor_drown(physicsactor_t *pa)
 void physicsactor_breathe(physicsactor_t *pa)
 {
     pa->state = PAS_BREATHING;
+    pa->breathe_timer = 0.5f;
 }
 
 /* getters and setters */
@@ -786,6 +789,18 @@ void run_simulation(physicsactor_t *pa, const obstaclemap_t *obstaclemap)
         if(pa->in_the_air && pa->ysp > 0.0f)
             pa->state = PAS_WALKING;
     }
+
+    /*
+     *
+     * breathing
+     *
+     */
+    if(pa->breathe_timer > 0.0f) {
+        pa->breathe_timer -= dt;
+        pa->state = PAS_BREATHING;
+    }
+    else if(pa->state == PAS_BREATHING && pa->in_the_air)
+        pa->state = PAS_WALKING;
 
     /*
      *

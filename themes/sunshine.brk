@@ -7699,7 +7699,7 @@ brick 830
 
 brick 848
 {
-    type                 PASSABLE
+    type                 OBSTACLE
     behavior             DEFAULT
     angle                0
     
