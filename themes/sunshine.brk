@@ -7702,6 +7702,7 @@ brick 848
     type                 OBSTACLE
     behavior             DEFAULT
     angle                0
+    zindex               0.9
     
     sprite
     {

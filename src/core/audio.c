@@ -882,7 +882,6 @@ void audio_update()
     }
 }
 #else
-#include<stdio.h>
 void audio_update()
 {
     /* alureUpdate() somehow won't call the eos_callbacks... */
