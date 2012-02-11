@@ -19,6 +19,27 @@ group
     brick 848 0 0
 }
 
+group
+{
+    brick 848 0 0
+    brick 848 64 0
+    brick 848 0 64
+    brick 848 64 64
+}
+
+group
+{
+    brick 852 0 0
+}
+
+group
+{
+    brick 852 0 0
+    brick 852 64 0
+    brick 852 0 64
+    brick 852 64 64
+}
+
 // group 1: 64x64
 group
 {

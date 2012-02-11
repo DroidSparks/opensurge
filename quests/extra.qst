@@ -15,5 +15,5 @@ description     "$MENU_CQ_EXTRA"
 image           "images/quest_extra.png"
 
 // level list (in order of appearance)
-level           "levels/desert1.lev"
 level           "levels/template.lev"
+level           "levels/desert1.lev"

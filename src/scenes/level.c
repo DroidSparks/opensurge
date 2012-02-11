@@ -3127,12 +3127,15 @@ void editor_draw_object(enum editor_entity_type obj_type, int obj_id, v2d_t posi
 {
     image_t *cursor = NULL;
     v2d_t offset = v2d_new(0, 0);
+    float alpha = 1.0f;
 
     /* getting the image of the current object */
     switch(obj_type) {
         case EDT_BRICK: {
             if(brickdata_get(obj_id) != NULL) {
                 cursor = brickdata_get(obj_id)->image;
+                if(brickdata_get(obj_id)->property == BRK_NONE)
+                    alpha = 0.5f;
             }
             break;
         }
@@ -3167,7 +3170,7 @@ void editor_draw_object(enum editor_entity_type obj_type, int obj_id, v2d_t posi
 
     /* drawing the object */
     if(cursor != NULL)
-        image_draw_trans(cursor, video_get_backbuffer(), (int)(position.x-offset.x), (int)(position.y-offset.y), 0.5, IF_NONE);
+        image_draw_trans(cursor, video_get_backbuffer(), (int)(position.x-offset.x), (int)(position.y-offset.y), alpha, IF_NONE);
 }
 
 

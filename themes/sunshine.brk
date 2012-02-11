@@ -7723,6 +7723,7 @@ brick 852
     type                 PASSABLE
     behavior             DEFAULT
     angle                0
+    zindex               0.1
     
     sprite
     {
@@ -7867,9 +7868,10 @@ brick 912
 
 brick 916
 {
-    type                 OBSTACLE
+    type                 PASSABLE
     behavior             DEFAULT
     angle                0
+    zindex               0.9
     
     sprite
     {
@@ -7888,9 +7890,10 @@ brick 916
 
 brick 920
 {
-    type                 OBSTACLE
+    type                 PASSABLE
     behavior             DEFAULT
     angle                0
+    zindex               0.9
     
     sprite
     {
@@ -7909,9 +7912,10 @@ brick 920
 
 brick 924
 {
-    type                 OBSTACLE
+    type                 PASSABLE
     behavior             DEFAULT
     angle                0
+    zindex               0.1
     
     sprite
     {

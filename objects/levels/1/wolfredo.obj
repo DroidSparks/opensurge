@@ -2,9 +2,9 @@
 // Open Surge Engine
 // http://opensnc.sourceforge.net
 //
-// Wolf
+// Wolfredo
 //
-// Wolf was originally developed by Race the Hedgehog(Joao Victor)
+// Wolfredo was originally developed by Race the Hedgehog(Joao Victor)
 // 
 // Changelog:
 // 2011-08-21 - small modification by Alexandre
@@ -14,7 +14,7 @@
 object "Wolfredo"
 {
     requires 0.2.0
-    category "Level 1"
+    category "enemy" "level 1"
     annotation "A wolf"
 
     state "main"

@@ -13,7 +13,7 @@
 object "Peixudo"
 {
     requires 0.2.0
-    category "Level 1"
+    category "enemy" "level 1"
     annotation "A fish"
  
     state "main"
@@ -29,7 +29,7 @@ object "Peixudo"
 
         // go
         hide
-        set_animation "Sir Bugsy" "0"
+        set_animation "Peixudo" "0"
         change_state "stopped"
     }
 
@@ -60,6 +60,8 @@ object "Peixudo"
         // moves the object on the y axis
         move "0" "$yspeed" // move the object at $yspeed pixels per second
         let "$yspeed = $yspeed + $gravity * dt()" // gravity affects the yspeed
+        look_at_player
+        set_angle "cond($yspeed < 0, 0, 180)"
 
         // hide again?
         if "ypos() >= spawnpoint_y()" "hide again"

@@ -13,7 +13,7 @@
 object "Springfling"
 {
     requires 0.2.0
-    category "Level 1"
+    category "enemy" "level 1"
     annotation "Jumps around"
  
     state "main"
