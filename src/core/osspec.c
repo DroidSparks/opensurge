@@ -87,7 +87,7 @@ static void search_the_file(char *dest, const char *relativefp, size_t dest_size
 static void cache_init();
 static void cache_release();
 static char *cache_search(const char *key);
-static void cache_insert(const char *key, char *value);
+static void cache_insert(const char *key, const char *value);
 
 /* the cache is implemented as a simple binary tree */
 typedef struct cache_t {
@@ -278,9 +278,7 @@ void resource_filepath(char *dest, const char *relativefp, size_t dest_size, int
                     search_the_file(dest, relativefp, dest_size);
 
                     /* store the resulting filepath in the memory */
-                    path = mallocx( (strlen(dest)+1) * sizeof *path );
-                    strcpy(path, dest);
-                    cache_insert(relativefp, path);
+                    cache_insert(relativefp, dest);
                 }
                 else
                     str_cpy(dest, path, dest_size);
@@ -544,7 +542,7 @@ char *cache_search(const char *key)
 }
 
 /* inserts a string into the dictionary */
-void cache_insert(const char *key, char *value)
+void cache_insert(const char *key, const char *value)
 {
     cache_root = cachetree_insert(cache_root, key, value);
 }
@@ -591,19 +589,17 @@ cache_t *cachetree_insert(cache_t *node, const char *key, const char *value)
         cmp = strcmp(key, node->key);
 
         if(cmp < 0)
-            return (node->left = cachetree_insert(node->left, key, value));
+            node->left = cachetree_insert(node->left, key, value);
         else if(cmp > 0)
-            return (node->right = cachetree_insert(node->right, key, value));
-        else
-            return node;
+            node->right = cachetree_insert(node->right, key, value);
+
+        return node;
     }
     else {
         t = mallocx(sizeof *t);
-        t->key = mallocx(sizeof *(t->key) * (strlen(key)+1));
-        t->value = mallocx(sizeof *(t->value) * (strlen(value)+1));
+        t->key = str_dup(key);
+        t->value = str_dup(value);
         t->left = t->right = NULL;
-        strcpy(t->key, key);
-        strcpy(t->value, value);
         return t;
     }
 }

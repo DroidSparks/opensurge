@@ -134,6 +134,10 @@ BONUSMSG_TEXT               "Bonus stages not yet implemented ;)"
     INPUT_KEYB_FIRE2        "the LEFT CTRL KEY"
     INPUT_KEYB_FIRE3        "ENTER"
     INPUT_KEYB_FIRE4        "ESC"
+    INPUT_KEYB_FIRE5        "W"
+    INPUT_KEYB_FIRE6        "A"
+    INPUT_KEYB_FIRE7        "S"
+    INPUT_KEYB_FIRE8        "D"
 
 
     // joystick
@@ -146,6 +150,10 @@ BONUSMSG_TEXT               "Bonus stages not yet implemented ;)"
     INPUT_JOY_FIRE2         "BUTTON 2"
     INPUT_JOY_FIRE3         "BUTTON 3"
     INPUT_JOY_FIRE4         "BUTTON 4"
+    INPUT_JOY_FIRE5         "BUTTON 5"
+    INPUT_JOY_FIRE6         "BUTTON 6"
+    INPUT_JOY_FIRE7         "BUTTON 7"
+    INPUT_JOY_FIRE8         "BUTTON 8"
 
 
 // HUD (Heads-Up Display)

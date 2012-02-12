@@ -183,6 +183,7 @@ player_t* player_destroy(player_t *player)
         actor_destroy(player->invstar[i]);
 
     physicsactor_destroy(player->pa);
+    actor_destroy(player->shield);
     actor_destroy(player->actor);
     free(player->name);
     free(player);

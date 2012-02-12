@@ -188,6 +188,7 @@ void objectdecorator_setanimationstrategy_anim_release(objectmachine_t *o)
 
     expression_destroy(s->animation_id);
     free(s->sprite_name);
+    free(s);
 }
 
 void objectdecorator_setanimationstrategy_anim_update(objectmachine_t *o)
@@ -222,6 +223,7 @@ void objectdecorator_setanimationstrategy_frame_release(objectmachine_t *o)
     objectdecorator_setanimationstrategy_frame_t *s = (objectdecorator_setanimationstrategy_frame_t*)(me->strategy);
 
     expression_destroy(s->animation_frame);
+    free(s);
 }
 
 void objectdecorator_setanimationstrategy_frame_update(objectmachine_t *o)
@@ -259,6 +261,7 @@ void objectdecorator_setanimationstrategy_speed_release(objectmachine_t *o)
     objectdecorator_setanimationstrategy_speed_t *s = (objectdecorator_setanimationstrategy_speed_t*)(me->strategy);
 
     expression_destroy(s->animation_speed);
+    free(s);
 }
 
 void objectdecorator_setanimationstrategy_speed_update(objectmachine_t *o)

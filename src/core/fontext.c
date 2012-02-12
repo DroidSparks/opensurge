@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * fontext.h - extensions for the font module
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -40,6 +40,10 @@ static const char* f_input_fire1() { return lang_get(input_joystick_available() 
 static const char* f_input_fire2() { return lang_get(input_joystick_available() ? "INPUT_JOY_FIRE2" : "INPUT_KEYB_FIRE2"); }
 static const char* f_input_fire3() { return lang_get(input_joystick_available() ? "INPUT_JOY_FIRE3" : "INPUT_KEYB_FIRE3"); }
 static const char* f_input_fire4() { return lang_get(input_joystick_available() ? "INPUT_JOY_FIRE4" : "INPUT_KEYB_FIRE4"); }
+static const char* f_input_fire5() { return lang_get(input_joystick_available() ? "INPUT_JOY_FIRE5" : "INPUT_KEYB_FIRE5"); }
+static const char* f_input_fire6() { return lang_get(input_joystick_available() ? "INPUT_JOY_FIRE6" : "INPUT_KEYB_FIRE6"); }
+static const char* f_input_fire7() { return lang_get(input_joystick_available() ? "INPUT_JOY_FIRE7" : "INPUT_KEYB_FIRE7"); }
+static const char* f_input_fire8() { return lang_get(input_joystick_available() ? "INPUT_JOY_FIRE8" : "INPUT_KEYB_FIRE8"); }
 
 
 /*
@@ -65,4 +69,8 @@ void fontext_register_variables()
     font_register_variable("$INPUT_FIRE2", f_input_fire2);
     font_register_variable("$INPUT_FIRE3", f_input_fire3);
     font_register_variable("$INPUT_FIRE4", f_input_fire4);
+    font_register_variable("$INPUT_FIRE5", f_input_fire5);
+    font_register_variable("$INPUT_FIRE6", f_input_fire6);
+    font_register_variable("$INPUT_FIRE7", f_input_fire7);
+    font_register_variable("$INPUT_FIRE8", f_input_fire8);
 }

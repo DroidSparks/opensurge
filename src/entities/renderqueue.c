@@ -96,7 +96,7 @@ static float brick_zindex_offset(const brick_t *b)
 
 /* private strategies */
 static float zindex_particles(renderable_t r) { return 0.5f; }
-static float zindex_player(renderable_t r) { return 0.5f; }
+static float zindex_player(renderable_t r) { return player_is_dying(r.player) ? 1.0f : 0.5f; }
 static float zindex_item(renderable_t r) { return 0.5f; }
 static float zindex_object(renderable_t r) { return r.object->zindex; }
 static float zindex_brick(renderable_t r) { return r.brick->brick_ref->zindex + brick_zindex_offset(r.brick); }

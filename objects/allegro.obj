@@ -1,0 +1,39 @@
+// Allegro logo
+object ".allegro_startup"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    // main
+    state "main"
+    {
+        set_absolute_position screen_width()/2 screen_height()/2
+        set_animation SD_ALLEGRO 0
+        play_sample samples/allegro.wav
+        change_state wait
+    }
+
+    state wait
+    {
+        on_timeout 3.5 fadeout
+    }
+
+    state fadeout
+    {
+        let $_fade_in=0
+        let $_fade_duration=1
+        create_child .fade_effect
+        change_state wait2
+    }
+
+    state wait2
+    {
+        on_timeout 2 next
+    }
+
+    state next
+    {
+        next_level
+    }
+}

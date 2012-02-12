@@ -166,6 +166,8 @@ void symboltable_destroy(symboltable_t *st)
         free(node->key);
         free(node);
     }
+
+    free(st);
 }
 
 /* adds or updates an association */

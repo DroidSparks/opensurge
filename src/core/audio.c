@@ -540,7 +540,7 @@ sound_t *sound_load(const char *path)
         }
 
         /* I don't know why, but I have to put this thing in here, otherwise the game will crash... :( */
-        sound_play_ex(s, 0, 1, 1, 0);
+        /*sound_play_ex(s, 0, 1, 1, 0);*/
 
         /* adding it to the resource manager */
         resourcemanager_add_sample(path, s);
@@ -717,14 +717,14 @@ void sound_stop(sound_t *sample)
 void sound_stop(sound_t *sample)
 {
     /* I don't know why, but I need this to make sure the game won't crash on exit... :( */
-    if(game_is_over()) {
+    /*if(game_is_over()) {
         static int gambiarra = 0;
         if(0 == gambiarra++) {
             int i = src_count;
             while(i--)
                 sound_play_ex(sample, 0, 1, 1, 0);
         }
-    }
+    }*/
 
     /* stop sample */
     if(sample && sample->is_playing) {
@@ -850,7 +850,7 @@ void audio_release()
 {
     logfile_message("audio_release()");
     if(!quiet) {
-        alDeleteSources(src_count, src);
+        //alDeleteSources(src_count, src);
         alureShutdownDevice();
     }
     logfile_message("audio_release() ok");
