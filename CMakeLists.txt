@@ -31,7 +31,7 @@ MESSAGE("${GAME_NAME} version ${GAME_VERSION}")
 # configuring...
 SET(DEFS "") # #define'd stuff
 SET(CFLAGS_EXTRA "")
-SET(CFLAGS_EXTRA "-g")
+#SET(CFLAGS_EXTRA "-g")
 SET(CFLAGS "${CFLAGS} ${CMAKE_C_FLAGS}")
 MESSAGE("Using CFLAGS='${CFLAGS}'")
 
