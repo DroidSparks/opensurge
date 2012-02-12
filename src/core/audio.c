@@ -73,10 +73,15 @@ struct sound_t {
 };
 
 static int quiet;
+
 static ALuint src[PREFERRED_NUMBER_OF_VOICES]; /* audio sources for sound_t's */
 static int src_count; /* number of valid elements of src[] */
 static int src_ptr; /* next src[] index to be used */
 static ALuint srcmus; /* audio source for the music */
+
+static ALuint *sbuf; /* array of ALuint: will hold all created buffers */
+static int sbuf_capacity; /* capacity of sbuf[] */
+static int sbuf_count; /* length of sbuf[] */
 
 static void eos_callback(void *userdata, ALuint source);
 static void eom_callback(void *userdata, ALuint source);
@@ -274,6 +279,7 @@ void music_play(music_t *music, int loop)
 void eom_callback(void *userdata, ALuint source)
 {
     music_t *music = (music_t*)userdata;
+
     if(music != NULL) {
         alureRewindStream(music->stream);
         music->is_playing = FALSE;
@@ -539,8 +545,13 @@ sound_t *sound_load(const char *path)
             return NULL;
         }
 
-        /* I don't know why, but I have to put this thing in here, otherwise the game will crash... :( */
-        /*sound_play_ex(s, 0, 1, 1, 0);*/
+        /* we'll need to release the array of buffers later */
+        sbuf[sbuf_count] = s->buf;
+        if(++sbuf_count >= sbuf_capacity) {
+            sbuf_capacity *= 2;
+            logfile_message("Expanding the array of audio buffers to hold %d elements", sbuf_capacity);
+            sbuf = reallocx(sbuf, sbuf_capacity * sizeof(*sbuf));
+        }
 
         /* adding it to the resource manager */
         resourcemanager_add_sample(path, s);
@@ -601,8 +612,8 @@ void sound_destroy(sound_t *sample)
 void sound_destroy(sound_t *sample)
 {
     if(sample != NULL) {
-        sound_stop(sample); /* super important */
-        alDeleteBuffers(1, &(sample->buf));
+        sound_stop(sample);
+        /* the buffers will be deleted later, in audio_release() */
         free(sample);
     }
 }
@@ -635,7 +646,6 @@ void sound_play(sound_t *sample)
  * 1.0 = default frequency
  * 0 = no loops
  */
-#include<stdio.h>
 #ifndef __USE_OPENAL__
 void sound_play_ex(sound_t *sample, float vol, float pan, float freq, int loop)
 {
@@ -692,10 +702,13 @@ void sound_play_ex(sound_t *sample, float vol, float pan, float freq, int loop)
 void eos_callback(void *userdata, ALuint source)
 {
     sound_t *sample = (sound_t*)userdata;
-    if(sample->loops_left > 0)
-        sound_play_ex(sample, sample->vol, sample->pan, sample->freq, sample->loops_left-1);
-    else
-        sample->is_playing = FALSE;
+
+    if(sample != NULL) {
+        if(sample->loops_left > 0)
+            sound_play_ex(sample, sample->vol, sample->pan, sample->freq, sample->loops_left-1);
+        else
+            sample->is_playing = FALSE;
+    }
 
     (void)source;
 }
@@ -716,17 +729,6 @@ void sound_stop(sound_t *sample)
 #else
 void sound_stop(sound_t *sample)
 {
-    /* I don't know why, but I need this to make sure the game won't crash on exit... :( */
-    /*if(game_is_over()) {
-        static int gambiarra = 0;
-        if(0 == gambiarra++) {
-            int i = src_count;
-            while(i--)
-                sound_play_ex(sample, 0, 1, 1, 0);
-        }
-    }*/
-
-    /* stop sample */
     if(sample && sample->is_playing) {
         alureStopSource(*(sample->src), AL_FALSE);
         sample->is_playing = FALSE;
@@ -796,14 +798,18 @@ void audio_init()
 void audio_init()
 {
     int sources;
+
     logfile_message("audio_init(): using OpenAL for audio playback...");
+    quiet = TRUE;
 
     /* initialize the OpenAL device */
-    if(!alureInitDevice(NULL, NULL)) {
-        logfile_message("Failed to open OpenAL device: %s", alureGetErrorString());
-        quiet = TRUE;
-    }
-    else {
+    if(alureInitDevice(NULL, NULL)) {
+        /* allocating some buffers */
+        sbuf_capacity = 1024; /* initial capacity; the sbuf[] array grows as needed */
+        sbuf_count = 0;
+        logfile_message("Allocating %d audio buffers...", sbuf_capacity);
+        sbuf = mallocx(sbuf_capacity * sizeof(*sbuf));
+
         /* allocates a few audio sources */
         sources = PREFERRED_NUMBER_OF_VOICES;
         logfile_message("Generating audio sources...");
@@ -829,8 +835,9 @@ void audio_init()
 
         logfile_message("Failed to generate audio sources: %s", alureGetErrorString());
         alureShutdownDevice();
-        quiet = TRUE;
     }
+    else
+        logfile_message("Failed to open OpenAL device: %s", alureGetErrorString());
 }
 #endif
 
@@ -849,10 +856,17 @@ void audio_release()
 void audio_release()
 {
     logfile_message("audio_release()");
+
     if(!quiet) {
-        //alDeleteSources(src_count, src);
+        logfile_message("Deleting audio buffers...");
+        alDeleteBuffers(sbuf_count, sbuf);
+        free(sbuf);
+        logfile_message("Deleting audio sources...");
+        alDeleteSources(src_count, src);
+        logfile_message("Shutting down OpenAL...");
         alureShutdownDevice();
     }
+
     logfile_message("audio_release() ok");
 }
 #endif
