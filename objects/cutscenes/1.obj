@@ -588,9 +588,8 @@ object ".cutscene1_neontalk"
     state main
     {
         set_zindex 1.01
-        set_absolute_position screen_width()-width() screen_height()-30
+        set_absolute_position screen_width()-2*width() screen_height()-30
         set_animation SD_NEONTALK 0
-//set_scale 0.75 0.75
         change_state fadein
     }
 
@@ -602,6 +601,7 @@ object ".cutscene1_neontalk"
 
     state talk
     {
+        set_absolute_position min(screen_width()/2,xpos()+640*dt()) ypos()
         set_animation SD_NEONTALK 1
     }
 

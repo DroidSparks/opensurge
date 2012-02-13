@@ -412,7 +412,8 @@ void video_render()
             image_t *half = window_surface_half;
 
             if(video_is_smooth()) {
-                filter_blit(video_get_backbuffer(), half, FILTER_2XSAI);
+                /*filter_blit(video_get_backbuffer(), half, FILTER_2XSAI);*/
+                fast2x_blit(video_get_backbuffer(), half);
                 filter_blit(half, tmp, FILTER_2XSAI);
             }
             else {
