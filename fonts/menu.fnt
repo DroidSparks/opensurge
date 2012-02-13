@@ -27,6 +27,7 @@ font "menu.text"
     {
         source_file             "ttf/DejaVuSans.ttf"
         size                    13
+        shadow
     }
 }
 
@@ -51,5 +52,26 @@ font "menu.small"
         size                    12
         antialias
         shadow
+    }
+}
+
+// main menu: marquee
+font "menu.main.marquee"
+{
+    truetype
+    {
+        source_file             "ttf/DejaVuSans.ttf"
+        size                    13
+        shadow
+    }
+}
+
+// menu: credits
+font "menu.credits"
+{
+    truetype
+    {
+        source_file             "ttf/DejaVuSans.ttf"
+        size                    13
     }
 }

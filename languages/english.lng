@@ -46,7 +46,7 @@ OPTIONS_GAME                "GAME"
 OPTIONS_GAMEPAD             "Use gamepad"
 OPTIONS_LANGUAGE            "Change language"
 OPTIONS_STAGESELECT         "Stage select"
-OPTIONS_CREDITS             "Credits"
+OPTIONS_CREDITS             "Credits & donators"
 OPTIONS_BACK                "BACK"
 
 
@@ -75,11 +75,12 @@ LANGSELECT_PAGE             "page %d/%d"
 
 // Credits
 CREDITS_TITLE               "<color=$COLOR_P1>CREDITS</color>"
-CREDITS_KEY                 "Press <color=ffff00>$INPUT_FIRE4</color> to go back"
+CREDITS_KEY                 "Press <color=ffff00>$INPUT_FIRE4</color> to go back, or <color=ffff00>$INPUT_FIRE8</color> to see the donators"
 CREDITS_ACTIVE              "Project team"
 CREDITS_CONTRIB             "Special contributors"
 CREDITS_RETIRED             "Retired members"
 CREDITS_THANKS              "Thanks to"
+
 CREDITS_ALEXANDRE           "Founder, Programmer"
 CREDITS_DI                  "Musician"
 CREDITS_COLIN               "Forum moderator, Story designer"
@@ -104,6 +105,12 @@ CREDITS_RES_TEXT            "Unless explicitly told otherwise, the files listed 
 CREDITS_RES_IMAGES          "Images"
 CREDITS_RES_MUSICS          "Musics"
 CREDITS_RES_SAMPLES         "Sound effects"
+
+
+// Donations
+DONATORS_TITLE               "<color=$COLOR_P1>DONATORS</color>"
+DONATORS_KEY                 "Press <color=ffff00>$INPUT_FIRE4</color> to go back"
+DONATORS_HEADER              "These are the kind people who have helped fund our project:"
 
 
 // Quest names

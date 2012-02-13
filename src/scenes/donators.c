@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
- * credits.c - credits scene
- * Copyright (C) 2009-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * donators.c - donators scene
+ * Copyright (C) 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
  */
 
 #include <math.h>
-#include "credits.h"
+#include "donators.h"
 #include "options.h"
 #include "../core/util.h"
 #include "../core/video.h"
@@ -29,7 +29,6 @@
 #include "../core/input.h"
 #include "../core/timer.h"
 #include "../core/scene.h"
-#include "../core/storyboard.h"
 #include "../core/soundfactory.h"
 #include "../core/font.h"
 #include "../core/osspec.h"
@@ -39,25 +38,16 @@
 
 
 /* private data */
-#define CREDITS_FILE               "config/credits.dat"
-#define CREDITS_BGFILE             "themes/credits.bg"
+#define DONATORS_FILE               "config/donators.dat"
+#define DONATORS_BGFILE             "themes/donators.bg"
 static image_t *box;
 static int quit;
 static font_t *title, *text, *back;
 static input_t *input;
 static int line_count;
 static bgtheme_t *bgtheme;
-static char credits_header[] =
-    "\n<color=ff8000>"
-    GAME_TITLE
-    " version "
-    GAME_VERSION_STRING
-    "</color>\n"
-    GAME_WEBSITE
-    "\n\n";
 
-static scene_t *next_scene;
-static char* read_credits_file();
+static char* read_donators_file();
 
 
 
@@ -65,29 +55,28 @@ static char* read_credits_file();
 /* public functions */
 
 /*
- * credits_init()
+ * donators_init()
  * Initializes the scene
  */
-void credits_init()
+void donators_init()
 {
     const char *p;
-    char *credits_text = read_credits_file();
+    char *donators_text = read_donators_file();
 
     /* initializing stuff... */
     quit = FALSE;
-    next_scene = NULL;
     input = input_create_user(NULL);
 
     title = font_create("menu.title");
-    font_set_text(title, "%s", lang_get("CREDITS_TITLE"));
+    font_set_text(title, "%s", lang_get("DONATORS_TITLE"));
     font_set_position(title, v2d_new((VIDEO_SCREEN_W - font_get_textsize(title).x)/2, 5));
 
     back = font_create("menu.text");
-    font_set_text(back, "%s", lang_get("CREDITS_KEY"));
+    font_set_text(back, "%s", lang_get("DONATORS_KEY"));
     font_set_position(back, v2d_new(10, VIDEO_SCREEN_H - font_get_textsize(back).y - 5));
 
     text = font_create("menu.credits");
-    font_set_text(text, "%s\n%s", credits_header, credits_text);
+    font_set_text(text, "%s", donators_text);
     font_set_width(text, 300);
     font_set_position(text, v2d_new(10, VIDEO_SCREEN_H));
     for(line_count=1,p=font_get_text(text); *p; p++)
@@ -96,20 +85,20 @@ void credits_init()
     box = image_create(VIDEO_SCREEN_W, 30);
     image_clear(box, image_rgb(0,0,0));
 
-    bgtheme = background_load(CREDITS_BGFILE);
+    bgtheme = background_load(DONATORS_BGFILE);
 
     fadefx_in(image_rgb(0,0,0), 1.0);
 
     /* done! */
-    free(credits_text);
+    free(donators_text);
 }
 
 
 /*
- * credits_release()
+ * donators_release()
  * Releases the scene
  */
-void credits_release()
+void donators_release()
 {
     bgtheme = background_unload(bgtheme);
     image_destroy(box);
@@ -123,10 +112,10 @@ void credits_release()
 
 
 /*
- * credits_update()
+ * donators_update()
  * Updates the scene
  */
-void credits_update()
+void donators_update()
 {
     float dt = timer_get_delta();
     v2d_t textpos;
@@ -145,12 +134,6 @@ void credits_update()
     if(!quit && !fadefx_is_fading()) {
         if(input_button_pressed(input, IB_FIRE4)) {
             sound_play( soundfactory_get("return") );
-            next_scene = NULL;
-            quit = TRUE;
-        }
-        else if(input_button_pressed(input, IB_FIRE8)) {
-            sound_play( soundfactory_get("select") );
-            next_scene = storyboard_get_scene(SCENE_DONATORS);
             quit = TRUE;
         }
     }
@@ -165,8 +148,6 @@ void credits_update()
     if(quit) {
         if(fadefx_over()) {
             scenestack_pop();
-            if(next_scene != NULL)
-                scenestack_push(next_scene);
             return;
         }
         fadefx_out(image_rgb(0,0,0), 1.0);
@@ -176,10 +157,10 @@ void credits_update()
 
 
 /*
- * credits_render()
+ * donators_render()
  * Renders the scene
  */
-void credits_render()
+void donators_render()
 {
     v2d_t cam = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
 
@@ -201,16 +182,16 @@ void credits_render()
 
 /* private stuff */
 
-/* reads the contents of CREDITS_FILE */
-char* read_credits_file()
+/* reads the contents of DONATORS_FILE */
+char* read_donators_file()
 {
     char *buf, filename[1024];
     FILE* fp;
     long size;
 
-    resource_filepath(filename, CREDITS_FILE, sizeof filename, RESFP_READ);
+    resource_filepath(filename, DONATORS_FILE, sizeof filename, RESFP_READ);
     if(NULL == (fp = fopen(filename, "r"))) {
-        fatal_error("Can't open '%s' for reading.", CREDITS_FILE);
+        fatal_error("Can't open '%s' for reading.", DONATORS_FILE);
         return NULL;
     }
 
@@ -221,7 +202,7 @@ char* read_credits_file()
     buf = mallocx(1 + size);
     buf[size] = 0;
     if(fread(buf, 1, size, fp) != size)
-        logfile_message("Warning: invalid return value of fread() when reading '%s'", CREDITS_FILE);
+        logfile_message("Warning: invalid return value of fread() when reading '%s'", DONATORS_FILE);
 
     fclose(fp);
     return buf;

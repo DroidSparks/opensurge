@@ -5,7 +5,7 @@
 // File:   objects/default_startup/water.inc
 // Desc:   water
 // Author: Alexandre
-// Date:   2012-02-04, 2012-02-10
+// Date:   2012-02-04, 2012-02-10, 2012-02-13
 // ---------------------------------------------------------------------------
 
 object ".default_startup.water"
@@ -22,6 +22,7 @@ object ".default_startup.water"
         create_child ".default_startup.water.splash_detector"
         create_child ".default_startup.water.drown_detector"
         create_child ".default_startup.water.bubble_creator"
+        create_child ".default_startup.water.shield_behavior"
         destroy
     }
 }
@@ -261,6 +262,7 @@ object ".default_startup.water.bubble_creator"
 
     state uw
     {
+        on_water_shield uw // don't create bubbles if watershield
         attach_to_player 8*player_direction() -13
         on_player_drown drowned
         on_timeout "1.0+random(100)*0.01" create_bubble
@@ -324,5 +326,37 @@ object ".default_startup.water.bubble"
     state "destroy"
     {
         destroy
+    }
+}
+
+// ------------------------------------------
+
+object ".default_startup.water.shield_behavior"
+{
+    requires 0.2.0
+    always_active
+
+    state "main"
+    {
+        hide
+        on_player_underwater uw
+    }
+
+    state "uw"
+    {
+        on_fire_shield delete_shield
+        on_thunder_shield delete_shield
+        on_player_underwater uw
+        change_state main
+    }
+
+    state "delete_shield"
+    {
+        let $x=player_xspeed()
+        let $y=player_yspeed()
+        hit_player
+        set_player_xspeed $x
+        set_player_yspeed $y
+        return_to_previous_state
     }
 }

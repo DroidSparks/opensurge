@@ -224,8 +224,7 @@ object ".intro_subtitles"
         textout "menu.small" 7 180 "$OPENING_3" 291 0 $strlen
         change_closest_object_state ".intro_startup" "show 2nd slide"
         let "$second_slide_ok = 1"
-        return_to_previous_state
-        textout "menu.small" 7 180 "$OPENING_3" 291 0 $strlen
+        change_state text3
     }
 
     state "show 3rd slide"
@@ -349,7 +348,8 @@ object ".intro_subtitles"
         let "$typerate = 1.5*$length/$displaytime"
         let "$_introtextout = 9"
         //play_sample "samples/intro9.ogg"
-        change_state "text9"
+        //change_state "text9"
+        on_timeout $displaytime*1 text9
     }
 
     // real text display

@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * menu.c - menu scene
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -45,6 +45,7 @@
 
 
 /* private data */
+#define DEFAULT_QUEST   "quests/default.qst"
 #define MENU_MUSICFILE  "musics/title.ogg"
 #define MENU_BGFILE     "themes/menu.bg"
 #define FADEIN_TIME     0.5f
@@ -124,8 +125,8 @@ void menu_init()
 
     for(j=0; j<MENU_MAXOPTIONS; j++) {
         menufnt[j] = font_create("menu.main");
-        font_set_position(menufnt[j], v2d_new(112, 172+10*j));
         font_set_text(menufnt[j], "%s", menu[j]);
+        font_set_position(menufnt[j], v2d_new((VIDEO_SCREEN_W - font_get_textsize(menufnt[j]).x)/2, 167+12*j));
     }
 
     /* marquee */
@@ -280,13 +281,13 @@ void select_option(int opt)
     char abs_path[1024];
 
     switch(opt) {
-        /* 1P GAME */
+        /* START GAME */
         case 0:
-            resource_filepath(abs_path, "quests/default.qst", sizeof(abs_path), RESFP_READ);
+            resource_filepath(abs_path, DEFAULT_QUEST, sizeof(abs_path), RESFP_READ);
             game_start( load_quest(abs_path) );
             return;
 
-        /* CUSTOM QUESTS */
+        /* EXTRAS */
         case 1:
             jump_to = storyboard_get_scene(SCENE_QUESTSELECT);
             fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
@@ -325,7 +326,7 @@ void marquee_init()
 {
     int h;
 
-    marquee.font = font_create("menu.text");
+    marquee.font = font_create("menu.main.marquee");
     font_set_text(marquee.font, "%s v%s - %s - %s", GAME_TITLE, GAME_VERSION_STRING, GAME_WEBSITE, GAME_YEAR);
 
     h = (int)(1.5f * font_get_textsize(marquee.font).y);

@@ -194,6 +194,7 @@ SET(
   src/scenes/util/grouptree.c
   src/scenes/confirmbox.c
   src/scenes/credits.c
+  src/scenes/donators.c
   src/scenes/editorhelp.c
   src/scenes/gameover.c
   src/scenes/intro.c
@@ -370,6 +371,7 @@ IF(WIN32)
       src/scenes/confirmbox.h
       src/scenes/editorhelp.h
       src/scenes/credits.h
+      src/scenes/donators.h
       src/scenes/gameover.h
       src/scenes/intro.h
       src/scenes/langselect.h

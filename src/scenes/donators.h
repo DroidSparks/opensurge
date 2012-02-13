@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
- * storyboard.h - storyboard (stores the scenes of the game)
- * Copyright (C) 2010, 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * donators.h - donators scene
+ * Copyright (C) 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,32 +19,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _STORYBOARD_H
-#define _STORYBOARD_H
+#ifndef _DONATORS_H
+#define _DONATORS_H
 
-#include "scene.h"
-
-/* available scenes */
-typedef enum scenetype_t {
-    SCENE_INTRO,
-    SCENE_LEVEL,
-    SCENE_PAUSE,
-    SCENE_GAMEOVER,
-    SCENE_QUEST,
-    SCENE_MENU,
-    SCENE_CONFIRMBOX,
-    SCENE_LANGSELECT,
-    SCENE_CREDITS,
-    SCENE_DONATORS,
-    SCENE_OPTIONS,
-    SCENE_STAGESELECT,
-    SCENE_QUESTSELECT,
-    SCENE_EDITORHELP
-} scenetype_t;
-
-/* Storyboard */
-void storyboard_init();
-void storyboard_release();
-scene_t* storyboard_get_scene(scenetype_t type);
+/* public functions */
+void donators_init();
+void donators_release();
+void donators_update();
+void donators_render();
 
 #endif
