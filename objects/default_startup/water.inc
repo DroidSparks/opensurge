@@ -357,6 +357,6 @@ object ".default_startup.water.shield_behavior"
         hit_player
         set_player_xspeed $x
         set_player_yspeed $y
-        return_to_previous_state
+        change_state main
     }
 }

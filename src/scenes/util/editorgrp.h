@@ -36,6 +36,7 @@ typedef struct {
     enum editorgrp_entity_type type; /* object type */
     int id; /* object id */
     v2d_t position; /* position */
+    int layer; /* layer */
 } editorgrp_entity_t;
 
 /* linked list of entities */

@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * editorgrp.c - level editor: groups
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -178,7 +178,7 @@ int traverse_group(const parsetree_statement_t *stmt, void *entity_list)
 {
     const char *identifier;
     const parsetree_parameter_t *param_list;
-    const parsetree_parameter_t *p1, *p2, *p3;
+    const parsetree_parameter_t *p1, *p2, *p3, *p4;
     editorgrp_entity_list_t **list = (editorgrp_entity_list_t**)entity_list;
     editorgrp_entity_t e;
 
@@ -188,22 +188,27 @@ int traverse_group(const parsetree_statement_t *stmt, void *entity_list)
     if(str_icmp(identifier, "brick") == 0) {
         int id;
         int x, y;
+        bricklayer_t layer;
 
         p1 = nanoparser_get_nth_parameter(param_list, 1);
         p2 = nanoparser_get_nth_parameter(param_list, 2);
         p3 = nanoparser_get_nth_parameter(param_list, 3);
+        p4 = nanoparser_get_nth_parameter(param_list, 4);
 
         nanoparser_expect_string(p1, "Brick id must be given");
         nanoparser_expect_string(p2, "Brick xpos must be given");
         nanoparser_expect_string(p3, "Brick ypos must be given");
+        if(p4) nanoparser_expect_string(p4, "Brick layer is expected");
 
         id = atoi(nanoparser_get_string(p1));
         x = atoi(nanoparser_get_string(p2));
         y = atoi(nanoparser_get_string(p3));
+        layer = p4 ? colorname2bricklayer(nanoparser_get_string(p4)) : BRL_DEFAULT;
 
         e.type = EDITORGRP_ENTITY_BRICK;
         e.id = clip(id, 0, brickdata_size()-1);
         e.position = v2d_new(x,y);
+        e.layer = (int)layer;
         if(NULL != brickdata_get(e.id)) /* valid brick? */
             *list = add_to_list(*list, e);
     }
@@ -226,6 +231,7 @@ int traverse_group(const parsetree_statement_t *stmt, void *entity_list)
         e.type = EDITORGRP_ENTITY_ITEM;
         e.id = clip(id, 0, ITEMDATA_MAX-1);
         e.position = v2d_new(x,y);
+        e.layer = 0;
         if(editor_is_valid_item(e.id)) /* valid item? */
             *list = add_to_list(*list, e);
     }
@@ -248,6 +254,7 @@ int traverse_group(const parsetree_statement_t *stmt, void *entity_list)
         e.type = EDITORGRP_ENTITY_ENEMY;
         e.id = editor_enemy_name2key(name);
         e.position = v2d_new(x,y);
+        e.layer = 0;
         *list = add_to_list(*list, e);
     }
     else

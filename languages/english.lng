@@ -108,9 +108,9 @@ CREDITS_RES_SAMPLES         "Sound effects"
 
 
 // Donations
-DONATORS_TITLE               "<color=$COLOR_P1>DONATORS</color>"
-DONATORS_KEY                 "Press <color=ffff00>$INPUT_FIRE4</color> to go back"
-DONATORS_HEADER              "These are the kind people who have helped fund our project:"
+DONATORS_TITLE              "<color=$COLOR_P1>DONATORS</color>"
+DONATORS_KEY                "Press <color=ffff00>$INPUT_FIRE4</color> to go back"
+DONATORS_HEADER             "As an open source game, Open Surge needs money to pay for code, art, music, etc.\n\nThese are the kind people who have helped fund Open Surge:"
 
 
 // Quest names

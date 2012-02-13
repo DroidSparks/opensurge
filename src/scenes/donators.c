@@ -125,7 +125,7 @@ void donators_update()
 
     /* text movement */
     textpos = font_get_position(text);
-    textpos.y -= (3*font_get_textsize(text).y) * dt;
+    textpos.y -= (2*font_get_textsize(text).y) * dt;
     if(textpos.y < -(line_count * (font_get_textsize(text).y + font_get_charspacing(text).y)))
         textpos.y = VIDEO_SCREEN_H;
     font_set_position(text, textpos);

@@ -3542,8 +3542,13 @@ void editor_action_commit(editor_action_t action)
                     editor_action_t a;
                     editorgrp_entity_t e = it->entity;
                     enum editor_entity_type my_type = EDITORGRP_ENTITY_TO_EDT(e.type);
+                    int old_layer = editor_layer;
+
+                    /* e.layer has higher precedence than editor_layer */
+                    editor_layer = (e.layer != BRL_DEFAULT) ? e.layer : editor_layer;
                     a = editor_action_entity_new(TRUE, my_type, e.id, v2d_add(e.position, action.obj_position));
                     editor_action_commit(a);
+                    editor_layer = old_layer;
                 }
                 break;
             }
