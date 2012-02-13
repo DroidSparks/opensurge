@@ -38,7 +38,7 @@ object ".intro_startup"
 
     state "show 2nd slide" // called by someone else
     {
-        //set_absolute_position xpos() max(-240,ypos()-6*dt())
+        set_absolute_position xpos() max(-240,ypos()-6*dt())
         set_alpha $_slide_alpha=max(0,alpha()-(1.0/1.5)*dt())
         if alpha()<=0 "start 2nd slide"
     }
@@ -58,7 +58,7 @@ object ".intro_startup"
 
     state "show 3rd slide" // called by someone else
     {
-        set_alpha max(0,alpha()-(1.0/2.5)*dt())
+        set_alpha max(0,alpha()-(1.0/0.85)*dt())
         if alpha()<=0 "start 3rd slide"
     }
 
@@ -204,7 +204,7 @@ object ".intro_subtitles"
     state "main"
     {
         set_absolute_position 0 0
-        set_zindex infinity()+999
+        set_zindex 0.999919
 
         let "$strlen = 0"
         if "$text == 9" "length9"
@@ -223,26 +223,25 @@ object ".intro_subtitles"
     {
         textout "menu.small" 7 180 "$OPENING_3" 291 0 $strlen
         change_closest_object_state ".intro_startup" "show 2nd slide"
-        change_state "text3"
+        let "$second_slide_ok = 1"
+        return_to_previous_state
+        textout "menu.small" 7 180 "$OPENING_3" 291 0 $strlen
     }
 
     state "show 3rd slide"
     {
-        textout "menu.small" 7 180 "$OPENING_3" 291 0 $strlen
         change_closest_object_state ".intro_startup" "show 3rd slide"
         change_state "wait_fade"
     }
 
     state "show 4th slide"
     {
-        textout "menu.small" 7 180 "$OPENING_6" 291 0 $strlen
         change_closest_object_state ".intro_startup" "show 4th slide"
         change_state "wait_fade"
     }
 
     state "show 5th slide"
     {
-        textout "menu.small" 7 180 "$OPENING_7" 291 0 $strlen
         change_closest_object_state ".intro_startup" "show 5th slide"
         change_state "wait_fade"
     }
@@ -375,7 +374,7 @@ object ".intro_subtitles"
         textout "menu.small" 7 180 "$OPENING_3" 291 0 $strlen
         let "$strlen += $typerate*dt()"
         let "$text = 4"
-        on_timeout "$displaytime * 0.45" "show 2nd slide"
+        if "not($second_slide_ok) and (($tx3 += dt()) >= ($displaytime * 0.45))" "show 2nd slide"
         on_timeout "$displaytime" "show 3rd slide"
     }
 

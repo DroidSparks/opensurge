@@ -7849,7 +7849,7 @@ brick 908
 brick 912
 {
     type                 OBSTACLE
-    behavior             DEFAULT
+    behavior             BREAKABLE 5 5
     angle                0
     
     sprite
