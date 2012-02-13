@@ -65,6 +65,7 @@ static int menuopt; /* current option */
 static font_t *menufnt[MENU_MAXOPTIONS];
 static actor_t *arrow;
 static int quit;
+static int not_first_time = 0;
 
 /* marquee */
 static struct marquee_t {
@@ -131,7 +132,10 @@ void menu_init()
     marquee_init();
 
     /* fade in */
-    fadefx_in(image_rgb(0,0,0), FADEIN_TIME);
+    if(not_first_time++)
+        fadefx_in(image_rgb(0,0,0), FADEIN_TIME);
+    else
+        fadefx_in(image_rgb(255,255,255), FADEIN_TIME);
 }
 
 

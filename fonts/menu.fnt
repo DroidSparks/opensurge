@@ -50,5 +50,6 @@ font "menu.small"
         source_file             "ttf/DejaVuSans.ttf"
         size                    12
         antialias
+        shadow
     }
 }

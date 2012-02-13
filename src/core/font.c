@@ -52,7 +52,7 @@ struct fontdata_t { /* abstract font: base class */
     v2d_t (*textsize)(fontdata_t*,const char*); /* text size, in pixels */
 };
 static fontdata_t* fontdata_bmp_new(const char *source_file, const char *keymap, int sheet_source_x, int sheet_source_y, int sheet_width, int sheet_height, int char_width, int char_height);
-static fontdata_t* fontdata_ttf_new(const char *source_file, int size, int antialias);
+static fontdata_t* fontdata_ttf_new(const char *source_file, int size, int antialias, int shadow);
 
 typedef struct fontdata_bmp_t fontdata_bmp_t;
 struct fontdata_bmp_t { /* bitmap font */
@@ -71,6 +71,7 @@ struct fontdata_ttf_t { /* truetype font */
     ALFONT_FONT *ttf;
     image_t *cached_character[96]; /* store characters 0..127 in a table */
     int antialias; /* enable antialiasing? */
+    int shadow; /* enable shadow? */
 };
 static void fontdata_ttf_renderchar(fontdata_t *fnt, image_t *img, int ch, int x, int y, uint32 color);
 static void fontdata_ttf_release(fontdata_t *fnt);
@@ -140,6 +141,7 @@ struct fontscript_t {
             char source_file[1024]; /* source file (relative file path) */
             int size; /* font size */
             int antialias; /* enable antialiasing? */
+            int shadow; /* enable shadow? */
         } ttf;
 
     } data;
@@ -648,7 +650,8 @@ int traverse(const parsetree_statement_t *stmt)
             data = fontdata_ttf_new(
                 header.data.ttf.source_file,
                 header.data.ttf.size,
-                header.data.ttf.antialias
+                header.data.ttf.antialias,
+                header.data.ttf.shadow
             );
             break;
 
@@ -694,6 +697,7 @@ int traverse_block(const parsetree_statement_t *stmt, void *data)
         strcpy(header->data.ttf.source_file, "");
         header->data.ttf.size = 12;
         header->data.ttf.antialias = FALSE;
+        header->data.ttf.shadow = FALSE;
 
         nanoparser_traverse_program_ex(nanoparser_get_program(p1), data, traverse_ttf);
     }
@@ -796,6 +800,8 @@ int traverse_ttf(const parsetree_statement_t *stmt, void *data)
     }
     else if(str_icmp(id, "antialias") == 0)
         header->data.ttf.antialias = TRUE;
+    else if(str_icmp(id, "shadow") == 0)
+        header->data.ttf.shadow = TRUE;
     else
         fatal_error("Font script error: unknown keyword '%s' in ttf font", id);
 
@@ -991,7 +997,7 @@ v2d_t fontdata_bmp_textsize(fontdata_t *fnt, const char *string)
 /* ttf fonts */
 /* ------------------------------------------------- */
 
-fontdata_t* fontdata_ttf_new(const char *source_file, int size, int antialias)
+fontdata_t* fontdata_ttf_new(const char *source_file, int size, int antialias, int shadow)
 {
     char abs_path[1024], buf[16];
     int ch, w, h;
@@ -1010,6 +1016,7 @@ fontdata_t* fontdata_ttf_new(const char *source_file, int size, int antialias)
         /* configuring */
         alfont_set_font_size(f->ttf, size);
         f->antialias = antialias;
+        f->shadow = shadow;
 
         /* caching commonly used characters */
         if(!antialias) {
@@ -1033,7 +1040,18 @@ void fontdata_ttf_renderchar(fontdata_t *fnt, image_t *img, int ch, int x, int y
 {
     fontdata_ttf_t *f = (fontdata_ttf_t*)fnt;
     int aa = f->antialias;
+    uint32 black = image_rgb(0,0,0);
+    static int sh = 0;
 
+    /* sh effect */
+    if(f->shadow && !sh++) {
+        fontdata_ttf_renderchar(fnt, img, ch, 1+x, 1+y, black);
+        fontdata_ttf_renderchar(fnt, img, ch, 0+x, 1+y, black);
+        fontdata_ttf_renderchar(fnt, img, ch, 1+x, 0+y, black);
+        sh = 0;
+    }
+
+    /* renderchar */
     if(!aa && (ch >= 32 && ch <= 127)) {
         /* this character is in cache */
         image_t *char_image = f->cached_character[ch-32];

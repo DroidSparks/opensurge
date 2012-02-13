@@ -18,3 +18,4 @@ hidden
 // level list (in order of appearance)
 level           "levels/cutscenes/allegro.lev"
 level           "levels/cutscenes/intro.lev"
+level           "levels/cutscenes/almostmenu.lev"

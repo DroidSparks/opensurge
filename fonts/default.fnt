@@ -39,5 +39,6 @@ font "default_ttf_aa"
         source_file             "ttf/DejaVuSans.ttf"
         size                    13
         antialias
+        shadow
     }
 }

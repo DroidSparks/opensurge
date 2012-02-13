@@ -16,7 +16,15 @@ object ".allegro_startup"
 
     state wait
     {
+        on_button_pressed fire3 stop
+        on_button_pressed fire4 stop
         on_timeout 3.5 fadeout
+    }
+
+    state stop
+    {
+        stop_sample samples/allegro.wav
+        change_state fadeout_fast
     }
 
     state fadeout
@@ -27,9 +35,22 @@ object ".allegro_startup"
         change_state wait2
     }
 
+    state fadeout_fast
+    {
+        let $_fade_in=0
+        let $_fade_duration=0.5
+        create_child .fade_effect
+        change_state wait3
+    }
+
     state wait2
     {
         on_timeout 2 next
+    }
+
+    state wait3
+    {
+        on_timeout 1 next
     }
 
     state next
