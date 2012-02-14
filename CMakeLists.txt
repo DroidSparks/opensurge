@@ -55,6 +55,8 @@ ENDIF(UNIX)
 
 
 
+
+
 # Finding the required libraries:
 
 # Allegro: liballeg
@@ -92,12 +94,7 @@ IF(NOT LJPGALLEG)
   MESSAGE(FATAL_ERROR "Fatal error: libjpgalleg not found! ${RTFM}")
 ENDIF(NOT LJPGALLEG)
 
-# LOGG: liblogg, libogg, libvorbis, libvorbisfile
-FIND_LIBRARY(LLOGG NAMES logg PATH "${CMAKE_LIBRARY_PATH}")
-IF(NOT LLOGG)
-  MESSAGE(FATAL_ERROR "Fatal error: liblogg not found! ${RTFM}")
-ENDIF(NOT LLOGG)
-
+# Ogg/Vorbis: libogg, libvorbis, libvorbisfile
 FIND_LIBRARY(LOGG NAMES ogg PATH "${CMAKE_LIBRARY_PATH}")
 IF(NOT LOGG)
   MESSAGE(FATAL_ERROR "Fatal error: libogg not found! ${RTFM}")
@@ -113,14 +110,19 @@ IF(NOT LVORBISFILE)
   MESSAGE(FATAL_ERROR "Fatal error: libvorbisfile not found! ${RTFM}")
 ENDIF(NOT LVORBISFILE)
 
-# Alfont: libalfont
-FIND_LIBRARY(LALFONT NAMES alfont PATH "${CMAKE_LIBRARY_PATH}")
-IF(NOT LALFONT)
-  MESSAGE(FATAL_ERROR "Fatal error: modified alfont not found! ${RTFM}")
-ENDIF(NOT LALFONT)
+# LOGG: liblogg
+IF(NOT USE_OPENAL)
+  MESSAGE(STATUS "Building using Allegro for audio playback...")
+  FIND_LIBRARY(LLOGG NAMES logg PATH "${CMAKE_LIBRARY_PATH}")
+  IF(NOT LLOGG)
+    MESSAGE(FATAL_ERROR "Fatal error: liblogg not found! ${RTFM}")
+  ENDIF(NOT LLOGG)
+  SET(AUDIO_LIBS logg vorbisfile vorbis ogg)
+ENDIF(NOT USE_OPENAL)
 
 # OpenAL & ALURE
 IF(USE_OPENAL)
+  MESSAGE(STATUS "Building using OpenAL for audio playback...")
   FIND_LIBRARY(LOPENAL NAMES openal OpenAL OpenAL32 al PATH "${CMAKE_LIBRARY_PATH}")
   IF(NOT LOPENAL)
     MESSAGE(FATAL_ERROR "Fatal error: can't find OpenAL! ${RTFM}")
@@ -129,13 +131,35 @@ IF(USE_OPENAL)
   IF(NOT LALURE)
     MESSAGE(FATAL_ERROR "Fatal error: can't find ALURE! ${RTFM}")
   ENDIF(NOT LALURE)
+
+  IF(UNIX)
+    FIND_LIBRARY(LPTHREAD NAMES pthread PATH "${CMAKE_LIBRARY_PATH}")
+    IF(NOT LPTHREAD)
+      MESSAGE(FATAL_ERROR "Fatal error: can't find libpthread! ${RTFM}")
+    ENDIF(NOT LPTHREAD)
+    FIND_LIBRARY(LDL NAMES dl PATH "${CMAKE_LIBRARY_PATH}")
+    IF(NOT LDL)
+      MESSAGE(FATAL_ERROR "Fatal error: can't find libdl! ${RTFM}")
+    ENDIF(NOT LDL)
+  ELSE(UNIX)
+    SET(LPTHREAD "") # TODO?
+    SET(LDL "")
+  ENDIF(UNIX)
+
   SET(DEFS ${DEFS} __USE_OPENAL__ ALURE_STATIC_LIBRARY)
-  SET(AUDIO_LIBS ${LALURE} ${LOPENAL} vorbisfile vorbis ogg stdc++)
-  MESSAGE(STATUS "Building using OpenAL for audio playback...")
-ELSE(USE_OPENAL)
-  SET(AUDIO_LIBS logg vorbisfile vorbis ogg)
-  MESSAGE(STATUS "Building using Allegro for audio playback...")
+  SET(AUDIO_LIBS ${LALURE} ${LOPENAL} vorbisfile vorbis ogg stdc++ ${LPTHREAD} ${LDL})
 ENDIF(USE_OPENAL)
+
+# Alfont: libalfont
+FIND_LIBRARY(LALFONT NAMES alfont PATH "${CMAKE_LIBRARY_PATH}")
+IF(NOT LALFONT)
+  MESSAGE(FATAL_ERROR "Fatal error: modified alfont not found! ${RTFM}")
+ENDIF(NOT LALFONT)
+
+
+
+
+
 
 
 # RC compiler

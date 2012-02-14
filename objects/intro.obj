@@ -619,7 +619,7 @@ object ".intro_thunder"
     state main {
         hide
         set_absolute_position 0 0
-        on_timeout 13.7 go
+        on_timeout 13.6 go
     }
 
     state go {

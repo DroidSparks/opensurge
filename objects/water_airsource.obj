@@ -108,6 +108,7 @@ object ".water.air_bubble[breathable]"
 
     state "breathe"
     {
+        on_water_shield go // why should you use this bubble if you have a water shield?
         if "$t<2" go
         player_breathe
         change_state end
