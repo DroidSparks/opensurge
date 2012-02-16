@@ -40,6 +40,7 @@ void video_init(const char *window_title, int resolution, int smooth, int fullsc
 void video_release();
 void video_render();
 void video_showmessage(const char *fmt, ...);
+int video_get_desktop_color_depth();
 int video_get_color_depth();
 int video_is_window_active();
 uint32 video_get_maskcolor();

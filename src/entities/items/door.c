@@ -106,7 +106,7 @@ void door_update(item_t* item, player_t** team, int team_size, brick_list_t* bri
     if(me->is_closed)
         act->position.y = min(act->position.y + speed*dt, act->spawn_point.y);
     else    
-        act->position.y = max(act->position.y - speed*dt, act->spawn_point.y - actor_image(act)->h * 0.8);
+        act->position.y = max(act->position.y - speed*dt, act->spawn_point.y - image_height(actor_image(act)) * 0.8);
 }
 
 

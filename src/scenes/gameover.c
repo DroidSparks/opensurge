@@ -52,8 +52,8 @@ void gameover_init()
     font_set_position(gameover_fnt[1], v2d_new(384, 112));
     font_set_text(gameover_fnt[1], "OVER");
 
-    gameover_buf = image_create(video_get_backbuffer()->w, video_get_backbuffer()->h);
-    image_blit(video_get_backbuffer(), gameover_buf, 0, 0, 0, 0, gameover_buf->w, gameover_buf->h);
+    gameover_buf = image_create(image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
+    image_blit(video_get_backbuffer(), gameover_buf, 0, 0, 0, 0, image_width(gameover_buf), image_height(gameover_buf));
 
     music_play(music_load("musics/gameover.ogg"), 0);
 }
@@ -100,7 +100,7 @@ void gameover_render()
 {
     v2d_t v = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
 
-    image_blit(gameover_buf, video_get_backbuffer(), 0, 0, 0, 0, gameover_buf->w, gameover_buf->h);
+    image_blit(gameover_buf, video_get_backbuffer(), 0, 0, 0, 0, image_width(gameover_buf), image_height(gameover_buf));
     font_render(gameover_fnt[0], v);
     font_render(gameover_fnt[1], v);
 }

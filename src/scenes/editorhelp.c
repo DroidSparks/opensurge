@@ -84,7 +84,7 @@ void editorhelp_init()
     font_set_position(quitlabel, v2d_new(20, VIDEO_SCREEN_H - 28));
     font_set_text(quitlabel, "Press <color=ffff00>ESC</color> to go back");
 
-    buf = image_create(video_get_backbuffer()->w, video_get_backbuffer()->h);
+    buf = image_create(image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
     image_clear(buf, image_rgb(0,0,0));
     image_draw_trans(video_get_backbuffer(), buf, 0, 0, 0.15f, IF_NONE);
 
@@ -117,7 +117,7 @@ void editorhelp_render()
 {
     v2d_t v = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
 
-    image_blit(buf, video_get_backbuffer(), 0, 0, 0, 0, buf->w, buf->h);
+    image_blit(buf, video_get_backbuffer(), 0, 0, 0, 0, image_width(buf), image_height(buf));
     font_render(title, v);
     font_render(label, v);
     font_render(quitlabel, v);

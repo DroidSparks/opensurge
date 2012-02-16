@@ -68,8 +68,8 @@ static float f_spawnpoint_x() { return target->actor->spawn_point.x; }
 static float f_spawnpoint_y() { return target->actor->spawn_point.y; }
 static float f_screen_width() { return (float)VIDEO_SCREEN_W; }
 static float f_screen_height() { return (float)VIDEO_SCREEN_H; }
-static float f_width() { return actor_image(target->actor)->w; }
-static float f_height() { return actor_image(target->actor)->h; }
+static float f_width() { return image_width(actor_image(target->actor)); }
+static float f_height() { return image_height(actor_image(target->actor)); }
 static float f_direction() { return target->actor->mirror & IF_HFLIP ? -1.0f : 1.0f; }
 static float f_player_xpos() { return PLAYER->actor->position.x; }
 static float f_player_ypos() { return PLAYER->actor->position.y; }

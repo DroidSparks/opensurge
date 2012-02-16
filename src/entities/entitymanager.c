@@ -286,12 +286,12 @@ int get_brick_ypos(const brick_t *brick)
 
 int get_brick_width(const brick_t *brick)
 {
-    return brick->brick_ref->image->w;
+    return image_width(brick->brick_ref->image);
 }
 
 int get_brick_height(const brick_t *brick)
 {
-    return brick->brick_ref->image->h;
+    return image_height(brick->brick_ref->image);
 }
 
 int get_item_xpos(const item_t *item)
@@ -306,12 +306,12 @@ int get_item_ypos(const item_t *item)
 
 int get_item_width(const item_t *item)
 {
-    return actor_image(item->actor)->w;
+    return image_width(actor_image(item->actor));
 }
 
 int get_item_height(const item_t *item)
 {
-    return actor_image(item->actor)->h;
+    return image_height(actor_image(item->actor));
 }
 
 int get_object_xpos(const enemy_t *object)
@@ -326,12 +326,12 @@ int get_object_ypos(const enemy_t *object)
 
 int get_object_width(const enemy_t *object)
 {
-    return actor_image(object->actor)->w;
+    return image_width(actor_image(object->actor));
 }
 
 int get_object_height(const enemy_t *object)
 {
-    return actor_image(object->actor)->h;
+    return image_height(actor_image(object->actor));
 }
 
 int retrieve_bricks(brick_t *brick, void *ref_to_brick_list)

@@ -114,7 +114,7 @@ int obstacle_sensor_collision(const obstacle_t *obstacle, int x1, int y1, int x2
             for(x=x1; x<=x2; x++) {
                 px = x - o_x1;
                 py = y - o_y1;
-                if(px >= 0 && px < img->w && py >= 0 && py < img->h) {
+                if(px >= 0 && px < image_width(img) && py >= 0 && py < image_height(img)) {
                     if(image_getpixel(img, px, py) != mask)
                         return TRUE;
                 }

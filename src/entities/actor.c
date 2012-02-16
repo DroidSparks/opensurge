@@ -135,8 +135,8 @@ void actor_render_repeat_xy(actor_t *act, v2d_t camera_position, int repeat_x, i
     image_t *img = actor_image(act);
     v2d_t final_pos;
 
-    final_pos.x = (int)act->position.x%(repeat_x?img->w:INT_MAX) - act->hot_spot.x-(camera_position.x-VIDEO_SCREEN_W/2) - (repeat_x?img->w:0);
-    final_pos.y = (int)act->position.y%(repeat_y?img->h:INT_MAX) - act->hot_spot.y-(camera_position.y-VIDEO_SCREEN_H/2) - (repeat_y?img->h:0);
+    final_pos.x = (int)act->position.x%(repeat_x?image_width(img):INT_MAX) - act->hot_spot.x-(camera_position.x-VIDEO_SCREEN_W/2) - (repeat_x?image_width(img):0);
+    final_pos.y = (int)act->position.y%(repeat_y?image_height(img):INT_MAX) - act->hot_spot.y-(camera_position.y-VIDEO_SCREEN_H/2) - (repeat_y?image_height(img):0);
 
     if(act->visible && act->animation) {
         /* update animation */
@@ -149,11 +149,11 @@ void actor_render_repeat_xy(actor_t *act, v2d_t camera_position, int repeat_x, i
         }
 
         /* render */
-        w = repeat_x ? (VIDEO_SCREEN_W/img->w + 3) : 1;
-        h = repeat_y ? (VIDEO_SCREEN_H/img->h + 3) : 1;
+        w = repeat_x ? (VIDEO_SCREEN_W/image_width(img) + 3) : 1;
+        h = repeat_y ? (VIDEO_SCREEN_H/image_height(img) + 3) : 1;
         for(i=0; i<w; i++) {
             for(j=0; j<h; j++)
-                image_draw(img, video_get_backbuffer(), (int)final_pos.x + i*img->w, (int)final_pos.y + j*img->h, act->mirror);
+                image_draw(img, video_get_backbuffer(), (int)final_pos.x + i*image_width(img), (int)final_pos.y + j*image_height(img), act->mirror);
         }
     }
 }
@@ -168,13 +168,13 @@ int actor_collision(const actor_t *a, const actor_t *b)
     int j, right = 0;
     v2d_t corner[2][4];
     corner[0][0] = v2d_subtract(a->position, v2d_rotate(a->hot_spot, -a->angle)); /* a's topleft */
-    corner[0][1] = v2d_add( corner[0][0] , v2d_rotate(v2d_new(actor_image(a)->w, 0), -a->angle) ); /* a's topright */
-    corner[0][2] = v2d_add( corner[0][0] , v2d_rotate(v2d_new(actor_image(a)->w, actor_image(a)->h), -a->angle) ); /* a's bottomright */
-    corner[0][3] = v2d_add( corner[0][0] , v2d_rotate(v2d_new(0, actor_image(a)->h), -a->angle) ); /* a's bottomleft */
+    corner[0][1] = v2d_add( corner[0][0] , v2d_rotate(v2d_new(image_width(actor_image(a)), 0), -a->angle) ); /* a's topright */
+    corner[0][2] = v2d_add( corner[0][0] , v2d_rotate(v2d_new(image_width(actor_image(a)), image_height(actor_image(a))), -a->angle) ); /* a's bottomright */
+    corner[0][3] = v2d_add( corner[0][0] , v2d_rotate(v2d_new(0, image_height(actor_image(a))), -a->angle) ); /* a's bottomleft */
     corner[1][0] = v2d_subtract(b->position, v2d_rotate(b->hot_spot, -b->angle)); /* b's topleft */
-    corner[1][1] = v2d_add( corner[1][0] , v2d_rotate(v2d_new(actor_image(b)->w, 0), -b->angle) ); /* b's topright */
-    corner[1][2] = v2d_add( corner[1][0] , v2d_rotate(v2d_new(actor_image(b)->w, actor_image(b)->h), -b->angle) ); /* b's bottomright */
-    corner[1][3] = v2d_add( corner[1][0] , v2d_rotate(v2d_new(0, actor_image(b)->h), -b->angle) ); /* b's bottomleft */
+    corner[1][1] = v2d_add( corner[1][0] , v2d_rotate(v2d_new(image_width(actor_image(b)), 0), -b->angle) ); /* b's topright */
+    corner[1][2] = v2d_add( corner[1][0] , v2d_rotate(v2d_new(image_width(actor_image(b)), image_height(actor_image(b))), -b->angle) ); /* b's bottomright */
+    corner[1][3] = v2d_add( corner[1][0] , v2d_rotate(v2d_new(0, image_height(actor_image(b))), -b->angle) ); /* b's bottomleft */
     right += fabs(a->angle)<EPSILON||fabs(a->angle-PI/2)<EPSILON||fabs(a->angle-PI)<EPSILON||fabs(a->angle-3*PI/2)<EPSILON;
     right += fabs(b->angle)<EPSILON||fabs(b->angle-PI/2)<EPSILON||fabs(b->angle-PI)<EPSILON||fabs(b->angle-3*PI/2)<EPSILON;
 
@@ -192,7 +192,7 @@ int actor_collision(const actor_t *a, const actor_t *b)
     }
     else {
         v2d_t center[2];
-        float radius[2] = { max(actor_image(a)->w,actor_image(a)->h) , max(actor_image(b)->w,actor_image(b)->h) };
+        float radius[2] = { max(image_width(actor_image(a)),image_height(actor_image(a))) , max(image_width(actor_image(b)),image_height(actor_image(b))) };
         for(j=0; j<2; j++)
             center[j] = v2d_multiply(v2d_add(corner[j][0], corner[j][2]), 0.5);
         return circular_collision(center[0], radius[0], center[1], radius[1]);
@@ -303,9 +303,9 @@ int actor_pixelperfect_collision(const actor_t *a, const actor_t *b)
 int actor_brick_collision(actor_t *act, brick_t *brk)
 {
     v2d_t topleft = v2d_subtract(act->position, v2d_rotate(act->hot_spot, act->angle));
-    v2d_t bottomright = v2d_add( topleft , v2d_rotate(v2d_new(actor_image(act)->w, actor_image(act)->h), act->angle) );
+    v2d_t bottomright = v2d_add( topleft , v2d_rotate(v2d_new(image_width(actor_image(act)), image_height(actor_image(act))), act->angle) );
     float a[4] = { topleft.x , topleft.y , bottomright.x , bottomright.y };
-    float b[4] = { (float)brk->x , (float)brk->y , (float)(brk->x+brk->brick_ref->image->w) , (float)(brk->y+brk->brick_ref->image->h) };
+    float b[4] = { (float)brk->x , (float)brk->y , (float)(brk->x+image_width(brk->brick_ref->image)) , (float)(brk->y+image_height(brk->brick_ref->image)) };
 
     return bounding_box(a,b);
 }
@@ -385,8 +385,8 @@ image_t* actor_image(const actor_t *act)
 void actor_sensors(actor_t *act, brick_list_t *brick_list, brick_t **up, brick_t **upright, brick_t **right, brick_t **downright, brick_t **down, brick_t **downleft, brick_t **left, brick_t **upleft)
 {
     float diff = MAGIC_DIFF;
-    int frame_width = actor_image(act)->w;
-    int frame_height = actor_image(act)->h;
+    int frame_width = image_width(actor_image(act));
+    int frame_height = image_height(actor_image(act));
 
     v2d_t feet       = v2d_add(v2d_subtract(act->position, act->hot_spot), v2d_new(frame_width/2, frame_height));
     v2d_t vup        = v2d_add ( feet , v2d_rotate( v2d_new(0, -frame_height+diff), -act->angle) );
@@ -437,7 +437,7 @@ void actor_sensors_ex(actor_t *act, v2d_t vup, v2d_t vupright, v2d_t vright, v2d
 
     /* bricks: down, downleft, downright */
     if(down && *down && (*down)->brick_ref->property == BRK_CLOUD) {
-        float offset = min(15, (*down)->brick_ref->image->h/3);
+        float offset = min(15, image_height((*down)->brick_ref->image)/3);
         if(!(act->speed.y >= 0 && act->position.y < ((*down)->y+diff+1)+offset)) {
             /* forget bricks */
             if(downleft && *downleft == *down)
@@ -512,8 +512,8 @@ static brick_t* brick_at(const brick_list_t *list, v2d_t spot)
         /* here's something I like... */
         br[0] = (float)p->data->x;
         br[1] = (float)p->data->y;
-        br[2] = (float)(p->data->x + p->data->brick_ref->image->w);
-        br[3] = (float)(p->data->y + p->data->brick_ref->image->h);
+        br[2] = (float)(p->data->x + image_width(p->data->brick_ref->image));
+        br[3] = (float)(p->data->y + image_height(p->data->brick_ref->image));
         offset = v2d_subtract(spot, v2d_new(p->data->x, p->data->y));
 
         if((spot.x >= br[0] && spot.y >= br[1] && spot.x < br[2] && spot.y < br[3]) && image_getpixel(brick_image(p->data), (int)offset.x, (int)offset.y) != video_get_maskcolor()) {
@@ -567,8 +567,8 @@ void calculate_rotated_boundingbox(const actor_t *act, v2d_t spot[4])
     v2d_t pos;
 
     angle = -act->angle;
-    w = actor_image(act)->w;
-    h = actor_image(act)->h;
+    w = image_width(actor_image(act));
+    h = image_height(actor_image(act));
     hs = act->hot_spot;
     pos = act->position;
 

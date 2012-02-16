@@ -253,7 +253,7 @@ void questselect_render()
     background_render_fg(bgtheme, cam);
 
     thumbnail = quest_data[option]->image;
-    image_blit(thumbnail, video_get_backbuffer(), 0, 0, VIDEO_SCREEN_W - thumbnail->w - 10, 60, thumbnail->w, thumbnail->h); 
+    image_blit(thumbnail, video_get_backbuffer(), 0, 0, VIDEO_SCREEN_W - image_width(thumbnail) - 10, 60, image_width(thumbnail), image_height(thumbnail)); 
 
     font_render(title, cam);
     font_render(msg, cam);

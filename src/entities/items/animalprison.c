@@ -247,8 +247,8 @@ void state_exploding_handle(state_t *state, item_t *item, player_t **team, int t
     /* keep exploding for a while... */
     if(s->explode_timer >= 0.1f) {
         v2d_t pos = v2d_new(
-            act->position.x - act->hot_spot.x + random(actor_image(act)->w),
-            act->position.y - act->hot_spot.y + random(actor_image(act)->h/2)
+            act->position.x - act->hot_spot.x + random(image_width(actor_image(act))),
+            act->position.y - act->hot_spot.y + random(image_height(actor_image(act))/2)
         );
         level_create_item(IT_EXPLOSION, pos);
         sound_play( soundfactory_get("explode") );
@@ -269,8 +269,8 @@ void state_releasing_handle(state_t *state, item_t *item, player_t **team, int t
     /* release the animals! */
     for(i=0; i<20; i++) {
         v2d_t pos = v2d_new(
-            act->position.x - act->hot_spot.x + random(actor_image(act)->w),
-            act->position.y - act->hot_spot.y + random(actor_image(act)->h/2)
+            act->position.x - act->hot_spot.x + random(image_width(actor_image(act))),
+            act->position.y - act->hot_spot.y + random(image_height(actor_image(act))/2)
         );
         level_create_animal(pos);
     }
@@ -298,13 +298,13 @@ int animalprison_got_hit_by_player(item_t *item, player_t *player)
 
     a[0] = pl->position.x - pl->hot_spot.x;
     a[1] = pl->position.y - pl->hot_spot.y;
-    a[2] = a[0] + actor_image(pl)->w;
-    a[3] = a[1] + actor_image(pl)->h;
+    a[2] = a[0] + image_width(actor_image(pl));
+    a[3] = a[1] + image_height(actor_image(pl));
 
     b[0] = act->position.x - act->hot_spot.x + 5;
     b[1] = act->position.y - act->hot_spot.y;
-    b[2] = b[0] + actor_image(act)->w - 10;
-    b[3] = b[1] + actor_image(act)->h/2;
+    b[2] = b[0] + image_width(actor_image(act)) - 10;
+    b[3] = b[1] + image_height(actor_image(act))/2;
 
     return (player_is_attacking(player) && bounding_box(a,b) && actor_pixelperfect_collision(act,pl));
 }

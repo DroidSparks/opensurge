@@ -34,4 +34,8 @@ float timer_get_delta();
 uint32 timer_get_ticks();
 int timer_get_fps();
 
+/* optimize cpu usage? */
+int timer_is_cpu_usage_optimized();
+void timer_optimize_cpu_usage(int optimize);
+
 #endif

@@ -34,6 +34,12 @@
 #include "resourcemanager.h"
 #include "util.h"
 
+/* image structure */
+struct image_t {
+    BITMAP *data;
+    int w, h;
+};
+
 /* useful stuff */
 #define IS_PNG(path) (str_icmp((path)+strlen(path)-4, ".png") == 0)
 typedef int (*fast_getpixel_funptr)(BITMAP*,int,int);
@@ -200,6 +206,26 @@ void image_destroy(image_t *img)
     }
 
     free(img);
+}
+
+
+/*
+ * image_width()
+ * The width of the image
+ */
+int image_width(const image_t *img)
+{
+    return img->w;
+}
+
+
+/*
+ * image_height()
+ * The height of the image
+ */
+int image_height(const image_t *img)
+{
+    return img->h;
 }
 
 

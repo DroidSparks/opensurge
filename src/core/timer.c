@@ -202,6 +202,23 @@ int timer_get_fps()
     return fps;
 }
 
+/*
+ * timer_is_cpu_usage_optimized()
+ * Is the CPU usage optimized?
+ */
+int timer_is_cpu_usage_optimized()
+{
+    return yield_cpu;
+}
+
+/*
+ * timer_optimize_cpu_usage()
+ * Optimize the CPU usage?
+ */
+void timer_optimize_cpu_usage(int optimize)
+{
+    yield_cpu = optimize;
+}
 
 
 /* internal methods */

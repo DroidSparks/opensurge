@@ -193,11 +193,11 @@ int floor_strategy(item_t *spikes, player_t *player)
 
     b[0] = act->position.x - act->hot_spot.x + 5;
     b[1] = act->position.y - act->hot_spot.y - 5;
-    b[2] = b[0] + actor_image(act)->w - 10;
+    b[2] = b[0] + image_width(actor_image(act)) - 10;
     b[3] = b[1] + 10;
 
-    feet = player->actor->position.y - player->actor->hot_spot.y + actor_image(player->actor)->h;
-    return hittest(player, b) && feet < (act->position.y - act->hot_spot.y + actor_image(act)->h/2);
+    feet = player->actor->position.y - player->actor->hot_spot.y + image_height(actor_image(player->actor));
+    return hittest(player, b) && feet < (act->position.y - act->hot_spot.y + image_height(actor_image(act))/2);
 }
 
 int ceiling_strategy(item_t *spikes, player_t *player)
@@ -206,8 +206,8 @@ int ceiling_strategy(item_t *spikes, player_t *player)
     actor_t *act = spikes->actor;
 
     b[0] = act->position.x - act->hot_spot.x + 5;
-    b[1] = act->position.y - act->hot_spot.y + actor_image(act)->h - 5;
-    b[2] = b[0] + actor_image(act)->w - 10;
+    b[1] = act->position.y - act->hot_spot.y + image_height(actor_image(act)) - 5;
+    b[2] = b[0] + image_width(actor_image(act)) - 10;
     b[3] = b[1] + 10;
 
     return hittest(player, b);
@@ -218,10 +218,10 @@ int leftwall_strategy(item_t *spikes, player_t *player)
     float b[4];
     actor_t *act = spikes->actor;
 
-    b[0] = act->position.x - act->hot_spot.x + actor_image(act)->w - 5;
+    b[0] = act->position.x - act->hot_spot.x + image_width(actor_image(act)) - 5;
     b[1] = act->position.y - act->hot_spot.y + 5;
     b[2] = b[0] + 10;
-    b[3] = b[1] + actor_image(act)->h - 10;
+    b[3] = b[1] + image_height(actor_image(act)) - 10;
 
     return hittest(player, b);
 }
@@ -234,7 +234,7 @@ int rightwall_strategy(item_t *spikes, player_t *player)
     b[0] = act->position.x - act->hot_spot.x - 5;
     b[1] = act->position.y - act->hot_spot.y + 5;
     b[2] = b[0] + 10;
-    b[3] = b[1] + actor_image(act)->h - 10;
+    b[3] = b[1] + image_height(actor_image(act)) - 10;
 
     return hittest(player, b);
 }
@@ -250,8 +250,8 @@ int hittest(player_t *player, float rect[4])
 
     a[0] = pl->position.x - pl->hot_spot.x;
     a[1] = pl->position.y - pl->hot_spot.y;
-    a[2] = a[0] + actor_image(pl)->w;
-    a[3] = a[1] + actor_image(pl)->h;
+    a[2] = a[0] + image_width(actor_image(pl));
+    a[3] = a[1] + image_height(actor_image(pl));
 
     return bounding_box(a, rect);
 }

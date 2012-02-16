@@ -107,14 +107,14 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
     /* swap direction when a wall is touched */
     if(right != NULL) {
         if(me->direction > 0.0f) {
-            act->position.x = act->hot_spot.x - actor_image(act)->w + right->x;
+            act->position.x = act->hot_spot.x - image_width(actor_image(act)) + right->x;
             me->direction = -1.0f;
         }
     }
 
     if(left != NULL) {
         if(me->direction < 0.0f) {
-            act->position.x = act->hot_spot.x + left->x + brick_image(left)->w;
+            act->position.x = act->hot_spot.x + left->x + image_width(brick_image(left));
             me->direction = 1.0f;
         }
     }

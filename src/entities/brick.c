@@ -182,15 +182,15 @@ void brick_update(brick_t *brk, player_t** team, int team_size, brick_list_t *br
     switch(brk->brick_ref->behavior) {
         /* breakable bricks */
         case BRB_BREAKABLE: {
-            int brkw = brk->brick_ref->image->w;
-            int brkh = brk->brick_ref->image->h;
+            int brkw = image_width(brk->brick_ref->image);
+            int brkh = image_height(brk->brick_ref->image);
             float a[4], b[4] = { brk->x, brk->y, brk->x + brkw, brk->y + brkh };
 
             for(i=0; i<team_size; i++) {
                 a[0] = team[i]->actor->position.x - team[i]->actor->hot_spot.x - 3;
                 a[1] = team[i]->actor->position.y - team[i]->actor->hot_spot.y - 3;
-                a[2] = a[0] + actor_image(team[i]->actor)->w + 6;
-                a[3] = a[1] + actor_image(team[i]->actor)->h + 6;
+                a[2] = a[0] + image_width(actor_image(team[i]->actor)) + 6;
+                a[3] = a[1] + image_height(actor_image(team[i]->actor)) + 6;
 
                 if((team[i]->attacking || player_is_rolling(team[i])) && bounding_box(a,b)) {
                     /* particles */
@@ -222,16 +222,16 @@ void brick_update(brick_t *brk, player_t** team, int team_size, brick_list_t *br
         /* falling bricks */
         case BRB_FALL: {
             int i;
-            int brkw = brk->brick_ref->image->w;
-            int brkh = brk->brick_ref->image->h;
+            int brkw = image_width(brk->brick_ref->image);
+            int brkh = image_height(brk->brick_ref->image);
             float a[4], b[4] = { brk->x, brk->y, brk->x + brkw, brk->y + brkh/2 };
             int bb = FALSE;
 
             for(i=0; i<team_size; i++) {
                 a[0] = team[i]->actor->position.x - team[i]->actor->hot_spot.x - 3;
-                a[1] = team[i]->actor->position.y - team[i]->actor->hot_spot.y + actor_image(team[i]->actor)->h/2;
-                a[2] = a[0] + actor_image(team[i]->actor)->w + 6;
-                a[3] = a[1] + actor_image(team[i]->actor)->h/2 + 6;
+                a[1] = team[i]->actor->position.y - team[i]->actor->hot_spot.y + image_height(actor_image(team[i]->actor))/2;
+                a[2] = a[0] + image_width(actor_image(team[i]->actor)) + 6;
+                a[3] = a[1] + image_height(actor_image(team[i]->actor))/2 + 6;
                 bb = bb || bounding_box(a, b);
             }
             
@@ -248,11 +248,11 @@ void brick_update(brick_t *brk, player_t** team, int team_size, brick_list_t *br
                 bh = max(brk->brick_ref->behavior_arg[1], 1);
                 for(bi=0; bi<bw; bi++) {
                     for(bj=0; bj<bh; bj++) {
-                        v2d_t piecepos = v2d_new(brk->x + (bi*brkimg->w)/bw, brk->y + (bj*brkimg->h)/bh);
+                        v2d_t piecepos = v2d_new(brk->x + (bi*image_width(brkimg))/bw, brk->y + (bj*image_height(brkimg))/bh);
                         v2d_t piecespeed = v2d_new(0, 20+bj*20+ (right_oriented?bi:bw-bi)*20);
-                        image_t *piece = image_create(brkimg->w/bw, brkimg->h/bh);
+                        image_t *piece = image_create(image_width(brkimg)/bw, image_height(brkimg)/bh);
 
-                        image_blit(brkimg, piece, (bi*brkimg->w)/bw, (bj*brkimg->h)/bh, 0, 0, piece->w, piece->h);
+                        image_blit(brkimg, piece, (bi*image_width(brkimg))/bw, (bj*image_height(brkimg))/bh, 0, 0, image_width(piece), image_height(piece));
                         level_create_particle(piece, piecepos, piecespeed, FALSE);
                     }
                 }
@@ -266,8 +266,8 @@ void brick_update(brick_t *brk, player_t** team, int team_size, brick_list_t *br
 
         /* moveable bricks */
         case BRB_CIRCULAR: {
-            int brkw = brk->brick_ref->image->w;
-            int brkh = brk->brick_ref->image->h;
+            int brkw = image_width(brk->brick_ref->image);
+            int brkh = image_height(brk->brick_ref->image);
             float rx, ry, sx, sy, ph, t;
             float a[4], b[4];
             int i;
@@ -288,8 +288,8 @@ void brick_update(brick_t *brk, player_t** team, int team_size, brick_list_t *br
             for(i=0; i<team_size; i++) {
                 a[0] = team[i]->actor->position.x - team[i]->actor->hot_spot.x - 3;
                 a[1] = team[i]->actor->position.y - team[i]->actor->hot_spot.y - 3;
-                a[2] = a[0] + actor_image(team[i]->actor)->w + 6;
-                a[3] = a[1] + actor_image(team[i]->actor)->h + 6;
+                a[2] = a[0] + image_width(actor_image(team[i]->actor)) + 6;
+                a[3] = a[1] + image_height(actor_image(team[i]->actor)) + 6;
 
                 b[0] = brk->x;
                 b[1] = brk->y;
@@ -346,8 +346,8 @@ void brick_render_path(const brick_t *brk, v2d_t camera_position)
 {
     float oldx = 0.0f, oldy = 0.0f, x = 0.0f, y = 0.0f, t = 0.0f;
     float rx, ry, sx, sy, ph, off;
-    int w = brick_image(brk)->w;
-    int h = brick_image(brk)->h;
+    int w = image_width(brick_image(brk));
+    int h = image_height(brick_image(brk));
     v2d_t topleft = v2d_subtract(camera_position, v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2));
 
     switch(brk->brick_ref->behavior) {

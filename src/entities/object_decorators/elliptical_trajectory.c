@@ -154,22 +154,22 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
     /* I don't want to get stuck into walls */
     if(right != NULL) {
         if(act->position.x > old_position.x)
-            act->position.x = act->hot_spot.x - actor_image(act)->w + right->x;
+            act->position.x = act->hot_spot.x - image_width(actor_image(act)) + right->x;
     }
 
     if(left != NULL) {
         if(act->position.x < old_position.x)
-            act->position.x = act->hot_spot.x + left->x + brick_image(left)->w;
+            act->position.x = act->hot_spot.x + left->x + image_width(brick_image(left));
     }
 
     if(down != NULL) {
         if(act->position.y > old_position.y)
-            act->position.y = act->hot_spot.y - actor_image(act)->h + down->y;
+            act->position.y = act->hot_spot.y - image_height(actor_image(act)) + down->y;
     }
 
     if(up != NULL) {
         if(act->position.y < old_position.y)
-            act->position.y = act->hot_spot.y + up->y + brick_image(up)->h;
+            act->position.y = act->hot_spot.y + up->y + image_height(brick_image(up));
     }
 
     /* decorator pattern */

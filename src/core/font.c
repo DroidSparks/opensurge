@@ -34,6 +34,10 @@
 #include "hashtable.h"
 #include "nanoparser/nanoparser.h"
 
+/* private stuff */
+#define IMAGE2BITMAP(img)       (*((BITMAP**)(img)))   /* whoooa, this is crazy stuff */
+
+
 /* callback table: used for variable/text interpolation */
 typedef const char* (*fontcallback_t)();
 HASHTABLE_GENERATE_CODE(fontcallback_t)
@@ -948,8 +952,8 @@ void fontdata_bmp_renderchar(fontdata_t *fnt, image_t *img, int ch, int x, int y
             uint32 px, mask = video_get_maskcolor();
 
             image_color2rgb(color, &cr, &cg, &cb);
-            for(l=0; l<char_image->h; l++) {
-                for(c=0; c<char_image->w; c++) {
+            for(l=0; l<image_height(char_image); l++) {
+                for(c=0; c<image_width(char_image); c++) {
                     px = image_getpixel(char_image, c, l);
                     if(px != mask) {
                         image_color2rgb(px, &r, &g, &b);
@@ -1026,7 +1030,7 @@ fontdata_t* fontdata_ttf_new(const char *source_file, int size, int antialias, i
                 h = alfont_text_height(f->ttf);
                 f->cached_character[ch-32] = image_create(w, h);
                 image_clear(f->cached_character[ch-32], video_get_maskcolor());
-                alfont_textout_ex(f->cached_character[ch-32]->data, f->ttf, buf, 0, 0, image_rgb(255,255,255), -1);
+                alfont_textout_ex(IMAGE2BITMAP(f->cached_character[ch-32]), f->ttf, buf, 0, 0, image_rgb(255,255,255), -1);
             }
         }
     }
@@ -1062,8 +1066,8 @@ void fontdata_ttf_renderchar(fontdata_t *fnt, image_t *img, int ch, int x, int y
             uint32 px, mask = video_get_maskcolor();
 
             image_color2rgb(color, &cr, &cg, &cb);
-            for(l=0; l<char_image->h; l++) {
-                for(c=0; c<char_image->w; c++) {
+            for(l=0; l<image_height(char_image); l++) {
+                for(c=0; c<image_width(char_image); c++) {
                     px = image_getpixel(char_image, c, l);
                     if(px != mask) {
                         image_color2rgb(px, &r, &g, &b);
@@ -1080,7 +1084,7 @@ void fontdata_ttf_renderchar(fontdata_t *fnt, image_t *img, int ch, int x, int y
         /* this character is not in cache */
         char buf[16];
         uszprintf(buf, sizeof(buf), "%lc", ch);
-        (aa ? alfont_textout_aa_ex : alfont_textout_ex)(img->data, f->ttf, buf, x, y, (int)color, -1);
+        (aa ? alfont_textout_aa_ex : alfont_textout_ex)(IMAGE2BITMAP(img), f->ttf, buf, x, y, (int)color, -1);
     }
 }
 
@@ -1116,8 +1120,8 @@ v2d_t fontdata_ttf_textsize(fontdata_t *fnt, const char *string)
     for(p=s; *p; p++) {
         if(!aa && (*p >= 32/* && *p <= 127*/)) {
             image_t *char_image = f->cached_character[(int)(*p)-32];
-            v.x += char_image->w;
-            v.y = max(v.y, char_image->h);
+            v.x += image_width(char_image);
+            v.y = max(v.y, image_height(char_image));
         }
         else {
             v = v2d_new(alfont_text_length(f->ttf, s), alfont_text_height(f->ttf));

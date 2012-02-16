@@ -126,7 +126,7 @@ void intro_update()
  */
 void intro_render()
 {
-    image_blit(bg, video_get_backbuffer(), 0, 0, 0, 0, bg->w, bg->h);
+    image_blit(bg, video_get_backbuffer(), 0, 0, 0, 0, image_width(bg), image_height(bg));
 }
 
 
@@ -154,7 +154,7 @@ image_t* create_background()
     font_set_text(fnt, "%s", text);
     font_set_position(fnt, v2d_new(5,5));
     font_render(fnt, camera);
-    image_blit(video_get_backbuffer(), img, 0, 0, 0, 0, video_get_backbuffer()->w, video_get_backbuffer()->h);
+    image_blit(video_get_backbuffer(), img, 0, 0, 0, 0, image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
 
     font_destroy(fnt);
     return img;

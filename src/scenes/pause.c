@@ -48,11 +48,11 @@ static float pause_timer;
 void pause_init()
 {
     pause_input = input_create_user(NULL);
-    pause_buf = image_create(video_get_backbuffer()->w, video_get_backbuffer()->h);
+    pause_buf = image_create(image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
     pause_ready = FALSE;
     pause_quit = FALSE;
     pause_timer = 0;
-    image_blit(video_get_backbuffer(), pause_buf, 0, 0, 0, 0, pause_buf->w, pause_buf->h);
+    image_blit(video_get_backbuffer(), pause_buf, 0, 0, 0, 0, image_width(pause_buf), image_height(pause_buf));
 
     music_pause();
 }
@@ -126,9 +126,9 @@ void pause_render()
 {
     image_t *p = sprite_get_image(sprite_get_animation("SD_PAUSE", 0), 0);
     float scale = 1+0.5*fabs(cos(PI/2*pause_timer));
-    v2d_t pos = v2d_new((VIDEO_SCREEN_W-p->w)/2 - (scale-1)*p->w/2, (VIDEO_SCREEN_H-p->h)/2 - (scale-1)*p->h/2);
+    v2d_t pos = v2d_new((VIDEO_SCREEN_W-image_width(p))/2 - (scale-1)*image_width(p)/2, (VIDEO_SCREEN_H-image_height(p))/2 - (scale-1)*image_height(p)/2);
 
-    image_blit(pause_buf, video_get_backbuffer(), 0, 0, 0, 0, pause_buf->w, pause_buf->h);
+    image_blit(pause_buf, video_get_backbuffer(), 0, 0, 0, 0, image_width(pause_buf), image_height(pause_buf));
     image_draw_scaled(p, video_get_backbuffer(), (int)pos.x, (int)pos.y, v2d_new(scale,scale), IF_NONE);
 
     if(!pause_quit)

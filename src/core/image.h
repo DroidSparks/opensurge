@@ -26,12 +26,8 @@
 #include "global.h"
 #include "v2d.h"
 
-/* image structure */
+/* opaque image type */
 typedef struct image_t image_t;
-struct image_t {
-    BITMAP *data;
-    int w, h;
-};
 
 /* image flags (bitwise OR) */
 #define IF_NONE                 0
@@ -44,6 +40,10 @@ int image_unref(const char *path); /* use if you want to save memory... */
 image_t *image_create(int width, int height); /* create a memory surface */
 void image_destroy(image_t *img); /* call this after image_create() */
 void image_save(const image_t *img, const char *path);
+
+/* properties */
+int image_width(const image_t *img);
+int image_height(const image_t *img);
 
 /* utilities */
 uint32 image_rgb(uint8 r, uint8 g, uint8 b);

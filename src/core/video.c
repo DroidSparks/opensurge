@@ -35,7 +35,8 @@
 
 
 
-/* private data */
+/* private stuff */
+#define IMAGE2BITMAP(img)       (*((BITMAP**)(img)))   /* whoooa, this is crazy stuff */
 
 
 /* video manager */
@@ -52,7 +53,6 @@ static void filter_blit(image_t *src, image_t *dest, int filter);
 static void window_switch_in();
 static void window_switch_out();
 static int window_active = TRUE;
-static void losangle(image_t *img, int x, int y, int r, int col);
 static void draw_to_screen(image_t *img);
 static void setup_color_depth(int bpp);
 
@@ -175,7 +175,7 @@ void video_changemode(int resolution, int smooth, int fullscreen)
     logfile_message("creating the auxiliary window surface...");
     if(window_surface_half != NULL)
         image_destroy(window_surface_half);
-    window_surface_half = image_create(window_surface->w/2, window_surface->h/2);
+    window_surface_half = image_create(IMAGE2BITMAP(window_surface)->w/2, IMAGE2BITMAP(window_surface)->h/2);
     image_clear(window_surface_half, image_rgb(0,0,0));
 
     /* setting up the window... */
@@ -324,25 +324,12 @@ void video_render()
 
                 drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
                 set_trans_blender(0, 0, 0, n);
-                rectfill(video_get_backbuffer()->data, 0, 0, VIDEO_SCREEN_W, VIDEO_SCREEN_H, fadefx_color);
+                rectfill(IMAGE2BITMAP(video_get_backbuffer()), 0, 0, VIDEO_SCREEN_W, VIDEO_SCREEN_H, fadefx_color);
                 solid_mode();
             }
             else {
                 /* 256-color fade effect */
-                int i, j, x, y, r;
-                float prob;
-
-                prob = fadefx_elapsed_time / fadefx_total_time;
-                prob = (fadefx_type == FADEFX_IN) ? 1.0 - prob : prob;
-
-                for(i=0; i<=20; i++) {
-                    for(j=0; j<=10; j++) {
-                        r = (int)( ((1.0-(float)i/20)/8 + 7*prob/8)*50.0 );
-                        x = (int)((float)i/20 * video_get_backbuffer()->w);
-                        y = (int)((float)j/10 * video_get_backbuffer()->h);
-                        losangle(video_get_backbuffer(), x, y, r, fadefx_color);
-                    }
-                }
+                ;
             }
         }
         else {
@@ -351,7 +338,7 @@ void video_render()
 
             /* fade-out improvements */
             if(fadefx_type == FADEFX_OUT)
-                rectfill(video_get_backbuffer()->data, 0, 0, VIDEO_SCREEN_W, VIDEO_SCREEN_H, fadefx_color);
+                rectfill(IMAGE2BITMAP(video_get_backbuffer()), 0, 0, VIDEO_SCREEN_W, VIDEO_SCREEN_H, fadefx_color);
 
             /* reset the fade effect: a quick hack */
             fadefx_type = FADEFX_NONE;
@@ -364,12 +351,12 @@ void video_render()
 
     /* video message */
     if(timer_get_ticks() < videomsg_endtime)
-        textout_ex(video_get_backbuffer()->data, font, videomsg_data, 0, VIDEO_SCREEN_H-text_height(font), makecol(255,255,255), makecol(0,0,0));
+        textout_ex(IMAGE2BITMAP(video_get_backbuffer()), font, videomsg_data, 0, VIDEO_SCREEN_H-text_height(font), makecol(255,255,255), makecol(0,0,0));
 
 
     /* fps counter */
     if(video_is_fps_visible())
-        textprintf_right_ex(video_get_backbuffer()->data, font, VIDEO_SCREEN_W, 0, makecol(255,255,255), makecol(0,0,0),"FPS:%3d", timer_get_fps());
+        textprintf_right_ex(IMAGE2BITMAP(video_get_backbuffer()), font, VIDEO_SCREEN_W, 0, makecol(255,255,255), makecol(0,0,0),"FPS:%3d", timer_get_fps());
 
 
     /* render */
@@ -399,7 +386,7 @@ void video_render()
         case VIDEORESOLUTION_3X:
         {
             image_t *tmp = window_surface;
-            v2d_t scale = v2d_new((float)tmp->w / (float)video_get_backbuffer()->w, (float)tmp->h / (float)video_get_backbuffer()->h);
+            v2d_t scale = v2d_new((float)IMAGE2BITMAP(tmp)->w / (float)IMAGE2BITMAP(video_get_backbuffer())->w, (float)IMAGE2BITMAP(tmp)->h / (float)IMAGE2BITMAP(video_get_backbuffer())->h);
             image_draw_scaled(video_get_backbuffer(), tmp, 0, 0, scale, IF_NONE);
             draw_to_screen(tmp);
             break;
@@ -503,6 +490,16 @@ int video_get_color_depth()
 
 
 /*
+ * video_get_desktop_color_depth()
+ * Returns the default color depth of the user
+ */
+int video_get_desktop_color_depth()
+{
+    return desktop_color_depth();
+}
+
+
+/*
  * video_is_window_active()
  * Returns TRUE if the game window is active,
  * or FALSE otherwise
@@ -558,7 +555,7 @@ int video_is_fps_visible()
 void video_display_loading_screen()
 {
     image_t *img = image_load(LOADINGSCREEN_FILE);
-    image_blit(img, video_get_backbuffer(), 0, 0, 0, 0, img->w, img->h);
+    image_blit(img, video_get_backbuffer(), 0, 0, 0, 0, IMAGE2BITMAP(img)->w, IMAGE2BITMAP(img)->h);
     image_unref(LOADINGSCREEN_FILE);
 
     video_render();
@@ -590,31 +587,31 @@ const image_t* video_get_window_surface()
  *
  * if (filter == 2xsai) or (filter == superagle):
  * -- we assume that:
- * ---- dest->w = 2 * src->w
- * ---- dest->h = 2 * src->h
+ * ---- IMAGE2BITMAP(dest)->w = 2 * src->w
+ * ---- IMAGE2BITMAP(dest)->h = 2 * src->h
  */
 void filter_blit(image_t *src, image_t *dest, int filter)
 {
     int i, j;
     const int k=2;
 
-    if(src->data == NULL || dest->data == NULL)
+    if(IMAGE2BITMAP(src) == NULL || IMAGE2BITMAP(dest) == NULL)
         return;
 
     switch(filter) {
         case FILTER_2XSAI:
-            Super2xSaI(src->data, dest->data, 0, 0, 0, 0, src->w, src->h);
-            for(i=0; i<dest->h; i++) { /* image fix */
+            Super2xSaI(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, 0, 0, IMAGE2BITMAP(src)->w, IMAGE2BITMAP(src)->h);
+            for(i=0; i<IMAGE2BITMAP(dest)->h; i++) { /* image fix */
                 for(j=0; j<k; j++)
-                    _putpixel(dest->data, j, i, _getpixel(dest->data, k, i));
+                    _putpixel(IMAGE2BITMAP(dest), j, i, _getpixel(IMAGE2BITMAP(dest), k, i));
             }
             break;
 
         case FILTER_SUPEREAGLE:
-            SuperEagle(src->data, dest->data, 0, 0, 0, 0, src->w, src->h);
-            for(i=0; i<dest->h; i++) { /* image fix */
+            SuperEagle(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, 0, 0, IMAGE2BITMAP(src)->w, IMAGE2BITMAP(src)->h);
+            for(i=0; i<IMAGE2BITMAP(dest)->h; i++) { /* image fix */
                 for(j=0; j<k; j++)
-                    _putpixel(dest->data, dest->w-1-j, i, _getpixel(dest->data, dest->w-1-k, i));
+                    _putpixel(IMAGE2BITMAP(dest), IMAGE2BITMAP(dest)->w-1-j, i, _getpixel(IMAGE2BITMAP(dest), IMAGE2BITMAP(dest)->w-1-k, i));
             }
             break;
     }
@@ -625,40 +622,40 @@ void filter_blit(image_t *src, image_t *dest, int filter)
  *
  * src is a memory bitmap
  * dest is a previously created memory bitmap
- * dest->w == 2 * src->w
- * dest->h == 2 * src->h */
+ * IMAGE2BITMAP(dest)->w == 2 * src->w
+ * IMAGE2BITMAP(dest)->h == 2 * src->h */
 void fast2x_blit(image_t *src, image_t *dest)
 {
     int i, j;
 
-    if(src->data == NULL || dest->data == NULL)
+    if(IMAGE2BITMAP(src) == NULL || IMAGE2BITMAP(dest) == NULL)
         return;
 
     switch(video_get_color_depth())
     {
         case 8:
-            for(j=0; j<dest->h; j++) {
-                for(i=0; i<dest->w; i++)
-                    ((uint8*)dest->data->line[j])[i] = ((uint8*)src->data->line[j/2])[i/2];
+            for(j=0; j<IMAGE2BITMAP(dest)->h; j++) {
+                for(i=0; i<IMAGE2BITMAP(dest)->w; i++)
+                    ((uint8*)IMAGE2BITMAP(dest)->line[j])[i] = ((uint8*)IMAGE2BITMAP(src)->line[j/2])[i/2];
             }
             break;
 
         case 16:
-            for(j=0; j<dest->h; j++) {
-                for(i=0; i<dest->w; i++)
-                    ((uint16*)dest->data->line[j])[i] = ((uint16*)src->data->line[j/2])[i/2];
+            for(j=0; j<IMAGE2BITMAP(dest)->h; j++) {
+                for(i=0; i<IMAGE2BITMAP(dest)->w; i++)
+                    ((uint16*)IMAGE2BITMAP(dest)->line[j])[i] = ((uint16*)IMAGE2BITMAP(src)->line[j/2])[i/2];
             }
             break;
 
         case 24:
             /* TODO */
-            stretch_blit(src->data, dest->data, 0, 0, src->w, src->h, 0, 0, dest->w, dest->h);
+            stretch_blit(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, IMAGE2BITMAP(src)->w, IMAGE2BITMAP(src)->h, 0, 0, IMAGE2BITMAP(dest)->w, IMAGE2BITMAP(dest)->h);
             break;
 
         case 32:
-            for(j=0; j<dest->h; j++) {
-                for(i=0; i<dest->w; i++)
-                    ((uint32*)dest->data->line[j])[i] = ((uint32*)src->data->line[j/2])[i/2];
+            for(j=0; j<IMAGE2BITMAP(dest)->h; j++) {
+                for(i=0; i<IMAGE2BITMAP(dest)->w; i++)
+                    ((uint32*)IMAGE2BITMAP(dest)->line[j])[i] = ((uint32*)IMAGE2BITMAP(src)->line[j/2])[i/2];
             }
             break;
 
@@ -671,13 +668,13 @@ void fast2x_blit(image_t *src, image_t *dest)
 /* draws img to the screen */
 void draw_to_screen(image_t *img)
 {
-    if(img->data == NULL) {
+    if(IMAGE2BITMAP(img) == NULL) {
         logfile_message("Can't use video resolution %d", video_get_resolution());
         video_showmessage("Can't use video resolution %d", video_get_resolution());
         video_changemode(VIDEORESOLUTION_2X, video_is_smooth(), video_is_fullscreen());
     }
     else
-        blit(img->data, screen, 0, 0, 0, 0, img->w, img->h);
+        blit(IMAGE2BITMAP(img), screen, 0, 0, 0, 0, IMAGE2BITMAP(img)->w, IMAGE2BITMAP(img)->h);
 }
 
 /* this window is active */
@@ -691,19 +688,6 @@ void window_switch_in()
 void window_switch_out()
 {
     window_active = FALSE;
-}
-
-/* losangle */
-void losangle(image_t *img, int x, int y, int r, int col)
-{
-    int points[] = {
-        x,   y-r,
-        x-r, y,
-        x,   y+r,
-        x+r, y
-    };
-
-    polygon(img->data, 4, points, col);
 }
 
 /* setups the color depth */

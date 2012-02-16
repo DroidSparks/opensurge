@@ -168,8 +168,8 @@ void donators_render()
     background_render_fg(bgtheme, cam);
 
     font_render(text, cam);
-    image_blit(box, video_get_backbuffer(), 0, 0, 0, 0, box->w, box->h);
-    image_blit(box, video_get_backbuffer(), 0, 0, 0, VIDEO_SCREEN_H-20, box->w, box->h);
+    image_blit(box, video_get_backbuffer(), 0, 0, 0, 0, image_width(box), image_height(box));
+    image_blit(box, video_get_backbuffer(), 0, 0, 0, VIDEO_SCREEN_H-20, image_width(box), image_height(box));
     font_render(title, cam);
     font_render(back, cam);
 }

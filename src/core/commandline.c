@@ -51,7 +51,7 @@ commandline_t commandline_parse(int argc, char **argv)
     cmd.video_resolution = preferences_get_videoresolution();
     cmd.smooth_graphics = preferences_get_smooth();
     cmd.fullscreen = preferences_get_fullscreen();
-    cmd.color_depth = max(16, desktop_color_depth());
+    cmd.color_depth = max(16, video_get_desktop_color_depth());
     cmd.show_fps = preferences_get_showfps();
     cmd.custom_level = FALSE;
     str_cpy(cmd.custom_level_path, "", sizeof(cmd.custom_level_path));

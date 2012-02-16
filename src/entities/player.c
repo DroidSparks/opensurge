@@ -204,7 +204,7 @@ void player_update(player_t *player, player_t **team, int team_size, brick_list_
     float dt = timer_get_delta();
 
     /* "gambiarra" */
-    act->hot_spot = v2d_new(actor_image(act)->w/2, actor_image(act)->h-20);
+    act->hot_spot = v2d_new(image_width(actor_image(act))/2, image_height(actor_image(act))-20);
 
     /* physics */
     if(!player->disable_movement) {
@@ -269,8 +269,8 @@ void player_update(player_t *player, player_t **team, int team_size, brick_list_
             starpos.x = 25*cos(invangle[i]*PI/180);
             starpos.y = ((timer_get_ticks()+i*400)%2000)/40;
             /*starpos = v2d_rotate(starpos, act->angle);*/
-            player->invstar[i]->position.x = act->position.x - act->hot_spot.x + actor_image(act)->w/2 + starpos.x;
-            player->invstar[i]->position.y = act->position.y - act->hot_spot.y + actor_image(act)->h - starpos.y + 5;
+            player->invstar[i]->position.x = act->position.x - act->hot_spot.x + image_width(actor_image(act))/2 + starpos.x;
+            player->invstar[i]->position.y = act->position.y - act->hot_spot.y + image_height(actor_image(act)) - starpos.y + 5;
             actor_change_animation_frame(player->invstar[i], random(maxf));
         }
 
@@ -378,7 +378,7 @@ void player_render(player_t *player, v2d_t camera_position)
  */
 void player_bounce(player_t *player, actor_t *hazard)
 {
-    int w = actor_image(hazard)->w/2, h = actor_image(hazard)->h/2;
+    int w = image_width(actor_image(hazard))/2, h = image_height(actor_image(hazard))/2;
     v2d_t hazard_centre = v2d_add(v2d_subtract(hazard->position, hazard->hot_spot), v2d_new(w/2, h/2));
     actor_t *act = player->actor;
 
@@ -406,7 +406,7 @@ void player_bounce(player_t *player, actor_t *hazard)
  */
 void player_hit(player_t *player, actor_t *hazard)
 {
-    int w = actor_image(hazard)->w/2, h = actor_image(hazard)->h/2;
+    int w = image_width(actor_image(hazard))/2, h = image_height(actor_image(hazard))/2;
     v2d_t hazard_centre = v2d_add(v2d_subtract(hazard->position, hazard->hot_spot), v2d_new(w/2, h/2));
 
     if(player->invincible || physicsactor_get_state(player->pa) == PAS_GETTINGHIT || player->blinking || player_is_dying(player))
@@ -961,7 +961,7 @@ void update_animation(player_t *p)
     }
 
     /* "gambiarra" */
-    p->actor->hot_spot = v2d_new(actor_image(p->actor)->w/2, actor_image(p->actor)->h-20);
+    p->actor->hot_spot = v2d_new(image_width(actor_image(p->actor))/2, image_height(actor_image(p->actor))-20);
 }
 
 /* the interface between player_t and physicsactor_t */

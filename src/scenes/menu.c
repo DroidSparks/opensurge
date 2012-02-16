@@ -358,8 +358,8 @@ void marquee_render()
 {
     v2d_t camera = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
 
-    image_draw_trans(marquee.background, video_get_backbuffer(), 0, VIDEO_SCREEN_H-(marquee.background)->h, 0.5f, IF_NONE);
-    /*image_draw(marquee.background, video_get_backbuffer(), 0, VIDEO_SCREEN_H-(marquee.background)->h, IF_NONE);*/
+    image_draw_trans(marquee.background, video_get_backbuffer(), 0, VIDEO_SCREEN_H - image_height(marquee.background), 0.5f, IF_NONE);
+    /*image_draw(marquee.background, video_get_backbuffer(), 0, VIDEO_SCREEN_H - image_height(marquee.background), IF_NONE);*/
     font_render(marquee.font, camera);
 }
 

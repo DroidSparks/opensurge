@@ -105,11 +105,11 @@ void icon_update(item_t* item, player_t** team, int team_size, brick_list_t* bri
         image_t *img = actor_image(act), *particle;
 
         /* particle party! :) */
-        for(i=0; i<img->h; i++) {
-            for(j=0; j<img->w; j++) {
+        for(i=0; i<image_height(img); i++) {
+            for(j=0; j<image_width(img); j++) {
                 particle = image_create(1,1);
                 image_clear(particle, image_getpixel(img, j, i));
-                level_create_particle(particle, v2d_new(x+j, y+i), v2d_new((j-img->w/2) + (random(img->w)-img->w/2), i-random(img->h/2)), FALSE);
+                level_create_particle(particle, v2d_new(x+j, y+i), v2d_new((j - image_width(img)/2) + (random(image_width(img)) - image_width(img)/2), i - random(image_height(img)/2)), FALSE);
             }
         }
 

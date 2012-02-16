@@ -97,17 +97,17 @@ void particle_update_all(const struct brick_list_t* brick_list)
     for(it=particle_list; it; it=next) {
         p = it->data;
         next = it->next;
-        inside_area = level_inside_screen(p->position.x, p->position.y, p->position.x+p->image->w, p->position.y+p->image->h);
+        inside_area = level_inside_screen(p->position.x, p->position.y, p->position.x+image_width(p->image), p->position.y+image_height(p->image));
 
         /* collided with bricks? */
         got_brick = FALSE;
         if(p->destroy_on_brick && inside_area && p->speed.y > 0) {
-            float a[4] = { p->position.x, p->position.y, p->position.x+p->image->w, p->position.y+p->image->h };
+            float a[4] = { p->position.x, p->position.y, p->position.x+image_width(p->image), p->position.y+image_height(p->image) };
             const brick_list_t *itb;
             for(itb=brick_list; itb && !got_brick; itb=itb->next) {
                 const brick_t *brk = itb->data;
                 if(brk->brick_ref->property == BRK_OBSTACLE && brk->brick_ref->angle == 0) {
-                    float b[4] = { brk->x, brk->y, brk->x+brk->brick_ref->image->w, brk->y+brk->brick_ref->image->h };
+                    float b[4] = { brk->x, brk->y, brk->x+image_width(brk->brick_ref->image), brk->y+image_height(brk->brick_ref->image) };
                     if(bounding_box(a,b))
                         got_brick = TRUE;
                 }

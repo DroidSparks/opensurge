@@ -106,8 +106,8 @@ void animal_update(item_t* item, player_t** team, int team_size, brick_list_t* b
     ri = actor_image(act);
     rx = (int)(act->position.x - act->hot_spot.x);
     ry = (int)(act->position.y - act->hot_spot.y);
-    rw = ri->w;
-    rh = ri->h;
+    rw = image_width(ri);
+    rh = image_height(ri);
 
     /* check for collisions */
     for(it = brick_list; it != NULL && bounce == NONE; it = it->next) {
@@ -115,8 +115,8 @@ void animal_update(item_t* item, player_t** team, int team_size, brick_list_t* b
             bi = it->data->brick_ref->image;
             bx = it->data->x;
             by = it->data->y;
-            bw = bi->w;
-            bh = bi->h;
+            bw = image_width(bi);
+            bh = image_height(bi);
 
             if(rx<bx+bw && rx+rw>bx && ry<by+bh && ry+rh>by) {
                 if(image_pixelperfect_collision(ri, bi, rx, ry, bx, by)) {
@@ -214,8 +214,8 @@ void animal_render(item_t* item, v2d_t camera_position)
 /* (x,y) collides with the brick */
 int hit_test(int x, int y, const image_t *brk_image, int brk_x, int brk_y)
 {
-    if(x >= brk_x && x < brk_x + brk_image->w && y >= brk_y && y < brk_y + brk_image->h)
+    if(x >= brk_x && x < brk_x + image_width(brk_image) && y >= brk_y && y < brk_y + image_height(brk_image))
         return image_getpixel(brk_image, x - brk_x, y - brk_y) != video_get_maskcolor();
-    else
-        return FALSE;
+
+    return FALSE;
 }

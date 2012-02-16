@@ -214,13 +214,13 @@ int pressed_the_switch(item_t *item, player_t *player)
 
     a[0] = item->actor->position.x - item->actor->hot_spot.x;
     a[1] = item->actor->position.y - item->actor->hot_spot.y;
-    a[2] = a[0] + actor_image(item->actor)->w;
-    a[3] = a[1] + actor_image(item->actor)->h;
+    a[2] = a[0] + image_width(actor_image(item->actor));
+    a[3] = a[1] + image_height(actor_image(item->actor));
 
-    b[0] = player->actor->position.x - player->actor->hot_spot.x + actor_image(player->actor)->w * 0.3;
-    b[1] = player->actor->position.y - player->actor->hot_spot.y + actor_image(player->actor)->h * 0.5;
-    b[2] = b[0] + actor_image(player->actor)->w * 0.4;
-    b[3] = b[1] + actor_image(player->actor)->h * 0.5;
+    b[0] = player->actor->position.x - player->actor->hot_spot.x + image_width(actor_image(player->actor)) * 0.3;
+    b[1] = player->actor->position.y - player->actor->hot_spot.y + image_height(actor_image(player->actor)) * 0.5;
+    b[2] = b[0] + image_width(actor_image(player->actor)) * 0.4;
+    b[3] = b[1] + image_height(actor_image(player->actor)) * 0.5;
 
     return (!player_is_dying(player) && bounding_box(a,b));
 }

@@ -45,8 +45,8 @@ obstacle_t* obstacle_create_solid(const image_t *image, int angle, v2d_t positio
     obstacle_t *o = mallocx(sizeof *o);
 
     o->position = position;
-    o->width = image->w;
-    o->height = image->h;
+    o->width = image_width(image);
+    o->height = image_height(image);
     o->angle = angle & 0xFF;
     o->is_solid = solidobstacle_is_solid;
     o->image = image;
@@ -59,8 +59,8 @@ obstacle_t* obstacle_create_oneway(const image_t *image, int angle, v2d_t positi
     obstacle_t *o = mallocx(sizeof *o);
 
     o->position = position;
-    o->width = image->w;
-    o->height = image->h;
+    o->width = image_width(image);
+    o->height = image_height(image);
     o->angle = angle & 0xFF;
     o->is_solid = onewayobstacle_is_solid;
     o->image = image;

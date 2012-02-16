@@ -911,7 +911,7 @@ void level_init()
     dialogregion_size = 0;
     override_music = NULL;
     quit_level = FALSE;
-    quit_level_img = image_create(video_get_backbuffer()->w, video_get_backbuffer()->h);
+    quit_level_img = image_create(image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
     backgroundtheme = NULL;
     must_load_another_level = FALSE;
     must_restart_this_level = FALSE;
@@ -999,7 +999,7 @@ void level_update()
             char op[3][512];
 
             wants_to_leave = FALSE;
-            image_blit(video_get_backbuffer(), quit_level_img, 0, 0, 0, 0, quit_level_img->w, quit_level_img->h);
+            image_blit(video_get_backbuffer(), quit_level_img, 0, 0, 0, 0, image_width(quit_level_img), image_height(quit_level_img));
             music_pause();
 
             lang_getstring("CBOX_QUIT_QUESTION", op[0], sizeof(op[0]));
@@ -1095,8 +1095,8 @@ void level_update()
         for(inode = major_items; inode != NULL; inode = inode->next) {
             float x = inode->data->actor->position.x;
             float y = inode->data->actor->position.y;
-            float w = actor_image(inode->data->actor)->w;
-            float h = actor_image(inode->data->actor)->h;
+            float w = image_width(actor_image(inode->data->actor));
+            float h = image_height(actor_image(inode->data->actor));
             int inside_playarea = inside_screen(x, y, w, h, DEFAULT_MARGIN);
             int always_active = inode->data->always_active;
 
@@ -1117,8 +1117,8 @@ void level_update()
         for(enode = major_enemies; enode != NULL; enode = enode->next) {
             float x = enode->data->actor->position.x;
             float y = enode->data->actor->position.y;
-            float w = actor_image(enode->data->actor)->w;
-            float h = actor_image(enode->data->actor)->h;
+            float w = image_width(actor_image(enode->data->actor));
+            float h = image_height(actor_image(enode->data->actor));
             int always_active = enode->data->always_active;
             int inside_playarea = inside_screen(x, y, w, h, DEFAULT_MARGIN);
 
@@ -1139,8 +1139,8 @@ void level_update()
         for(i=0; i<team_size; i++) {
             float x = team[i]->actor->position.x;
             float y = team[i]->actor->position.y;
-            float w = actor_image(team[i]->actor)->w;
-            float h = actor_image(team[i]->actor)->h;
+            float w = image_width(actor_image(team[i]->actor));
+            float h = image_height(actor_image(team[i]->actor));
             float hy = team[i]->actor->hot_spot.y;
 
             /* somebody is hurt! show it to the user */
@@ -1194,8 +1194,8 @@ void level_update()
         for(enode = major_enemies; enode != NULL; enode = enode->next) {
             float x = enode->data->actor->position.x;
             float y = enode->data->actor->position.y;
-            float w = actor_image(enode->data->actor)->w;
-            float h = actor_image(enode->data->actor)->h;
+            float w = image_width(actor_image(enode->data->actor));
+            float h = image_height(actor_image(enode->data->actor));
             int always_active = enode->data->always_active;
             int inside_playarea = inside_screen(x, y, w, h, DEFAULT_MARGIN);
 
@@ -1275,7 +1275,7 @@ void level_render()
 
     /* quit... */
     if(quit_level) {
-        image_blit(quit_level_img, video_get_backbuffer(), 0, 0, 0, 0, quit_level_img->w, quit_level_img->h);
+        image_blit(quit_level_img, video_get_backbuffer(), 0, 0, 0, 0, image_width(quit_level_img), image_height(quit_level_img));
         return;
     }
 
@@ -1513,7 +1513,7 @@ void level_add_to_score(int score)
 {
     item_t *flyingtext;
     char buf[80];
-    int h = actor_image(player->actor)->h;
+    int h = image_height(actor_image(player->actor));
 
     score = max(0, score);
     player_set_score(player_get_score() + score);
@@ -1867,8 +1867,8 @@ void update_level_size()
     brick_list = entitymanager_retrieve_all_bricks();
     for(p=brick_list; p; p=p->next) {
         if(p->data->brick_ref->property != BRK_NONE) {
-            max_x = max(max_x, p->data->sx + brick_image(p->data)->w);
-            max_y = max(max_y, p->data->sy + brick_image(p->data)->h);
+            max_x = max(max_x, p->data->sx + image_width(brick_image(p->data)));
+            max_y = max(max_y, p->data->sy + image_height(brick_image(p->data)));
         }
     }
     brick_list = entitymanager_release_retrieved_brick_list(brick_list);
@@ -2017,8 +2017,8 @@ void update_dlgbox()
             dlgbox_active = FALSE;
             return;
         }
-        dlgbox->position.x = (VIDEO_SCREEN_W - actor_image(dlgbox)->w)/2;
-        dlgbox->position.y = max(dlgbox->position.y - speed*dt, VIDEO_SCREEN_H - actor_image(dlgbox)->h*1.3);
+        dlgbox->position.x = (VIDEO_SCREEN_W - image_width(actor_image(dlgbox)))/2;
+        dlgbox->position.y = max(dlgbox->position.y - speed*dt, VIDEO_SCREEN_H - image_height(actor_image(dlgbox))*1.3);
 
     }
     else {
@@ -2087,8 +2087,8 @@ void update_dialogregions()
 
     a[0] = player->actor->position.x;
     a[1] = player->actor->position.y;
-    a[2] = a[0] + actor_image(player->actor)->w;
-    a[3] = a[1] + actor_image(player->actor)->h;
+    a[2] = a[0] + image_width(actor_image(player->actor));
+    a[3] = a[1] + image_height(actor_image(player->actor));
 
     for(i=0; i<dialogregion_size; i++) {
         if(dialogregion[i].disabled)
@@ -2218,7 +2218,7 @@ void render_powerups()
 
     for(i=0; i<c; i++) {
         if(visible[i])
-            image_draw(icon[i], video_get_backbuffer(), VIDEO_SCREEN_W - icon[i]->w*(i+1) - 5*i - 15, 10, IF_NONE);
+            image_draw(icon[i], video_get_backbuffer(), VIDEO_SCREEN_W - image_width(icon[i]) * (i+1) - 5*i - 15, 10, IF_NONE);
     }
 }
 
@@ -2439,8 +2439,8 @@ void editor_update()
     }   
 
     /* mouse cursor. note: editor_mouse is a input_t*, but also a inputmouse_t*, so it's safe to cast it */
-    editor_cursor.x = clip(input_get_xy((inputmouse_t*)editor_mouse).x, 0, VIDEO_SCREEN_W-cursor_arrow->w);
-    editor_cursor.y = clip(input_get_xy((inputmouse_t*)editor_mouse).y, 0, VIDEO_SCREEN_H-cursor_arrow->h);
+    editor_cursor.x = clip(input_get_xy((inputmouse_t*)editor_mouse).x, 0, VIDEO_SCREEN_W - image_width(cursor_arrow));
+    editor_cursor.y = clip(input_get_xy((inputmouse_t*)editor_mouse).y, 0, VIDEO_SCREEN_H - image_height(cursor_arrow));
 
     /* new spawn point */
     if(input_button_pressed(editor_mouse, IB_FIRE1) && input_button_down(editor_keyboard, IB_FIRE3)) {
@@ -2471,7 +2471,7 @@ void editor_update()
                 brick_t *candidate = NULL;
 
                 for(itb=major_bricks;itb;itb=itb->next) {
-                    float a[4] = {itb->data->x, itb->data->y, itb->data->x + itb->data->brick_ref->image->w, itb->data->y + itb->data->brick_ref->image->h};
+                    float a[4] = {itb->data->x, itb->data->y, itb->data->x + image_width(itb->data->brick_ref->image), itb->data->y + image_height(itb->data->brick_ref->image)};
                     float b[4] = { editor_cursor.x+topleft.x , editor_cursor.y+topleft.y , editor_cursor.x+topleft.x+1 , editor_cursor.y+topleft.y+1 };
                     if(bounding_box(a,b)) {
                         if(!candidate || (candidate && itb->data->brick_ref->zindex >= candidate->brick_ref->zindex))
@@ -2499,7 +2499,7 @@ void editor_update()
                 item_t *candidate = NULL;
 
                 for(iti=major_items;iti;iti=iti->next) {
-                    float a[4] = {iti->data->actor->position.x-iti->data->actor->hot_spot.x, iti->data->actor->position.y-iti->data->actor->hot_spot.y, iti->data->actor->position.x-iti->data->actor->hot_spot.x + actor_image(iti->data->actor)->w, iti->data->actor->position.y-iti->data->actor->hot_spot.y + actor_image(iti->data->actor)->h};
+                    float a[4] = {iti->data->actor->position.x-iti->data->actor->hot_spot.x, iti->data->actor->position.y-iti->data->actor->hot_spot.y, iti->data->actor->position.x-iti->data->actor->hot_spot.x + image_width(actor_image(iti->data->actor)), iti->data->actor->position.y-iti->data->actor->hot_spot.y + image_height(actor_image(iti->data->actor))};
                     float b[4] = { editor_cursor.x+topleft.x , editor_cursor.y+topleft.y , editor_cursor.x+topleft.x+1 , editor_cursor.y+topleft.y+1 };
 
                     if(bounding_box(a,b)) {
@@ -2532,7 +2532,7 @@ void editor_update()
                 int candidate_key = 0;
 
                 for(ite=major_enemies;ite;ite=ite->next) {
-                    float a[4] = {ite->data->actor->position.x-ite->data->actor->hot_spot.x, ite->data->actor->position.y-ite->data->actor->hot_spot.y, ite->data->actor->position.x-ite->data->actor->hot_spot.x + actor_image(ite->data->actor)->w, ite->data->actor->position.y-ite->data->actor->hot_spot.y + actor_image(ite->data->actor)->h};
+                    float a[4] = {ite->data->actor->position.x-ite->data->actor->hot_spot.x, ite->data->actor->position.y-ite->data->actor->hot_spot.y, ite->data->actor->position.x-ite->data->actor->hot_spot.x + image_width(actor_image(ite->data->actor)), ite->data->actor->position.y-ite->data->actor->hot_spot.y + image_height(actor_image(ite->data->actor))};
                     float b[4] = { editor_cursor.x+topleft.x , editor_cursor.y+topleft.y , editor_cursor.x+topleft.x+1 , editor_cursor.y+topleft.y+1 };
                     int mykey = editor_enemy_name2key(ite->data->name);
                     if(mykey >= 0 && bounding_box(a,b)) {
@@ -2667,7 +2667,7 @@ void editor_render()
     else {
         /* drawing an eraser */
         cursor = sprite_get_image(sprite_get_animation("SD_ERASER", 0), 0);
-        image_draw(cursor, video_get_backbuffer(), (int)editor_cursor.x-cursor->w/2, (int)editor_cursor.y-cursor->h/2, IF_NONE);
+        image_draw(cursor, video_get_backbuffer(), (int)editor_cursor.x - image_width(cursor)/2, (int)editor_cursor.y - image_height(cursor)/2, IF_NONE);
     }
 
     /* object properties */
@@ -2758,8 +2758,8 @@ int editor_want_to_activate()
  */
 void editor_render_background()
 {
-    float x = (float)VIDEO_SCREEN_W/editor_bgimage->w;
-    float y = (float)VIDEO_SCREEN_H/editor_bgimage->h;
+    float x = (float)VIDEO_SCREEN_W / image_width(editor_bgimage);
+    float y = (float)VIDEO_SCREEN_H / image_height(editor_bgimage);
     image_draw_scaled(editor_bgimage, video_get_backbuffer(), 0, 0, v2d_new(x,y), IF_NONE);
 }
 
@@ -2882,7 +2882,7 @@ const char *editor_entity_info(enum editor_entity_type objtype, int objid)
         case EDT_BRICK: {
             brickdata_t *x = brickdata_get(objid);
             if(x && x->image)
-                sprintf(buf, "angle: %d\nsize: %dx%d\nproperty: %s\nbehavior: %s\nzindex: %.2lf", x->angle, x->image->w, x->image->h, brick_get_property_name(x->property), brick_get_behavior_name(x->behavior), x->zindex);
+                sprintf(buf, "angle: %d\nsize: %dx%d\nproperty: %s\nbehavior: %s\nzindex: %.2lf", x->angle, image_width(x->image), image_height(x->image), brick_get_property_name(x->property), brick_get_behavior_name(x->behavior), x->zindex);
             else
                 sprintf(buf, "WARNING: missing brick");
             break;
@@ -3232,15 +3232,15 @@ void editor_grid_render()
         grid = image_create(EDITOR_GRID_W, EDITOR_GRID_H);
         color = image_rgb(0,128,160);
         image_clear(grid, video_get_maskcolor());
-        for(i=0; i<grid->h; i++)
-            image_putpixel(grid, grid->w-1, i, color);
-        for(i=0; i<grid->w; i++)
-            image_putpixel(grid, i, grid->h-1, color);
+        for(i=0; i<image_height(grid); i++)
+            image_putpixel(grid, image_width(grid)-1, i, color);
+        for(i=0; i<image_width(grid); i++)
+            image_putpixel(grid, i, image_height(grid)-1, color);
 
         /* drawing the grid... */
-        for(i=0; i<=VIDEO_SCREEN_W/grid->w; i++) {
-            for(j=0; j<=VIDEO_SCREEN_H/grid->h; j++) {
-                v = v2d_subtract(editor_grid_snap(v2d_new(i*grid->w, j*grid->h)), topleft);
+        for(i=0; i<=VIDEO_SCREEN_W/image_width(grid); i++) {
+            for(j=0; j<=VIDEO_SCREEN_H/image_height(grid); j++) {
+                v = v2d_subtract(editor_grid_snap(v2d_new(i*image_width(grid), j*image_height(grid))), topleft);
                 image_draw(grid, video_get_backbuffer(), (int)v.x, (int)v.y, IF_NONE);
             }
         }
@@ -3249,15 +3249,15 @@ void editor_grid_render()
         grid64 = image_create(EDITOR_GRID_W*8, EDITOR_GRID_H*8);
         color = image_rgb(0,192,124);
         image_clear(grid64, video_get_maskcolor());
-        for(i=0; i<grid64->h; i++)
-            image_putpixel(grid64, grid64->w-1, i, color);
-        for(i=0; i<grid64->w; i++)
-            image_putpixel(grid64, i, grid64->h-1, color);
+        for(i=0; i<image_height(grid64); i++)
+            image_putpixel(grid64, image_width(grid64)-1, i, color);
+        for(i=0; i<image_width(grid64); i++)
+            image_putpixel(grid64, i, image_height(grid64)-1, color);
 
         /* drawing the 64x64 grid */
-        for(i=0; i<=VIDEO_SCREEN_W/grid64->w; i++) {
-            for(j=0; j<=1+VIDEO_SCREEN_H/grid64->h; j++) {
-                v = v2d_subtract(editor_grid64_snap(v2d_new(i*grid64->w, j*grid64->h)), topleft);
+        for(i=0; i<=VIDEO_SCREEN_W/image_width(grid64); i++) {
+            for(j=0; j<=1+VIDEO_SCREEN_H/image_height(grid64); j++) {
+                v = v2d_subtract(editor_grid64_snap(v2d_new(i*image_width(grid64), j*image_height(grid64))), topleft);
                 image_draw(grid64, video_get_backbuffer(), (int)v.x, (int)v.y, IF_NONE);
             }
         }

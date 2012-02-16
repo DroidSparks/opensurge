@@ -167,14 +167,14 @@ void dnadoor_update(item_t* item, player_t** team, int team_size, brick_list_t* 
     if(perfect_collision) {
         a[0] = act->position.x - act->hot_spot.x - diff;
         a[1] = act->position.y - act->hot_spot.y - diff;
-        a[2] = a[0] + actor_image(act)->w + 2*diff;
-        a[3] = a[1] + actor_image(act)->h + 2*diff;
+        a[2] = a[0] + image_width(actor_image(act)) + 2*diff;
+        a[3] = a[1] + image_height(actor_image(act)) + 2*diff;
         for(it = item_list; it != NULL; it = it->next) {
             if(it->data->type == item->type) {
                 b[0] = it->data->actor->position.x - it->data->actor->hot_spot.x - diff;
                 b[1] = it->data->actor->position.y - it->data->actor->hot_spot.y - diff;
-                b[2] = b[0] + actor_image(it->data->actor)->w + 2*diff;
-                b[3] = b[1] + actor_image(it->data->actor)->h + 2*diff;
+                b[2] = b[0] + image_width(actor_image(it->data->actor)) + 2*diff;
+                b[3] = b[1] + image_height(actor_image(it->data->actor)) + 2*diff;
                 if(bounding_box(a,b)) {
                     if(it->data->actor->alpha < act->alpha)
                         act->alpha = it->data->actor->alpha;
@@ -210,13 +210,13 @@ int hittest(player_t *player, item_t *dnadoor)
 
     a[0] = pl->position.x - pl->hot_spot.x;
     a[1] = pl->position.y - pl->hot_spot.y;
-    a[2] = a[0] + actor_image(pl)->w;
-    a[3] = a[1] + actor_image(pl)->h;
+    a[2] = a[0] + image_width(actor_image(pl));
+    a[3] = a[1] + image_height(actor_image(pl));
 
     b[0] = act->position.x - act->hot_spot.x;
     b[1] = act->position.y - act->hot_spot.y - offset;
-    b[2] = b[0] + actor_image(act)->w;
-    b[3] = b[1] + actor_image(act)->h + offset;
+    b[2] = b[0] + image_width(actor_image(act));
+    b[3] = b[1] + image_height(actor_image(act)) + offset;
 
     return bounding_box(a, b);
 }

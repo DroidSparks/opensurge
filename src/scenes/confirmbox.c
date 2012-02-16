@@ -59,11 +59,11 @@ void confirmbox_init()
 {
     int i;
 
-    background = image_create(video_get_backbuffer()->w, video_get_backbuffer()->h);
-    image_blit(video_get_backbuffer(), background, 0, 0, 0, 0, video_get_backbuffer()->w, video_get_backbuffer()->h);
+    background = image_create(image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
+    image_blit(video_get_backbuffer(), background, 0, 0, 0, 0, image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
 
     box = sprite_get_image(sprite_get_animation("SD_CONFIRMBOX", 0), 0);
-    boxpos = v2d_new( (VIDEO_SCREEN_W-box->w)/2 , VIDEO_SCREEN_H );
+    boxpos = v2d_new( (VIDEO_SCREEN_W - image_width(box))/2 , VIDEO_SCREEN_H );
 
     input = input_create_user(NULL);
     arrow = actor_create();
@@ -117,7 +117,7 @@ void confirmbox_update()
 
     /* fade-in */
     if(fxfade_in) {
-        if( boxpos.y <= (VIDEO_SCREEN_H-box->h)/2 )
+        if( boxpos.y <= (VIDEO_SCREEN_H - image_height(box))/2 )
             fxfade_in = FALSE;
         else
             boxpos.y -= speed*dt;
@@ -135,10 +135,10 @@ void confirmbox_update()
     }
 
     /* positioning stuff */
-    arrow->position = v2d_new(boxpos.x + current_option*box->w/option_count + 10, boxpos.y + box->h*0.75);
+    arrow->position = v2d_new(boxpos.x + current_option * image_width(box)/option_count + 10, boxpos.y + image_height(box) * 0.75);
     font_set_position(textfnt, v2d_new(boxpos.x + 10 , boxpos.y + 10));
     for(i=0; i<option_count; i++) {
-        font_set_position(optionfnt[i][0], v2d_new(boxpos.x + i*box->w/option_count + 25, boxpos.y + box->h*0.75));
+        font_set_position(optionfnt[i][0], v2d_new(boxpos.x + i * image_width(box)/option_count + 25, boxpos.y + image_height(box) * 0.75));
         font_set_position(optionfnt[i][1], font_get_position(optionfnt[i][0]));
     }
 
@@ -173,7 +173,7 @@ void confirmbox_render()
     int i, k;
     v2d_t cam = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
 
-    image_blit(background, video_get_backbuffer(), 0, 0, 0, 0, background->w, background->h);
+    image_blit(background, video_get_backbuffer(), 0, 0, 0, 0, image_width(background), image_height(background));
     image_draw(box, video_get_backbuffer(), boxpos.x, boxpos.y, IF_NONE);
     font_render(textfnt, cam);
 
