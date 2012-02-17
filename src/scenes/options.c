@@ -467,7 +467,7 @@ static void group_smooth_update(group_t *g)
     group_highlightable_update(g);
 
     /* derived class */
-    if(group_smooth_is_highlighted(g)) {
+    if(group_smooth_is_highlighted(g) && video_get_color_depth() == 32) {
         if(!fadefx_is_fading()) {
             if(input_button_pressed(input, IB_FIRE1) || input_button_pressed(input, IB_FIRE3)) {
                 sound_play( soundfactory_get("select") );
@@ -504,10 +504,14 @@ static void group_smooth_render(group_t *g, v2d_t camera_position)
     str_cpy(v[0], lang_get("OPTIONS_YES"), sizeof(v[0]));
     str_cpy(v[1], lang_get("OPTIONS_NO"), sizeof(v[1]));
 
-    if(video_is_smooth())
-        font_set_text(f, "<color=ffff00>%s</color>  %s", v[0], v[1]);
+    if(video_get_color_depth() == 32) {
+        if(video_is_smooth())
+            font_set_text(f, "<color=ffff00>%s</color>  %s", v[0], v[1]);
+        else
+            font_set_text(f, "%s  <color=ffff00>%s</color>", v[0], v[1]);
+    }
     else
-        font_set_text(f, "%s  <color=ffff00>%s</color>", v[0], v[1]);
+        font_set_text(f, "<color=ff8888>%s</color>", lang_get("OPTIONS_SMOOTHGFX_ERROR"));
 
     font_render(f, camera_position);
     font_destroy(f);
