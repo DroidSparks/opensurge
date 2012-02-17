@@ -32,6 +32,11 @@
 #include "lang.h"
 #include "preferences.h"
 
+#ifdef __WIN32__
+#include <allegro.h>
+#include <winalleg.h>
+#endif
+
 
 /* private stuff ;) */
 static void display_message(char *fmt, ...);

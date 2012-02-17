@@ -28,8 +28,6 @@
 typedef enum inputbutton_t inputbutton_t;
 typedef struct input_t input_t; /* input_t is the base class */
 typedef struct inputmouse_t inputmouse_t; /* the following are derived from input_t */
-typedef struct inputkeyboard_t inputkeyboard_t;
-typedef struct inputjoystick_t inputjoystick_t;
 typedef struct inputcomputer_t inputcomputer_t;
 typedef struct inputuserdefined_t inputuserdefined_t;
 

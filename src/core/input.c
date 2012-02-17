@@ -43,14 +43,14 @@ struct inputmouse_t {
 };
 static void inputmouse_update(input_t* in);
 
-/* <derived class>: keyboard */
+/* <derived class>: keyboard -- deprecated -- */
 struct inputkeyboard_t {
     input_t base;
     int keybmap[IB_MAX]; /* key mappings */
 };
 static void inputkeyboard_update(input_t* in);
 
-/* <derived class>: joystick */
+/* <derived class>: joystick -- deprecated -- */
 struct inputjoystick_t {
     input_t base;
 };
