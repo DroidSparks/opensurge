@@ -461,7 +461,7 @@ static int group_smooth_is_highlighted(group_t *g)
 
 static void group_smooth_update(group_t *g)
 {
-    int resolution = (video_get_resolution() == VIDEORESOLUTION_1X || video_get_resolution() == VIDEORESOLUTION_3X) ? VIDEORESOLUTION_2X : video_get_resolution();
+    int resolution = (video_get_resolution() == VIDEORESOLUTION_1X) ? VIDEORESOLUTION_2X : video_get_resolution();
 
     /* base class */
     group_highlightable_update(g);

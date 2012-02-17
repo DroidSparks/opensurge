@@ -184,7 +184,6 @@ ENDIF(MSVC)
 SET(
   GAME_SRCS
 
-  src/core/2xsai/2xsai.c
   src/core/nanocalc/nanocalc.c
   src/core/nanocalc/nanocalc_addons.c
   src/core/nanoparser/nanoparser.c
@@ -213,6 +212,10 @@ SET(
   src/core/util.c
   src/core/v2d.c
   src/core/video.c
+  src/core/hqx/hq2x.c # after video.c
+  src/core/hqx/hq3x.c
+  src/core/hqx/hq4x.c
+  src/core/hqx/init.c
 
   src/scenes/util/editorgrp.c
   src/scenes/util/grouptree.c
@@ -357,7 +360,6 @@ IF(WIN32)
       GAME_SRCS
       ${GAME_SRCS}
 
-      src/core/2xsai/2xsai.h
       src/core/nanocalc/nanocalc.h
       src/core/nanocalc/nanocalc_addons.h
       src/core/nanoparser/nanoparser.h
@@ -389,6 +391,9 @@ IF(WIN32)
       src/core/util.h
       src/core/video.h
       src/core/v2d.h
+      src/core/hqx.h
+      src/core/hqx/common.h
+      src/core/hqx/hqx.h
 
       src/scenes/util/editorgrp.h
       src/scenes/util/grouptree.h

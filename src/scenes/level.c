@@ -1526,7 +1526,7 @@ void level_set_camera_focus(actor_t *act)
 
 
 /*
- * level_gets_camera_focus()
+ * level_get_camera_focus()
  * Gets the actor being focused by the camera
  */
 actor_t* level_get_camera_focus()

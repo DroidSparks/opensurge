@@ -26,13 +26,11 @@
 #include <allegro.h>
 #include <loadpng.h>
 #include <jpgalleg.h>
-#include "2xsai/2xsai.h"
+#include "hqx.h"
 #include "video.h"
 #include "timer.h"
 #include "logfile.h"
 #include "util.h"
-
-
 
 
 /* private stuff */
@@ -40,8 +38,6 @@
 
 
 /* video manager */
-#define FILTER_2XSAI            0
-#define FILTER_SUPEREAGLE       1
 static image_t *video_buffer;
 static image_t *window_surface, *window_surface_half;
 static int video_smooth;
@@ -49,7 +45,9 @@ static int video_resolution;
 static int video_fullscreen;
 static int video_showfps;
 static void fast2x_blit(image_t *src, image_t *dest);
-static void filter_blit(image_t *src, image_t *dest, int filter);
+static void smooth2x_blit(image_t *src, image_t *dest);
+static void smooth3x_blit(image_t *src, image_t *dest);
+static void smooth4x_blit(image_t *src, image_t *dest);
 static void window_switch_in();
 static void window_switch_out();
 static int window_active = TRUE;
@@ -144,17 +142,17 @@ void video_changemode(int resolution, int smooth, int fullscreen)
     /* smooth graphics? */
     video_smooth = smooth;
     if(video_smooth) {
-        if(video_get_color_depth() == 8) {
-            logfile_message("can't use smooth graphics in the 256 color mode (8 bpp)");
+        if(video_get_color_depth() != 32) {
+            logfile_message("smooth graphics can only be enabled when using 32 bits per pixel (currently, we're using %d bpp)", video_get_color_depth());
             video_smooth = FALSE;
         }
-        else if(video_resolution == VIDEORESOLUTION_1X || video_resolution == VIDEORESOLUTION_3X || video_resolution == VIDEORESOLUTION_EDT) {
-            logfile_message("can't use smooth graphics using resolution %d", video_resolution);
+        else if(video_resolution == VIDEORESOLUTION_1X || video_resolution == VIDEORESOLUTION_EDT) {
+            logfile_message("can't enable smooth graphics using resolution %d", video_resolution);
             video_smooth = FALSE;
         }
         else {
-            logfile_message("initializing 2xSaI...");
-            Init_2xSaI(video_get_color_depth());
+            logfile_message("initializing hqx...");
+            hqxInit();
         }
     }
 
@@ -263,20 +261,6 @@ v2d_t video_get_window_size()
             height = 4*VIDEO_SCREEN_H;
             break;
 
-        /*case VIDEORESOLUTION_MAX: {
-            int dw, dh;
-            if(get_desktop_resolution(&dw, &dh) == 0) {
-                int scale = min((int)(dw/VIDEO_SCREEN_W), (int)(dh/VIDEO_SCREEN_H));
-                width = scale*VIDEO_SCREEN_W;
-                height = scale*VIDEO_SCREEN_H;
-            }
-            else {
-                width = VIDEO_SCREEN_W;
-                height = VIDEO_SCREEN_H;
-            }
-            break;
-        }*/
-
         case VIDEORESOLUTION_EDT:
             width = VIDEO_SCREEN_W;
             height = VIDEO_SCREEN_H;
@@ -373,10 +357,10 @@ void video_render()
         {
             image_t *tmp = window_surface;
 
-            if(video_is_smooth())
-                filter_blit(video_get_backbuffer(), tmp, FILTER_2XSAI);
-            else
+            if(!video_is_smooth())
                 fast2x_blit(video_get_backbuffer(), tmp);
+            else
+                smooth2x_blit(video_get_backbuffer(), tmp);
 
             draw_to_screen(tmp);
             break;
@@ -387,7 +371,12 @@ void video_render()
         {
             image_t *tmp = window_surface;
             v2d_t scale = v2d_new((float)image_width(tmp) / (float)image_width(video_get_backbuffer()), (float)image_height(tmp) / (float)image_height(video_get_backbuffer()));
-            image_draw_scaled(video_get_backbuffer(), tmp, 0, 0, scale, IF_NONE);
+
+            if(!video_is_smooth())
+                image_draw_scaled(video_get_backbuffer(), tmp, 0, 0, scale, IF_NONE);
+            else
+                smooth3x_blit(video_get_backbuffer(), tmp);
+
             draw_to_screen(tmp);
             break;
         }
@@ -398,39 +387,16 @@ void video_render()
             image_t *tmp = window_surface;
             image_t *half = window_surface_half;
 
-            if(video_is_smooth()) {
-                /*filter_blit(video_get_backbuffer(), half, FILTER_2XSAI);*/
-                fast2x_blit(video_get_backbuffer(), half);
-                filter_blit(half, tmp, FILTER_2XSAI);
-            }
-            else {
+            if(!video_is_smooth()) {
                 fast2x_blit(video_get_backbuffer(), half);
                 fast2x_blit(half, tmp);
             }
+            else
+                smooth4x_blit(video_get_backbuffer(), tmp);
 
             draw_to_screen(tmp);
             break;
         }
-
-        /* maximum size */
-        /*case VIDEORESOLUTION_MAX:
-        {
-            image_t *tmp = window_surface;
-
-            if(video_is_smooth() && tmp->w >= 2*VIDEO_SCREEN_W && tmp->h >= 2*VIDEO_SCREEN_H) {
-                image_t *half = window_surface_half;
-                v2d_t scale = v2d_new((float)image_width(half) / (float)image_width(video_get_backbuffer()), (float)image_height(half) / (float)image_height(video_get_backbuffer()));
-                image_draw_scaled(video_get_backbuffer(), half, 0, 0, scale, IF_NONE);
-                filter_blit(half, tmp, FILTER_2XSAI);
-            }
-            else {
-                v2d_t scale = v2d_new((float)image_width(tmp) / (float)image_width(video_get_backbuffer()), (float)image_height(tmp) / (float)image_height(video_get_backbuffer()));
-                image_draw_scaled(video_get_backbuffer(), tmp, 0, 0, scale, IF_NONE);
-            }
-
-            draw_to_screen(tmp);
-            break;
-        }*/
 
         /* level editor */
         case VIDEORESOLUTION_EDT:
@@ -581,42 +547,6 @@ const image_t* video_get_window_surface()
 
 /* private stuff */
 
-/* filter_blit() applies the graphic filter
- * filter, fixing the possible defects of the
- * resulting image.
- *
- * if (filter == 2xsai) or (filter == superagle):
- * -- we assume that:
- * ---- width of dest = 2 * width of src
- * ---- height of dest = 2 * height of src
- */
-void filter_blit(image_t *src, image_t *dest, int filter)
-{
-    int i, j;
-    const int k=2;
-
-    if(IMAGE2BITMAP(src) == NULL || IMAGE2BITMAP(dest) == NULL)
-        return;
-
-    switch(filter) {
-        case FILTER_2XSAI:
-            Super2xSaI(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, 0, 0, image_width(src), image_height(src));
-            for(i=0; i<IMAGE2BITMAP(dest)->h; i++) { /* image fix */
-                for(j=0; j<k; j++)
-                    _putpixel(IMAGE2BITMAP(dest), j, i, _getpixel(IMAGE2BITMAP(dest), k, i));
-            }
-            break;
-
-        case FILTER_SUPEREAGLE:
-            SuperEagle(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, 0, 0, image_width(src), image_height(src));
-            for(i=0; i<IMAGE2BITMAP(dest)->h; i++) { /* image fix */
-                for(j=0; j<k; j++)
-                    _putpixel(IMAGE2BITMAP(dest), image_width(dest)-1-j, i, _getpixel(IMAGE2BITMAP(dest), image_width(dest)-1-k, i));
-            }
-            break;
-    }
-}
-
 /* fast2x_blit resizes the src image by a
  * factor of 2. It assumes that:
  *
@@ -662,6 +592,25 @@ void fast2x_blit(image_t *src, image_t *dest)
         default:
             break;
     }
+}
+
+/* applies the hqx algorithm */
+void smooth2x_blit(image_t *src, image_t *dest)
+{
+    if(video_get_color_depth() == 32)
+        hq2x_32((uint32*)(&(IMAGE2BITMAP(src)->line[0][0])), (uint32*)(&(IMAGE2BITMAP(dest)->line[0][0])), image_width(src), image_height(src));
+}
+
+void smooth3x_blit(image_t *src, image_t *dest)
+{
+    if(video_get_color_depth() == 32)
+        hq3x_32((uint32*)(&(IMAGE2BITMAP(src)->line[0][0])), (uint32*)(&(IMAGE2BITMAP(dest)->line[0][0])), image_width(src), image_height(src));
+}
+
+void smooth4x_blit(image_t *src, image_t *dest)
+{
+    if(video_get_color_depth() == 32)
+        hq4x_32((uint32*)(&(IMAGE2BITMAP(src)->line[0][0])), (uint32*)(&(IMAGE2BITMAP(dest)->line[0][0])), image_width(src), image_height(src));
 }
 
 
