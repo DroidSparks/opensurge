@@ -19,7 +19,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <allegro.h>
 #include <stdio.h>
 #include "screenshot.h"
 #include "osspec.h"
@@ -37,14 +36,7 @@ static char *next_available_filename();
  */
 void screenshot_init()
 {
-    int m[IB_MAX];
-
-    m[IB_UP] = m[IB_DOWN] = m[IB_LEFT] = m[IB_RIGHT] = KEY_A; /* whatever */
-    m[IB_FIRE3] = m[IB_FIRE4] = KEY_A;
-    m[IB_FIRE1] = KEY_EQUALS;
-    m[IB_FIRE2] = KEY_PRTSCR;
-
-    in = input_create_keyboard(m, 8);
+    in = input_create_user("screenshots");
 }
 
 

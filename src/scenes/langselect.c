@@ -19,6 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <string.h>
 #include <math.h>
 #include "langselect.h"
 #include "options.h"
@@ -62,8 +63,8 @@ static int before_the_intro_screen;
 static void save_preferences(const char *filepath);
 static void load_lang_list();
 static void unload_lang_list();
-static int dirfill(const char *filename, int attrib, void *param);
-static int dircount(const char *filename, int attrib, void *param);
+static int dirfill(const char *filename, void *param);
+static int dircount(const char *filename, void *param);
 static int sort_cmp(const void *a, const void *b);
 
 
@@ -238,7 +239,7 @@ void save_preferences(const char *filepath)
 /* reads the language list from the languages/ folder */
 void load_lang_list()
 {
-    int i, j, deny_flags = FA_DIREC | FA_LABEL, c = 0;
+    int i, j, c = 0;
     int max_paths;
     char path[] = "languages/*.lng";
     char abs_path[2][1024];
@@ -253,11 +254,11 @@ void load_lang_list()
     /* loading language data */
     lngcount = 0;
     for(j=0; j<max_paths; j++)
-        for_each_file_ex(abs_path[j], 0, deny_flags, dircount, NULL);
+        foreach_file(abs_path[j], dircount, NULL);
 
     lngdata = mallocx(lngcount * sizeof(lngdata_t));
     for(j=0; j<max_paths; j++)
-        for_each_file_ex(abs_path[j], 0, deny_flags, dirfill, (void*)&c);
+        foreach_file(abs_path[j], dirfill, (void*)&c);
     qsort(lngdata, lngcount, sizeof(lngdata_t), sort_cmp);
 
     /* fatal error */
@@ -279,7 +280,7 @@ void load_lang_list()
     }
 }
 
-int dirfill(const char *filename, int attrib, void *param)
+int dirfill(const char *filename, void *param)
 {
     int *c = (int*)param;
     int ver, subver, wipver;
@@ -297,7 +298,7 @@ int dirfill(const char *filename, int attrib, void *param)
     return 0;
 }
 
-int dircount(const char *filename, int attrib, void *param)
+int dircount(const char *filename, void *param)
 {
     int ver, subver, wipver;
     lang_readcompatibility(filename, &ver, &subver, &wipver);

@@ -35,7 +35,7 @@ HASHTABLE_GENERATE_CODE(spriteinfo_t)
 static hashtable_spriteinfo_t* sprites;
 
 /* private functions */
-static int dirfill(const char *filename, int attrib, void *param); /* file system callback */
+static int dirfill(const char *filename, void *param); /* file system callback */
 static void validate_sprite(spriteinfo_t *spr); /* validates the sprite */
 static void validate_animation(animation_t *anim); /* validates the animation */
 static void register_sprite(const char *sprite_name, spriteinfo_t *spr); /* adds spr to the hash table */
@@ -61,7 +61,7 @@ void sprite_init()
     parsetree_program_t *prog = NULL;
     const char *path = "sprites/*.spr";
     char abs_path[2][1024];
-    int j, max_paths, deny_flags = FA_DIREC | FA_LABEL;
+    int j, max_paths;
 
     logfile_message("Loading sprites...");
     sprites = hashtable_spriteinfo_t_create(spriteinfo_destroy);
@@ -73,7 +73,7 @@ void sprite_init()
 
     /* Reading the parse tree */
     for(j=0; j<max_paths; j++)
-        for_each_file_ex(abs_path[j], 0, deny_flags, dirfill, (void*)(&prog));
+        foreach_file(abs_path[j], dirfill, (void*)(&prog));
 
     if(prog == NULL)
         fatal_error("FATAL ERROR: no sprites have been found. Please reinstall the game.");
@@ -198,12 +198,10 @@ void spriteinfo_destroy(spriteinfo_t *info)
  * dirfill()
  * File system callback
  */
-int dirfill(const char *filename, int attrib, void *param)
+int dirfill(const char *filename, void *param)
 {
     parsetree_program_t** p = (parsetree_program_t**)param;
-
     *p = nanoparser_append_program(*p, nanoparser_construct_tree(filename));
-
     return 0;
 }
 

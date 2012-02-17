@@ -213,7 +213,7 @@ void image_destroy(image_t *img)
  * image_width()
  * The width of the image
  */
-int image_width(const image_t *img)
+inline int image_width(const image_t *img)
 {
     return img->w;
 }
@@ -223,7 +223,7 @@ int image_width(const image_t *img)
  * image_height()
  * The height of the image
  */
-int image_height(const image_t *img)
+inline int image_height(const image_t *img)
 {
     return img->h;
 }

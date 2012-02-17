@@ -209,7 +209,7 @@ void display_message(char *fmt, ...)
     va_end(args);
 
 #ifdef __WIN32__
-    allegro_message(buf);
+    MessageBoxA(NULL, buf, GAME_TITLE, MB_OK | MB_ICONINFORMATION);
 #else
     puts(buf);
 #endif

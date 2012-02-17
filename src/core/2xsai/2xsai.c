@@ -5,6 +5,17 @@
  */
 
 /*
+2xSaI : The advanced 2x Scale and Interpolation engine
+http://vdnoort.home.xs4all.nl/emulation/2xsai/
+
+Last updated Aug 2 2001
+
+2xSaI is Copyright (c) 1999-2001 by Derek Liauw Kie Fa.
+
+2xSaI is free under GPL. I hope you'll give me appropriate credit. If you want another license for your (free) project, contact me.
+
+=================================================================
+
 2xSaI
 ~~~~~
 

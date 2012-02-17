@@ -46,6 +46,7 @@ struct inputmap_t {
     } joystick; /* joystick mapping */
 };
 
+/* gets an inputmap */
 const inputmap_t* inputmap_get(const char* name);
 
 #endif

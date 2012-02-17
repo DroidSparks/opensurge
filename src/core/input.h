@@ -60,11 +60,9 @@ void input_ignore_joystick(int ignore); /* ignores the input received from joyst
 int input_is_joystick_ignored();
 int input_number_of_plugged_joysticks();
 
-input_t *input_create_computer(); /* computer-controlled "input": will return an inputcomputer_t*, which is also an input_t* */
-input_t *input_create_keyboard(int keybmap[], int keybmap_len); /* keyboard */
-input_t *input_create_mouse(); /* mouse */
-input_t *input_create_joystick(); /* joystick */
 input_t *input_create_user(const char* inputmap_name); /* user's custom input device (set inputmap_name to NULL to use a default mapping) */
+input_t *input_create_computer(); /* computer-controlled "input": will return an inputcomputer_t*, which is also an input_t* */
+input_t *input_create_mouse(); /* mouse */
 void input_destroy(input_t *in);
 
 int input_button_down(input_t *in, inputbutton_t button);

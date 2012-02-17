@@ -19,6 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <string.h>
 #include <math.h>
 #include <ctype.h>
 #include "questselect.h"
@@ -70,8 +71,8 @@ static font_t **quest_label; /* vector of font_t* */
 /* private functions */
 static void load_quest_list();
 static void unload_quest_list();
-static int dirfill(const char *filename, int attrib, void *param);
-static int dircount(const char *filename, int attrib, void *param);
+static int dirfill(const char *filename, void *param);
+static int dircount(const char *filename, void *param);
 static int sort_cmp(const void *a, const void *b);
 
 
@@ -280,7 +281,7 @@ void questselect_render()
 /* loads the quest list from the quests/ folder */
 void load_quest_list()
 {
-    int i, j, deny_flags = FA_DIREC | FA_LABEL, c = 0;
+    int i, j, c = 0;
     int max_paths;
     char path[] = "quests/*.qst";
     char abs_path[2][1024];
@@ -296,11 +297,11 @@ void load_quest_list()
     /* loading data */
     quest_count = 0;
     for(j=0; j<max_paths; j++)
-        for_each_file_ex(abs_path[j], 0, deny_flags, dircount, NULL);
+        foreach_file(abs_path[j], dircount, NULL);
 
     quest_data = mallocx(quest_count * sizeof(quest_t*));
     for(j=0; j<max_paths; j++)
-        for_each_file_ex(abs_path[j], 0, deny_flags, dirfill, (void*)&c);
+        foreach_file(abs_path[j], dirfill, (void*)&c);
     qsort(quest_data, quest_count, sizeof(quest_t*), sort_cmp);
 
     /* fatal error */
@@ -337,7 +338,7 @@ void unload_quest_list()
 
 
 /* callback that fills quest_data[] */
-int dirfill(const char *filename, int attrib, void *param)
+int dirfill(const char *filename, void *param)
 {
     int *c = (int*)param;
     quest_t *s;
@@ -354,7 +355,7 @@ int dirfill(const char *filename, int attrib, void *param)
 }
 
 /* callback that counts how many levels are installed */
-int dircount(const char *filename, int attrib, void *param)
+int dircount(const char *filename, void *param)
 {
     quest_t *s;
 

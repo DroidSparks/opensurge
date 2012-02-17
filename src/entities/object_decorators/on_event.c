@@ -19,6 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <string.h>
 #include "on_event.h"
 #include "../object_vm.h"
 #include "../../core/util.h"

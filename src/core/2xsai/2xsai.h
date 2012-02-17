@@ -31,7 +31,7 @@ that may arise by the use of this program.
 #ifndef _2XSAI_H
 #define _2XSAI_H
 
-#include <allegro.h>
+typedef struct BITMAP BITMAP;
 
 #if !defined(_MSC_VER)
 #include <stdint.h>

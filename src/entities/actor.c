@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <allegro.h>
+#include <limits.h>
 #include <math.h>
 #include "actor.h"
 #include "brick.h"

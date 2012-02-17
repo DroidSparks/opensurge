@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * osspec.h - OS Specific Routines
- * Copyright (C) 2009  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2009, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -40,6 +40,7 @@ void home_filepath(char *dest, const char *relativefp, size_t dest_size);
 void resource_filepath(char *dest, const char *relativefp, size_t dest_size, int resfp_mode);
 void create_process(const char *path, int argc, char *argv[]);
 char* basename(const char *path);
+int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param); /* it doesn't recurse */
 
 
 #endif

@@ -73,7 +73,7 @@ static int fill_object_names(const parsetree_statement_t *stmt, void *object_nam
 static int fill_object_categories(const parsetree_statement_t *stmt, void *object_category_data);
 static int fill_lookup_table(const parsetree_statement_t *stmt, void *lookup_table);
 static int prepare_to_fill_object_categories(const parsetree_statement_t *stmt, void *object_category_data);
-static int dirfill(const char *filename, int attrib, void *param); /* file system callback */
+static int dirfill(const char *filename, void *param); /* file system callback */
 static int is_hidden_object(const char *name);
 static int category_exists(const char *category);
 
@@ -93,7 +93,7 @@ void objects_init()
 {
     const char *path = "objects/*.obj";
     char abs_path[2][1024];
-    int j, max_paths, deny_flags = FA_DIREC | FA_LABEL;
+    int j, max_paths;
 
     logfile_message("Loading objects scripts...");
     objects = NULL;
@@ -105,7 +105,7 @@ void objects_init()
 
     /* reading the parse tree */
     for(j=0; j<max_paths; j++)
-        for_each_file_ex(abs_path[j], 0, deny_flags, dirfill, (void*)(&objects));
+        foreach_file(abs_path[j], dirfill, (void*)(&objects));
 
     /* creating the name table */
     name_table.length = 0;
@@ -536,7 +536,7 @@ int object_category_table_cmp(const void *a, const void *b)
     return str_icmp(i, j);
 }
 
-int dirfill(const char *filename, int attrib, void *param)
+int dirfill(const char *filename, void *param)
 {
     parsetree_program_t** p = (parsetree_program_t**)param;
     *p = nanoparser_append_program(*p, nanoparser_construct_tree(filename));

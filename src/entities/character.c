@@ -19,7 +19,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <allegro.h>
 #include "character.h"
 #include "../core/hashtable.h"
 #include "../core/nanoparser/nanoparser.h"
@@ -35,7 +34,7 @@ static hashtable_character_t* characters;
 static character_t *character_new(const char *name); /* creates a new character_t instance */
 static void character_delete(character_t* c); /* deletes c */
 
-static int dirfill(const char *filename, int attrib, void *param); /* file system callback */
+static int dirfill(const char *filename, void *param); /* file system callback */
 static void register_character(character_t *c); /* adds c to the hash table */
 static void validate_character(character_t *c); /* validates c */
 
@@ -52,7 +51,7 @@ void charactersystem_init()
     parsetree_program_t *prog = NULL;
     const char *path = "characters/*.chr";
     char abs_path[2][1024];
-    int j, max_paths, deny_flags = FA_DIREC | FA_LABEL;
+    int j, max_paths;
 
     logfile_message("Loading characters...");
     characters = hashtable_character_t_create(character_delete);
@@ -64,7 +63,7 @@ void charactersystem_init()
 
     /* Reading the parse tree */
     for(j=0; j<max_paths; j++)
-        for_each_file_ex(abs_path[j], 0, deny_flags, dirfill, (void*)(&prog));
+        foreach_file(abs_path[j], dirfill, (void*)(&prog));
 
     if(prog == NULL)
         fatal_error("FATAL ERROR: no characters have been found. Please reinstall the game.");
@@ -148,7 +147,7 @@ void character_delete(character_t* c)
     free(c);
 }
 
-int dirfill(const char *filename, int attrib, void *param)
+int dirfill(const char *filename, void *param)
 {
     parsetree_program_t** p = (parsetree_program_t**)param;
     *p = nanoparser_append_program(*p, nanoparser_construct_tree(filename));

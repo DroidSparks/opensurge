@@ -19,7 +19,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <allegro.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -135,8 +134,8 @@ void menu_init()
     /* fade in */
     if(not_first_time++)
         fadefx_in(image_rgb(0,0,0), FADEIN_TIME);
-    else
-        fadefx_in(image_rgb(255,255,255), FADEIN_TIME);
+    /*else
+        fadefx_in(image_rgb(255,255,255), FADEIN_TIME);*/
 }
 
 

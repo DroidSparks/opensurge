@@ -19,6 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <string.h>
 #include <math.h>
 #include <ctype.h>
 #include "stageselect.h"
@@ -81,7 +82,7 @@ static font_t **stage_label; /* vector */
 /* private functions */
 static void load_stage_list();
 static void unload_stage_list();
-static int dirfill(const char *filename, int attrib, void *param);
+static int dirfill(const char *filename, void *param);
 static int sort_cmp(const void *a, const void *b);
 
 
@@ -274,7 +275,7 @@ void stageselect_render()
 /* loads the stage list from the level/ folder */
 void load_stage_list()
 {
-    int i, j, deny_flags = FA_DIREC | FA_LABEL;
+    int i, j;
     int max_paths;
     char path[] = "levels/*.lev";
     char abs_path[2][1024];
@@ -290,7 +291,7 @@ void load_stage_list()
     /* loading data */
     stage_count = 0;
     for(j=0; j<max_paths; j++)
-        for_each_file_ex(abs_path[j], 0, deny_flags, dirfill, NULL);
+        foreach_file(abs_path[j], dirfill, NULL);
     qsort(stage_data, stage_count, sizeof(stagedata_t*), sort_cmp);
 
     /* fatal error */
@@ -327,7 +328,7 @@ void unload_stage_list()
 
 
 /* callback that fills stage_data[] */
-int dirfill(const char *filename, int attrib, void *param)
+int dirfill(const char *filename, void *param)
 {
     int ver, subver, wipver;
     stagedata_t *s;

@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * osspec.c - OS Specific Routines
- * Copyright (C) 2009-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2009-2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -77,10 +77,18 @@
 #ifndef __WIN32__
 static struct passwd *userinfo;
 #endif
+
 static char* fix_case_path(char *filepath);
 static int fix_case_path_backtrack(const char *pwd, const char *remaining_path, const char *delim, char *dest);
 static char executable_name[1024];
 static void search_the_file(char *dest, const char *relativefp, size_t dest_size);
+
+typedef struct {
+    int (*callback)(const char *filename, void *param);
+    void *param;
+} foreach_file_helper;
+
+static int foreach_file_callback(const char *filename, int attrib, void *param);
 
 #ifndef DISABLE_FILEPATH_OPTIMIZATIONS
 /* cache stuff (also private): it's a basic dictionary */
@@ -401,6 +409,26 @@ char *basename(const char *path)
 }
 
 
+/*
+ * foreach_file()
+ * Traverses a directory, calling callback on each file
+ * wildcard may be a relative path, e.g.: "images / *.png"
+ *
+ * Note: this function doesn't recurse
+ * Note 2: callback must return 0 to let the enumeration proceed, or non-zero to stop it
+ *
+ * Returns the number of successfull calls to callback.
+ */
+int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param)
+{
+    int deny_flags = FA_DIREC | FA_LABEL;
+    char abs_path[1024];
+    foreach_file_helper h = { callback, param };
+
+    absolute_filepath(abs_path, wildcard, sizeof(abs_path));
+    return for_each_file_ex(abs_path, 0, deny_flags, foreach_file_callback, (void*)(&h));
+}
+
 
 
 
@@ -409,6 +437,13 @@ char *basename(const char *path)
 
 
 /* private methods */
+
+/* helps foreach_file() */
+int foreach_file_callback(const char *filename, int attrib, void *param)
+{
+    foreach_file_helper *h = (foreach_file_helper*)param;
+    return h->callback(filename, h->param);
+}
 
 /* backtracking routine used in fix_case_path()
  * returns TRUE iff a solution is found */

@@ -240,27 +240,6 @@ enum editor_entity_type {
 
 /* internal stuff */
 static int editor_enabled; /* is the level editor enabled? */
-static int editor_keybmap[] = {
-    KEY_UP, KEY_DOWN, KEY_RIGHT, KEY_LEFT,  /* directional keys */
-    KEY_N,                                  /* fire 1 */
-    KEY_B,                                  /* fire 2 */
-    KEY_LCONTROL,                           /* fire 3 */
-    KEY_F12                                 /* fire 4 */
-};
-int editor_keybmap2[] = {
-    KEY_W, KEY_S, KEY_D, KEY_A,
-    KEY_Z,
-    KEY_Y,
-    KEY_G,
-    KEY_P
-};
-int editor_keybmap3[] = {
-    KEY_A, KEY_A, KEY_A, KEY_A,
-    KEY_LSHIFT,
-    KEY_DEL,
-    KEY_L,
-    KEY_F1
-};
 static int editor_previous_video_resolution;
 static int editor_previous_video_smooth;
 static image_t *editor_bgimage;
@@ -2284,9 +2263,9 @@ void editor_init()
 
     /* creating objects */
     editor_bgimage = image_load(EDITOR_BGFILE);
-    editor_keyboard = input_create_keyboard(editor_keybmap, 8);
-    editor_keyboard2 = input_create_keyboard(editor_keybmap2, 8);
-    editor_keyboard3 = input_create_keyboard(editor_keybmap3, 8);
+    editor_keyboard = input_create_user("editor1");
+    editor_keyboard2 = input_create_user("editor2");
+    editor_keyboard3 = input_create_user("editor3");
     editor_mouse = input_create_mouse();
     editor_cursor_font = font_create("default");
     editor_properties_font = font_create("default");

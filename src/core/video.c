@@ -175,7 +175,7 @@ void video_changemode(int resolution, int smooth, int fullscreen)
     logfile_message("creating the auxiliary window surface...");
     if(window_surface_half != NULL)
         image_destroy(window_surface_half);
-    window_surface_half = image_create(IMAGE2BITMAP(window_surface)->w/2, IMAGE2BITMAP(window_surface)->h/2);
+    window_surface_half = image_create(image_width(window_surface)/2, image_height(window_surface)/2);
     image_clear(window_surface_half, image_rgb(0,0,0));
 
     /* setting up the window... */
@@ -386,7 +386,7 @@ void video_render()
         case VIDEORESOLUTION_3X:
         {
             image_t *tmp = window_surface;
-            v2d_t scale = v2d_new((float)IMAGE2BITMAP(tmp)->w / (float)IMAGE2BITMAP(video_get_backbuffer())->w, (float)IMAGE2BITMAP(tmp)->h / (float)IMAGE2BITMAP(video_get_backbuffer())->h);
+            v2d_t scale = v2d_new((float)image_width(tmp) / (float)image_width(video_get_backbuffer()), (float)image_height(tmp) / (float)image_height(video_get_backbuffer()));
             image_draw_scaled(video_get_backbuffer(), tmp, 0, 0, scale, IF_NONE);
             draw_to_screen(tmp);
             break;
@@ -419,12 +419,12 @@ void video_render()
 
             if(video_is_smooth() && tmp->w >= 2*VIDEO_SCREEN_W && tmp->h >= 2*VIDEO_SCREEN_H) {
                 image_t *half = window_surface_half;
-                v2d_t scale = v2d_new((float)half->w / (float)video_get_backbuffer()->w, (float)half->h / (float)video_get_backbuffer()->h);
+                v2d_t scale = v2d_new((float)image_width(half) / (float)image_width(video_get_backbuffer()), (float)image_height(half) / (float)image_height(video_get_backbuffer()));
                 image_draw_scaled(video_get_backbuffer(), half, 0, 0, scale, IF_NONE);
                 filter_blit(half, tmp, FILTER_2XSAI);
             }
             else {
-                v2d_t scale = v2d_new((float)tmp->w / (float)video_get_backbuffer()->w, (float)tmp->h / (float)video_get_backbuffer()->h);
+                v2d_t scale = v2d_new((float)image_width(tmp) / (float)image_width(video_get_backbuffer()), (float)image_height(tmp) / (float)image_height(video_get_backbuffer()));
                 image_draw_scaled(video_get_backbuffer(), tmp, 0, 0, scale, IF_NONE);
             }
 
@@ -555,7 +555,7 @@ int video_is_fps_visible()
 void video_display_loading_screen()
 {
     image_t *img = image_load(LOADINGSCREEN_FILE);
-    image_blit(img, video_get_backbuffer(), 0, 0, 0, 0, IMAGE2BITMAP(img)->w, IMAGE2BITMAP(img)->h);
+    image_blit(img, video_get_backbuffer(), 0, 0, 0, 0, image_width(img), image_height(img));
     image_unref(LOADINGSCREEN_FILE);
 
     video_render();
@@ -587,8 +587,8 @@ const image_t* video_get_window_surface()
  *
  * if (filter == 2xsai) or (filter == superagle):
  * -- we assume that:
- * ---- IMAGE2BITMAP(dest)->w = 2 * src->w
- * ---- IMAGE2BITMAP(dest)->h = 2 * src->h
+ * ---- width of dest = 2 * width of src
+ * ---- height of dest = 2 * height of src
  */
 void filter_blit(image_t *src, image_t *dest, int filter)
 {
@@ -600,7 +600,7 @@ void filter_blit(image_t *src, image_t *dest, int filter)
 
     switch(filter) {
         case FILTER_2XSAI:
-            Super2xSaI(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, 0, 0, IMAGE2BITMAP(src)->w, IMAGE2BITMAP(src)->h);
+            Super2xSaI(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, 0, 0, image_width(src), image_height(src));
             for(i=0; i<IMAGE2BITMAP(dest)->h; i++) { /* image fix */
                 for(j=0; j<k; j++)
                     _putpixel(IMAGE2BITMAP(dest), j, i, _getpixel(IMAGE2BITMAP(dest), k, i));
@@ -608,10 +608,10 @@ void filter_blit(image_t *src, image_t *dest, int filter)
             break;
 
         case FILTER_SUPEREAGLE:
-            SuperEagle(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, 0, 0, IMAGE2BITMAP(src)->w, IMAGE2BITMAP(src)->h);
+            SuperEagle(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, 0, 0, image_width(src), image_height(src));
             for(i=0; i<IMAGE2BITMAP(dest)->h; i++) { /* image fix */
                 for(j=0; j<k; j++)
-                    _putpixel(IMAGE2BITMAP(dest), IMAGE2BITMAP(dest)->w-1-j, i, _getpixel(IMAGE2BITMAP(dest), IMAGE2BITMAP(dest)->w-1-k, i));
+                    _putpixel(IMAGE2BITMAP(dest), image_width(dest)-1-j, i, _getpixel(IMAGE2BITMAP(dest), image_width(dest)-1-k, i));
             }
             break;
     }
@@ -622,8 +622,8 @@ void filter_blit(image_t *src, image_t *dest, int filter)
  *
  * src is a memory bitmap
  * dest is a previously created memory bitmap
- * IMAGE2BITMAP(dest)->w == 2 * src->w
- * IMAGE2BITMAP(dest)->h == 2 * src->h */
+ * ---- width of dest = 2 * width of src
+ * ---- height of dest = 2 * height of src */
 void fast2x_blit(image_t *src, image_t *dest)
 {
     int i, j;
@@ -634,27 +634,27 @@ void fast2x_blit(image_t *src, image_t *dest)
     switch(video_get_color_depth())
     {
         case 8:
-            for(j=0; j<IMAGE2BITMAP(dest)->h; j++) {
-                for(i=0; i<IMAGE2BITMAP(dest)->w; i++)
+            for(j=0; j<image_height(dest); j++) {
+                for(i=0; i<image_width(dest); i++)
                     ((uint8*)IMAGE2BITMAP(dest)->line[j])[i] = ((uint8*)IMAGE2BITMAP(src)->line[j/2])[i/2];
             }
             break;
 
         case 16:
-            for(j=0; j<IMAGE2BITMAP(dest)->h; j++) {
-                for(i=0; i<IMAGE2BITMAP(dest)->w; i++)
+            for(j=0; j<image_height(dest); j++) {
+                for(i=0; i<image_width(dest); i++)
                     ((uint16*)IMAGE2BITMAP(dest)->line[j])[i] = ((uint16*)IMAGE2BITMAP(src)->line[j/2])[i/2];
             }
             break;
 
         case 24:
             /* TODO */
-            stretch_blit(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, IMAGE2BITMAP(src)->w, IMAGE2BITMAP(src)->h, 0, 0, IMAGE2BITMAP(dest)->w, IMAGE2BITMAP(dest)->h);
+            stretch_blit(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, image_width(src), image_height(src), 0, 0, image_width(dest), image_height(dest));
             break;
 
         case 32:
-            for(j=0; j<IMAGE2BITMAP(dest)->h; j++) {
-                for(i=0; i<IMAGE2BITMAP(dest)->w; i++)
+            for(j=0; j<image_height(dest); j++) {
+                for(i=0; i<image_width(dest); i++)
                     ((uint32*)IMAGE2BITMAP(dest)->line[j])[i] = ((uint32*)IMAGE2BITMAP(src)->line[j/2])[i/2];
             }
             break;
@@ -674,7 +674,7 @@ void draw_to_screen(image_t *img)
         video_changemode(VIDEORESOLUTION_2X, video_is_smooth(), video_is_fullscreen());
     }
     else
-        blit(IMAGE2BITMAP(img), screen, 0, 0, 0, 0, IMAGE2BITMAP(img)->w, IMAGE2BITMAP(img)->h);
+        blit(IMAGE2BITMAP(img), screen, 0, 0, 0, 0, image_width(img), image_height(img));
 }
 
 /* this window is active */

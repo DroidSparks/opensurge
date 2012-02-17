@@ -52,7 +52,7 @@ void *mallocx(size_t bytes)
     void *p = malloc(bytes);
 
     if(!p)
-        fatal_error("FATAL ERROR: mallocx() failed.\n");
+        fatal_error("FATAL ERROR: mallocx(%u) failed.\n", bytes);
 
     return p;
 }

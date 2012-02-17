@@ -33,7 +33,6 @@
 static font_t *title, *label, *quitlabel;
 static image_t *buf;
 static input_t *in;
-static int keybmap[] = { KEY_A, KEY_A, KEY_A, KEY_A, KEY_A, KEY_A, KEY_A, KEY_ESC };
 
 static const char text[] = 
 "<color=00bbff>General</color>\n\n"
@@ -88,7 +87,7 @@ void editorhelp_init()
     image_clear(buf, image_rgb(0,0,0));
     image_draw_trans(video_get_backbuffer(), buf, 0, 0, 0.15f, IF_NONE);
 
-    in = input_create_keyboard(keybmap, 8);
+    in = input_create_user("editorhelp");
 
     sound_play( soundfactory_get("select") );
 }
@@ -101,7 +100,7 @@ void editorhelp_init()
  */
 void editorhelp_update()
 {
-    if(input_button_pressed(in, IB_FIRE4)) {
+    if(input_button_pressed(in, IB_FIRE1)) {
         scenestack_pop();
         return;
     }
