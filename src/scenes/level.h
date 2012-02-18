@@ -55,7 +55,7 @@ const char* level_author();
 void level_change_player(struct player_t *new_player); /* character switching */
 struct player_t* level_player(); /* active player */
 
-void level_persist(); /* persists (saves) the current level */
+int level_persist(); /* persists (saves) the current level */
 
 void level_create_particle(struct image_t *image, v2d_t position, v2d_t speed, int destroy_on_brick);
 struct brick_t* level_create_brick(int type, v2d_t position);

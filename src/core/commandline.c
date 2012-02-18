@@ -64,7 +64,7 @@ commandline_t commandline_parse(int argc, char **argv)
     str_cpy(cmd.custom_quest_path, "", sizeof(cmd.custom_quest_path));
     str_cpy(cmd.language_filepath, preferences_get_languagepath(), sizeof(cmd.language_filepath));
     cmd.use_gamepad = preferences_get_usegamepad();
-    cmd.optimize_cpu_usage = FALSE;
+    cmd.optimize_cpu_usage = TRUE;
 
     /* logfile */
     logfile_message("game arguments:");
@@ -92,7 +92,7 @@ commandline_t commandline_parse(int argc, char **argv)
                 "    --level \"FILEPATH\"        runs the level located at FILEPATH\n"
                 "    --quest \"FILEPATH\"        runs the quest located at FILEPATH\n"
                 "    --language \"FILEPATH\"     sets the language file to FILEPATH (for example, %s)\n"
-                "    --optimize-cpu-usage      reduces CPU usage (experimental)\n"
+                "    --full-cpu-usage          uses 100%% of the CPU\n"
                 "\n"
                 "(*) This option may be used to improve the graphic quality using a special algorithm.\n"
                 "    You should NOT use this option on slow computers, since it may imply a severe performance hit.\n"
@@ -155,8 +155,8 @@ commandline_t commandline_parse(int argc, char **argv)
         else if(str_icmp(argv[i], "--use-gamepad") == 0)
             cmd.use_gamepad = TRUE;
 
-        else if(str_icmp(argv[i], "--optimize-cpu-usage") == 0)
-            cmd.optimize_cpu_usage = TRUE;
+        else if(str_icmp(argv[i], "--full-cpu-usage") == 0)
+            cmd.optimize_cpu_usage = FALSE;
 
         else if(str_icmp(argv[i], "--level") == 0) {
             if(++i < argc) {

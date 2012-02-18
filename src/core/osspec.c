@@ -92,10 +92,11 @@ static int foreach_file_callback(const char *filename, int attrib, void *param);
 
 #ifndef DISABLE_FILEPATH_OPTIMIZATIONS
 /* cache stuff (also private): it's a basic dictionary */
-static void cache_init();
-static void cache_release();
-static char *cache_search(const char *key);
-static void cache_insert(const char *key, const char *value);
+static void cache_init(); /* hi! :-) */
+static void cache_release(); /* bye! */
+static char *cache_search(const char *key); /* searches for key */
+static void cache_insert(const char *key, const char *value); /* new key */
+static void cache_update(const char *key, const char *value); /* will update key, if it exists */
 
 /* the cache is implemented as a simple binary tree */
 typedef struct cache_t {
@@ -321,7 +322,7 @@ void resource_filepath(char *dest, const char *relativefp, size_t dest_size, int
 
                     /* it doesn't exist */
                     if(NULL != (fp = fopen(dest, "w"))) {
-                        /* is it writable? */
+                        /* is it writable? this shouldn't happen */
                         fclose(fp);
                         delete_file(dest);
                     }
@@ -338,6 +339,13 @@ void resource_filepath(char *dest, const char *relativefp, size_t dest_size, int
 
             }
 
+#ifndef DISABLE_FILEPATH_OPTIMIZATIONS
+            /* this is sooo important... */
+            if(cache_search(relativefp) != NULL)
+                cache_update(relativefp, dest);
+            else
+                cache_insert(relativefp, dest);
+#endif
             break;
         }
 
@@ -582,6 +590,15 @@ void cache_insert(const char *key, const char *value)
     cache_root = cachetree_insert(cache_root, key, value);
 }
 
+/* will update an entry of the dictionary, if that entry exists */
+void cache_update(const char *key, const char *value)
+{
+    cache_t *node = cachetree_search(cache_root, key);
+    if(node != NULL) {
+        free(node->value);
+        node->value = str_dup(value);
+    }
+}
 
 /* ------ cache implementation --------- */
 cache_t *cachetree_release(cache_t *node)

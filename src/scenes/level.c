@@ -171,7 +171,7 @@ static font_t *dlgbox_title, *dlgbox_message;
 /* level management */
 static void level_load(const char *filepath);
 static void level_unload();
-static void level_save(const char *filepath);
+static int level_save(const char *filepath);
 static void level_interpret_line(const char *filename, int fileline, const char *line);
 static void level_interpret_parsed_line(const char *filename, int fileline, const char *identifier, int param_count, const char **param);
 
@@ -398,7 +398,7 @@ void level_load(const char *filepath)
     strcpy(author, "");
     strcpy(version, "");
     strcpy(grouptheme, "");
-    str_cpy(file, abs_path, sizeof(file));
+    str_cpy(file, filepath, sizeof(file)); /* it's the relative filepath we want */
     spawn_point = v2d_new(0,0);
     dialogregion_size = 0;
     act = 1;
@@ -501,8 +501,9 @@ void level_unload()
 /*
  * level_save()
  * Saves the current level to a file
+ * Returns TRUE on success
  */
-void level_save(const char *filepath)
+int level_save(const char *filepath)
 {
     int i;
     FILE *fp;
@@ -523,7 +524,7 @@ void level_save(const char *filepath)
     if(NULL == (fp=fopen(abs_path, "w"))) {
         logfile_message("Warning: could not open \"%s\" for writing.", abs_path);
         video_showmessage("Could not open \"%s\" for writing.", abs_path);
-        return;
+        return FALSE;
     }
 
     /* meta information */
@@ -614,6 +615,8 @@ void level_save(const char *filepath)
     brick_list = entitymanager_release_retrieved_brick_list(brick_list);
     item_list = entitymanager_release_retrieved_item_list(item_list);
     object_list = entitymanager_release_retrieved_object_list(object_list);
+
+    return TRUE;
 }
 
 /*
@@ -1400,10 +1403,11 @@ player_t* level_player()
 /*
  * level_persist()
  * Persists (saves) the current level
+ * Returns TRUE on success
  */
-void level_persist()
+int level_persist()
 {
-    level_save(file);
+    return level_save(file);
 }
 
 /*
@@ -2762,9 +2766,14 @@ void editor_moveable_platforms_path_render(brick_list_t *major_bricks)
  */
 void editor_save()
 {
-    level_save(file);
-    sound_play( soundfactory_get("level saved") );
-    video_showmessage("Level saved.");
+    if(level_save(file)) {
+        sound_play( soundfactory_get("level saved") );
+        video_showmessage("Level saved.");
+    }
+    else {
+        sound_play( soundfactory_get("deny") );
+        video_showmessage("Can't save the level. Please check the logs...");
+    }
 }
 
 
