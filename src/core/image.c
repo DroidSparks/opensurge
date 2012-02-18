@@ -496,11 +496,22 @@ void image_waterfx(image_t *img, int y, uint32 color)
     wg = fast_getg(color);
     wb = fast_getb(color);
 
-    /* fast blending algorithm (alpha = 0.5) */
-    for(j=y; j<img->h; j++) {
-        for(i=0; i<img->w; i++) {
-            col = fast_getpixel(img->data, i, j);
-            fast_putpixel(img->data, i, j, fast_makecol((fast_getr(col) + wr)>>1, (fast_getg(col) + wg)>>1, (fast_getb(col) + wb)>>1));
+    /* water effect */
+    if(video_get_color_depth() > 16) {
+        /* fast blending algorithm (alpha = 0.5) */
+        for(j=y; j<img->h; j++) {
+            for(i=0; i<img->w; i++) {
+                col = fast_getpixel(img->data, i, j);
+                fast_putpixel(img->data, i, j, fast_makecol((fast_getr(col) + wr)>>1, (fast_getg(col) + wg)>>1, (fast_getb(col) + wb)>>1));
+            }
+        }
+    }
+    else {
+        /* fast "dithered" water, when bpp is not greater than 16 (slow computers?) */
+        for(j=y; j<img->h; j++) {
+            for(i=j%2; i<img->w; i+=2) {
+                fast_putpixel(img->data, i, j, color);
+            }
         }
     }
 }
