@@ -107,9 +107,10 @@ Joao Victor
 --- images/extra/surge_sigh.png
 --- images/extra/neon_talk.png
 --- images/extra/neon_talk_big.png
---- ./icon.png
 --- ./logo.png
---- ./logo_big.png
+--- src/misc/icon16.png
+--- src/misc/icon32.png
+--- src/misc/icon64.png
 
 Colin Beard
 --- images/charge.png
@@ -236,6 +237,8 @@ Andrew Pociask
 
 lainz
 --- ./surge.png
+--- src/misc/icon128.png
+--- src/misc/icon256.png
 
 Allegro Demo Game, by Shawn Hargreaves
 --- images/allegro.png (gift-ware)
