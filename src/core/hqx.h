@@ -1,6 +1,6 @@
 /*
  * Open Surge Engine
- * hqx.h - neat wrapper for hqx
+ * hqx.h - neat(?) wrapper for hqx
  * Copyright (C) 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
@@ -30,7 +30,28 @@
 #define __D_WIN32
 #undef _WIN32
 #endif
+
+/* it's ugly, I know, but I do not want to change anything in the hqx lib */
+/* the macros defined in hqx/hqx.h are pretty annoying! I just want to get rid of them. */
 #include "hqx/hqx.h"
+#include "hqx/common.h"
+#include "hqx/init.c"
+#include "hqx/hq2x.c"
+#undef PIXEL00_20
+#undef PIXEL01_10
+#undef PIXEL01_12
+#undef PIXEL01_21
+#undef PIXEL01_60
+#undef PIXEL01_61
+#undef PIXEL10_10
+#undef PIXEL10_11
+#undef PIXEL10_21
+#undef PIXEL10_60
+#undef PIXEL10_61
+#undef PIXEL11_70
+#include "hqx/hq3x.c"
+#include "hqx/hq4x.c"
+
 #ifdef __D__GNUC__
 #define __GNUC__
 #endif

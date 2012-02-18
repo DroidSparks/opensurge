@@ -212,10 +212,6 @@ SET(
   src/core/util.c
   src/core/v2d.c
   src/core/video.c
-  src/core/hqx/hq2x.c # after video.c
-  src/core/hqx/hq3x.c
-  src/core/hqx/hq4x.c
-  src/core/hqx/init.c
 
   src/scenes/util/editorgrp.c
   src/scenes/util/grouptree.c
@@ -392,8 +388,6 @@ IF(WIN32)
       src/core/video.h
       src/core/v2d.h
       src/core/hqx.h
-      src/core/hqx/common.h
-      src/core/hqx/hqx.h
 
       src/scenes/util/editorgrp.h
       src/scenes/util/grouptree.h
