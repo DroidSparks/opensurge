@@ -212,6 +212,7 @@ SET(
   src/core/util.c
   src/core/v2d.c
   src/core/video.c
+  src/core/hqx.c
 
   src/scenes/util/editorgrp.c
   src/scenes/util/grouptree.c
