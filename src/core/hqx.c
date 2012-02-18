@@ -19,6 +19,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <stdlib.h>
+
 #ifdef __GNUC__
 #define __D__GNUC__
 #undef __GNUC__
