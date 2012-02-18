@@ -43,19 +43,6 @@ struct inputmouse_t {
 };
 static void inputmouse_update(input_t* in);
 
-/* <derived class>: keyboard -- deprecated -- */
-struct inputkeyboard_t {
-    input_t base;
-    int keybmap[IB_MAX]; /* key mappings */
-};
-static void inputkeyboard_update(input_t* in);
-
-/* <derived class>: joystick -- deprecated -- */
-struct inputjoystick_t {
-    input_t base;
-};
-static void inputjoystick_update(input_t* in);
-
 /* <derived class>: computer */
 struct inputcomputer_t {
     input_t base;
@@ -245,53 +232,6 @@ int input_button_up(input_t *in, inputbutton_t button)
 
 
 
-/*
- * input_create_keyboard()
- * Creates an input object based on the keyboard
- *
- * keybmap: array of IB_MAX integers. Use NULL
- *          to use the default settings.
- *
- * keybmap_len: number of elements of keybmap
- */
-input_t *input_create_keyboard(int keybmap[], int keybmap_len)
-{
-    inputkeyboard_t *me = mallocx(sizeof *me);
-    input_t *in = (input_t*)me;
-    int i;
-
-    in->update = inputkeyboard_update;
-    in->enabled = TRUE;
-    for(i=0; i<IB_MAX; i++)
-        in->state[i] = in->oldstate[i] = FALSE;
-
-    if(keybmap) {
-        /* custom keyboard map */
-        for(i=0; i<IB_MAX; i++)
-            me->keybmap[i] = i < keybmap_len ? keybmap[i] : 0;
-    }
-    else {
-        /* default settings */
-        me->keybmap[IB_UP] = KEY_UP;
-        me->keybmap[IB_DOWN] = KEY_DOWN;
-        me->keybmap[IB_RIGHT] = KEY_RIGHT;
-        me->keybmap[IB_LEFT] = KEY_LEFT;
-        me->keybmap[IB_FIRE1] = KEY_SPACE;
-        me->keybmap[IB_FIRE2] = KEY_LCONTROL;
-        me->keybmap[IB_FIRE3] = KEY_ENTER;
-        me->keybmap[IB_FIRE4] = KEY_ESC;
-        me->keybmap[IB_FIRE5] = KEY_W;
-        me->keybmap[IB_FIRE6] = KEY_A;
-        me->keybmap[IB_FIRE7] = KEY_S;
-        me->keybmap[IB_FIRE8] = KEY_D;
-    }
-
-    input_register(in);
-    return in;
-}
-
-
-
 
 /* 
  * input_create_mouse()
@@ -336,36 +276,6 @@ input_t *input_create_computer()
     input_register(in);
     return in;
 }
-
-
-/*
- * input_create_joystick()
- * Creates an object that receives input from
- * a joystick
- */
-input_t *input_create_joystick()
-{
-    inputjoystick_t *me;
-    input_t *in;
-    int i;
-
-    if(!input_joystick_available()) {
-        fatal_error("Called input_create_joystick(), but no joystick is available!");
-        return NULL;
-    }
-
-    me = mallocx(sizeof *me);
-    in = (input_t*)me;
-
-    in->update = inputjoystick_update;
-    in->enabled = TRUE;
-    for(i=0; i<IB_MAX; i++)
-        in->state[i] = in->oldstate[i] = FALSE;
-
-    input_register(in);
-    return in;
-}
-
 
 /*
  * input_create_user()
@@ -631,33 +541,6 @@ void inputmouse_update(input_t* in)
     in->state[IB_FIRE8] = FALSE;
 }
 
-void inputkeyboard_update(input_t* in)
-{
-    inputkeyboard_t *me = (inputkeyboard_t*)in;
-    int i;
-
-    for(i=0; i<IB_MAX; i++)
-        in->state[i] = (me->keybmap[i] > 0) ? key[ me->keybmap[i] ] : FALSE;
-}
-
-void inputjoystick_update(input_t* in)
-{
-    if(input_joystick_available()) {
-        in->state[IB_UP] = joy[0].stick[0].axis[1].d1;
-        in->state[IB_DOWN] = joy[0].stick[0].axis[1].d2;
-        in->state[IB_LEFT] = joy[0].stick[0].axis[0].d1;
-        in->state[IB_RIGHT] = joy[0].stick[0].axis[0].d2;
-        in->state[IB_FIRE1] = joy[0].button[0].b;
-        in->state[IB_FIRE2] = joy[0].button[1].b;
-        in->state[IB_FIRE3] = joy[0].button[2].b;
-        in->state[IB_FIRE4] = joy[0].button[3].b;
-        in->state[IB_FIRE5] = (joy[0].num_buttons >= 5) ? joy[0].button[4].b : FALSE;
-        in->state[IB_FIRE6] = (joy[0].num_buttons >= 6) ? joy[0].button[5].b : FALSE;
-        in->state[IB_FIRE7] = (joy[0].num_buttons >= 7) ? joy[0].button[6].b : FALSE;
-        in->state[IB_FIRE8] = (joy[0].num_buttons >= 8) ? joy[0].button[7].b : FALSE;
-    }
-}
-
 void inputcomputer_update(input_t* in)
 {
     ;
@@ -693,4 +576,3 @@ void inputuserdefined_update(input_t* in)
         in->state[IB_FIRE8] |= (joy[k].num_buttons > im->joystick.button[IB_FIRE8]) ? joy[k].button[ im->joystick.button[IB_FIRE8] ].b : FALSE;
     }
 }
-
