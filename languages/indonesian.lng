@@ -8,16 +8,16 @@
 // ---------------------------------------------------------------------------
 
 // Meta data
-LANG_LANGUAGE               "Indonesia"
+LANG_LANGUAGE               "Indonesian"
 LANG_AUTHOR                 "Christopher Martinus"
-LANG_LASTUPDATE             "2011-02-22"
+LANG_LASTUPDATE             "2012-02-21"
 LANG_COMPATIBILITY          "0.2.0"
 
 
 // Colors
-COLOR_P1                    "0077ff"
-COLOR_P2                    "ff7700"
-COLOR_P3                    "ff0000"
+COLOR_P1                    "ff8000"
+COLOR_P2                    "bf7a0d"
+COLOR_P3                    "aca5a5"
 COLOR_INPUT                 "aaaaaa"
 COLOR_SPECIAL               "ffff00"
 
@@ -36,15 +36,18 @@ OPTIONS_NO                  "TIDAK"
 OPTIONS_GRAPHICS            "GAMBAR"
 OPTIONS_FULLSCREEN          "Gambar penuh"
 OPTIONS_RESOLUTION          "Resolusi"
-OPTIONS_RESOLUTION_OPT1     "KECIL"
-OPTIONS_RESOLUTION_OPT2     "BIASA"
-OPTIONS_RESOLUTION_OPT3     "MAKSIMAL"
+OPTIONS_RESOLUTION_OPT1     "Kecil"
+OPTIONS_RESOLUTION_OPT2     "Biasa"
+OPTIONS_RESOLUTION_OPT3     "Besar"
+OPTIONS_RESOLUTION_OPT4     "Maks"
 OPTIONS_SMOOTHGFX           "Gambar halus"
+OPTIONS_SMOOTHGFX_ERROR     "[HANYA UNTUK RESOLUSI 32 BPP]"
 OPTIONS_FPS                 "Tunjukkan kecepatan"
 OPTIONS_GAME                "PERMAINAN"
+OPTIONS_GAMEPAD             "Gunakan gamepad"
 OPTIONS_LANGUAGE            "Ganti bahasa"
 OPTIONS_STAGESELECT         "Pemilihan level"
-OPTIONS_CREDITS             "Kredit"
+OPTIONS_CREDITS             "Kredit dan penyumbang"
 OPTIONS_BACK                "KEMBALI"
 
 
@@ -63,33 +66,44 @@ QUESTSELECT_INFO            "<color=ffff00>Versi:</color> %s\n<color=ffff00>Pemb
 MENU_CQ_TUTORIAL            "Belajar bermain Open Surge!"
 MENU_CQ_EXTRA               "Level tambahan"
 
+// Languages (PLEASE DO NOT TRANSLATE!)
+LANGSELECT_TITLE1           "<color=$COLOR_P1>SELECT YOUR</color>"
+LANGSELECT_TITLE2           "<color=$COLOR_P1>LANGUAGE</color>"
+LANGSELECT_AUTHOR           "<color=ffff00>Translation by:</color> %s"
+LANGSELECT_PAGE             "page %d/%d"
 
 // Credits
-CREDITS_TITLE               "KREDIT"
-CREDITS_KEY                 "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali"
-CREDITS_ACTIVE              "Tim"
-CREDITS_RETIRED             "Mantan Anggota"
+CREDITS_TITLE               "<color=$COLOR_P1>KREDIT</color>"
+CREDITS_KEY                 "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali, atau <color=ffff00>$INPUT_FIRE8</color> untuk melihat para penyumbang."
+CREDITS_ACTIVE              "Tim proyek"
+CREDITS_CONTRIB             "Bantuan khusus"
+CREDITS_RETIRED             "Member yang pensiun"
 CREDITS_THANKS              "Terima kasih kepada"
-CREDITS_ALEXANDRE           "Pemimpin proyek, Pemrogram"
+
+CREDITS_ALEXANDRE           "Pemimpin, pemrogram"
 CREDITS_DI                  "Musisi"
-CREDITS_COLIN               "Pengarang cerita, Moderator forum, Penggambar, Musisi"
-CREDITS_MATEUSREIS          "Pendesain efek suara, Musisi"
-CREDITS_JOHAN               "Musisi"
-CREDITS_CELDECEA            "Penggambar"
-CREDITS_JOAO                "Penggambar"
-CREDITS_CHRISTOPHER         "Pengelola Wiki, Terjemahan bhs. Indonesia"
-CREDITS_RUBEN               "Pendesain level"
+CREDITS_COLIN               "Moderator forum, Pengarang cerita"
+CREDITS_MATEUSREIS          "Efek suara"
+CREDITS_JOHAN               "Musisi, Pengurus media sosial"
+CREDITS_CELDECEA            "Seniman"
+CREDITS_JOAO                "Seniman"
+CREDITS_RAMON               "Ilustrasi"
+CREDITS_CHRISTOPHER         "Pengurus Wiki, Terjemahan bhs. Indonesia"
+CREDITS_RUBEN               "Desain Level"
 CREDITS_SSDW                "Terjemahan bhs. Belanda"
-CREDITS_LAINZ               "Terjemahan bhs. Spanyol"
 CREDITS_ARTHURBLOT          "Terjemahan bhs. Prancis"
 CREDITS_REIMUND             "Terjemahan bhs. Jerman"
 CREDITS_SZYMON              "Terjemahan bhs. Polandia"
-CREDITS_TOMIRES             "Terjemahan bhs. Czech"
-CREDITS_JOGAIT              "Terjemahan bhs. Portugal"
-CREDITS_NEOBLAST            "Porting Dreamcast"
-CREDITS_CHRISTIAN           "Porting Mac OS X"
-CREDITS_BASTIAN             "Penggambar"
+CREDITS_TOMIRES             "Terjemahan bhs. Republik Ceko"
 CREDITS_FRANCESCO           "Terjemahan bhs. Italia"
+CREDITS_SANTIAGO            "Terjemahan bhs. Spanyol"
+CREDITS_RAXILLAN            "Terjemahan bhs. Rusia"
+
+CREDITS_RES_TITLE           "Kredit untuk setiap sumber individu"
+CREDITS_RES_TEXT            "Kecuali secara jelas tertulis tidak, berkas-berkas tercantum di bawah ini dilisensikan dengan lisensi Creative Commons Attribution-Share Alike 3.0 (CC-BY-SA 3.0)."CREDITS_RES_IMAGES          "Images"
+CREDITS_RES_MUSICS          "Musik"
+CREDITS_RES_SAMPLES         "Efek suara"
+
 
 
 // Quest names
@@ -120,6 +134,10 @@ BONUSMSG_TEXT               "Level bonus belum ada ;)"
     INPUT_KEYB_FIRE2        "TOMBOL CTRL KIRI"
     INPUT_KEYB_FIRE3        "ENTER"
     INPUT_KEYB_FIRE4        "ESC"
+    INPUT_KEYB_FIRE5        "W"
+    INPUT_KEYB_FIRE6        "A"
+    INPUT_KEYB_FIRE7        "S"
+    INPUT_KEYB_FIRE8        "D"
 
 
     // joystick
@@ -132,12 +150,16 @@ BONUSMSG_TEXT               "Level bonus belum ada ;)"
     INPUT_JOY_FIRE2         "TOMBOL 2"
     INPUT_JOY_FIRE3         "TOMBOL 3"
     INPUT_JOY_FIRE4         "TOMBOL 4"
+    INPUT_JOY_FIRE5         "TOMBOL 5"
+    INPUT_JOY_FIRE6         "TOMBOL 6"
+    INPUT_JOY_FIRE7         "TOMBOL 7"
+    INPUT_JOY_FIRE8         "TOMBOL 8"
 
 
 // HUD (Heads-Up Display)
-HUD_SCORE                   "SKOR:"
+HUD_SCORE                   "SKOR: "
 HUD_TIME                    "WAKTU: "
-HUD_COLLECTIBLES            "RING:"
+HUD_COLLECTIBLES            "RING: "
 HUD_SPACES                  "      " // the same amount of spaces
 HUD_CLEARED_LINE1           "KAU TELAH"
 HUD_CLEARED_LINE2           "MELALUI"
@@ -157,4 +179,38 @@ HUD_CLEARED_TOTAL           "BONUS TOTAL"
     DESERT1_TITLE_2         "Rahasia" 
     DESERT1_MSG_2           "Ini tempat untuk yang bisa melihat..."
     DESERT1_TITLE_3         "Tersimpan"
-    DESERT1_MSG_3           "S"
+    DESERT1_MSG_3           "Sebuah putaran akan ada disini suatu hari nanti."
+
+// Opening cutscene
+OPENING_1				"Pada zaman dahulu, para dewa kuno telah menciptakan sebuah barang yang suci dan kuat: <color=ff8000>Tongkat Dimensi</color>."
+OPENING_2				"Tongkat ini memberikan kekuatan tak terbatas kepada siapapun yang memegangnya, "
+OPENING_3				"dan karena tongkat itu bisa sangat berbahaya jika jatuh di tangan yang salah, para dewa telah menyembunyikannya di <color=ff8000>Gerbang Dimensi</color>."
+OPENING_4				"<color=ff8000>Gimacian si Gelap</color> adalah seorang penyhir jahat yang memerlukan kegelapan untuk menjadi lebih kuat."
+OPENING_5				"Dia tahu dimana letak <color=ff8000>Gerbang Dimensi</color> itu dan ia akan mencoba untuk membukanya dengan <color=ff8000>Cincin Dimensi</color>." 
+OPENING_6				"Jika dia mendapatkan kekuatan itu, dia akan merajai seluruh jagat raya, dan tidak akan ada yang bisa menghentikan dia." 
+OPENING_7				"<color=ff8000>Surge</color> dan kawan-kawannya harus mencegah <color=ff8000>Gimacian si Gelap</color> dari membuka gerbang itu,"
+OPENING_8				"atau wujud kehidupan, seperti yang kita tahu,"
+OPENING_9				"akan berakhir!"
+
+// Dialog boxes
+    // test
+    DIALOGBOX_MESSAGE_0     ""
+    DIALOGBOX_MESSAGE_1     "Halo! ini <color=ffff00>Kotak dialog</color>! Tes, tes, satu, dua, tiga! Yah, itu saja dulu."
+    DIALOGBOX_MESSAGE_2     "Hah?"
+
+    // cutscene 1: <color=$COLOR_P1>Surge</color> and <color=$COLOR_P2>Neon</color>
+    DIALOGBOX_MESSAGE_100   "Ahhh, ini hidup, kan, teman?"
+    DIALOGBOX_MESSAGE_101   "Ya..."
+    DIALOGBOX_MESSAGE_102   "Tidakkah kau berpikir bahwa kita --"
+    DIALOGBOX_MESSAGE_103   "Hm?!?"
+    DIALOGBOX_MESSAGE_104   "<color=$COLOR_P2>Neon</color>, tunggulah disini sebentar."
+    DIALOGBOX_MESSAGE_105   "Apakah menurutmu ini terhubung dengan kehilangan-kehilangan yang baru- baru ini terjadi?"
+    DIALOGBOX_MESSAGE_106   "Aku tak tahu. Akan kulihat apa yang sedang terjadi."
+    DIALOGBOX_MESSAGE_107   "Tapi, <color=$COLOR_P1>Surge</color>, kau akan terluka! Aku akan membantu!"
+    DIALOGBOX_MESSAGE_108   "Jangan, <color=$COLOR_P2>Neon</color>. Tunggulah disini dan jagalah dirimu. Aku takkan membiarkanmu dilukai oleh... apapun yang sedang kita lihat."
+    DIALOGBOX_MESSAGE_109   "Tapi, <color=$COLOR_P1>Surge</color>..."
+    DIALOGBOX_MESSAGE_110   "Baiklah..."
+    DIALOGBOX_MESSAGE_111   "Kita akan bertemu di air terjun. Jagalah dirimu. Ingat, kalau kau kewalahan, lari saja."
+    DIALOGBOX_MESSAGE_112   "Baiklah, tapi kau juga akan hati-hati... kan?"
+    DIALOGBOX_MESSAGE_113   "Aku akan berhati-hati. Sekarang, cepatlah!"
+    DIALOGBOX_MESSAGE_114   "Ayo!"
