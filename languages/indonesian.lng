@@ -74,7 +74,7 @@ LANGSELECT_PAGE             "page %d/%d"
 
 // Credits
 CREDITS_TITLE               "<color=$COLOR_P1>KREDIT</color>"
-CREDITS_KEY                 "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali, atau <color=ffff00>$INPUT_FIRE8</color> untuk melihat para penyumbang."
+CREDITS_KEY                 "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali, atau <color=ffff00>$INPUT_FIRE8</color> untuk daftar penyumbang."
 CREDITS_ACTIVE              "Tim proyek"
 CREDITS_CONTRIB             "Bantuan khusus"
 CREDITS_RETIRED             "Member yang pensiun"
@@ -104,7 +104,10 @@ CREDITS_RES_TEXT            "Kecuali secara jelas tertulis tidak, berkas-berkas 
 CREDITS_RES_MUSICS          "Musik"
 CREDITS_RES_SAMPLES         "Efek suara"
 
-
+// Donations
+DONATORS_TITLE              "<color=$COLOR_P1>DONATUR</color>"
+DONATORS_KEY                "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali"
+DONATORS_HEADER             "Sebagai game open source, Open Surge memerlukan dana untuk pengkodean, musik, seni, dan lain-lain.\n\nTercantum berikut adalah para penggemar yang telah membantu dengan sumbangan:"
 
 // Quest names
 TUTORIAL_QUEST_NAME         "Latihan"
@@ -158,7 +161,7 @@ BONUSMSG_TEXT               "Level bonus belum ada ;)"
 
 // HUD (Heads-Up Display)
 HUD_SCORE                   "SKOR: "
-HUD_TIME                    "WAKTU: "
+HUD_TIME                    "WAKTU:"
 HUD_COLLECTIBLES            "RING: "
 HUD_SPACES                  "      " // the same amount of spaces
 HUD_CLEARED_LINE1           "KAU TELAH"
@@ -183,11 +186,11 @@ HUD_CLEARED_TOTAL           "BONUS TOTAL"
 
 // Opening cutscene
 OPENING_1				"Pada zaman dahulu, para dewa kuno telah menciptakan sebuah barang yang suci dan kuat: <color=ff8000>Tongkat Dimensi</color>."
-OPENING_2				"Tongkat ini memberikan kekuatan tak terbatas kepada siapapun yang memegangnya, "
-OPENING_3				"dan karena tongkat itu bisa sangat berbahaya jika jatuh di tangan yang salah, para dewa telah menyembunyikannya di <color=ff8000>Gerbang Dimensi</color>."
+OPENING_2				"Tongkat ini memberi kekuatan tanpa batas bagi pemegangnya."
+OPENING_3				"Karena tongkat itu berbahaya jika jatuh di tangan yang salah, para dewa telah menyimpannya di <color=ff8000>Gerbang Dimensi</color>."
 OPENING_4				"<color=ff8000>Gimacian si Gelap</color> adalah seorang penyhir jahat yang memerlukan kegelapan untuk menjadi lebih kuat."
-OPENING_5				"Dia tahu dimana letak <color=ff8000>Gerbang Dimensi</color> itu dan ia akan mencoba untuk membukanya dengan <color=ff8000>Cincin Dimensi</color>." 
-OPENING_6				"Jika dia mendapatkan kekuatan itu, dia akan merajai seluruh jagat raya, dan tidak akan ada yang bisa menghentikan dia." 
+OPENING_5				"Dia tahu dimana letak <color=ff8000>Gerbang Dimensi</color> itu. Ia akan mencoba untuk membukanya dengan <color=ff8000>Cincin Dimensi</color>." 
+OPENING_6				"Jika dia mendapatkan kekuatan itu, dia akan merajai seluruh jagat raya, dan tidak akan ada yang bisa menghentikannya." 
 OPENING_7				"<color=ff8000>Surge</color> dan kawan-kawannya harus mencegah <color=ff8000>Gimacian si Gelap</color> dari membuka gerbang itu,"
 OPENING_8				"atau wujud kehidupan, seperti yang kita tahu,"
 OPENING_9				"akan berakhir!"
