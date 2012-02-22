@@ -73,7 +73,7 @@ object ".cutscene1_startup"
 
     state "step 1.1"
     {
-        on_timeout 4.0 "step 1.2"
+        on_timeout 2.0 "step 1.2"
     }
 
     state "step 1.2"
@@ -362,7 +362,7 @@ object ".cutscene1_blackscreen_text"
         set_zindex 1.1
         set_animation SD_HUDBLACKSCREEN 0
         let $t+=dt()
-        set_alpha "cond($t < 1.0, alpha()-dt(), cond($t > 2.0, alpha()+dt(), 0.0))"
+        set_alpha "cond($t < 0.5, alpha()-2*dt(), cond($t > 1.5, alpha()+2*dt(), 0.0))"
         //textout_centre default_ttf screen_width()/2 screen_height()/2-6 "$CUTSCENE1_SKIP" screen_width()*0.9
         textout_right default_ttf screen_width()-5 screen_height()-45 "$CUTSCENE1_SKIP" screen_width()*0.9
     }

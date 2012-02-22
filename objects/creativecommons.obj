@@ -13,7 +13,7 @@ object ".creativecommons_startup"
         set_animation SD_FADEEFFECT_WHITE 0
 
         let $_fade_in=1
-        let $_fade_duration=1
+        let $_fade_duration=0.5
         create_child .fade_effect
 
         change_state wait
@@ -21,25 +21,26 @@ object ".creativecommons_startup"
 
     state wait
     {
-        on_timeout 1 create_logo
+        on_timeout 0.5 create_logo
     }
 
     state create_logo
     {
+        play_sample samples/creativecommons.ogg
         create_child .creativecommons_startup.logo
         change_state skipper
     }
 
     state skipper
     {
-        on_button_pressed fire1 fadeout
+        on_timeout 4.0 fadeout
         on_button_pressed fire3 fadeout
         on_button_pressed fire4 fadeout
     }
 
     state fadeout
     {
-        change_closest_object_state ".creativecommons_startup.audio" stop
+        stop_sample samples/creativecommons.ogg
         let $_fade_in=0
         let $_fade_duration=0.5
         create_child .fade_effect
@@ -68,17 +69,30 @@ object ".creativecommons_startup.logo"
         set_animation SD_CREATIVECOMMONS 0
         set_absolute_position $_cclogo_x=-width() (screen_height()-height())/2
         let $_cclogo_w=width()
+        create_child .creativecommons_startup.logo.aux
 
-        create_child .creativecommons_startup.surge
-        create_child .creativecommons_startup.audio
-
-        change_state move
+        change_state move_right
     }
 
-    state move
+    state move_right
     {
-        let $v=(screen_width()/2)/3
-        set_absolute_position $_cclogo_x=min(xpos()+$v*dt(),(screen_width()-$_cclogo_w=width())/2) ypos()
+        let $v=screen_width()/0.4
+        move $v 0
+        let $_cclogo_x=xpos()
+        if "xpos() >= (screen_width() - width() * 0.24)/2" wait
+    }
+
+    state wait
+    {
+        if ($t+=dt())<0.5 wait
+        create_child .creativecommons_startup.logo.by_sa
+        change_state move_left
+    }
+
+    state move_left
+    {
+        let $_cclogo_x+=$v*dt()/2
+        set_absolute_position max(xpos()-$v*dt()/2,(screen_width()-width())/2) ypos()
     }
 
     state fadeout_please
@@ -86,13 +100,9 @@ object ".creativecommons_startup.logo"
         change_parent_state fadeout
         change_state wait
     }
-
-    state wait
-    {
-    }
 }
 
-object ".creativecommons_startup.surge"
+object ".creativecommons_startup.logo.aux"
 {
     requires 0.2.0
     detach_from_camera
@@ -100,56 +110,34 @@ object ".creativecommons_startup.surge"
 
     state main
     {
-        set_animation SD_SURGE 14
-        set_absolute_position $_cclogo_x height()/3+screen_height()/2
-        if $_cclogo_x>=(screen_width()-$_cclogo_w)/2-1 win
-    }
-
-    state win
-    {
-        set_animation SD_SURGE 17
-        on_timeout 3 fadeout_please
-    }
-
-    state fadeout_please
-    {
-        change_parent_state fadeout_please
-        change_state wait
-    }
-
-    state wait
-    {
-    }
-}
-
-object ".creativecommons_startup.audio"
-{
-    requires 0.2.0
-    detach_from_camera
-    always_active
-
-    state main
-    {
-        hide
-        play_sample samples/push_stone.ogg
+        set_animation SD_FADEEFFECT_WHITE 0
+        set_zindex 1.0
         change_state loop
     }
 
     state loop
     {
-        if $_cclogo_x>=(screen_width()-$_cclogo_w)/2-1 stop
-        on_timeout 0.3 play
+        set_absolute_position $_cclogo_x+$_cclogo_w*0.22 0
+    }
+}
+
+object ".creativecommons_startup.logo.by_sa"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state main
+    {
+        set_animation SD_CREATIVECOMMONS_BY_SA 0
+        set_alpha 0
+        set_zindex 1.1
+        set_absolute_position screen_width()-width()-3 screen_height()-height()-3
+        change_state appear
     }
 
-    state play
+    state appear
     {
-        play_sample samples/push_stone.ogg
-        return_to_previous_state
-    }
-
-    state stop
-    {
-        stop_sample samples/push_stone.ogg
-        destroy
+        set_alpha alpha()+2*dt()
     }
 }
