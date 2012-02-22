@@ -1,0 +1,155 @@
+// creative commons screen
+// script by Alexandre, 2012-02-22, 2:22 AM
+
+object ".creativecommons_startup"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state main
+    {
+        set_zindex 0
+        set_animation SD_FADEEFFECT_WHITE 0
+
+        let $_fade_in=1
+        let $_fade_duration=1
+        create_child .fade_effect
+
+        change_state wait
+    }
+
+    state wait
+    {
+        on_timeout 1 create_logo
+    }
+
+    state create_logo
+    {
+        create_child .creativecommons_startup.logo
+        change_state skipper
+    }
+
+    state skipper
+    {
+        on_button_pressed fire1 fadeout
+        on_button_pressed fire3 fadeout
+        on_button_pressed fire4 fadeout
+    }
+
+    state fadeout
+    {
+        change_closest_object_state ".creativecommons_startup.audio" stop
+        let $_fade_in=0
+        let $_fade_duration=0.5
+        create_child .fade_effect
+        change_state wait2
+    }
+
+    state wait2
+    {
+        on_timeout 1 next
+    }
+
+    state next
+    {
+        next_level
+    }
+}
+
+object ".creativecommons_startup.logo"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state main
+    {
+        set_animation SD_CREATIVECOMMONS 0
+        set_absolute_position $_cclogo_x=-width() (screen_height()-height())/2
+        let $_cclogo_w=width()
+
+        create_child .creativecommons_startup.surge
+        create_child .creativecommons_startup.audio
+
+        change_state move
+    }
+
+    state move
+    {
+        let $v=(screen_width()/2)/3
+        set_absolute_position $_cclogo_x=min(xpos()+$v*dt(),(screen_width()-$_cclogo_w=width())/2) ypos()
+    }
+
+    state fadeout_please
+    {
+        change_parent_state fadeout
+        change_state wait
+    }
+
+    state wait
+    {
+    }
+}
+
+object ".creativecommons_startup.surge"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state main
+    {
+        set_animation SD_SURGE 14
+        set_absolute_position $_cclogo_x height()/3+screen_height()/2
+        if $_cclogo_x>=(screen_width()-$_cclogo_w)/2-1 win
+    }
+
+    state win
+    {
+        set_animation SD_SURGE 17
+        on_timeout 3 fadeout_please
+    }
+
+    state fadeout_please
+    {
+        change_parent_state fadeout_please
+        change_state wait
+    }
+
+    state wait
+    {
+    }
+}
+
+object ".creativecommons_startup.audio"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state main
+    {
+        hide
+        play_sample samples/push_stone.ogg
+        change_state loop
+    }
+
+    state loop
+    {
+        if $_cclogo_x>=(screen_width()-$_cclogo_w)/2-1 stop
+        on_timeout 0.3 play
+    }
+
+    state play
+    {
+        play_sample samples/push_stone.ogg
+        return_to_previous_state
+    }
+
+    state stop
+    {
+        stop_sample samples/push_stone.ogg
+        destroy
+    }
+}
