@@ -1,6 +1,9 @@
 // ========== CUTSCENES ================
+// intro
+#include "cutscenes/intro.obj"
+
 // before sunshine act 1
-#include "cutscenes/1.obj"
+#include "cutscenes/cutscene1.obj"
 
 // ========== LEVELS ===============
 // Sunshine Paradise

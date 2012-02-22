@@ -246,5 +246,13 @@ sprite SD_SURGE
         fps         8
         data        49
     }
+
+    // confident talking
+    animation 30
+    {
+        repeat      FALSE
+        fps         8
+        data        68 69 70 68 69 70 68 69 70 68 69 70 68 69 70
+    }
 }
 

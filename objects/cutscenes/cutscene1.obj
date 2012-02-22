@@ -1,6 +1,6 @@
 // cutscene1 script
 // by Alexandre @ 2011-09-15
-// updates: 2011-12-28, 2012-01-25
+// updates: 2011-12-28, 2012-01-25, 2012-02-22
 
 object ".cutscene1_startup"
 {
@@ -13,9 +13,8 @@ object ".cutscene1_startup"
         hide
         request_camera_focus
         set_absolute_position 160 1130
-        create_child ".cutscene"
-        create_child ".cutscene_skipper"
-        create_child ".cutscene1_music"
+        create_child ".moviefx"
+        create_child ".moviefx_skipper"
         create_child ".cutscene1_neon" 0 0 "neon"
         create_child ".cutscene1_surge" 0 0 "surge"
         change_state "step 1"
@@ -50,13 +49,14 @@ object ".cutscene1_startup"
         if $dlgstep==11 "step 3.5" // Surge giving "orders"
         if $dlgstep==12 "step 3.9" // Neon is talking
         if $dlgstep==13 "step 4.0" // no more waterfalls
+        if $dlgstep==14 "step 5.0" // final step
 
         return_to_previous_state
     }
 
     state .dialogbox:on_destroy
     {
-        // ???
+        change_state "step 5.2" // fade out
     }
 
     // void
@@ -73,7 +73,7 @@ object ".cutscene1_startup"
 
     state "step 1.1"
     {
-        on_timeout 1.0 "step 1.2"
+        on_timeout 4.0 "step 1.2"
     }
 
     state "step 1.2"
@@ -81,6 +81,7 @@ object ".cutscene1_startup"
         let "$_fade_in = 1"
         let "$_fade_duration = 1.0"
         create_child ".fade_effect"
+        create_child ".cutscene1_music"
         change_state "step 1.3"
     }
 
@@ -269,15 +270,58 @@ object ".cutscene1_startup"
     {
     }
 
+    // step #4: no more waterfalls
     state "step 4.0" // no more waterfalls
     {
         change_closest_object_state .cutscene1_neontalk fadeout
         change_closest_object_state .cutscene1_waterfall fadeout
+        change_child_state surge step10
+        change_child_state neon step10
         change_state "step 4.1"
     }
 
     state "step 4.1"
     {
+    }
+
+    // step #5: go away!
+    state "step 5.0"
+    {
+        change_child_state surge step11
+        change_child_state neon step11
+        change_state "step 5.1"
+    }
+
+    state "step 5.1"
+    {
+    }
+
+    state "step 5.2" // fade out
+    {
+        let $oldv=music_volume()
+        let $_fade_in=0
+        let $_fade_duration=1
+        create_child .fade_effect
+        change_state "step 5.3" 
+    }
+
+    state "step 5.3"
+    {
+        set_music_volume music_volume()-dt()/2
+        on_timeout 1 "step 5.4"
+    }
+
+    state "step 5.4"
+    {
+        set_music_volume music_volume()-dt()/2
+        on_timeout 2 "step 5.5"
+    }
+
+    state "step 5.5"
+    {
+        play_music musics/silence.ogg -1
+        set_music_volume $oldv
+        next_level
     }
 }
 
@@ -292,6 +336,35 @@ object ".cutscene1_blackscreen"
         set_zindex 1.0
         set_absolute_position 0 0
         set_animation SD_HUDBLACKSCREEN 0
+        create_child .cutscene1_blackscreen_text 0 0 text
+        change_state wait
+    }
+
+    state wait
+    {
+    }
+
+    state destroy
+    {
+        change_child_state text destroy
+        destroy
+    }
+}
+
+object ".cutscene1_blackscreen_text"
+{
+    requires 0.2.0
+    always_active
+    detach_from_camera
+
+    state main
+    {
+        set_zindex 1.1
+        set_animation SD_HUDBLACKSCREEN 0
+        let $t+=dt()
+        set_alpha "cond($t < 1.0, alpha()-dt(), cond($t > 2.0, alpha()+dt(), 0.0))"
+        //textout_centre default_ttf screen_width()/2 screen_height()/2-6 "$CUTSCENE1_SKIP" screen_width()*0.9
+        textout_right default_ttf screen_width()-5 screen_height()-45 "$CUTSCENE1_SKIP" screen_width()*0.9
     }
 
     state destroy
@@ -353,6 +426,7 @@ object .cutscene1_surge
 
     state main
     {
+        set_zindex 0.75
         set_absolute_position 178 1197
         set_animation SD_SURGE 29
         look_left
@@ -407,6 +481,22 @@ object .cutscene1_surge
         change_state freeze
     }
 
+    state step9
+    {
+    }
+
+    state step10
+    {
+        set_animation SD_SURGE 30
+    }
+
+    state step11 // run away
+    {
+        set_animation SD_SURGE 2
+        look_right
+        move 175 0
+    }
+
     // misc
     state freeze
     {
@@ -420,6 +510,7 @@ object .cutscene1_neon
 
     state main
     {
+        set_zindex 0.75
         set_absolute_position 160 1195
         set_animation SD_NEON 29
         look_left
@@ -473,6 +564,18 @@ object .cutscene1_neon
     state step9
     {
         set_animation SD_NEON 28
+    }
+
+    state step10
+    {
+        set_animation SD_NEON 31
+    }
+
+    state step11 // run away
+    {
+        set_animation SD_NEON 2
+        look_left
+        move -175 0
     }
 
     // misc
@@ -548,7 +651,7 @@ object ".cutscene1_surgesigh"
 
     state fadein
     {
-        set_absolute_position max(screen_width()/2,xpos()-640*dt()) ypos()
+        set_absolute_position max(screen_width()/2,xpos()-2*640*dt()) ypos()
         on_timeout 1.7 sigh
     }
 
@@ -574,7 +677,7 @@ object ".cutscene1_surgesigh"
 
     state fadeout
     {
-        move 640 0
+        move 2*640 0
     }
 }
 
@@ -595,19 +698,19 @@ object ".cutscene1_neontalk"
 
     state fadein
     {
-        set_absolute_position min(screen_width()/2,xpos()+640*dt()) ypos()
+        set_absolute_position min(screen_width()/2,xpos()+2*640*dt()) ypos()
         on_timeout 0.25 talk
     }
 
     state talk
     {
-        set_absolute_position min(screen_width()/2,xpos()+640*dt()) ypos()
+        set_absolute_position min(screen_width()/2,xpos()+2*640*dt()) ypos()
         set_animation SD_NEONTALK 1
     }
 
     state fadeout
     {
-        move -640 0
+        move -2*640 0
     }
 }
 

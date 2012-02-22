@@ -182,7 +182,7 @@ object .dialogbox.base.text[typewriter].textadvancer
     state idle
     {
         on_button_pressed fire1 finish
-        on_button_pressed fire2 finish
+        on_button_down fire2 finish2
         if ($t+=dt())>=$limit advance
     }
 
@@ -199,5 +199,11 @@ object .dialogbox.base.text[typewriter].textadvancer
         let $_dialogbox_base_textadvancer_pos=$len
         let $_dialogbox_base_textadvancer_completed=1
         destroy
+    }
+
+    state finish2
+    {
+        play_sample samples/talk.wav 0.5
+        change_state finish
     }
 }

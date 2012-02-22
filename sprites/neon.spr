@@ -254,6 +254,14 @@ sprite SD_NEON
         fps         8
         data        71 72 73 71 72 73 71 72 73 71 72 73 71
     }
+
+    // crouch up, after sitting down
+    animation 31
+    {
+        repeat      FALSE
+        fps         4
+        data        84 85
+    }
 }
 
 sprite SD_EASTERNEON

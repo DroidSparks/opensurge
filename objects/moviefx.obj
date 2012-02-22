@@ -2,25 +2,25 @@
 // Open Surge Engine
 // http://opensnc.sourceforge.net
 //
-// File:   objects/cutscene.obj
+// File:   objects/moviefx.obj
 // Desc:   this object is used to get a nice cutscene/movie effect
 // Author: Alexandre
 // Date:   2011-01-02
 // ---------------------------------------------------------------------------
 
 // How to use:
-// Whenever you want to activate the cutscene mode, follow the instructions:
+// Whenever you want to activate the cutscene/movie mode, follow the instructions:
 //
-// 1. Spawn an instance of the ".cutscene" object.
-//    create_child ".cutscene"
+// 1. Spawn an instance of the ".moviefx" object.
+//    create_child ".moviefx"
 //
 // 2. When you're done with the cutscene,
-//    change_closest_object_state ".cutscene" "hide"
+//    change_closest_object_state ".moviefx" "hide"
 //
-// Additionally, you may spawn ".cutscene_skipper" if you want that FIRE3
-// or FIRE4 make the engine go to the next level.
+// Additionally, you may spawn ".moviefx_skipper" if you want that FIRE4
+// make the engine go to the next level.
 
-object ".cutscene"
+object ".moviefx"
 {
     requires 0.2.0
     always_active
@@ -28,15 +28,15 @@ object ".cutscene"
     state "main"
     {
         hide
-        let "$_cutscene_stripspeed = 90"
-        let "$_cutscene_zindex = 9999999"
-        let "$_cutscene_end = 0"
+        let "$_moviefx_stripspeed = 90"
+        let "$_moviefx_zindex = 9999999"
+        let "$_moviefx_end = 0"
         let "$old_hide_hud = $_hide_hud"
         let "$old_char_switch = $_disable_character_switching"
         disable_player_movement
 
-        create_child ".cutscene.topstrip" 0 0 "topstrip"
-        create_child ".cutscene.bottomstrip" 0 0 "bottomstrip"
+        create_child ".moviefx.topstrip" 0 0 "topstrip"
+        create_child ".moviefx.bottomstrip" 0 0 "bottomstrip"
         change_state "enabled"
     }
 
@@ -55,7 +55,7 @@ object ".cutscene"
 
     state "cooldown"
     {
-        if "$_cutscene_end >= 2" "destroy"
+        if "$_moviefx_end >= 2" "destroy"
     }
 
     state "destroy"
@@ -67,7 +67,7 @@ object ".cutscene"
     }
 }
 
-object ".cutscene.topstrip"
+object ".moviefx.topstrip"
 {
     requires 0.2.0
     always_active
@@ -75,7 +75,7 @@ object ".cutscene.topstrip"
 
     state "main"
     {
-        set_zindex "$_cutscene_zindex"
+        set_zindex "$_moviefx_zindex"
         set_animation "SD_CUTSCENETOPSTRIP" 0
         set_absolute_position 0 -height()
         change_state "move"
@@ -83,23 +83,23 @@ object ".cutscene.topstrip"
 
     state "move"
     {
-        set_absolute_position xpos() min(0,ypos()+$_cutscene_stripspeed*dt())
+        set_absolute_position xpos() min(0,ypos()+$_moviefx_stripspeed*dt())
     }
 
     state "hide"
     {
-        set_absolute_position xpos() ypos()-$_cutscene_stripspeed*dt()
+        set_absolute_position xpos() ypos()-$_moviefx_stripspeed*dt()
         if "ypos() <= -height()" destroy
     }
 
     state "destroy"
     {
-        let "$_cutscene_end += 1"
+        let "$_moviefx_end += 1"
         destroy
     }
 }
 
-object ".cutscene.bottomstrip"
+object ".moviefx.bottomstrip"
 {
     requires 0.2.0
     always_active
@@ -107,7 +107,7 @@ object ".cutscene.bottomstrip"
 
     state "main"
     {
-        set_zindex "$_cutscene_zindex"
+        set_zindex "$_moviefx_zindex"
         set_animation "SD_CUTSCENEBOTTOMSTRIP" 0
         set_absolute_position 0 screen_height()
         change_state "move"
@@ -115,23 +115,23 @@ object ".cutscene.bottomstrip"
 
     state "move"
     {
-        set_absolute_position xpos() max(screen_height()-height(),ypos()-$_cutscene_stripspeed*dt())
+        set_absolute_position xpos() max(screen_height()-height(),ypos()-$_moviefx_stripspeed*dt())
     }
 
     state "hide"
     {
-        set_absolute_position xpos() ypos()+$_cutscene_stripspeed*dt()
+        set_absolute_position xpos() ypos()+$_moviefx_stripspeed*dt()
         if "ypos() >= screen_height()" destroy
     }
 
     state "destroy"
     {
-        let "$_cutscene_end += 1"
+        let "$_moviefx_end += 1"
         destroy
     }
 }
 
-object ".cutscene_skipper"
+object ".moviefx_skipper"
 {
     requires 0.2.0
     always_active
@@ -139,7 +139,6 @@ object ".cutscene_skipper"
     state main
     {
         hide
-        //on_button_pressed fire3 end
         on_button_pressed fire4 end
     }
 
