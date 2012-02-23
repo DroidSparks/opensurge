@@ -27,6 +27,7 @@
 #include "../core/storyboard.h"
 #include "../core/video.h"
 #include "../core/audio.h"
+#include "../core/input.h"
 #include "../core/osspec.h"
 #include "../core/font.h"
 #include "../entities/background.h"
@@ -34,10 +35,12 @@
 
 /* private data */
 #define INTRO_TIMEOUT       4.0f
+#define INTRO_QUEST         "quests/intro.qst"
 static float elapsed_time;
 static void load_intro_quest();
 static int must_fadein;
 static image_t* bg;
+static input_t* in;
 
 static char *text = 
  "<color=ff8000>"
@@ -80,6 +83,7 @@ void intro_init()
     must_fadein = TRUE;
     music_stop();
     bg = create_background();
+    in = input_create_user(NULL);
 }
 
 
@@ -89,6 +93,7 @@ void intro_init()
  */
 void intro_release()
 {
+    input_destroy(in);
     image_destroy(bg);
 }
 
@@ -100,6 +105,8 @@ void intro_release()
 void intro_update()
 {
     elapsed_time += timer_get_delta();
+    if(!fadefx_is_fading() && !must_fadein && (input_button_pressed(in, IB_FIRE3) || input_button_pressed(in, IB_FIRE4)))
+        elapsed_time += INTRO_TIMEOUT;
 
     if(must_fadein) {
         fadefx_in(image_rgb(0,0,0), 1.0f);
@@ -137,8 +144,7 @@ void intro_render()
 void load_intro_quest()
 {
     char abs_path[1024];
-
-    resource_filepath(abs_path, "quests/intro.qst", sizeof(abs_path), RESFP_READ);
+    resource_filepath(abs_path, INTRO_QUEST, sizeof(abs_path), RESFP_READ);
     quest_run(load_quest(abs_path), FALSE);
     scenestack_push(storyboard_get_scene(SCENE_QUEST));
 }

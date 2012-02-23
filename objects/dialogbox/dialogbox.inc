@@ -134,6 +134,7 @@ object .dialogbox.example
         create_child .dialogbox.base.text 0 0 text
 
         // wait a bit
+        disable_player_movement
         change_state wait
     }
 
@@ -158,6 +159,7 @@ object .dialogbox.example
         change_child_state avatar destroy
         change_child_state text destroy
         change_parent_state .dialogbox:on_destroy
+        enable_player_movement
         destroy
     }
 
@@ -208,6 +210,7 @@ object .dialogbox.default
         create_child .dialogbox.base.avatar 0 0 avatar
         create_child .dialogbox.base.text[typewriter] 0 0 text
         create_child .dialogbox.base.button 0 0 button
+        disable_player_movement
         change_state wait
     }
 
@@ -228,6 +231,7 @@ object .dialogbox.default
         change_child_state text destroy
         change_child_state button destroy
         change_parent_state .dialogbox:on_destroy
+        enable_player_movement
         destroy
     }
 
@@ -281,6 +285,7 @@ object .dialogbox.default[no_avatar]
         create_child .dialogbox.base.background[slide_from_bottom] 0 0 background
         create_child .dialogbox.base.text[typewriter] 0 0 text
         create_child .dialogbox.base.button 0 0 button
+        disable_player_movement
         change_state wait
     }
 
@@ -300,6 +305,7 @@ object .dialogbox.default[no_avatar]
         change_child_state text destroy
         change_child_state button destroy
         change_parent_state .dialogbox:on_destroy
+        enable_player_movement
         destroy
     }
 

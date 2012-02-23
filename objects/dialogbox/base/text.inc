@@ -65,7 +65,7 @@ object .dialogbox.base.text
     state display
     {
         let $offset_x=15+cond($_dialogbox_base_avatar_exists,$_dialogbox_base_avatar_width,0)
-        let $offset_y=($_dialogbox_base_bgh-$_dialogbox_base_avatar_height)/2
+        let $offset_y=cond($_dialogbox_avatar_exists,($_dialogbox_base_bgh-$_dialogbox_base_avatar_height)/2,($_dialogbox_base_bgh-60)/2)
         let $width=$_dialogbox_base_bgw-$offset_x-15
 
         set_zindex $_dialogbox_base_bgz+0.1
@@ -115,7 +115,7 @@ object .dialogbox.base.text[typewriter]
     state display
     {
         let $offset_x=15+cond($_dialogbox_base_avatar_exists,$_dialogbox_base_avatar_width,0)
-        let $offset_y=($_dialogbox_base_bgh-$_dialogbox_base_avatar_height)/2
+        let $offset_y=cond($_dialogbox_avatar_exists,($_dialogbox_base_bgh-$_dialogbox_base_avatar_height)/2,($_dialogbox_base_bgh-60)/2)
         let $width=$_dialogbox_base_bgw-$offset_x-15
 
         set_zindex $_dialogbox_base_bgz+0.1
