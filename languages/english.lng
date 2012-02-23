@@ -107,13 +107,13 @@ CREDITS_RES_IMAGES          "Images"
 CREDITS_RES_MUSICS          "Musics"
 CREDITS_RES_SAMPLES         "Sound effects"
 CREDITS_RES_SCRIPTS         "Scripts"
-CREDITS_RES_SCRIPTS_TEXT    "The authors are specified within the scripts themselves"
+CREDITS_RES_SCRIPTS_TEXT    "The authors are specified within the scripts themselves."
 
 
 // Donations
 DONATORS_TITLE              "<color=$COLOR_P1>DONATORS</color>"
 DONATORS_KEY                "Press <color=ffff00>$INPUT_FIRE4</color> to go back"
-DONATORS_HEADER             "As an open source game, Open Surge needs money to pay for code, art, music, etc.\n\nThese are the enthusiasts who have helped fund the project:"
+DONATORS_HEADER             "As an open source game, Open Surge needs money to pay for code, art, music, etc.\n\nThese are the enthusiasts who have helped fund the project:\n\n[nobody yet]"
 
 
 // Quest names
