@@ -4,13 +4,13 @@
 //
 // File:   languages/indonesian.lng
 // Desc:   Indonesian translation (encoding: utf-8)
-// Author: SurgeChris
+// Author: Christopher M. (SurgeChris)
 // ---------------------------------------------------------------------------
 
 // Meta data
 LANG_LANGUAGE               "Indonesian"
 LANG_AUTHOR                 "Christopher Martinus"
-LANG_LASTUPDATE             "2012-02-21"
+LANG_LASTUPDATE             "2012-02-22"
 LANG_COMPATIBILITY          "0.2.0"
 
 
@@ -30,7 +30,7 @@ MENU_EXIT                   "KELUAR"
 
 
 // Options
-OPTIONS_TITLE               "PENGATURAN"
+OPTIONS_TITLE               "<color=$COLOR_P1>PENGATURAN</color>"
 OPTIONS_YES                 "YA"
 OPTIONS_NO                  "TIDAK"
 OPTIONS_GRAPHICS            "GAMBAR"
@@ -41,7 +41,7 @@ OPTIONS_RESOLUTION_OPT2     "Biasa"
 OPTIONS_RESOLUTION_OPT3     "Besar"
 OPTIONS_RESOLUTION_OPT4     "Maks"
 OPTIONS_SMOOTHGFX           "Gambar halus"
-OPTIONS_SMOOTHGFX_ERROR     "[HANYA UNTUK RESOLUSI 32 BPP]"
+OPTIONS_SMOOTHGFX_ERROR     "[Untuk res. 32 BPP]"
 OPTIONS_FPS                 "Tunjukkan kecepatan"
 OPTIONS_GAME                "PERMAINAN"
 OPTIONS_GAMEPAD             "Gunakan gamepad"
@@ -52,14 +52,14 @@ OPTIONS_BACK                "KEMBALI"
 
 
 // Stage Select
-STAGESELECT_TITLE           "PEMILIHAN LEVEL"
+STAGESELECT_TITLE           "<color=$COLOR_P1>PEMILIHAN LEVEL</color>"
 STAGESELECT_MSG             "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali"
 STAGESELECT_PAGE            "Hal. %d/%d"
 STAGESELECT_ACT             "Babak"
 
 
 // Custom quests
-QUESTSELECT_TITLE           "PEMILIHAN MISI"
+QUESTSELECT_TITLE           "<color=$COLOR_P1>PEMILIHAN MISI</color>"
 QUESTSELECT_MSG             "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk kembali"
 QUESTSELECT_PAGE            "Hal. %d/%d"
 QUESTSELECT_INFO            "<color=ffff00>Versi:</color> %s\n<color=ffff00>Pembuat:</color> %s\n<color=ffff00>Deskripsi:</color> %s"
@@ -201,7 +201,11 @@ OPENING_9				"akan berakhir!"
     DIALOGBOX_MESSAGE_1     "Halo! ini <color=ffff00>Kotak dialog</color>! Tes, tes, satu, dua, tiga! Yah, itu saja dulu."
     DIALOGBOX_MESSAGE_2     "Hah?"
 
-    // cutscene 1: <color=$COLOR_P1>Surge</color> and <color=$COLOR_P2>Neon</color>
+// cutscene 1: <color=$COLOR_P1>Surge</color> and <color=$COLOR_P2>Neon</color>
+    // Generic texts
+    CUTSCENE1_SKIP          "Tekan <color=ffff00>$INPUT_FIRE4</color> untuk melewatkan adegan."
+	
+	// Dialog boxes
     DIALOGBOX_MESSAGE_100   "Ahhh, ini hidup, kan, teman?"
     DIALOGBOX_MESSAGE_101   "Ya..."
     DIALOGBOX_MESSAGE_102   "Tidakkah kau berpikir bahwa kita --"
