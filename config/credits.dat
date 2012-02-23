@@ -66,6 +66,7 @@ $CREDITS_COLIN
 SourceForge.net
 allegro.cc
 OpenGameArt.org
+FreeGamer
 GagaGames.com.br
 Redshrike
 lunarrush
@@ -349,3 +350,7 @@ d1337r
 
 Allegro Demo Game, by Shawn Hargreaves
 --- samples/allegro.wav (gift-ware)
+
+<color=ffff00>$CREDITS_RES_SCRIPTS</color>
+
+$CREDITS_RES_SCRIPTS_TEXT

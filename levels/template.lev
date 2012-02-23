@@ -5,7 +5,7 @@
 
 // header
 name "Template"
-author "OS Team"
+author "Alexandre"
 version "1.0"
 requires 0.2.0
 act 1

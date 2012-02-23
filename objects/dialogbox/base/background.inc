@@ -1,3 +1,6 @@
+// Dialog Box Component: Background
+// script by Alexandre
+// ----------------------------------------------------------------------------
 //
 // Some background components for you to choose:
 //

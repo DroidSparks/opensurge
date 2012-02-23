@@ -5,7 +5,7 @@
 
 // header
 name "Introduction Cutscene"
-author "OS Team"
+author "Joao Victor, SilverstepP, KZR, jobromedia, Alexandre"
 version "1.0"
 requires 0.2.0
 act 1

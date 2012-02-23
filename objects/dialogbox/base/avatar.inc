@@ -1,3 +1,6 @@
+// Dialog Box Component: Avatar
+// script by Alexandre
+// ----------------------------------------------------------------------------
 //
 // Some avatar components for you to choose:
 //

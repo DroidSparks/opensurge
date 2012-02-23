@@ -1,3 +1,6 @@
+// Loop objects
+// script by Alexandre
+
 sprite SD_LOOPGREEN
 {
     source_file     images/loop.png

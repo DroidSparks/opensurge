@@ -5,7 +5,7 @@
 
 // header
 name "Creative Commons Cutscene"
-author "OS Team"
+author "Di Rodrigues, Alexandre"
 version "1.0"
 requires 0.2.0
 act 1

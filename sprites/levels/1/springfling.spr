@@ -1,5 +1,5 @@
 //Spring Fling: Sprite By SilverstepP
-// modified by Alexandre
+// script by SilverstepP, modified by Alexandre
 sprite "Springfling"
 {
 	source_file	"images/levels/1/springfling.png"

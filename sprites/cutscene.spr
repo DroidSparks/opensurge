@@ -1,3 +1,6 @@
+// cutscene stuff (movie effect)
+// script by Alexandre
+
 // Cutscene top strip
 sprite SD_CUTSCENETOPSTRIP
 {

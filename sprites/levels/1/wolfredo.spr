@@ -1,4 +1,5 @@
 // Wolfredo
+// script by Joao Victor, modified by Alexandre
 sprite Wolfredo
 {
     source_file     images/levels/1/wolfredo.png

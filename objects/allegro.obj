@@ -1,4 +1,5 @@
 // Allegro logo
+// script by Alexandre
 object ".allegro_startup"
 {
     requires 0.2.0

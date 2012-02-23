@@ -1,3 +1,5 @@
+// Awesome (O)Possum, from Ultimate Smash Friends
+// script by Alexandre
 sprite SD_AWOP
 {
     source_file     images/awop.png

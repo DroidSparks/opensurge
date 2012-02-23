@@ -1,4 +1,5 @@
 // Sunshine Paradise
+// script by Alexandre
 #include "levels/1/springfling.spr"
 #include "levels/1/wolfredo.spr"
 #include "levels/1/peixudo.spr"

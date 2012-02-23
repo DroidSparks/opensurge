@@ -1,3 +1,6 @@
+// script by Alexandre
+
+// Camera icons
 sprite SD_CAMERA
 {
 	source_file		images/camera.png

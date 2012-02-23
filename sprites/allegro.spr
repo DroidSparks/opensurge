@@ -1,4 +1,5 @@
 // Allegro logo
+// script by Alexandre
 sprite SD_ALLEGRO
 {
     source_file     images/allegro.png

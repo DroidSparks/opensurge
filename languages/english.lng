@@ -106,6 +106,8 @@ CREDITS_RES_TEXT            "Unless explicitly told otherwise, the files listed 
 CREDITS_RES_IMAGES          "Images"
 CREDITS_RES_MUSICS          "Musics"
 CREDITS_RES_SAMPLES         "Sound effects"
+CREDITS_RES_SCRIPTS         "Scripts"
+CREDITS_RES_SCRIPTS_TEXT    "The authors are specified within the scripts themselves"
 
 
 // Donations

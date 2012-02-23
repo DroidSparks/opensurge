@@ -4,7 +4,7 @@
 //
 // File:   quests/intro.qst
 // Desc:   this is the introduction cutscene, displayed before the menu screen
-// Author: OS Team
+// Author: script by Alexandre
 // ---------------------------------------------------------------------------
 
 // quest properties
@@ -16,7 +16,6 @@ image           "images/null.png"
 hidden
 
 // level list (in order of appearance)
-level           "levels/cutscenes/allegro.lev"
 level           "levels/cutscenes/creativecommons.lev"
 level           "levels/cutscenes/intro.lev"
 level           "levels/cutscenes/almostmenu.lev"

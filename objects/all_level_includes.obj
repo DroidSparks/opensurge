@@ -1,3 +1,6 @@
+// some includes...
+// script by Alexandre
+
 // ========== CUTSCENES ================
 // intro
 #include "cutscenes/intro.obj"

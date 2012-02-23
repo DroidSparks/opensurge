@@ -1,3 +1,6 @@
+// Dialog Box Component: Text
+// script by Alexandre
+// ----------------------------------------------------------------------------
 //
 // Some text components for you to choose:
 //

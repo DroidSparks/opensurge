@@ -1,4 +1,5 @@
 // almost in the menu...
+// script by Alexandre
 object ".almostmenu_startup"
 {
     requires 0.2.0
