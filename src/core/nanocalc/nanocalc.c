@@ -1,7 +1,7 @@
 /*
- * nanocalc 1.0
+ * nanocalc 1.1
  * A tiny stand-alone easy-to-use expression evaluator written in C
- * Copyright (c) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (c) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
@@ -33,30 +33,13 @@
 extern "C" {
 #endif
 
+#define error nanocalc_error
+
 /* ============ UTILITIES ================= */
 static void (*error_fun)(const char*) = NULL;
-static void error(const char *fmt, ...); /* fatal error */
 static void* malloc_x(size_t bytes); /* our version of malloc */
 static char* str_dup(const char *s); /* our version of strdup: duplicates s */
 static void float2string(char *s, float f);
-
-void error(const char *fmt, ...)
-{
-    char buf[1024] = "nanocalc error! ";
-    int len = strlen(buf);
-    va_list args;
-
-    va_start(args, fmt);
-    vsprintf(buf+len, fmt, args);
-    va_end(args);
-
-    if(error_fun)
-        error_fun(buf);
-    else
-        fprintf(stderr, "%s\n", buf);
-
-    exit(1);
-}
 
 char* str_dup(const char *s)
 {
@@ -1382,6 +1365,25 @@ void nanocalc_register_bif_arity4(const char *name, float (*fun)(float,float,flo
 void nanocalc_set_error_function(void (*fun)(const char*))
 {
     error_fun = fun;
+}
+
+/* calls the function 'fun' defined above and kills the program */
+void nanocalc_error(const char *fmt, ...)
+{
+    char buf[1024] = "nanocalc error! ";
+    int len = strlen(buf);
+    va_list args;
+
+    va_start(args, fmt);
+    vsprintf(buf+len, fmt, args);
+    va_end(args);
+
+    if(error_fun)
+        error_fun(buf);
+    else
+        fprintf(stderr, "%s\n", buf);
+
+    exit(1);
 }
 
 

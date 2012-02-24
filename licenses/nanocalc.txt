@@ -1,5 +1,5 @@
-nanocalc - A tiny stand-alone easy-to-use expression evaluator written in C - version 1.0
-Copyright (c) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+nanocalc - A tiny stand-alone easy-to-use expression evaluator written in C - version 1.1
+Copyright (c) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
 http://opensnc.sourceforge.net
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this 

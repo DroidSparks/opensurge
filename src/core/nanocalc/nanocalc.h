@@ -1,7 +1,7 @@
 /*
- * nanocalc 1.0
+ * nanocalc 1.1
  * A tiny stand-alone easy-to-use expression evaluator written in C
- * Copyright (c) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (c) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
@@ -111,6 +111,9 @@ void nanocalc_register_bif_arity4(const char *name, float (*fun)(float,float,flo
 /* you may optionally define your own error function (it will be called
    when an error arises). It must receive an error string */
 void nanocalc_set_error_function(void (*fun)(const char*));
+
+/* calls the function 'fun' defined above and kills the program */
+void nanocalc_error(const char *fmt, ...);
 
 
 

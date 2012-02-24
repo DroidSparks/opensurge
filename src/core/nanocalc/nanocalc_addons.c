@@ -1,7 +1,7 @@
 /*
  * nanocalc addons
  * Mathematical built-in functions for nanocalc
- * Copyright (c) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (c) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
@@ -34,10 +34,16 @@ extern "C" {
 static const float one = 1.0f;
 #define EPS             1e-5
 #define INFI            (1.0f / (1.0f - one))
+#define MAX_ARRAYS      1024
+#define ARRAY_MAXLEN    1024
 
 
 
 /* ============ available functions ============ */
+
+/*
+ * math
+ */
 
 /* if cond is true, returns t. Otherwise, returns f */
 static float f_cond(float cond, float t, float f) { return fabs(cond)>EPS ? t : f; }
@@ -129,12 +135,150 @@ static float f_infinity() { return INFI; }
 
 
 
+/*
+ * arrays
+ */
+struct ncarray_t {
+    int length;
+    float *value;
+} ncarray[MAX_ARRAYS];
+
+/* creates a new array */
+static float f_new_array(float length)
+{
+    int i, j;
+
+    /* must use a valid length */
+    if(!((int)length > 0 && (int)length < ARRAY_MAXLEN))
+        nanocalc_error("Can't create a new array with length %d. The length must be between 1 and %d, inclusive.", (int)length, ARRAY_MAXLEN-1);
+
+    /* finds the first unused array */
+    for(i=0; i<MAX_ARRAYS; i++) {
+        if(ncarray[i].value == NULL) {
+            ncarray[i].length = (int)length;
+            if(!(ncarray[i].value = malloc((int)length * sizeof(*(ncarray[i].value)))))
+                nanocalc_error("Can't create a new array with length %d: out of memory.", (int)length);
+            for(j=0; j<(int)length; j++)
+                ncarray[i].value[j] = 0.0f;
+            return (float)i;
+        }
+    }
+
+    /* error! */
+    nanocalc_error("Can't create more than %d arrays.", MAX_ARRAYS);
+    return -1.0f;
+}
+
+/* destroys an existing array */
+static float f_delete_array(float handle)
+{
+    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
+        nanocalc_error("Invalid array handle: %d", (int)handle);
+
+    ncarray[(int)handle].length = 0;
+    free(ncarray[(int)handle].value);
+    return -1.0f;
+}
+
+/* sets the elements of an array */
+static float f_set_array_element(float handle, float index, float value)
+{
+    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
+        nanocalc_error("Invalid array handle: %d", (int)handle);
+
+    if(index < 0 || index >= ncarray[(int)handle].length)
+        nanocalc_error("Invalid array index: %d (handle %d). It should be a value between 0 and %d, inclusive.", (int)index, (int)handle, -1+ncarray[(int)handle].length);
+
+    return (ncarray[(int)handle].value[(int)index] = value);
+}
+
+/* gets the element of an array */
+static float f_array_element(float handle, float index)
+{
+    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
+        nanocalc_error("Invalid array handle: %d", (int)handle);
+
+    if(index < 0 || index >= ncarray[(int)handle].length)
+        nanocalc_error("Invalid array index: %d (handle %d). It should be a value between 0 and %d, inclusive.", (int)index, (int)handle, -1+ncarray[(int)handle].length);
+
+    return ncarray[(int)handle].value[(int)index];
+}
+
+/* the length of an array */
+static float f_array_length(float handle)
+{
+    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
+        nanocalc_error("Invalid array handle: %d", (int)handle);
+
+    return (float)(ncarray[(int)handle].length);
+}
+
+/* is the given array valid? */
+static float f_is_valid_array(float handle)
+{
+    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
+        return 0.0f;
+
+    return 1.0f;
+}
+
+/* resizes an existing array */
+static float f_resize_array(float handle, float new_length)
+{
+    int j;
+
+    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
+        nanocalc_error("Invalid array handle: %d", (int)handle);
+
+    if(!((int)new_length > 0 && (int)new_length < ARRAY_MAXLEN))
+        nanocalc_error("Can't create resize an array to have a length of %d. The length must be between 1 and %d, inclusive.", (int)new_length, ARRAY_MAXLEN-1);
+
+    j = ncarray[(int)handle].length;
+    ncarray[(int)handle].length = (int)new_length;
+    ncarray[(int)handle].value = realloc(ncarray[(int)handle].value, (int)new_length * sizeof(*(ncarray[(int)handle].value)));
+    for(; j<(int)new_length; j++)
+        ncarray[(int)handle].value[j] = 0.0f;
+
+    return handle;
+}
+
+/* clones an existing array */
+static float f_clone_array(float handle)
+{
+    int len;
+    float arr;
+
+    arr = f_new_array(len = f_array_length(handle)); /* already checks if the handle is valid */
+    while(len--)
+        ncarray[(int)arr].value[len] = ncarray[(int)handle].value[len];
+
+    return arr;
+}
+
 
 /* ============ nanocalc addons ================ */
 
 /* binds the mathematical functions: call this AFTER nanocalc_init() */
 void nanocalc_addons_enable()
 {
+    /* array system */
+    int i = MAX_ARRAYS;
+    while(i--) {
+        ncarray[i].length = 0;
+        ncarray[i].value = NULL;
+    }
+    nanocalc_register_bif_arity3("set_array_element", f_set_array_element);
+    nanocalc_register_bif_arity2("array_element", f_array_element);
+    nanocalc_register_bif_arity2("resize_array", f_resize_array);
+    nanocalc_register_bif_arity1("new_array", f_new_array);
+    nanocalc_register_bif_arity1("delete_array", f_delete_array);
+    nanocalc_register_bif_arity1("array_length", f_array_length);
+    nanocalc_register_bif_arity1("clone_array", f_clone_array);
+    nanocalc_register_bif_arity1("is_valid_array", f_is_valid_array);
+
+
+
+    /* registering the math BIFs */
     nanocalc_register_bif_arity3("cond", f_cond);
     nanocalc_register_bif_arity3("clamp", f_clamp);
 
