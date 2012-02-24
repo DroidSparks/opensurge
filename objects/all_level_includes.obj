@@ -3,7 +3,10 @@
 
 // ========== CUTSCENES ================
 // intro
+#include "cutscenes/creativecommons.obj"
+#include "cutscenes/allegro.obj"
 #include "cutscenes/intro.obj"
+#include "cutscenes/almostmenu.obj"
 
 // before sunshine act 1
 #include "cutscenes/cutscene1.obj"

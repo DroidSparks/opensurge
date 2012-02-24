@@ -473,18 +473,18 @@ object .intro_scepter
     state main {
         set_zindex 0.99991
         let $speed=12
-        set_animation SD_INTROCUTSCENE_SCEPTER 0
-        set_absolute_position 160 320
+        set_animation SD_INTROCUTSCENE_SCEPTER 1
+        set_absolute_position 160 295
         create_child .intro_scepter_spark
         change_state go
     }
 
     state go {
         set_alpha $_slide_alpha
-        set_alpha (0.001+min(1,$t+=0.02*dt()))*$_slide_alpha
+        //set_alpha (0.001+min(1,$t+=0.02*dt()))*$_slide_alpha
         let $_scepter_x=xpos()
         let $_scepter_y=ypos()
-        set_absolute_position xpos() max(120,ypos()-$speed*dt())
+        set_absolute_position xpos() max(screen_height()/2,ypos()-$speed*dt())
         if alpha()<=0 destroy
     }
 
@@ -501,7 +501,8 @@ object .intro_scepter_spark
 
     state main {
         set_zindex 0.99992
-        let $limit=4
+        let $limit=6
+        let $r=1
         hide
 
         let $id=$_intro_scepter_spark
@@ -522,12 +523,15 @@ object .intro_scepter_spark
     }
 
     state go {
-        set_alpha $_slide_alpha
-        set_alpha (0.001+min(1,$a+=0.015*dt()))*$_slide_alpha
-        set_absolute_position "$_scepter_x + 32*cos(pi()*$t+(2*pi()*$id)/($limit))" "$_scepter_y-48 + $e=(abs(ypos()-10)/10)*-sin(pi()*($t+=dt())+(2*pi()*$id)/($limit))"
+        let $r+=cond($_slide_alpha<$os,25*dt(),0)
+
+        set_alpha (0.001+min(1,$a+=0.017*dt()))*$_slide_alpha
+        set_absolute_position "$_scepter_x + ($r*32)*cos(pi()*$t+(2*pi()*$id)/($limit))" "$_scepter_y-43 + $e=($r*abs(ypos()-10)/10)*-sin(pi()*($t+=dt())+(2*pi()*$id)/($limit))"
         set_zindex cond($e>=0,0.99992,0.999905)
         if alpha()<=0 destroy
         on_timeout 0.5 show
+
+        let $os=$_slide_alpha
     }
 
     state show {
