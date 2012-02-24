@@ -1,7 +1,7 @@
 /*
  * nanocalc addons
  * Mathematical built-in functions for nanocalc
- * Copyright (c) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (c) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this 
@@ -32,7 +32,10 @@ extern "C" {
    mathematical functions to the expression evaluator.
    You may take a look at nanocalc_addons.c to find out
    which functions are added, along with their interfaces */
-void nanocalc_addons_enable();
+void nanocalc_addons_init();
+
+/* call this when you're done, but before nanocalc_release() */
+void nanocalc_addons_release();
 
 
 #ifdef __cplusplus

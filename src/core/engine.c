@@ -358,7 +358,7 @@ void init_nanocalc()
 {
     nanocalc_init(); /* initializes a basic nanocalc */
     nanocalc_set_error_function(calc_error); /* error callback */
-    nanocalc_addons_enable(); /* adds some mathematical functions to nanocalc */
+    nanocalc_addons_init(); /* adds some mathematical functions to nanocalc */
     nanocalcext_register_bifs(); /* more bindings */
 }
 
@@ -368,6 +368,7 @@ void init_nanocalc()
  */
 void release_nanocalc()
 {
+    nanocalc_addons_release();
     nanocalc_release();
 }
 

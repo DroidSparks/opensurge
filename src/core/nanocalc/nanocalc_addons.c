@@ -177,6 +177,7 @@ static float f_delete_array(float handle)
 
     ncarray[(int)handle].length = 0;
     free(ncarray[(int)handle].value);
+    ncarray[(int)handle].value = NULL;
     return -1.0f;
 }
 
@@ -259,7 +260,7 @@ static float f_clone_array(float handle)
 /* ============ nanocalc addons ================ */
 
 /* binds the mathematical functions: call this AFTER nanocalc_init() */
-void nanocalc_addons_enable()
+void nanocalc_addons_init()
 {
     /* array system */
     int i = MAX_ARRAYS;
@@ -313,6 +314,21 @@ void nanocalc_addons_enable()
     nanocalc_register_bif_arity0("infinity", f_infinity);
 }
 
+/* call this when you're done, but before nanocalc_release() */
+void nanocalc_addons_release()
+{
+    /* clear any existing arrays */
+    int i = MAX_ARRAYS;
+    while(i--) {
+        ncarray[i].length = 0;
+        if(ncarray[i].value) {
+            free(ncarray[i].value);
+            ncarray[i].value = NULL;
+        }
+    }
+
+    /* done! ;) */
+}
 
 #ifdef __cplusplus
 }
