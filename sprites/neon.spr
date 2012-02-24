@@ -36,7 +36,7 @@ sprite SD_NEON
     animation 3
     {
         repeat      TRUE
-        fps         8
+        fps         16
         data        8 9 10 11
     }
 

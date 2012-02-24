@@ -5,7 +5,7 @@
 // File:   default_companions/charge.inc
 // Desc:   Charge's companion
 // Author: Alexandre
-// Date:   2011-02-09, 2011-02-11
+// Date:   2011-02-09, 2011-02-11, 2012-02-23
 // ---------------------------------------------------------------------------
 
 object ".charge_companion"
@@ -50,33 +50,39 @@ object ".charge_spindash_controller"
     {
         set_player_animation "SD_CHARGE" "6"
         strong_player
+        springfy_player // so that the camera won't go down, since the player is ducking
         disable_player_movement
         play_sample "charge"
-        let "$p += 2"
+        let "$p = min($p+2, 8)"
         change_state "hold"
     }
 
     state "hold"
     {
         set_player_animation "SD_CHARGE" "6"
-        let "$p *= 0.96875 * 0.96875 ^ (60 * dt() - 1)"
+        let "$p -= 0.234 * floor(8*$p) * dt()"
 
         // check if there's a platform underneath the player
         attach_to_player 0 20
-        on_floor_collision "hold2"
+        unless "brick_exists(0,0)" "cancel"
 
-        change_state "cancel"
-    }
-
-    state "hold2"
-    {
-        set_player_animation "SD_CHARGE" "6"
-        let "$p *= 0.96875 * 0.96875 ^ (60 * dt() - 1)"
+        // create cool particles
+        let "$_pixelparticle_anim = 1 + random(3)"
+        let "$_pixelparticle_xvel = -player_direction() * (120 + random(60))"
+        let "$_pixelparticle_yvel = -60 - random(120)"
+        create_child .pixelparticle -player_direction()*7 -2
+        let "$_pixelparticle_anim = 1 + random(3)"
+        let "$_pixelparticle_xvel = -player_direction() * (120 + random(60))"
+        let "$_pixelparticle_yvel = -60 - random(120)"
+        create_child .pixelparticle -player_direction()*7 -2
+        let "$_pixelparticle_anim = 1 + random(3)"
+        let "$_pixelparticle_xvel = -player_direction() * (120 + random(60))"
+        let "$_pixelparticle_yvel = -60 - random(120)"
+        create_child .pixelparticle -player_direction()*7 -2
 
         // check if the user wants to charge more, or if we can release the player
         on_button_pressed "fire1" "charge"
         on_button_down "down" "hold"
-
         change_state "release"
     }
 
@@ -89,6 +95,7 @@ object ".charge_spindash_controller"
 
     state "release"
     {
+        play_sample "release"
         enable_player_movement
         weak_player
         set_player_xspeed "(480 + 30 * floor($p)) * player_direction()"

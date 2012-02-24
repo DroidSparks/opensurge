@@ -60,7 +60,7 @@ sprite SD_SURGE
     animation 6
     {
         repeat      TRUE
-        fps         16
+        fps         32
         data        11 12 13 14
     }
 

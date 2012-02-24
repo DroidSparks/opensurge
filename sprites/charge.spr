@@ -36,7 +36,7 @@ sprite SD_CHARGE
     animation 3
     {
         repeat      TRUE
-        fps         16
+        fps         32
         data        16 17 18 19 20 21
     }
 
@@ -60,7 +60,7 @@ sprite SD_CHARGE
     animation 6
     {
         repeat      TRUE
-        fps         32
+        fps         64
         data        16 17 18 19 20 21
     }
 

@@ -36,7 +36,7 @@ sprite SD_TUX
     animation 3
     {
         repeat      TRUE
-        fps         8
+        fps         16
         data        15 16 17 18 19
     }
 
@@ -60,7 +60,7 @@ sprite SD_TUX
     animation 6
     {
         repeat      TRUE
-        fps         16
+        fps         32
         data        20 21 22 23 24 25
     }
 
