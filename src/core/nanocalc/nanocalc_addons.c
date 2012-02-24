@@ -32,10 +32,12 @@ extern "C" {
 
 /* constants */
 static const float one = 1.0f;
-#define EPS             1e-5
-#define INFI            (1.0f / (1.0f - one))
-#define MAX_ARRAYS      1024
-#define ARRAY_MAXLEN    1024
+#define EPS                 1e-5
+#define INFI                (1.0f / (1.0f - one))
+#define MAX_ARRAYS          1024
+#define ARRAY_MAXLEN        1024
+#define ARRAY_PTR2HANDLE(x) (float)(1337 + x)
+#define ARRAY_HANDLE2PTR(x) (int)x - 1337
 
 
 
@@ -160,7 +162,7 @@ static float f_new_array(float length)
                 nanocalc_error("Can't create a new array with length %d: out of memory.", (int)length);
             for(j=0; j<(int)length; j++)
                 ncarray[i].value[j] = 0.0f;
-            return (float)i;
+            return ARRAY_PTR2HANDLE(i);
         }
     }
 
@@ -172,73 +174,79 @@ static float f_new_array(float length)
 /* destroys an existing array */
 static float f_delete_array(float handle)
 {
-    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
-        nanocalc_error("Invalid array handle: %d", (int)handle);
+    int ptr = ARRAY_HANDLE2PTR(handle);
 
-    ncarray[(int)handle].length = 0;
-    free(ncarray[(int)handle].value);
-    ncarray[(int)handle].value = NULL;
+    if(ptr < 0 || ptr >= MAX_ARRAYS || ncarray[ptr].value == NULL)
+        nanocalc_error("Invalid array handle: %f", handle);
+
+    ncarray[ptr].length = 0;
+    free(ncarray[ptr].value);
+    ncarray[ptr].value = NULL;
     return -1.0f;
 }
 
 /* sets the elements of an array */
 static float f_set_array_element(float handle, float index, float value)
 {
-    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
-        nanocalc_error("Invalid array handle: %d", (int)handle);
+    int ptr = ARRAY_HANDLE2PTR(handle);
 
-    if(index < 0 || index >= ncarray[(int)handle].length)
-        nanocalc_error("Invalid array index: %d (handle %d). It should be a value between 0 and %d, inclusive.", (int)index, (int)handle, -1+ncarray[(int)handle].length);
+    if(ptr < 0 || ptr >= MAX_ARRAYS || ncarray[ptr].value == NULL)
+        nanocalc_error("Invalid array handle: %f", handle);
 
-    return (ncarray[(int)handle].value[(int)index] = value);
+    if(index < 0 || index >= ncarray[ptr].length)
+        nanocalc_error("Invalid array index: %d (handle %f). It should be a value between 0 and %d, inclusive.", (int)index, handle, -1+ncarray[ptr].length);
+
+    return (ncarray[ptr].value[(int)index] = value);
 }
 
 /* gets the element of an array */
 static float f_array_element(float handle, float index)
 {
-    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
-        nanocalc_error("Invalid array handle: %d", (int)handle);
+    int ptr = ARRAY_HANDLE2PTR(handle);
 
-    if(index < 0 || index >= ncarray[(int)handle].length)
-        nanocalc_error("Invalid array index: %d (handle %d). It should be a value between 0 and %d, inclusive.", (int)index, (int)handle, -1+ncarray[(int)handle].length);
+    if(ptr < 0 || ptr >= MAX_ARRAYS || ncarray[ptr].value == NULL)
+        nanocalc_error("Invalid array handle: %f", handle);
 
-    return ncarray[(int)handle].value[(int)index];
+    if(index < 0 || index >= ncarray[ptr].length)
+        nanocalc_error("Invalid array index: %d (handle %f). It should be a value between 0 and %d, inclusive.", (int)index, handle, -1+ncarray[ptr].length);
+
+    return ncarray[ptr].value[(int)index];
 }
 
 /* the length of an array */
 static float f_array_length(float handle)
 {
-    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
-        nanocalc_error("Invalid array handle: %d", (int)handle);
+    int ptr = ARRAY_HANDLE2PTR(handle);
 
-    return (float)(ncarray[(int)handle].length);
+    if(ptr < 0 || ptr >= MAX_ARRAYS || ncarray[ptr].value == NULL)
+        nanocalc_error("Invalid array handle: %f", handle);
+
+    return ncarray[ptr].length;
 }
 
 /* is the given array valid? */
 static float f_is_valid_array(float handle)
 {
-    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
-        return 0.0f;
-
-    return 1.0f;
+    int ptr = ARRAY_HANDLE2PTR(handle);
+    return (ptr < 0 || ptr >= MAX_ARRAYS || ncarray[ptr].value == NULL) ? 0.0f : 1.0f;
 }
 
 /* resizes an existing array */
 static float f_resize_array(float handle, float new_length)
 {
-    int j;
+    int j, ptr = ARRAY_HANDLE2PTR(handle);
 
-    if(handle < 0 || handle >= MAX_ARRAYS || ncarray[(int)handle].value == NULL)
-        nanocalc_error("Invalid array handle: %d", (int)handle);
+    if(ptr < 0 || ptr >= MAX_ARRAYS || ncarray[ptr].value == NULL)
+        nanocalc_error("Invalid array handle: %f", handle);
 
     if(!((int)new_length > 0 && (int)new_length < ARRAY_MAXLEN))
         nanocalc_error("Can't create resize an array to have a length of %d. The length must be between 1 and %d, inclusive.", (int)new_length, ARRAY_MAXLEN-1);
 
-    j = ncarray[(int)handle].length;
-    ncarray[(int)handle].length = (int)new_length;
-    ncarray[(int)handle].value = realloc(ncarray[(int)handle].value, (int)new_length * sizeof(*(ncarray[(int)handle].value)));
+    j = ncarray[ptr].length;
+    ncarray[ptr].length = (int)new_length;
+    ncarray[ptr].value = realloc(ncarray[ptr].value, (int)new_length * sizeof(*(ncarray[ptr].value)));
     for(; j<(int)new_length; j++)
-        ncarray[(int)handle].value[j] = 0.0f;
+        ncarray[ptr].value[j] = 0.0f;
 
     return handle;
 }
@@ -251,7 +259,7 @@ static float f_clone_array(float handle)
 
     arr = f_new_array(len = f_array_length(handle)); /* already checks if the handle is valid */
     while(len--)
-        ncarray[(int)arr].value[len] = ncarray[(int)handle].value[len];
+        ncarray[ ARRAY_HANDLE2PTR(arr) ].value[len] = ncarray[ ARRAY_HANDLE2PTR(handle) ].value[len];
 
     return arr;
 }
