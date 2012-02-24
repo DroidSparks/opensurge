@@ -10,7 +10,7 @@
 // Meta data
 LANG_LANGUAGE               "Indonesian"
 LANG_AUTHOR                 "Christopher Martinus"
-LANG_LASTUPDATE             "2012-02-22"
+LANG_LASTUPDATE             "2012-02-24"
 LANG_COMPATIBILITY          "0.2.0"
 
 
@@ -183,17 +183,19 @@ HUD_CLEARED_TOTAL           "BONUS TOTAL"
     DESERT1_MSG_2           "Ini tempat untuk yang bisa melihat..."
     DESERT1_TITLE_3         "Tersimpan"
     DESERT1_MSG_3           "Sebuah putaran akan ada disini suatu hari nanti."
+	
+// ===================== CUTSCENES ==============================
 
 // Opening cutscene
-OPENING_1				"Pada zaman dahulu, para dewa kuno telah menciptakan sebuah barang yang suci dan kuat: <color=ff8000>Tongkat Dimensi</color>."
-OPENING_2				"Tongkat ini memberi kekuatan tanpa batas bagi pemegangnya."
-OPENING_3				"Karena tongkat itu berbahaya jika jatuh di tangan yang salah, para dewa telah menyimpannya di <color=ff8000>Gerbang Dimensi</color>."
-OPENING_4				"<color=ff8000>Gimacian si Gelap</color> adalah seorang penyhir jahat yang memerlukan kegelapan untuk menjadi lebih kuat."
-OPENING_5				"Dia tahu dimana letak <color=ff8000>Gerbang Dimensi</color> itu. Ia akan mencoba untuk membukanya dengan <color=ff8000>Cincin Dimensi</color>." 
-OPENING_6				"Jika dia mendapatkan kekuatan itu, dia akan merajai seluruh jagat raya, dan tidak akan ada yang bisa menghentikannya." 
-OPENING_7				"<color=ff8000>Surge</color> dan kawan-kawannya harus mencegah <color=ff8000>Gimacian si Gelap</color> dari membuka gerbang itu,"
-OPENING_8				"atau wujud kehidupan, seperti yang kita tahu,"
-OPENING_9				"akan berakhir!"
+	OPENING_1				"Pada zaman dahulu, para dewa kuno telah menciptakan sebuah barang yang suci dan kuat: <color=ff8000>Tongkat Dimensi</color>."
+	OPENING_2				"Tongkat ini memberi kekuatan tanpa batas bagi pemegangnya."
+	OPENING_3				"Karena tongkat itu berbahaya jika jatuh di tangan yang salah, para dewa telah menyimpannya di <color=ff8000>Gerbang Dimensi</color>."
+	OPENING_4				"<color=ff8000>Gimacian si Gelap</color> adalah seorang penyhir jahat yang memerlukan kegelapan untuk menjadi lebih kuat."
+	OPENING_5				"Dia tahu dimana letak <color=ff8000>Gerbang Dimensi</color> itu. Ia akan mencoba untuk membukanya dengan <color=ff8000>Cincin Dimensi</color>." 
+	OPENING_6				"Jika dia mendapatkan kekuatan itu, dia akan merajai seluruh jagat raya, dan tidak akan ada yang bisa menghentikannya." 
+	OPENING_7				"<color=ff8000>Surge</color> dan kawan-kawannya harus mencegah <color=ff8000>Gimacian si Gelap</color> dari membuka gerbang itu,"
+	OPENING_8				"atau wujud kehidupan, seperti yang kita tahu,"
+	OPENING_9				"akan berakhir!"
 
 // Dialog boxes
     // test
@@ -221,3 +223,9 @@ OPENING_9				"akan berakhir!"
     DIALOGBOX_MESSAGE_112   "Baiklah, tapi kau juga akan hati-hati... kan?"
     DIALOGBOX_MESSAGE_113   "Aku akan berhati-hati. Sekarang, cepatlah!"
     DIALOGBOX_MESSAGE_114   "Ayo!"
+	
+// ========================== LEVELS ====================================
+
+    // Sunshine Paradise
+    DIALOGBOX_MESSAGE_130   "Hus, diam! Jangan sampai ada yang melihatku di game ini! Nih, ambil <color=ffff00>50 Ring</color> dan minggir."
+    DIALOGBOX_MESSAGE_131   "DASAR ORANG TIDAK BISA DIBERITAHU! MINGGIR!"
