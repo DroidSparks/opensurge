@@ -1,0 +1,19 @@
+// Sunshine Paradise: Boss
+sprite Boss1_Body
+{
+    source_file     images/levels/1/boss.png
+    source_rect     0 75 104 85
+    frame_size      104 85
+    hot_spot        38 9
+
+    animation 0
+    {
+        repeat      TRUE
+        fps         8
+        data        0
+    }
+}
+
+//sprite Boss1_Head
+//{
+//}

@@ -225,7 +225,7 @@ static float f_array_length(float handle)
 }
 
 /* is the given array valid? */
-static float f_is_valid_array(float handle)
+static float f_is_array(float handle)
 {
     int ptr = ARRAY_HANDLE2PTR(handle);
     return (ptr < 0 || ptr >= MAX_ARRAYS || ncarray[ptr].value == NULL) ? 0.0f : 1.0f;
@@ -283,7 +283,7 @@ void nanocalc_addons_init()
     nanocalc_register_bif_arity1("delete_array", f_delete_array);
     nanocalc_register_bif_arity1("array_length", f_array_length);
     nanocalc_register_bif_arity1("clone_array", f_clone_array);
-    nanocalc_register_bif_arity1("is_valid_array", f_is_valid_array);
+    nanocalc_register_bif_arity1("is_array", f_is_array);
 
 
 
