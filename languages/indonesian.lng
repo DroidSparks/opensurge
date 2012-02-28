@@ -10,7 +10,7 @@
 // Meta data
 LANG_LANGUAGE               "Indonesian"
 LANG_AUTHOR                 "Christopher Martinus"
-LANG_LASTUPDATE             "2012-02-24"
+LANG_LASTUPDATE             "2012-02-28"
 LANG_COMPATIBILITY          "0.2.0"
 
 
@@ -216,7 +216,7 @@ HUD_CLEARED_TOTAL           "BONUS TOTAL"
     DIALOGBOX_MESSAGE_105   "Apakah menurutmu ini terhubung dengan kehilangan-kehilangan yang baru- baru ini terjadi?"
     DIALOGBOX_MESSAGE_106   "Aku tak tahu. Akan kulihat apa yang sedang terjadi."
     DIALOGBOX_MESSAGE_107   "Tapi, <color=$COLOR_P1>Surge</color>, kau akan terluka! Aku akan membantu!"
-    DIALOGBOX_MESSAGE_108   "Jangan, <color=$COLOR_P2>Neon</color>. Tunggulah disini dan jagalah dirimu. Aku takkan membiarkanmu dilukai oleh... apapun yang sedang kita lihat."
+    DIALOGBOX_MESSAGE_108   "Jangan, <color=$COLOR_P2>Neon</color>. Tunggulah disini dan jagalah dirimu. Aku takkan membiarkanmu terluka!"
     DIALOGBOX_MESSAGE_109   "Tapi, <color=$COLOR_P1>Surge</color>..."
     DIALOGBOX_MESSAGE_110   "Baiklah..."
     DIALOGBOX_MESSAGE_111   "Kita akan bertemu di air terjun. Jagalah dirimu. Ingat, kalau kau kewalahan, lari saja."
