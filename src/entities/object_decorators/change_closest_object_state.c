@@ -23,6 +23,7 @@
 #include "../object_vm.h"
 #include "../../core/util.h"
 #include "../../core/stringutil.h"
+#include "../../core/nanocalcext.h"
 
 /* objectdecorator_changeclosestobjectstate_t class */
 typedef struct objectdecorator_changeclosestobjectstate_t objectdecorator_changeclosestobjectstate_t;
@@ -98,6 +99,7 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
     if(target != NULL) {
         objectvm_set_current_state(target->vm, me->new_state_name);
         enemy_update(target, team, team_size, brick_list, item_list, object_list); /* important to exchange data between objects */
+        nanocalcext_set_target_object(object);
     }
 
     decorated_machine->update(decorated_machine, team, team_size, brick_list, item_list, object_list);

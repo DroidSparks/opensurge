@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * object_vm.h - virtual machine of the objects
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -39,8 +39,10 @@ objectvm_t* objectvm_destroy(objectvm_t* vm); /* destroys an existing VM */
 objectmachine_t** objectvm_get_reference_to_current_state(objectvm_t* vm); /* returns a reference to the current state */
 symboltable_t* objectvm_get_symbol_table(objectvm_t *vm); /* returns my symbol table (variables support; nanocalc stuff...) */
 void objectvm_create_state(objectvm_t* vm, const char *name); /* you have to create a state before you can use it */
+const char* objectvm_get_current_state(objectvm_t* vm); /* gets the current state */
 void objectvm_set_current_state(objectvm_t* vm, const char *name); /* sets the current state */
 void objectvm_return_to_previous_state(objectvm_t *vm); /* returns to the previous state */
 void objectvm_reset_history(objectvm_t *vm); /* resets the history of states (can't return to previous state anymore) */
+objectmachine_t* objectvm_get_state_by_name(objectvm_t* vm, const char *name); /* retrieves a specific state by name */
 
 #endif

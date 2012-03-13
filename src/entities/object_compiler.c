@@ -78,6 +78,7 @@
 #include "object_decorators/restart_level.h"
 #include "object_decorators/save_level.h"
 #include "object_decorators/camera_focus.h"
+#include "object_decorators/execute.h"
 
 /* expression evaluator (nanocalc) helper */
 /* given a string, makes an expression_t object */
@@ -189,6 +190,9 @@ static void set_zindex(objectmachine_t** m, int n, const char **p, const parsetr
 static void t_textout(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void t_textout_centre(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void t_textout_right(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+
+/* fast loops */
+static void execute(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 
 /* events */
 static void change_state(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -352,6 +356,9 @@ static entry_t command_table[] = {
     { "textout", t_textout },
     { "textout_centre", t_textout_centre },
     { "textout_right", t_textout_right },
+
+    /* fast loops */
+    { "execute", execute },
 
     /* events */
     { "change_state", change_state },
@@ -1752,4 +1759,28 @@ void t_textout_right(objectmachine_t** m, int n, const char **p, const parsetree
         *m = objectdecorator_textoutright_new(*m, p[0], EXPRESSION(p[1]), EXPRESSION(p[2]), p[3], EXPRESSION(p[4]), EXPRESSION(p[5]), EXPRESSION(p[6]));
     else
         COMPILE_ERROR("Object script error - textout_right expects at least four and at most seven parameters: font_name, xpos, ypos, text [, max_width [, index_of_first_char [, length]]]");
+}
+
+void execute(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_execute_new(*m, p[0]); /* execute <state> */
+    else if(n == 3) {
+        if(str_icmp(p[1], "if") == 0)
+            *m = objectdecorator_executeif_new(*m, p[0], EXPRESSION(p[2])); /* execute <state> if <expr> */
+        else if(str_icmp(p[1], "unless") == 0)
+            *m = objectdecorator_executeunless_new(*m, p[0], EXPRESSION(p[2])); /* execute <state> unless <expr> */
+        else if(str_icmp(p[1], "while") == 0)
+            *m = objectdecorator_executewhile_new(*m, p[0], EXPRESSION(p[2])); /* execute <state> while <expr> */
+        else
+            COMPILE_ERROR("Object script error - invalid syntax for command execute (3 args)");
+    }
+    else if(n == 5) {
+        if(str_icmp(p[1], "for") == 0)
+            *m = objectdecorator_executefor_new(*m, p[0], EXPRESSION(p[2]), EXPRESSION(p[3]), EXPRESSION(p[4])); /* execute <state> for <e1> <e2> <e3> */
+        else
+            COMPILE_ERROR("Object script error - invalid syntax for command execute (5 args)");
+    }
+    else
+        COMPILE_ERROR("Object script error - invalid syntax for command execute");
 }

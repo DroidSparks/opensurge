@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * object_vm.c - virtual machine of the objects
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -49,9 +49,10 @@ struct objectmachine_list_t {
 static objectmachine_list_t* objectmachine_list_new(objectmachine_list_t* list, const char *name, enemy_t* owner);
 static objectmachine_list_t* objectmachine_list_delete(objectmachine_list_t* list);
 static objectmachine_list_t* objectmachine_list_find(objectmachine_list_t* list, const char *name);
+static objectmachine_list_t* objectmachine_list_findmachine(objectmachine_list_t* list, objectmachine_t* machine);
 
 /* stack of object machines */
-#define OBJECTMACHINE_STACK_CAPACITY 5
+#define OBJECTMACHINE_STACK_CAPACITY 5 /* return_to_previous_state history */
 struct objectmachine_stack_t {
     objectmachine_list_t *data[OBJECTMACHINE_STACK_CAPACITY]; /* nodes of objectmachine_list_t */
     int top, size;
@@ -107,6 +108,19 @@ void objectvm_create_state(objectvm_t* vm, const char *name)
         fatal_error("Object script error: can't redefine state \"%s\" in object \"%s\".", name, vm->owner->name);
 }
 
+
+const char* objectvm_get_current_state(objectvm_t* vm)
+{
+    objectmachine_list_t *m = objectmachine_list_findmachine(vm->state_list, *(vm->reference_to_current_state));
+
+    if(m == NULL) {
+        fatal_error("Object script error: can't get current state name in object \"%s\". This shouldn't happen.", vm->owner->name);
+        return NULL;
+    }
+    else
+        return m->name;
+}
+
 void objectvm_set_current_state(objectvm_t* vm, const char *name)
 {
     objectmachine_list_t *m = objectmachine_list_find(vm->state_list, name);
@@ -141,6 +155,17 @@ void objectvm_reset_history(objectvm_t *vm)
     objectmachine_stack_clear(vm->history);
 }
 
+objectmachine_t* objectvm_get_state_by_name(objectvm_t* vm, const char *name)
+{
+    objectmachine_list_t *m = objectmachine_list_find(vm->state_list, name);
+
+    if(m == NULL) {
+        fatal_error("Object script error: can't find state \"%s\" in object \"%s\".", name, vm->owner->name);
+        return NULL;
+    }
+    else
+        return m->data;
+}
 
 /* objectmachine_list_t: private methods */
 
@@ -174,10 +199,21 @@ objectmachine_list_t* objectmachine_list_find(objectmachine_list_t* list, const 
         else
             return list;
     }
-
-    return NULL;
+    else
+        return NULL;
 }
 
+objectmachine_list_t* objectmachine_list_findmachine(objectmachine_list_t* list, objectmachine_t* machine)
+{
+     if(list != NULL) {
+        if(list->data != machine)
+            return objectmachine_list_findmachine(list->next, machine);
+        else
+            return list;
+    }
+    else
+        return NULL;   
+}
 
 /* objectmachine_stack_t: private methods */
 
