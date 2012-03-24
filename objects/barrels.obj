@@ -51,6 +51,7 @@ object "Barrel - right,rotation"
         play_sample samples/destroypop.wav
         set_player_xspeed "$strength * cos(deg2rad(angle()))"
         set_player_yspeed "-$strength * sin(deg2rad(angle()))"
+        roll_player
         enable_player_movement
         change_state cooldown
     }

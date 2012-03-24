@@ -1074,14 +1074,15 @@ item 0 216 6368
 
 // object list
 object "water.air_source" 1088 7064
-object "Awesome (O)Possum" 2048 6672
 object "Wolfredo" 1024 6776
 object "Peixudo" 832 6576
 object "Peixudo" 976 6576
 object "Moska" 2040 6184
 object "Moska" 1936 6072
 object "Moska" 1904 6264
+object "Barrel - right,rotation" 928 6280
 object "Springfling" 608 6424
 object "Springfling" 456 6424
+object "Awesome (O)Possum" 2048 6672
 
 // EOF
