@@ -108,7 +108,7 @@ object "Zipline.Grabber"
         let "$sx = cond($c, $sx + $acc_factor * $dx * dt(), $sx)"
         let "$sy = cond($c, $sy + $acc_factor * $dy * dt(), $sy)"
         move $sx $sy
-        set_player_position 0 20
+        set_player_position $_zipline_offx*player_direction() 20
     }
 
     // -------------- deactivation phase
@@ -237,21 +237,25 @@ object ".Zipline.GrabberPlayerAnim"
     state activate_surge
     {
         set_player_animation SD_SURGE 16
+        let $_zipline_offx=7
     }
 
     state activate_neon
     {
         set_player_animation SD_NEON 16
+        let $_zipline_offx=0
     }
 
     state activate_charge
     {
         set_player_animation SD_CHARGE 16
+        let $_zipline_offx=0
     }
 
     state activate_tux
     {
         set_player_animation SD_TUX 16
+        let $_zipline_offx=0
     }
 
     state destroy
