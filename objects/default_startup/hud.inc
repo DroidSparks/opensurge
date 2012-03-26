@@ -340,6 +340,7 @@ object ".default_startup.hud.lives"
         hide
         set_zindex "$_ds_hud_zindex"
         set_absolute_position "15" "screen_height()+400"
+        set_absolute_position xpos()+hotspot_x() ypos()+hotspot_y() // fix hotspot
         create_child ".default_startup.hud.lives.counter"
         change_state "go"
     }
@@ -371,9 +372,9 @@ object ".default_startup.hud.lives"
     state "go"
     {
         if "$_hide_hud" "hidden"
-        set_absolute_position "xpos()" "max(screen_height()-24, ypos() - 500*dt())"
-        let "$_ds_hud_lives_xpos = xpos()"
-        let "$_ds_hud_lives_ypos = ypos()"
+        set_absolute_position "xpos()" "max(screen_height()-15, ypos() - 500*dt())"
+        let "$_ds_hud_lives_xpos = xpos() - hotspot_x()"
+        let "$_ds_hud_lives_ypos = ypos() - hotspot_y()"
         on_level_cleared "go away"
 
         show
@@ -390,8 +391,8 @@ object ".default_startup.hud.lives"
     {
         if "$_hide_hud" "hidden"
         set_absolute_position "xpos()" "ypos() + 500*dt()"
-        let "$_ds_hud_lives_xpos = xpos()"
-        let "$_ds_hud_lives_ypos = ypos()"
+        let "$_ds_hud_lives_xpos = xpos() - hotspot_x()"
+        let "$_ds_hud_lives_ypos = ypos() - hotspot_y()"
     }
 
     state "hidden"

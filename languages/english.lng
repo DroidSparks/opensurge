@@ -67,7 +67,7 @@ MENU_CQ_TUTORIAL            "Learn how to play Open Surge"
 MENU_CQ_EXTRA               "Extra levels"
 
 
-// Languages (please do not translate!)
+// Languages (please do not translate these!)
 LANGSELECT_TITLE1           "<color=$COLOR_P1>SELECT YOUR</color>"
 LANGSELECT_TITLE2           "<color=$COLOR_P1>LANGUAGE</color>"
 LANGSELECT_AUTHOR           "<color=ffff00>Translation by:</color> %s"
@@ -113,8 +113,15 @@ CREDITS_RES_SCRIPTS_TEXT    "The authors are specified within the scripts themse
 // Donations
 DONATORS_TITLE              "<color=$COLOR_P1>DONATORS</color>"
 DONATORS_KEY                "Press <color=ffff00>$INPUT_FIRE4</color> to go back"
-DONATORS_HEADER             "As an open source game, Open Surge needs money to pay for code, art, music, etc.\n\nThese are the enthusiasts who have helped fund the project:\n\n[nobody yet]"
+DONATORS_HEADER             "As an open source game, Open Surge needs money to pay for code, art, music, etc.\n\nThese are the enthusiasts who have helped fund the project:"
 
+
+// "Please donate" screen
+DONATE_TITLE                "<color=$COLOR_P1>PLEASE DONATE</color>"
+DONATE_TEXT                 "Please donate to the Open Surge Project!\n\nOpen Surge is a free and open source game, made available for you at no cost. However, making a game costs us real money. <color=ffff00>Please show your support.</color> By making a <color=ffff00>donation of any value</color>, you'll gain access to our cool <color=ffff00>Premium Zone</color>!\n\nYour donation is absolutely critical to the advancement of this project. Your money will be invested in code, art, music, etc.\n\nWould you like to donate now?"
+DONATE_YES                  "Sure!"
+DONATE_NO                   "Later."
+DONATE_ALREADYHAVE          "Already have."
 
 // Quest names
 TUTORIAL_QUEST_NAME         "Tutorial"

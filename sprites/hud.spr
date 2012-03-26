@@ -86,7 +86,7 @@ sprite SD_HUDHEAD
     source_file     images/hud.png
     source_rect     589 0 51 36
     frame_size      17 18
-    hot_spot        0 0
+    hot_spot        9 9
 
     // Surge
     animation 0

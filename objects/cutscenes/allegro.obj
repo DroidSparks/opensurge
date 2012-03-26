@@ -46,7 +46,7 @@ object ".allegro_startup"
 
     state wait2
     {
-        on_timeout 2 next
+        on_timeout 2 cc
     }
 
     state wait3
@@ -56,7 +56,11 @@ object ".allegro_startup"
 
     state next
     {
-        //next_level
+        next_level
+    }
+
+    state cc
+    {
         load_level levels/cutscenes/creativecommons.lev
     }
 }

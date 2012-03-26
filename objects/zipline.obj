@@ -32,9 +32,11 @@ object "Zipline.Grabber"
         let "$sy = 0"
         let "$dx = 0"
         let "$dy = 0"
+        play_sample samples/zipline.wav
         strong_player
         disable_player_movement
         create_child .Zipline.GrabberPlayerAnim 0 0 anim
+        create_child .Zipline.GrabberSound 0 0 snd
         request_camera_focus
         change_state set_initial_speed
         change_state main_loop
@@ -120,6 +122,7 @@ object "Zipline.Grabber"
         set_player_xspeed $sx
         set_player_yspeed $sy
         change_child_state anim destroy
+        change_child_state snd destroy
         drop_camera_focus
         change_state respawn
     }
@@ -228,6 +231,7 @@ object ".Zipline.GrabberPlayerAnim"
     state main
     {
         hide
+        let $anim=16
         on_observed_player Surge activate_surge // todo: improve this?
         on_observed_player Neon activate_neon // why do we need a switch
         on_observed_player Charge activate_charge
@@ -237,30 +241,60 @@ object ".Zipline.GrabberPlayerAnim"
 
     state activate_surge
     {
-        set_player_animation SD_SURGE 16
+        set_player_animation SD_SURGE $anim
         let $_zipline_offx=7
     }
 
     state activate_neon
     {
-        set_player_animation SD_NEON 16
+        set_player_animation SD_NEON $anim
         let $_zipline_offx=0
     }
 
     state activate_charge
     {
-        set_player_animation SD_CHARGE 16
+        set_player_animation SD_CHARGE $anim
         let $_zipline_offx=0
     }
 
     state activate_tux
     {
-        set_player_animation SD_TUX 16
+        set_player_animation SD_TUX $anim
         let $_zipline_offx=0
     }
 
     state destroy
     {
+        destroy
+    }
+}
+
+object ".Zipline.GrabberSound"
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        hide
+        change_state play
+    }
+
+    state play
+    {
+        play_sample samples/zipline2.wav $t*0.25*($dy/$dx)
+        change_state wait
+    }
+
+    state wait
+    {
+        let $t+=dt()
+        on_timeout 0.25 play
+    }
+
+    state destroy
+    {
+        stop_sample samples/zipline2.wav
         destroy
     }
 }

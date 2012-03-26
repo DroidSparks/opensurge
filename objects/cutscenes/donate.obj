@@ -1,0 +1,276 @@
+// "Please donate" screen
+// script by Alexandre
+object ".donate_startup"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state "main"
+    {
+        hide
+        create_child .donate_startup.title
+        create_child .donate_startup.text
+        create_child .donate_startup.options
+        let $_fade_in=1
+        let $_fade_duration=1
+        create_child .fade_effect
+        destroy
+    }
+}
+
+object ".donate_startup.title"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state "main"
+    {
+        hide
+        set_absolute_position screen_width()/2 10
+        change_state loop
+    }
+
+    state loop
+    {
+        elliptical_trajectory 0 2 0 1
+        textout_centre menu.title 0 0 $DONATE_TITLE
+    }
+}
+
+object ".donate_startup.text"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state "main"
+    {
+        hide
+        set_absolute_position 10 40
+        textout menu.small 0 0 $DONATE_TEXT screen_width()-20
+    }
+}
+
+object ".donate_startup.options"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state "main"
+    {
+        hide
+        set_absolute_position screen_width()/2 screen_height()-22
+        create_child .donate_startup.options.text 0 0 text
+        change_state no
+    }
+
+    state no
+    {
+        change_child_state text no
+        on_button_pressed fire1 chose_no
+        on_button_pressed fire3 chose_no
+        on_button_pressed fire4 chose_no
+        on_button_pressed left change_to_yes
+        on_button_pressed right change_to_yes
+    }
+
+    state yes
+    {
+        change_child_state text yes
+        on_button_pressed fire1 chose_yes
+        on_button_pressed fire3 chose_yes
+        on_button_pressed fire4 chose_no
+        on_button_pressed left change_to_no
+        on_button_pressed right change_to_no
+    }
+
+    state change_to_no
+    {
+        play_sample samples/switch.wav
+        change_state no
+    }
+
+    state change_to_yes
+    {
+        play_sample samples/switch.wav
+        change_state yes
+    }
+
+    state chose_yes
+    {
+        change_child_state text yes
+        play_sample samples/select.wav
+        let $_fade_in=0
+        let $_fade_duration=1
+        create_child .fade_effect
+        change_closest_object_state .donate_startup.options.text.yes @already_donated
+        execute _launch_url if not($_already_donated)
+        execute _dont_show_again if $_already_donated
+        change_state wait
+    }
+
+    state chose_no
+    {
+        change_child_state text no
+        play_sample samples/return.wav
+        let $_fade_in=0
+        let $_fade_duration=1
+        create_child .fade_effect
+        change_state wait
+    }
+
+    state wait
+    {
+        on_timeout 1 bye
+    }
+
+    state bye
+    {
+        next_level
+    }
+
+    state _launch_url
+    {
+        launch_url "http://www.wikipedia.org"
+    }
+
+    state _dont_show_again
+    {
+        create_child .donate_startup.dont_show_again 0 0 dsa
+        change_child_state dsa @save
+    }
+}
+
+object ".donate_startup.options.text"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state "main"
+    {
+        hide
+        set_absolute_position screen_width()/2 screen_height()-32
+        create_child .donate_startup.options.text.yes 0 0 yes
+        create_child .donate_startup.options.text.no 0 0 no
+        change_state no
+    }
+
+    state yes
+    {
+        change_child_state yes enabled
+        change_child_state no disabled
+    }
+
+    state no
+    {
+        change_child_state no enabled
+        change_child_state yes disabled
+    }
+}
+
+object ".donate_startup.options.text.yes"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state "main"
+    {
+        set_animation SD_HUDHEAD 0
+        set_absolute_position screen_width()*0.33 ypos()
+        let $already_have=0
+        change_state disabled
+    }
+
+    state enabled
+    {
+        show
+        textout_centre menu.small 0 10+screen_height()*$already_have "<color=ffff00>$DONATE_YES</color>"
+        textout_centre menu.small 0 10+screen_height()*(1-$already_have) "<color=ffff00>$DONATE_ALREADYHAVE</color>"
+        if ($t+=dt())<2 enabled
+        on_button_pressed up toggle
+        on_button_pressed down toggle
+    }
+
+    state disabled
+    {
+        hide
+        textout_centre menu.small 0 10+screen_height()*$already_have "$DONATE_YES"
+        textout_centre menu.small 0 10+screen_height()*(1-$already_have) "$DONATE_ALREADYHAVE"
+    }
+
+    state toggle
+    {
+        play_sample samples/switch.wav
+        let $already_have=1-$already_have
+        textout_centre menu.small 0 10+screen_height()*$already_have "$DONATE_YES"
+        textout_centre menu.small 0 10+screen_height()*(1-$already_have) "$DONATE_ALREADYHAVE"
+        return_to_previous_state
+    }
+
+    state @already_donated // called by someone else
+    {
+        let $_already_donated=$already_have
+        return_to_previous_state
+    }
+}
+
+object ".donate_startup.options.text.no"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state "main"
+    {
+        set_animation SD_HUDHEAD 0
+        look_left
+        set_absolute_position screen_width()*0.66 ypos()
+        change_state disabled
+    }
+
+    state enabled
+    {
+        show
+        textout_centre menu.small 0 10 "<color=ffff00>$DONATE_NO</color>"
+    }
+
+    state disabled
+    {
+        hide
+        textout_centre menu.small 0 10 "$DONATE_NO"
+    }
+}
+
+object ".donate_startup.dont_show_again"
+{
+    requires 0.2.0
+    detach_from_camera
+    always_active
+
+    state main
+    {
+        change_state next
+    }
+
+    state next
+    {
+        change_state next2 // some safety delay...
+    }
+
+    state next2
+    {
+        if $_force_donation_screen next2
+        next_level
+    }
+
+    state @save // called by someone else
+    {
+        save_level
+        destroy
+    }
+}

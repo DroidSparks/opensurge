@@ -5,6 +5,7 @@
 // intro
 #include "cutscenes/creativecommons.obj"
 #include "cutscenes/allegro.obj"
+#include "cutscenes/donate.obj"
 #include "cutscenes/intro.obj"
 #include "cutscenes/almostmenu.obj"
 

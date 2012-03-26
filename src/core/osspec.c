@@ -26,6 +26,7 @@
 #include "osspec.h"
 #include "util.h"
 #include "stringutil.h"
+#include "video.h"
 
 
 
@@ -456,6 +457,9 @@ int launch_url(const char *url)
 {
     int ret = TRUE;
     char *safe_url = url_encode(url); /* it's VERY important to sanitize the URL... */
+
+    if(video_is_fullscreen())
+        video_changemode(video_get_resolution(), video_is_smooth(), FALSE);
 
     if(strncmp(safe_url, "http://", 7) == 0 || strncmp(safe_url, "https://", 8) == 0 || strncmp(safe_url, "ftp://", 6) == 0 || strncmp(safe_url, "mailto:", 7) == 0) {
 #ifdef __WIN32__
