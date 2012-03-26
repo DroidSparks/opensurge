@@ -116,7 +116,7 @@ struct font_t {
 #define IS_IDENTIFIER_CHAR(c)      ((c) != '\0' && ((isalnum((unsigned char)(c))) || ((c) == '_')))
 #define FONT_STACKCAPACITY  32
 #define FONT_TEXTMAXLENGTH  20480
-static int dirfill(const char *filename, int attrib, void *param);
+static int dirfill(const char *filename, void *param);
 static int traverse(const parsetree_statement_t *stmt);
 static int traverse_block(const parsetree_statement_t *stmt, void *data);
 static int traverse_bmp(const parsetree_statement_t *stmt, void *data);
@@ -160,7 +160,7 @@ void font_init()
 {
     const char *path = "fonts/*.fnt";
     char abs_path[2][1024];
-    int j, max_paths, deny_flags = FA_DIREC | FA_LABEL;
+    int j, max_paths;
     parsetree_program_t *fonts = NULL;
 
     logfile_message("Initializing alfont...");
@@ -177,7 +177,7 @@ void font_init()
 
     /* reading the parse tree */
     for(j=0; j<max_paths; j++)
-        for_each_file_ex(abs_path[j], 0, deny_flags, dirfill, (void*)(&fonts));
+        foreach_file(abs_path[j], dirfill, (void*)&fonts);
 
     /* loading the fontdata list */
     nanoparser_traverse_program(fonts, traverse);
@@ -616,7 +616,7 @@ char* remove_tags(const char *str)
 }
 
 /* dirfill() */
-int dirfill(const char *filename, int attrib, void *param)
+int dirfill(const char *filename, void *param)
 {
     parsetree_program_t** p = (parsetree_program_t**)param;
     *p = nanoparser_append_program(*p, nanoparser_construct_tree(filename));

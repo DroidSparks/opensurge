@@ -65,7 +65,8 @@ object ".creativecommons_startup"
     state wait3
     {
         if ($wt+=dt())<1 wait3
-        load_level levels/cutscenes/allegro.lev
+        next_level
+        //load_level levels/cutscenes/allegro.lev
     }
 }
 

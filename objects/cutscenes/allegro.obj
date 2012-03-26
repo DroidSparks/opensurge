@@ -56,6 +56,7 @@ object ".allegro_startup"
 
     state next
     {
-        next_level
+        //next_level
+        load_level levels/cutscenes/creativecommons.lev
     }
 }

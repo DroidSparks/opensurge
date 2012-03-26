@@ -79,6 +79,7 @@
 #include "object_decorators/save_level.h"
 #include "object_decorators/camera_focus.h"
 #include "object_decorators/execute.h"
+#include "object_decorators/launch_url.h"
 
 /* expression evaluator (nanocalc) helper */
 /* given a string, makes an expression_t object */
@@ -269,6 +270,9 @@ static void audio_play_level_music(objectmachine_t** m, int n, const char **p, c
 static void audio_set_music_volume(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void audio_stop_sample(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 
+/* misc */
+static void m_launch_url(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+
 /* -------------------------------------- */
 
 /* command table */
@@ -434,6 +438,9 @@ static entry_t command_table[] = {
     { "play_music", audio_play_music },
     { "play_level_music", audio_play_level_music },
     { "set_music_volume", audio_set_music_volume },
+
+    /* misc */
+    { "launch_url", m_launch_url },
 
     /* end of table */
     { NULL, NULL }
@@ -1783,4 +1790,12 @@ void execute(objectmachine_t** m, int n, const char **p, const parsetree_stateme
     }
     else
         COMPILE_ERROR("Object script error - invalid syntax for command execute");
+}
+
+void m_launch_url(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_launchurl_new(*m, p[0]);
+    else
+        COMPILE_ERROR("Object script error - launch_url expects one parameter: URL");
 }

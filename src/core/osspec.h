@@ -41,6 +41,7 @@ void resource_filepath(char *dest, const char *relativefp, size_t dest_size, int
 void create_process(const char *path, int argc, char *argv[]);
 char* basename(const char *path);
 int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param); /* it doesn't recurse */
+int launch_url(const char *url); /* launches an URL: returns TRUE on success */
 
 
 #endif

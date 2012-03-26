@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>
+#include <ctype.h>
 #include <allegro.h>
 #include "global.h"
 #include "osspec.h"
@@ -78,9 +79,9 @@
 static struct passwd *userinfo;
 #endif
 
+static char executable_name[1024];
 static char* fix_case_path(char *filepath);
 static int fix_case_path_backtrack(const char *pwd, const char *remaining_path, const char *delim, char *dest);
-static char executable_name[1024];
 static void search_the_file(char *dest, const char *relativefp, size_t dest_size);
 
 typedef struct {
@@ -108,6 +109,12 @@ static cache_t *cachetree_release(cache_t *node);
 static cache_t *cachetree_search(cache_t *node, const char *key);
 static cache_t *cachetree_insert(cache_t *node, const char *key, const char *value);
 #endif
+
+/* url encoding routines */
+/*static char hex2ch(char ch);*/
+static char ch2hex(char code);
+static char *url_encode(const char *str);
+/*static char *url_decode(const char *str);*/
 
 
 /* public functions */
@@ -439,6 +446,59 @@ int foreach_file(const char *wildcard, int (*callback)(const char *filename, voi
 
 
 
+/*
+ * launch_url()
+ * Launches an URL using the default browser.
+ * Returns TRUE on success.
+ * Useful stuff: http://www.dwheeler.com/essays/open-files-urls.html
+ */
+int launch_url(const char *url)
+{
+    int ret = TRUE;
+    char *safe_url = url_encode(url); /* it's VERY important to sanitize the URL... */
+
+    if(strncmp(safe_url, "http://", 7) == 0 || strncmp(safe_url, "https://", 8) == 0 || strncmp(safe_url, "ftp://", 6) == 0 || strncmp(safe_url, "mailto:", 7) == 0) {
+#ifdef __WIN32__
+        ShellExecute(NULL, "open", safe_url, NULL, NULL, SW_SHOWNORMAL);
+#elif __APPLE__
+        char *safe_cmd = mallocx(sizeof(char) * (strlen(safe_url) + 32));
+        *safe_cmd = 0;
+
+        if(filepath_exists("/usr/bin/open"))
+            sprintf(safe_cmd, "open \"%s\"", safe_url);
+        else 
+            ret = FALSE; /* failure */
+
+        if(*safe_cmd)
+            ret = system(safe_cmd) >= 0;
+
+        free(safe_cmd);
+#else
+        char *safe_cmd = mallocx(sizeof(char) * (strlen(safe_url) + 32));
+        *safe_cmd = 0;
+
+        if(filepath_exists("/usr/bin/xdg-open"))
+            sprintf(safe_cmd, "xdg-open \"%s\"", safe_url);
+        else if(filepath_exists("/usr/bin/firefox"))
+            sprintf(safe_cmd, "firefox \"%s\"", safe_url);
+        else 
+            ret = FALSE; /* failure */
+
+        if(*safe_cmd)
+            ret = system(safe_cmd) >= 0;
+
+        free(safe_cmd);
+#endif
+    }
+    else {
+        ret = FALSE;
+        fatal_error("Can't launch url: invalid protocol (valid ones are: http, https, ftp, mailto).\n%s", safe_url);
+    }
+
+    free(safe_url);
+    return ret;
+}
+
 
 
 
@@ -559,6 +619,64 @@ void search_the_file(char *dest, const char *relativefp, size_t dest_size)
 }
 
 
+
+
+
+
+
+
+/* url encoding-decoding routines */
+
+/* converts ch from hex */
+/*char hex2ch(char ch) {
+    return isdigit(ch) ? (ch - '0') : ((char)toupper(ch) - 'A' + 10);
+}*/
+
+/* converts code to hex */
+char ch2hex(char code) {
+    static char hex[] = "0123456789ABCDEF";
+    return hex[code & 0xF];
+}
+
+/* returns an url-encoded version of str */
+char *url_encode(const char *str) {
+    const char *p;
+    char *buf = mallocx(sizeof(char) * (strlen(str) * 3 + 1)), *q = buf;
+
+    for(p = str; *p; p++) {
+        if(isalnum(*p) || *p == '-' || *p == '#' || *p == '_' || *p == '.' || *p == '~' || *p == ':' || *p == '?' || *p == '&' || *p == '/' || *p == '=' || *p == '+' || *p == '@')
+            *q++ = *p; /* safety: we ensure that *p != '\\', *p != '\"' */
+        else if(*p == ' ') 
+            *q++ = '+';
+        else 
+            *q++ = '%', *q++ = ch2hex(*p >> 4), *q++ = ch2hex(*p & 0xF);
+    }
+
+    *q = 0;
+    return buf;
+}
+
+/* returns an url-decoded version of str */
+/*char *url_decode(const char *str) {
+    const char *p;
+    char *buf = mallocx(sizeof(char) * (strlen(str) + 1)), *q = buf;
+
+    for(p = str; *p; p++) {
+        if(*p == '%') {
+            if(*(p+1) && *(p+2)) {
+                *q++ = (hex2ch(*(p+1)) << 4) | hex2ch(*(p+2));
+                p += 2;
+            }
+        }
+        else if(*p == '+')
+            *q++ = ' ';
+        else
+            *q++ = *p;
+    }
+
+    *q = 0;
+    return buf;
+}*/
 
 
 
