@@ -156,6 +156,7 @@ object "Zipline.Pole"
     state "main"
     {
         set_animation Zipline.Pole 0
+        set_zindex 0.45
     }
 }
 
