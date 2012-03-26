@@ -287,9 +287,13 @@ void objectdecorator_executewhile_callback(objectdecorator_executebase_t *ex, ob
 {
     objectdecorator_executewhile_t *me = (objectdecorator_executewhile_t*)ex;
     objectmachine_t *other_state = objectvm_get_state_by_name(obj->vm, ex->state_name);
+    objectmachine_t *this_state = *(objectvm_get_reference_to_current_state(obj->vm));
 
-    while(fabs(expression_evaluate(me->condition)) >= 1e-5)
+    while(fabs(expression_evaluate(me->condition)) >= 1e-5) {
         other_state->update(other_state, team, team_size, brick_list, item_list, object_list);
+        if(this_state != *(objectvm_get_reference_to_current_state(obj->vm)))
+            break;
+    }
 }
 
 void objectdecorator_executewhile_destructor(objectdecorator_executebase_t *ex)
@@ -302,10 +306,13 @@ void objectdecorator_executefor_callback(objectdecorator_executebase_t *ex, obje
 {
     objectdecorator_executefor_t *me = (objectdecorator_executefor_t*)ex;
     objectmachine_t *other_state = objectvm_get_state_by_name(obj->vm, ex->state_name);
+    objectmachine_t *this_state = *(objectvm_get_reference_to_current_state(obj->vm));
 
     expression_evaluate(me->initial);
     while(fabs(expression_evaluate(me->condition)) >= 1e-5) {
         other_state->update(other_state, team, team_size, brick_list, item_list, object_list);
+        if(this_state != *(objectvm_get_reference_to_current_state(obj->vm)))
+            break;
         expression_evaluate(me->iteration);
     }
 }
