@@ -30,8 +30,9 @@ object ".allegro_startup"
 
     state fadeout
     {
+        let $s=1
         let $_fade_in=0
-        let $_fade_duration=1
+        let $_fade_duration=0.5
         create_child .fade_effect
         change_state wait2
     }
@@ -46,6 +47,8 @@ object ".allegro_startup"
 
     state wait2
     {
+        let $s=max(0,$s-2*dt())
+        set_scale $s $s
         on_timeout 2 cc
     }
 

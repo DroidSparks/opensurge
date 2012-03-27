@@ -49,7 +49,7 @@ object "Barrel - right,rotation"
     state fire
     {
         create_child .barrel.explosion
-        play_sample samples/destroypop.wav
+        play_sample samples/cannon.ogg
         set_player_xspeed "$strength * cos(deg2rad(angle()))"
         set_player_yspeed "-$strength * sin(deg2rad(angle()))"
         roll_player

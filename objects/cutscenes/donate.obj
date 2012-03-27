@@ -129,6 +129,7 @@ object ".donate_startup.options"
 
     state bye
     {
+        let $_force_donation_screen=0
         next_level
     }
 
