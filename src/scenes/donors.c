@@ -1,6 +1,6 @@
 /*
  * Open Surge Engine
- * donators.c - donators scene
+ * donors.c - donors scene
  * Copyright (C) 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
@@ -20,7 +20,7 @@
  */
 
 #include <math.h>
-#include "donators.h"
+#include "donors.h"
 #include "options.h"
 #include "../core/util.h"
 #include "../core/video.h"
@@ -38,8 +38,8 @@
 
 
 /* private data */
-#define DONATORS_FILE               "config/donators.dat"
-#define DONATORS_BGFILE             "themes/donators.bg"
+#define DONORS_FILE               "config/donors.dat"
+#define DONORS_BGFILE             "themes/donors.bg"
 static image_t *box;
 static int quit;
 static font_t *title, *text, *back;
@@ -47,7 +47,7 @@ static input_t *input;
 static int line_count;
 static bgtheme_t *bgtheme;
 
-static char* read_donators_file();
+static char* read_donors_file();
 
 
 
@@ -55,28 +55,28 @@ static char* read_donators_file();
 /* public functions */
 
 /*
- * donators_init()
+ * donors_init()
  * Initializes the scene
  */
-void donators_init()
+void donors_init()
 {
     const char *p;
-    char *donators_text = read_donators_file();
+    char *donors_text = read_donors_file();
 
     /* initializing stuff... */
     quit = FALSE;
     input = input_create_user(NULL);
 
     title = font_create("menu.title");
-    font_set_text(title, "%s", lang_get("DONATORS_TITLE"));
+    font_set_text(title, "%s", lang_get("DONORS_TITLE"));
     font_set_position(title, v2d_new((VIDEO_SCREEN_W - font_get_textsize(title).x)/2, 5));
 
     back = font_create("menu.text");
-    font_set_text(back, "%s", lang_get("DONATORS_KEY"));
+    font_set_text(back, "%s", lang_get("DONORS_KEY"));
     font_set_position(back, v2d_new(10, VIDEO_SCREEN_H - font_get_textsize(back).y - 5));
 
     text = font_create("menu.credits");
-    font_set_text(text, "%s", donators_text);
+    font_set_text(text, "%s", donors_text);
     font_set_width(text, 300);
     font_set_position(text, v2d_new(10, VIDEO_SCREEN_H));
     for(line_count=1,p=font_get_text(text); *p; p++)
@@ -85,20 +85,20 @@ void donators_init()
     box = image_create(VIDEO_SCREEN_W, 30);
     image_clear(box, image_rgb(0,0,0));
 
-    bgtheme = background_load(DONATORS_BGFILE);
+    bgtheme = background_load(DONORS_BGFILE);
 
     fadefx_in(image_rgb(0,0,0), 1.0);
 
     /* done! */
-    free(donators_text);
+    free(donors_text);
 }
 
 
 /*
- * donators_release()
+ * donors_release()
  * Releases the scene
  */
-void donators_release()
+void donors_release()
 {
     bgtheme = background_unload(bgtheme);
     image_destroy(box);
@@ -112,10 +112,10 @@ void donators_release()
 
 
 /*
- * donators_update()
+ * donors_update()
  * Updates the scene
  */
-void donators_update()
+void donors_update()
 {
     float dt = timer_get_delta();
     v2d_t textpos;
@@ -157,10 +157,10 @@ void donators_update()
 
 
 /*
- * donators_render()
+ * donors_render()
  * Renders the scene
  */
-void donators_render()
+void donors_render()
 {
     v2d_t cam = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
 
@@ -182,16 +182,16 @@ void donators_render()
 
 /* private stuff */
 
-/* reads the contents of DONATORS_FILE */
-char* read_donators_file()
+/* reads the contents of DONORS_FILE */
+char* read_donors_file()
 {
     char *buf, filename[1024];
     FILE* fp;
     long size;
 
-    resource_filepath(filename, DONATORS_FILE, sizeof filename, RESFP_READ);
+    resource_filepath(filename, DONORS_FILE, sizeof filename, RESFP_READ);
     if(NULL == (fp = fopen(filename, "r"))) {
-        fatal_error("Can't open '%s' for reading.", DONATORS_FILE);
+        fatal_error("Can't open '%s' for reading.", DONORS_FILE);
         return NULL;
     }
 
@@ -202,7 +202,7 @@ char* read_donators_file()
     buf = mallocx(1 + size);
     buf[size] = 0;
     if(fread(buf, 1, size, fp) != size)
-        logfile_message("Warning: invalid return value of fread() when reading '%s'", DONATORS_FILE);
+        logfile_message("Warning: invalid return value of fread() when reading '%s'", DONORS_FILE);
 
     fclose(fp);
     return buf;

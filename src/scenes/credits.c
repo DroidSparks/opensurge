@@ -150,7 +150,7 @@ void credits_update()
         }
         else if(input_button_pressed(input, IB_FIRE8)) {
             sound_play( soundfactory_get("select") );
-            next_scene = storyboard_get_scene(SCENE_DONATORS);
+            next_scene = storyboard_get_scene(SCENE_DONORS);
             quit = TRUE;
         }
     }

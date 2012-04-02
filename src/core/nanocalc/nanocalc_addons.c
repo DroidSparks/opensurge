@@ -34,7 +34,7 @@ extern "C" {
 static const float one = 1.0f;
 #define EPS                 1e-5
 #define INFI                (1.0f / (1.0f - one))
-#define MAX_ARRAYS          1024
+#define MAX_ARRAYS          2048
 #define ARRAY_MAXLEN        1024
 #define ARRAY_PTR2HANDLE(x) (float)(1337 + x)
 #define ARRAY_HANDLE2PTR(x) (int)x - 1337

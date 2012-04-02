@@ -1,6 +1,6 @@
 /*
  * Open Surge Engine
- * donators.h - donators scene
+ * donors.h - donors scene
  * Copyright (C) 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
@@ -23,9 +23,9 @@
 #define _DONATORS_H
 
 /* public functions */
-void donators_init();
-void donators_release();
-void donators_update();
-void donators_render();
+void donors_init();
+void donors_release();
+void donors_update();
+void donors_render();
 
 #endif

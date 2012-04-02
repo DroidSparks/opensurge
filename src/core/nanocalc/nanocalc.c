@@ -92,10 +92,8 @@ char *nanocalc_interpolate_string(const char *str, symboltable_t *symbol_table)
 
                 if(symboltable_is_defined(symbol_table, varname)) {
                     float2string(varvalue, symboltable_get(symbol_table, varname));
-                    for(q=varvalue; *q && j<10240; ) {
+                    for(q=varvalue; *q && j++<10240; )
                         *(r++) = *(q++);
-                        j++;
-                    }
                     p += strlen(varname);
                     continue;
                 }
@@ -232,6 +230,8 @@ symboltable_t *symboltable_get_global_table()
 
 
 /* =============== BUILT-IN FUNCTIONS (BIFs) ======================== */
+#define CALL_BIF(name, bif_arity, ...) (bif_find/*_or_die*/(name)->call.arity##bif_arity(__VA_ARGS__)) /* calls the given BIF */
+
 typedef struct bif_t bif_t;
 struct bif_t {
     int arity;
@@ -275,6 +275,16 @@ static bif_t* bif_find(const char *name)
 
     return NULL;
 }
+
+/*static bif_t* bif_find_or_die(const char *name)
+{
+    bif_t *bif = bif_find(name);
+
+    if(!bif)
+        error("Can't find built-in function '%s'", name);
+
+    return bif;
+}*/
 
 static void bif_register_arity0(const char *name, float (*fun)())
 {
@@ -927,7 +937,7 @@ static int lexer_read_next_token(token_t *tok_ref, char **expr_ref)
     }
     else if(len >= 1 && (
         (s[0] == '+') ||
-        ((s[0] == '-') && (previous_token.type != TOK_LPAREN && previous_token.type != TOK_UNARYOP && previous_token.type != TOK_BINARYOP && previous_token.type != TOK_ASSIGNMENTOP && previous_token.type != TOK_UNKNOWN)) ||
+        ((s[0] == '-') && (previous_token.type != TOK_LPAREN && previous_token.type != TOK_UNARYOP && previous_token.type != TOK_BINARYOP && previous_token.type != TOK_ASSIGNMENTOP && previous_token.type != TOK_COMMA && previous_token.type != TOK_UNKNOWN)) ||
         (s[0] == '*') ||
         (s[0] == '/') ||
         (s[0] == '>') ||

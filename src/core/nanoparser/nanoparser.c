@@ -304,7 +304,7 @@ static int sourcelocation_get_line(sourcelocation_t* s);
 
 
 /* lexical analyzer */
-#define SYMBOL_MAXLENGTH        512
+#define SYMBOL_MAXLENGTH        2048
 
 typedef enum {
     SYM_EOF,

@@ -30,7 +30,7 @@
 #include "../scenes/confirmbox.h"
 #include "../scenes/langselect.h"
 #include "../scenes/credits.h"
-#include "../scenes/donators.h"
+#include "../scenes/donors.h"
 #include "../scenes/options.h"
 #include "../scenes/stageselect.h"
 #include "../scenes/questselect.h"
@@ -65,7 +65,7 @@ void storyboard_init()
     storyboard[SCENE_CONFIRMBOX] = scene_create(confirmbox_init, confirmbox_update, confirmbox_render, confirmbox_release);
     storyboard[SCENE_LANGSELECT] = scene_create(langselect_init, langselect_update, langselect_render, langselect_release);
     storyboard[SCENE_CREDITS] = scene_create(credits_init, credits_update, credits_render, credits_release);
-    storyboard[SCENE_DONATORS] = scene_create(donators_init, donators_update, donators_render, donators_release);
+    storyboard[SCENE_DONORS] = scene_create(donors_init, donors_update, donors_render, donors_release);
     storyboard[SCENE_OPTIONS] = scene_create(options_init, options_update, options_render, options_release);
     storyboard[SCENE_STAGESELECT] = scene_create(stageselect_init, stageselect_update, stageselect_render, stageselect_release);
     storyboard[SCENE_QUESTSELECT] = scene_create(questselect_init, questselect_update, questselect_render, questselect_release);
