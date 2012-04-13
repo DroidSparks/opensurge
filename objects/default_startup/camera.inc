@@ -234,7 +234,7 @@ object ".default_startup.camera.y"
         // am I in the air?
         change_child_state "air_checker" "@check"
         if "$_in_the_air" "wait"
-        on_button_down "fire1" "wait"
+        //on_button_down "fire1" "wait" // bug!
 
         // cute stuff
         set_alpha 1.0
