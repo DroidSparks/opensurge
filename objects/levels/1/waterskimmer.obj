@@ -101,5 +101,6 @@ object ".waterskimmer.skin"
         change_parent_state @get_position
         set_absolute_position $_wsx $_wsy
         set_animation WaterSkimmer $_wsa
+        set_zindex 0.6
     }
 }

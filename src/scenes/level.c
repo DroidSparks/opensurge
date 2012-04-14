@@ -401,7 +401,7 @@ void level_load(const char *filepath)
     str_cpy(file, filepath, sizeof(file)); /* it's the relative filepath we want */
     spawn_point = v2d_new(0,0);
     dialogregion_size = 0;
-    act = 1;
+    act = 0;
     requires[0] = GAME_VERSION;
     requires[1] = GAME_SUB_VERSION;
     requires[2] = GAME_WIP_VERSION;

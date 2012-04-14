@@ -363,6 +363,7 @@ object ".default_startup.opening_animation.act"
 
     state "main"
     {
+        execute "destroy" if "act() < 1 or act() > 3"
         let "$anim = clamp(act()-1, 0, 2)"
         set_animation "SD_LEVELACT" "$anim"
         set_zindex "$_ds_op_zindex + 0.05"
