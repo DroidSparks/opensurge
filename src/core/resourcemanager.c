@@ -54,7 +54,7 @@ void resourcemanager_release()
 
 void resourcemanager_release_unused_resources()
 {
-    hashtable_image_t_release_unreferenced_entries(images);
+    /*hashtable_image_t_release_unreferenced_entries(images);*/ /* can't do it, because we use shared images to display the sprites */
     hashtable_sound_t_release_unreferenced_entries(samples);
     hashtable_music_t_release_unreferenced_entries(musics);
 }

@@ -38,7 +38,8 @@ image_t *image_load(const char *path); /* will be unloaded automatically */
 int image_unref(const char *path); /* use if you want to save memory... */
 image_t *image_create(int width, int height); /* create a memory surface */
 void image_destroy(image_t *img); /* call this after image_create() */
-void image_save(const image_t *img, const char *path);
+void image_save(const image_t *img, const char *path); /* saves the image to a file */
+image_t *image_create_shared(const image_t *parent, int x, int y, int width, int height); /* creates a sub-image */
 
 /* properties */
 inline int image_width(const image_t *img);

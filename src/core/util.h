@@ -54,7 +54,7 @@
 #define max(a,b)                ((a)>(b)?(a):(b))
 #define sign(x)                 (((x)>=0.0f)?(1.0f):(-1.0f))
 #define round(x)                ((int)(((x)>0.0f)?((x)+0.5f):((x)-0.5f)))
-#define clip(val,a,b)           ( ((val)<min((a),(b))) ? min((a),(b)) : ( ((val)>max((a),(b))) ? max((a),(b)) : (val)  ) )
+#define clip(val,a,b)           ( ((val)<(a) && (val)<(b)) ? min((a),(b)) : ( ((val)>(a) && (val)>(b)) ? max((a),(b)) : (val)  ) )
 #define swap(a,b)               swap_ex(&(a), &(b), sizeof(a))
 #define atob(str)               ((str_icmp(str, "true") == 0) || (str_icmp(str, "yes") == 0))
 

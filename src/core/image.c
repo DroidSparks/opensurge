@@ -187,7 +187,7 @@ image_t *image_create(int width, int height)
     if(img->data != NULL)
         image_clear(img, image_rgb(0,0,0));
     else
-        logfile_message("ERROR - image_create(%d,%d): couldn't create bitmap", width, height);
+        logfile_message("ERROR - image_create(%d,%d): couldn't create image", width, height);
 
     return img;
 }
@@ -208,6 +208,34 @@ void image_destroy(image_t *img)
     free(img);
 }
 
+/*
+ * image_create_shared()
+ * Creates a sub-image, ie., an image sharing memory with an
+ * existing image, but possibly with a different size. Please
+ * remember to free the sub-image before freeing the parent
+ * image to avoid memory leaks and potential crashes acessing
+ * memory which has been freed.
+ */
+image_t *image_create_shared(const image_t *parent, int x, int y, int width, int height)
+{
+    image_t *img;
+    int pw, ph;
+
+    pw = image_width(parent);
+    ph = image_height(parent);
+    x = clip(x, 0, pw-1);
+    y = clip(y, 0, ph-1);
+    width = clip(width, 0, pw-x);
+    height = clip(height, 0, ph-y);
+
+    img = mallocx(sizeof *img);
+    img->w = width;
+    img->h = height;
+    if(NULL == (img->data = create_sub_bitmap(parent->data, x, y, width, height)))
+        logfile_message("ERROR - image_create_shared(0x%p,%d,%d,%d,%d): couldn't create shared image", parent, x, y, width, height);
+
+    return img;
+}
 
 /*
  * image_width()

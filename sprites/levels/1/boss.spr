@@ -1,4 +1,5 @@
 // Sunshine Paradise: Boss
+// script by Alexandre
 sprite Boss1_Body
 {
     source_file     images/levels/1/boss.png
