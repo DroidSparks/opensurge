@@ -928,10 +928,8 @@ fontdata_t* fontdata_bmp_new(const char *source_file, const char *keymap, int sh
         int y = i / len;
         int c = (*p) & 0xFF;
 
-        if(NULL == f->bmp[c]) {
-            f->bmp[c] = image_create(char_width, char_height);
-            image_blit(img, f->bmp[c], sheet_source_x + x*char_width, sheet_source_y + y*char_height, 0, 0, char_width, char_height);
-        }
+        if(NULL == f->bmp[c])
+            f->bmp[c] = image_create_shared(img, sheet_source_x + x*char_width, sheet_source_y + y*char_height, char_width, char_height);
     }
 
     /* done! ;) */

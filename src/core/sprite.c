@@ -348,8 +348,6 @@ void load_sprite_images(spriteinfo_t *spr)
     cur_x = spr->rect_x;
     cur_y = spr->rect_y;
     for(i=0; i<spr->frame_count; i++) {
-        /*spr->frame_data[i] = image_create(spr->frame_w, spr->frame_h);
-        image_blit(sheet, spr->frame_data[i], cur_x, cur_y, 0, 0, spr->frame_w, spr->frame_h);*/
         spr->frame_data[i] = image_create_shared(sheet, cur_x, cur_y, spr->frame_w, spr->frame_h);
         cur_x += spr->frame_w;
         if(cur_x >= spr->rect_x+spr->rect_w) {
