@@ -101,11 +101,11 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
 
 void render(objectmachine_t *obj, v2d_t camera_position)
 {
-    objectdecorator_t *dec = (objectdecorator_t*)obj;
-    objectmachine_t *decorated_machine = dec->decorated_machine;
+    /*objectdecorator_t *dec = (objectdecorator_t*)obj;
+    objectmachine_t *decorated_machine = dec->decorated_machine;*/
 
     ; /* empty */
 
-    decorated_machine->render(decorated_machine, camera_position);
+    /*decorated_machine->render(decorated_machine, camera_position);*/
 }
 

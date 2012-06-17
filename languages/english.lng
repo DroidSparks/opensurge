@@ -47,7 +47,7 @@ OPTIONS_GAME                "GAME"
 OPTIONS_GAMEPAD             "Use gamepad"
 OPTIONS_LANGUAGE            "Change language"
 OPTIONS_STAGESELECT         "Stage select"
-OPTIONS_CREDITS             "Credits & donations"
+OPTIONS_CREDITS             "Credits"
 OPTIONS_BACK                "BACK"
 
 
@@ -77,7 +77,7 @@ LANGSELECT_PAGE             "page %d/%d"
 // Credits
 CREDITS_TITLE               "<color=$COLOR_P1>CREDITS</color>"
 CREDITS_KEY                 "Press <color=ffff00>$INPUT_FIRE4</color> to go back, or <color=ffff00>$INPUT_FIRE8</color> to see the donors"
-CREDITS_ACTIVE              "Project team"
+CREDITS_ACTIVE              "Open Surge team"
 CREDITS_CONTRIB             "Special contributors"
 CREDITS_RETIRED             "Retired members"
 CREDITS_THANKS              "Thanks to"

@@ -256,7 +256,10 @@ void stageselect_render()
 
     for(i=0; i<stage_count; i++) {
         if(i/STAGE_MAXPERPAGE == option/STAGE_MAXPERPAGE) {
-            font_set_text(stage_label[i], (option==i) ? "<color=ffff00>%s - %s %d</color>" : "%s - %s %d", stage_data[i]->name, lang_get("STAGESELECT_ACT"), stage_data[i]->act);
+            if(stage_data[i]->act > 0)
+                font_set_text(stage_label[i], (option==i) ? "<color=ffff00>%s - %s %d</color>" : "%s - %s %d", stage_data[i]->name, lang_get("STAGESELECT_ACT"), stage_data[i]->act);
+            else
+                font_set_text(stage_label[i], (option==i) ? "<color=ffff00>%s</color>" : "%s", stage_data[i]->name);
             font_render(stage_label[i], cam);
         }
     }

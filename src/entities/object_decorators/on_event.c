@@ -194,6 +194,7 @@ static eventstrategy_t* onplayerwait_new() { return onplayerevent_new(player_is_
 static eventstrategy_t* onplayerwin_new() { return onplayerevent_new(player_is_winning); }
 static eventstrategy_t* onplayerintheair_new() { return onplayerevent_new(player_is_in_the_air); }
 static eventstrategy_t* onplayerunderwater_new() { return onplayerevent_new(player_is_underwater); }
+static eventstrategy_t* onplayerultrafast_new() { return onplayerevent_new(player_is_ultrafast); }
 
 /* onplayershield_t concrete strategy */
 struct onplayershield_t {
@@ -456,6 +457,11 @@ objectmachine_t* objectdecorator_onplayerintheair_new(objectmachine_t *decorated
 objectmachine_t* objectdecorator_onplayerunderwater_new(objectmachine_t *decorated_machine, const char *new_state_name)
 {
     return make_decorator(decorated_machine, new_state_name, onplayerunderwater_new());
+}
+
+objectmachine_t* objectdecorator_onplayerultrafast_new(objectmachine_t *decorated_machine, const char *new_state_name)
+{
+    return make_decorator(decorated_machine, new_state_name, onplayerultrafast_new());
 }
 
 objectmachine_t* objectdecorator_onnoshield_new(objectmachine_t *decorated_machine, const char *new_state_name)

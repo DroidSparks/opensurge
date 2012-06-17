@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * player.c - player module
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -805,6 +805,29 @@ int player_is_in_the_air(const player_t *player)
 {
     return physicsactor_is_in_the_air(player->pa);
 }
+
+
+/*
+ * player_is_ultrafast()
+ * TRUE if, and only if, the player is wearing speed shoes
+ */
+int player_is_ultrafast(const player_t* player)
+{
+    return player->got_speedshoes;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

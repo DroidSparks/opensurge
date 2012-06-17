@@ -226,6 +226,7 @@ static void on_player_wait(objectmachine_t** m, int n, const char **p, const par
 static void on_player_win(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_player_in_the_air(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_player_underwater(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void on_player_ultrafast(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_no_shield(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_shield(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_fire_shield(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -395,6 +396,7 @@ static entry_t command_table[] = {
     { "on_player_win", on_player_win },
     { "on_player_in_the_air", on_player_in_the_air },
     { "on_player_underwater", on_player_underwater },
+    { "on_player_ultrafast", on_player_ultrafast },
     { "on_no_shield", on_no_shield },
     { "on_shield", on_shield },
     { "on_fire_shield", on_fire_shield },
@@ -1194,6 +1196,14 @@ void on_player_underwater(objectmachine_t** m, int n, const char **p, const pars
         *m = objectdecorator_onplayerunderwater_new(*m, p[0]);
     else
         COMPILE_ERROR("Object script error - on_player_underwater expects one parameter: new_state_name");
+}
+
+void on_player_ultrafast(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_onplayerultrafast_new(*m, p[0]);
+    else
+        COMPILE_ERROR("Object script error - on_player_ultrafast expects one parameter: new_state_name");
 }
 
 void on_no_shield(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)

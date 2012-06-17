@@ -1,4 +1,4 @@
-nanoparser - A tiny stand-alone easy-to-use parser written in C - version 1.0
+nanoparser - A tiny stand-alone easy-to-use parser written in C - version 1.1
 Copyright (c) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
 http://opensnc.sourceforge.net
 
