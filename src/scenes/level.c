@@ -110,7 +110,7 @@ static void spawn_startup_objects();
  * Level
  * ------------------------ */
 /* constants */
-#define DEFAULT_MARGIN          160
+#define DEFAULT_MARGIN          (VIDEO_SCREEN_W/2)
 #define MAX_POWERUPS            10
 #define DLGBOX_MAXTIME          7000
 #define TEAM_MAX                16
@@ -1897,13 +1897,15 @@ void reconfigure_players_input_devices()
     int i;
 
     for(i=0; i<team_size; i++) {
-        input_destroy(team[i]->actor->input);
-        if(team[i] == player) {
+        if(NULL == team[i]->actor->input)
             team[i]->actor->input = input_create_user(NULL);
+
+        if(team[i] == player) {
+            input_restore(team[i]->actor->input);
             input_simulate_button_down(team[i]->actor->input, IB_FIRE2); /* bugfix (character switching) */
         }
         else
-            team[i]->actor->input = input_create_computer();
+            input_ignore(team[i]->actor->input);
     }
 }
 
