@@ -26,6 +26,7 @@
 #include "logfile.h"
 #include "timer.h"
 #include "inputmap.h"
+#include "stringutil.h"
 
 /* input strcuture (private) */
 /* <base class> */
@@ -434,9 +435,11 @@ v2d_t input_get_xy(inputmouse_t *in)
  */
 void input_change_mapping(inputuserdefined_t *in, const char* inputmap_name)
 {
-    input_clear((input_t*)in);
-    in->inputmap = inputmap_get(inputmap_name ? inputmap_name : DEFAULT_INPUTMAP_NAME);
-    ((input_t*)in)->update((input_t*)in);
+    if(str_icmp(inputmap_name, input_get_mapping_name(in)) != 0) {
+        input_clear((input_t*)in);
+        in->inputmap = inputmap_get(inputmap_name ? inputmap_name : DEFAULT_INPUTMAP_NAME);
+        ((input_t*)in)->update((input_t*)in);
+    }
 }
 
 /*
