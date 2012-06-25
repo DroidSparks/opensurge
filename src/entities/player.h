@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Edits by Dalton Sterritt (all edits released under same license):
+ * player_enable_roll, player_disable_roll
  */
 
 #ifndef _PLAYER_H
@@ -60,6 +63,7 @@ struct player_t {
     char *name;
     struct actor_t *actor;
     int disable_movement;
+    int disable_roll;
     int in_locked_area;
     int at_some_border;
     int bring_to_back;
@@ -113,6 +117,8 @@ void player_bounce(player_t *player, struct actor_t *hazard);
 void player_kill(player_t *player);
 void player_spring(player_t *player);
 void player_roll(player_t *player);
+void player_enable_roll(player_t *player);
+void player_disable_roll(player_t *player);
 void player_lock_horizontally_for(player_t *player, float seconds);
 
 void player_enter_water(player_t *player);

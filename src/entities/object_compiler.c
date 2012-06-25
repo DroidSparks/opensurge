@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Edits by Dalton Sterritt (all edits released under same license):
+ * enable_player_roll, disable_player_roll
  */
 
 #include <stdarg.h>
@@ -155,6 +158,8 @@ static void observe_all_players(objectmachine_t** m, int n, const char **p, cons
 static void attach_to_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void springfy_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void roll_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void enable_player_roll(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void disable_player_roll(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void strong_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void weak_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void w_player_enter_water(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -325,6 +330,8 @@ static entry_t command_table[] = {
     { "attach_to_player", attach_to_player },
     { "springfy_player", springfy_player },
     { "roll_player", roll_player },
+    { "enable_player_roll", enable_player_roll },
+    { "disable_player_roll", disable_player_roll },
     { "strong_player", strong_player },
     { "weak_player", weak_player },
     { "player_enter_water", w_player_enter_water },
@@ -1664,6 +1671,22 @@ void roll_player(objectmachine_t** m, int n, const char **p, const parsetree_sta
         *m = objectdecorator_rollplayer_new(*m);
     else
         COMPILE_ERROR("Object script error - roll_player expects no parameters");
+}
+
+void enable_player_roll(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_enableplayerroll_new(*m);
+    else
+        COMPILE_ERROR("Object script error - enable_player_roll expects no parameters");
+}
+
+void disable_player_roll(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_disableplayerroll_new(*m);
+    else
+        COMPILE_ERROR("Object script error - disable_player_roll expects no parameters");
 }
 
 void strong_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)

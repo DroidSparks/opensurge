@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Edits by Dalton Sterritt (all edits released under same license):
+ * enable_roll, disable_roll
  */
 
 #include "player_action.h"
@@ -42,6 +45,8 @@ static objectmachine_t *make_decorator(objectmachine_t *decorated_machine, void 
 /* private strategies */
 static void springfy(player_t *player);
 static void roll(player_t *player);
+static void enable_roll(player_t *player);
+static void disable_roll(player_t *player);
 static void strong(player_t *player);
 static void weak(player_t *player);
 static void enterwater(player_t *player);
@@ -63,6 +68,16 @@ objectmachine_t* objectdecorator_springfyplayer_new(objectmachine_t *decorated_m
 objectmachine_t* objectdecorator_rollplayer_new(objectmachine_t *decorated_machine)
 {
     return make_decorator(decorated_machine, roll);
+}
+
+objectmachine_t* objectdecorator_enableplayerroll_new(objectmachine_t *decorated_machine)
+{
+    return make_decorator(decorated_machine, enable_roll);
+}
+
+objectmachine_t* objectdecorator_disableplayerroll_new(objectmachine_t *decorated_machine)
+{
+    return make_decorator(decorated_machine, disable_roll);
 }
 
 objectmachine_t* objectdecorator_strongplayer_new(objectmachine_t *decorated_machine)
@@ -176,6 +191,16 @@ void springfy(player_t *player)
 void roll(player_t *player)
 {
     player_roll(player);
+}
+
+void enable_roll(player_t *player)
+{
+    player_enable_roll(player);
+}
+
+void disable_roll(player_t *player)
+{
+    player_disable_roll(player);
 }
 
 void strong(player_t *player)

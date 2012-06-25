@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Edits by Dalton Sterritt (all edits released under same license):
+ * player_enable_roll, player_disable_roll
  */
 
 #include <math.h>
@@ -96,6 +99,7 @@ player_t *player_create(const char *character_name)
     p->name = str_dup(character_name);
     p->actor = actor_create();
     p->disable_movement = FALSE;
+    p->disable_roll = FALSE;
     p->in_locked_area = FALSE;
     p->at_some_border = FALSE;
     p->bring_to_back = FALSE;
@@ -486,6 +490,31 @@ void player_roll(player_t *player)
     physicsactor_roll(player->pa);
 }
 
+/*
+ * player_enable_roll()
+ * disables player rolling
+ */
+void player_enable_roll(player_t *player)
+{
+    physicsactor_t *pa = player->pa;
+    if(player->disable_roll) {
+        physicsactor_set_rollthreshold(pa, physicsactor_get_rollthreshold(pa) - 1000.0f);
+        player->disable_roll = FALSE;
+    }
+}
+
+/*
+ * player_disable_roll()
+ * disables player rolling
+ */
+void player_disable_roll(player_t *player)
+{
+    physicsactor_t *pa = player->pa;
+    if(!(player->disable_roll)) {
+        physicsactor_set_rollthreshold(pa, physicsactor_get_rollthreshold(pa) + 1000.0f);
+        player->disable_roll = TRUE;
+    }
+}
 
 /*
  * player_spring()
