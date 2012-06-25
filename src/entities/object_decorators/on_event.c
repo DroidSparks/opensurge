@@ -194,7 +194,8 @@ static eventstrategy_t* onplayerwait_new() { return onplayerevent_new(player_is_
 static eventstrategy_t* onplayerwin_new() { return onplayerevent_new(player_is_winning); }
 static eventstrategy_t* onplayerintheair_new() { return onplayerevent_new(player_is_in_the_air); }
 static eventstrategy_t* onplayerunderwater_new() { return onplayerevent_new(player_is_underwater); }
-static eventstrategy_t* onplayerultrafast_new() { return onplayerevent_new(player_is_ultrafast); }
+static eventstrategy_t* onplayerspeedshoes_new() { return onplayerevent_new(player_is_ultrafast); }
+static eventstrategy_t* onplayerinvincible_new() { return onplayerevent_new(player_is_invincible); }
 
 /* onplayershield_t concrete strategy */
 struct onplayershield_t {
@@ -459,9 +460,14 @@ objectmachine_t* objectdecorator_onplayerunderwater_new(objectmachine_t *decorat
     return make_decorator(decorated_machine, new_state_name, onplayerunderwater_new());
 }
 
-objectmachine_t* objectdecorator_onplayerultrafast_new(objectmachine_t *decorated_machine, const char *new_state_name)
+objectmachine_t* objectdecorator_onplayerspeedshoes_new(objectmachine_t *decorated_machine, const char *new_state_name)
 {
-    return make_decorator(decorated_machine, new_state_name, onplayerultrafast_new());
+    return make_decorator(decorated_machine, new_state_name, onplayerspeedshoes_new());
+}
+
+objectmachine_t* objectdecorator_onplayerinvincible_new(objectmachine_t *decorated_machine, const char *new_state_name)
+{
+    return make_decorator(decorated_machine, new_state_name, onplayerinvincible_new());
 }
 
 objectmachine_t* objectdecorator_onnoshield_new(objectmachine_t *decorated_machine, const char *new_state_name)

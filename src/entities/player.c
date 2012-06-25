@@ -816,6 +816,10 @@ int player_is_ultrafast(const player_t* player)
     return player->got_speedshoes;
 }
 
+int player_is_invincible(const player_t* player)
+{
+    return player->invincible;
+}
 
 
 

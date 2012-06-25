@@ -73,7 +73,8 @@ objectmachine_t* objectdecorator_onacidshield_new(objectmachine_t *decorated_mac
 objectmachine_t* objectdecorator_onwindshield_new(objectmachine_t *decorated_machine, const char *new_state_name);
 
 /* player events: others */
-objectmachine_t* objectdecorator_onplayerultrafast_new(objectmachine_t *decorated_machine, const char *new_state_name);
+objectmachine_t* objectdecorator_onplayerspeedshoes_new(objectmachine_t *decorated_machine, const char *new_state_name);
+objectmachine_t* objectdecorator_onplayerinvincible_new(objectmachine_t *decorated_machine, const char *new_state_name);
 
 /* brick events */
 objectmachine_t* objectdecorator_onbrickcollision_new(objectmachine_t *decorated_machine, const char *new_state_name);

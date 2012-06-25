@@ -172,6 +172,9 @@ int traverse(const parsetree_statement_t *stmt)
     const char *key, *value;
     stringadapter_t *s;
 
+    if(nanoparser_get_number_of_parameters(param_list) != 1) 
+        fatal_error("Language file error: invalid syntax at line %d in\n\"%s\"", nanoparser_get_line_number(stmt), nanoparser_get_file(stmt));
+
     nanoparser_expect_string(p, "a string is expected after each key of the language file");
     key = id;
     value = nanoparser_get_string(p);
@@ -191,9 +194,14 @@ int traverse_inout(const parsetree_statement_t *stmt, void *inout)
     const parsetree_parameter_t *param_list = nanoparser_get_parameter_list(stmt);
     const parsetree_parameter_t *p = nanoparser_get_nth_parameter(param_list, 1);
 
+    if(nanoparser_get_number_of_parameters(param_list) != 1) 
+        fatal_error("Language file error: invalid syntax at line %d in\n\"%s\"", nanoparser_get_line_number(stmt), nanoparser_get_file(stmt));
+
     nanoparser_expect_string(p, "a string is expected after each key of the language file");
-    if(str_icmp(id, x->key) == 0)
+    if(str_icmp(id, x->key) == 0) {
         x->value = nanoparser_get_string(p);
+        return 1; /* stop the enumeration */
+    }
 
     return 0;
 }
