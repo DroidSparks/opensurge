@@ -280,9 +280,6 @@ Colin Beard
 --- musics/boss.ogg
 --- musics/gimacianstheme.ogg
 
-Joepotato28
---- musics/magmamines.ogg
-
 Mateus Reis
 --- musics/citychill.ogg
 --- musics/intro_cutscene/intro[1-9].ogg
@@ -292,6 +289,7 @@ Johan Brodd
 --- musics/silence.ogg (public domain)
 --- musics/intro_cutscene/Jobromedia-Intro.ogg (public domain)
 --- musics/sharp.ogg (public domain)
+--- samples/allegro.ogg (public domain)
 
 <color=ffff00>$CREDITS_RES_SAMPLES</color>
 
@@ -359,9 +357,6 @@ Alexandre Martins
 
 d1337r
 --- samples/deny.wav
-
-Allegro Demo Game, by Shawn Hargreaves
---- samples/allegro.wav (gift-ware)
 
 <color=ffff00>$CREDITS_RES_SCRIPTS</color>
 

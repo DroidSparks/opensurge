@@ -11,7 +11,7 @@ object ".allegro_startup"
     {
         set_absolute_position screen_width()/2 screen_height()/2
         set_animation SD_ALLEGRO 0
-        play_sample samples/allegro.wav
+        play_sample samples/allegro.ogg
         change_state wait
     }
 
