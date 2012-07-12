@@ -118,7 +118,7 @@ DONORS_HEADER               "As an open source game, Open Surge needs money to p
 
 // "Please donate" screen
 DONATE_TITLE                "<color=$COLOR_P1>PLEASE DONATE</color>"
-DONATE_TEXT                 "Please help us create Episode 2!\n\nOpen Surge is a free and open source game, made available for you at no cost. However, making a game costs us real money. <color=ffff00>Please show your support.</color> By making a <color=ffff00>donation of any value</color>, you'll be helping us to create to next episode. You'll also gain access to some cool <color=ffff00>premium benefits</color>!\n\nYour donation is absolutely critical to the advancement of this project. Your money will be invested in code, art, music, etc.\n\nWould you like to donate now?"
+DONATE_TEXT                 "Please help us create Episode 2!\n\nOpen Surge is a free and open source game, made available for you at no cost. However, making a game costs us real money. <color=ffff00>Please show your support.</color> By making a <color=ffff00>donation of any value</color>, you'll be helping us to create to next episode.\n\nYour donation is absolutely critical to the advancement of this project. Your money will be invested in code, art, music, etc.\n\nWould you like to donate now?"
 DONATE_YES                  "Sure!"
 DONATE_NO                   "Later."
 DONATE_ALREADYHAVE          "Already have."
