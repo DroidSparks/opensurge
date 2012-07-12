@@ -109,7 +109,8 @@ Joao Victor
 --- images/extra/surge_sigh.png
 --- images/extra/neon_talk.png
 --- images/extra/neon_talk_big.png
---- ./logo.png
+--- images/extra/surge_artwork.png
+--- images/opensurge.png
 --- src/misc/icon16.png
 --- src/misc/icon32.png
 --- src/misc/icon64.png
@@ -128,6 +129,7 @@ svgmovement & Colin Beard
 svgmovement
 --- images/levels/1/barrel.png
 --- images/levels/1/waterskimmer.png
+--- ./logo.png
 
 Brian Zablocky
 --- images/blue_door.png
