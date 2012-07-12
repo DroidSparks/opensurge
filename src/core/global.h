@@ -24,7 +24,7 @@
 
 /* if this is defined, set it to the bleeding edge release */
 /* otherwise, then we assume we're compiling the stable release */
-/*#define GAME_BUILD_VERSION      1*/
+/*#define GAME_BUILD_VERSION      1337*/
 
 /* Game data */
 #define GAME_UNIXNAME           "opensurge"
@@ -34,8 +34,15 @@
 #define GAME_WIP_VERSION        0
 #define GAME_WEBSITE            "http://opensnc.sourceforge.net"
 #define GAME_YEAR               "2008-2012"
+
+/* Cute stuff */
+#ifndef GAME_UNIX_INSTALLDIR
 #define GAME_UNIX_INSTALLDIR    "/usr/share/opensurge"
-#define GAME_UNIX_COPYDIR       "/usr/bin"
+#endif
+
+#ifndef GAME_UNIX_EXECDIR
+#define GAME_UNIX_EXECDIR       "/usr/bin"
+#endif
 
 #ifndef GAME_BUILD_VERSION
 #define GAME_VERSION_STRING     STRVALUE(GAME_VERSION) "." STRVALUE(GAME_SUB_VERSION) "." STRVALUE(GAME_WIP_VERSION)

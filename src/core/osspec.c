@@ -219,15 +219,16 @@ void absolute_filepath(char *dest, const char *relativefp, size_t dest_size)
 {
     if(is_relative_filename(relativefp)) {
 #ifndef __WIN32__
-        char tmp[1024];
-        str_cpy(tmp, executable_name, sizeof(tmp));
-        tmp[ strlen(GAME_UNIX_COPYDIR) ] = '\0';
-        if(strcmp(tmp, GAME_UNIX_COPYDIR) == 0)
-            sprintf(dest, "%s/%s", GAME_UNIX_INSTALLDIR, relativefp);
-        else {
+        char *tmp = mallocx(sizeof(char) * (1 + max(strlen(executable_name), strlen(GAME_UNIX_EXECDIR))));
+        strcpy(tmp, executable_name);
+        tmp[ strlen(GAME_UNIX_EXECDIR) ] = '\0';
+        if(strcmp(tmp, GAME_UNIX_EXECDIR) != 0) {
             str_cpy(dest, executable_name, dest_size);
             replace_filename(dest, dest, relativefp, dest_size);
         }
+        else
+            snprintf(dest, dest_size, "%s/%s", GAME_UNIX_INSTALLDIR, relativefp);
+        free(tmp);
 #else
         str_cpy(dest, executable_name, dest_size);
         replace_filename(dest, dest, relativefp, dest_size);
@@ -253,7 +254,7 @@ void home_filepath(char *dest, const char *relativefp, size_t dest_size)
 #ifndef __WIN32__
 
     if(userinfo) {
-        sprintf(dest, "%s/.%s/%s", userinfo->pw_dir, GAME_UNIXNAME, relativefp);
+        snprintf(dest, dest_size, "%s/.%s/%s", userinfo->pw_dir, GAME_UNIXNAME, relativefp);
         fix_filename_slashes(dest);
         canonicalize_filename(dest, dest, dest_size);
         fix_case_path(dest);

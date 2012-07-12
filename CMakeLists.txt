@@ -23,35 +23,46 @@ PROJECT(opensurge C)
 SET(GAME_UNIXNAME opensurge)
 SET(GAME_NAME "Open Surge")
 SET(GAME_VERSION "0.2.0")
-SET(RTFM "Please read the user manual (readme.html) to get help.")
-SET(ALLEGRO_RECOMMENDED_VERSION "4.4.2")
-SET(CMAKE_BUILD_TYPE Release)
 MESSAGE("${GAME_NAME} version ${GAME_VERSION}")
 
-# configuring...
+# cool vars
+MARK_AS_ADVANCED(CMAKE_BUILD_TYPE CMAKE_INSTALL_PREFIX)
+SET(CMAKE_BUILD_TYPE Release)
+SET(CMAKE_INSTALL_PREFIX "")
+SET(RTFM "Please read the user manual (readme.html) to get help.")
+SET(ALLEGRO_RECOMMENDED_VERSION "4.4.2")
 SET(DEFS "") # #define'd stuff
-SET(CFLAGS_EXTRA "")
-#SET(CFLAGS_EXTRA "-g")
+SET(CFLAGS_EXTRA "") #SET(CFLAGS_EXTRA "-g")
 SET(CFLAGS "${CFLAGS} ${CMAKE_C_FLAGS}")
 MESSAGE("Using CFLAGS='${CFLAGS}'")
 
+# Allegro libs on *nix: it requires some tweaking...
 IF(UNIX)
-  SET(ALLEGRO_UNIX_LIBS "$ENV{_ALLEGRO_LIBS}")
-  IF(NOT ALLEGRO_UNIX_LIBS)
-    MESSAGE(FATAL_ERROR "Please do not invoke CMake directly. Run ./configure instead.")
-  ENDIF(NOT ALLEGRO_UNIX_LIBS)
+  EXECUTE_PROCESS(COMMAND allegro-config --libs OUTPUT_VARIABLE ALLEGRO_UNIX_LIBS)
+  IF(ALLEGRO_UNIX_LIBS)
+    STRING(REGEX REPLACE "[ \r\n\t]+$" "" ALLEGRO_UNIX_LIBS ${ALLEGRO_UNIX_LIBS})
+  ELSE(ALLEGRO_UNIX_LIBS)
+    MESSAGE(FATAL_ERROR "Couldn't run \"allegro-config --libs\"")
+  ENDIF(ALLEGRO_UNIX_LIBS)
 ENDIF(UNIX)
 
 # extra options
 IF(UNIX)
   # Under *nix, we prefer to use OpenAL instead of Allegro in order to handle the audio routines
-  # PulseAudio breaks the sound on Allegro games ...
+  # Allegro games really suffer: PulseAudio breaks the sound ...
   OPTION(USE_OPENAL "Will use OpenAL, not Allegro, for audio playback" ON)
 ELSE(UNIX)
   OPTION(USE_OPENAL "Will use OpenAL, not Allegro, for audio playback" OFF)
 ENDIF(UNIX)
 
-
+# install options
+IF(NOT WIN32)
+  SET(PREFIX "/usr/share/${GAME_UNIXNAME}" CACHE PATH "The folder where ${GAME_NAME} will be installed.")
+  SET(EXECUTABLE_DIR "/usr/bin" CACHE PATH "The executable will be placed in this folder.")
+  SET(GAME_UNIX_INSTALLDIR "${PREFIX}")
+  SET(GAME_UNIX_EXECDIR "${EXECUTABLE_DIR}")
+  SET(CFLAGS_EXTRA "${CFLAGS_EXTRA} -D'GAME_UNIX_INSTALLDIR=\"${GAME_UNIX_INSTALLDIR}\"' -D'GAME_UNIX_EXECDIR=\"${GAME_UNIX_EXECDIR}\"'")
+ENDIF(NOT WIN32)
 
 
 
@@ -65,7 +76,10 @@ IF(NOT LALLEG)
   MESSAGE(FATAL_ERROR "Fatal error: couldn't find the Allegro game programming library (liballeg)! ${RTFM}")
 ELSE(NOT LALLEG)
   IF(UNIX)
-    SET(ALLEGRO_UNIX_VERSION "$ENV{_ALLEGRO_VERSION}")
+    EXECUTE_PROCESS(COMMAND allegro-config --version OUTPUT_VARIABLE ALLEGRO_UNIX_VERSION)
+    IF(ALLEGRO_UNIX_VERSION)
+      STRING(REGEX REPLACE "[ \r\n\t]+$" "" ALLEGRO_UNIX_VERSION ${ALLEGRO_UNIX_VERSION})
+    ENDIF(ALLEGRO_UNIX_VERSION)
     IF(NOT ALLEGRO_UNIX_VERSION STREQUAL ALLEGRO_RECOMMENDED_VERSION)
       MESSAGE("\nWARNING: your Allegro version is ${ALLEGRO_UNIX_VERSION}. The recommended version is ${ALLEGRO_RECOMMENDED_VERSION}.\n         ${GAME_NAME} may not compile properly!.\n")
     ENDIF(NOT ALLEGRO_UNIX_VERSION STREQUAL ALLEGRO_RECOMMENDED_VERSION)
@@ -541,16 +555,13 @@ SET_TARGET_PROPERTIES(${GAME_UNIXNAME} PROPERTIES PROJECT_NAME "${GAME_NAME}")
 
 # Installing on *nix
 IF(UNIX)
-  SET(GAME_INSTALL_DIR "/usr/share/${GAME_UNIXNAME}")
-  SET(GAME_FINAL_DIR "/usr/bin")
+  INSTALL(CODE "MESSAGE(\"Installing ${GAME_NAME} ${GAME_VERSION} at ${GAME_UNIX_INSTALLDIR}... Please make sure you have enough privileges.\")")
+  INSTALL(TARGETS ${GAME_UNIXNAME} RUNTIME DESTINATION ${GAME_UNIX_INSTALLDIR})
+  INSTALL(FILES license.txt readme.html bg.png logo.png surge.png DESTINATION ${GAME_UNIX_INSTALLDIR})
+  INSTALL(DIRECTORY characters src objects sprites config images levels licenses musics quests samples screenshots themes languages fonts ttf DESTINATION ${GAME_UNIX_INSTALLDIR} PATTERN ".svn" EXCLUDE)
 
-  INSTALL(CODE "MESSAGE(\"Installing ${GAME_NAME} ${GAME_VERSION}... Make sure you have root privileges.\")")
-  INSTALL(TARGETS ${GAME_UNIXNAME} RUNTIME DESTINATION ${GAME_INSTALL_DIR})
-  INSTALL(FILES license.txt readme.html bg.png logo.png surge.png DESTINATION ${GAME_INSTALL_DIR})
-  INSTALL(DIRECTORY characters src objects sprites config images levels licenses musics quests samples screenshots themes languages fonts ttf DESTINATION ${GAME_INSTALL_DIR} PATTERN ".svn" EXCLUDE)
-
-  INSTALL(CODE "MESSAGE(\"Creating files at ${GAME_FINAL_DIR}...\")")
-  INSTALL(CODE "EXECUTE_PROCESS(COMMAND \"cmake\" \"-E\" \"copy\" \"${GAME_INSTALL_DIR}/${GAME_UNIXNAME}\" \"${GAME_FINAL_DIR}/${GAME_UNIXNAME}\")")
+  INSTALL(CODE "MESSAGE(\"Copying executable to ${GAME_UNIX_EXECDIR}...\")")
+  INSTALL(CODE "EXECUTE_PROCESS(COMMAND \"cmake\" \"-E\" \"copy\" \"${GAME_UNIX_INSTALLDIR}/${GAME_UNIXNAME}\" \"${GAME_UNIX_EXECDIR}/${GAME_UNIXNAME}\")")
 
   INSTALL(CODE "MESSAGE(\"Done! Please run ${GAME_UNIXNAME} to start ${GAME_NAME}.\")")
 ENDIF(UNIX)
