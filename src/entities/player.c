@@ -26,6 +26,7 @@
 #include "actor.h"
 #include "player.h"
 #include "brick.h"
+#include "collisionmask.h"
 #include "enemy.h"
 #include "item.h"
 #include "character.h"
@@ -1095,7 +1096,7 @@ void physics_adapter(player_t *player, player_t **team, int team_size, brick_lis
 /* converts a brick to an obstacle */
 obstacle_t* brick2obstacle(const brick_t *brick)
 {
-    const image_t *image = brick_image(brick);
+    const image_t *image = collisionmask_image(brick_collisionmask(brick));
     int angle = (int)(256 - (brick->brick_ref->angle % 360) / 1.40625f) % 256;
     v2d_t position = v2d_new(brick->x, brick->y);
     int cloud = brick->brick_ref->property == BRK_CLOUD;

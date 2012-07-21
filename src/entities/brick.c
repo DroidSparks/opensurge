@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * brick.c - brick module
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -26,6 +26,7 @@
 #include "enemy.h"
 #include "item.h"
 #include "actor.h"
+#include "collisionmask.h"
 #include "../scenes/level.h"
 #include "../core/global.h"
 #include "../core/video.h"
@@ -86,6 +87,12 @@ void brickdata_load(const char *filename)
 
     if(brickdata_count == 0)
         fatal_error("FATAL ERROR: no bricks have been defined in \"%s\"", filename);
+
+    logfile_message("Creating collision masks...");
+    for(i=0; i<brickdata_count; i++) {
+        if(brickdata[i] != NULL && brickdata[i]->collisionmask == NULL)
+            brickdata[i]->collisionmask = collisionmask_create_from_sprite(brickdata[i]->data);
+    }
 
     logfile_message("brickdata_load('%s') ok!", filename);
 }
@@ -413,6 +420,7 @@ v2d_t brick_moveable_platform_offset(const brick_t *brk)
 }
 
 
+
 /*
  * brick_image()
  * Returns the image of an (animated?) brick
@@ -421,6 +429,18 @@ const image_t *brick_image(const brick_t *brk)
 {
     return brk->brick_ref->image;
 }
+
+
+
+/*
+ * brick_collisionmask()
+ * Returns the collision mask of a brick
+ */
+const collisionmask_t *brick_collisionmask(const brick_t *brk)
+{
+    return brk->brick_ref->collisionmask;
+}
+
 
 
 /*
@@ -443,6 +463,7 @@ const char* brick_get_property_name(brickproperty_t property)
             return "Unknown";
     }
 }
+
 
 
 /*
@@ -531,6 +552,7 @@ brickdata_t* brickdata_new()
 
     obj->data = NULL;
     obj->image = NULL;
+    obj->collisionmask = NULL;
     obj->property = BRK_NONE;
     obj->angle = 0;
     obj->behavior = BRB_DEFAULT;
@@ -548,6 +570,7 @@ brickdata_t* brickdata_delete(brickdata_t *obj)
     if(obj != NULL) {
         if(obj->data != NULL)
             spriteinfo_destroy(obj->data);
+        collisionmask_destroy(obj->collisionmask);
         free(obj);
     }
 
@@ -655,6 +678,13 @@ int traverse_brick_attributes(const parsetree_statement_t *stmt, void *brickdata
         p1 = nanoparser_get_nth_parameter(param_list, 1);
         nanoparser_expect_string(p1, "Can't read brick attributes: zindex must be a number between 0.0 and 1.0");
         dat->zindex = clip(atof(nanoparser_get_string(p1)), 0.0f, 1.0f);
+    }
+    else if(str_icmp(identifier, "collision_mask") == 0) {
+        p1 = nanoparser_get_nth_parameter(param_list, 1);
+        nanoparser_expect_program(p1, "Can't read brick attributes: collision_mask expects a block");
+        if(dat->collisionmask != NULL)
+            collisionmask_destroy(dat->collisionmask);
+        dat->collisionmask = collisionmask_create_from_parsetree(nanoparser_get_program(p1));
     }
     else if(str_icmp(identifier, "sprite") == 0) {
         p1 = nanoparser_get_nth_parameter(param_list, 1);

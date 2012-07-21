@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * brick.h - brick module
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -66,6 +66,7 @@ struct actor_t;
 struct player_t;
 struct item_list_t;
 struct enemy_list_t;
+struct collisionmask_t;
 typedef struct brickdata_t brickdata_t;
 typedef struct brick_t brick_t;
 typedef struct brick_list_t brick_list_t;
@@ -78,6 +79,7 @@ typedef enum bricklayer_t bricklayer_t;
 struct brickdata_t {
     spriteinfo_t *data; /* this is not stored in the main hash */
     image_t *image; /* pointer to the current brick image in the animation */
+    struct collisionmask_t *collisionmask; /* collision mask */
     int angle; /* in degrees, 0 <= angle < 360 */
     float zindex; /* 0.0 (background) <= z-index <= 1.0 (foreground) */
     brickproperty_t property;
@@ -90,11 +92,11 @@ struct brick_t { /* a real, concrete brick */
     brickdata_t *brick_ref; /* brick metadata */
     int x, y; /* current position */
     int sx, sy; /* spawn point */
-    int enabled; /* old loop system */
-    brickstate_t state; /* BRS_* */
+    int enabled; /* obsolete: old loop system */
+    brickstate_t state; /* brick state: BRS_* */
     float value[BRICK_MAXVALUES]; /* alterable values */
     float animation_frame; /* controlled by a timer */
-    bricklayer_t layer; /* loop system */
+    bricklayer_t layer; /* loop system: BRL_* */
 };
 
 /* linked list of bricks */
@@ -117,10 +119,12 @@ void brick_render(brick_t *brk, v2d_t camera_position); /* renders a brick */
 
 v2d_t brick_moveable_platform_offset(const brick_t *brk); /* moveable platforms must move actors on top of them. Returns a delta_space vector */
 void brick_render_path(const brick_t *brk, v2d_t camera_position); /* moveable platforms path */
-const image_t* brick_image(const brick_t *brk); /* returns the image of the brick */
 const char* brick_get_property_name(brickproperty_t property); /* property name */
 const char* brick_get_behavior_name(brickbehavior_t behavior); /* behavior name */
+const image_t* brick_image(const brick_t *brk); /* returns the image of the brick */
+const struct collisionmask_t* brick_collisionmask(const brick_t *brk); /* returns the collision mask (will never be null) */
 
+/* brick utilities */
 uint32 bricklayer2color(bricklayer_t layer);
 const char* bricklayer2colorname(bricklayer_t layer);
 bricklayer_t colorname2bricklayer(const char *name);

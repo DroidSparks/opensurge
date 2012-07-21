@@ -221,6 +221,9 @@ image_t *image_create_shared(const image_t *parent, int x, int y, int width, int
     image_t *img;
     int pw, ph;
 
+    if(width <= 0 || height <= 0)
+        fatal_error("Can't create shared image of size %d x %d", width, height);
+
     pw = image_width(parent);
     ph = image_height(parent);
     x = clip(x, 0, pw-1);
@@ -232,7 +235,7 @@ image_t *image_create_shared(const image_t *parent, int x, int y, int width, int
     img->w = width;
     img->h = height;
     if(NULL == (img->data = create_sub_bitmap(parent->data, x, y, width, height)))
-        logfile_message("ERROR - image_create_shared(0x%p,%d,%d,%d,%d): couldn't create shared image", parent, x, y, width, height);
+        fatal_error("ERROR - image_create_shared(0x%p,%d,%d,%d,%d): couldn't create shared image", parent, x, y, width, height);
 
     return img;
 }

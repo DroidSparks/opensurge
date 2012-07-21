@@ -490,7 +490,7 @@ uint32 video_get_maskcolor()
         case 32: return MASK_COLOR_32;
     }
 
-    return MASK_COLOR_16;
+    return bitmap_mask_color(IMAGE2BITMAP(video_get_backbuffer()));
 }
 
 

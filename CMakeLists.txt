@@ -349,6 +349,7 @@ SET(
   src/entities/item.c
   src/entities/player.c
   src/entities/particle.c
+  src/entities/collisionmask.c
   src/entities/renderqueue.c
 
   src/main.c
@@ -528,6 +529,7 @@ IF(WIN32)
       src/entities/item.h
       src/entities/player.h
       src/entities/particle.h
+      src/entities/collisionmask.h
       src/entities/renderqueue.h
 
       src/misc/iconwin.rc
