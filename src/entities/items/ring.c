@@ -73,8 +73,8 @@ void ring_init(item_t *item)
     item->actor = actor_create();
 
     me->is_disappearing = FALSE;
-
     actor_change_animation(item->actor, sprite_get_animation("SD_RING", 0));
+    actor_synchronize_animation(item->actor, TRUE);
 }
 
 

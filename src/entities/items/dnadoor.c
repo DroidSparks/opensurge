@@ -117,6 +117,7 @@ void dnadoor_init(item_t *item)
 
     sprite_name = me->is_vertical_door ? "SD_DNADOOR" : "SD_HORIZONTALDNADOOR";
     actor_change_animation(item->actor, sprite_get_animation(sprite_name, anim_id));
+    actor_synchronize_animation(item->actor, TRUE);
 }
 
 

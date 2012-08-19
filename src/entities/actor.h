@@ -44,6 +44,7 @@ typedef struct actor_t {
     animation_t *animation;
     float animation_frame; /* controlled by a timer */
     float animation_speed_factor; /* default value: 1.0 */
+    int synchronized_animation; /* synchronized animation? */
     int mirror; /* see the IF_* flags at video.h */
     int visible; /* is this actor visible? */
     float alpha; /* 0.0f (invisible) <= alpha <= 1.0f (opaque) */
@@ -65,6 +66,7 @@ void actor_change_animation_frame(actor_t *act, int frame);
 void actor_change_animation_speed_factor(actor_t *act, float factor); /* default factor: 1.0 */
 void actor_change_animation(actor_t *act, animation_t *anim);
 int actor_animation_finished(actor_t *act); /* true if the current animation has finished */
+void actor_synchronize_animation(actor_t *act, int sync); /* should I use a shared animation frame? */
 
 /* collision detection */
 int actor_collision(const actor_t *a, const actor_t *b); /* tests bounding-box collision between a and b */

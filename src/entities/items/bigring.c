@@ -67,6 +67,7 @@ void bigring_init(item_t *item)
     item->actor = actor_create();
 
     actor_change_animation(item->actor, sprite_get_animation("SD_BIGRING", 0));
+    actor_synchronize_animation(item->actor, TRUE);
 }
 
 

@@ -70,6 +70,7 @@ void bluering_init(item_t *item)
 
     me->is_disappearing = FALSE;
     actor_change_animation(item->actor, sprite_get_animation("SD_BLUERING", 0));
+    actor_synchronize_animation(item->actor, TRUE);
 }
 
 

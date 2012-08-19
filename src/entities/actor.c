@@ -70,6 +70,7 @@ actor_t* actor_create()
     act->animation = NULL;
     act->animation_frame = 0.0f;
     act->animation_speed_factor = 1.0f;
+    act->synchronized_animation = FALSE;
     act->mirror = IF_NONE;
     act->visible = TRUE;
     act->alpha = 1.0f;
@@ -102,12 +103,20 @@ void actor_render(actor_t *act, v2d_t camera_position)
 
     if(act->visible && act->animation) {
         /* update animation */
-        act->animation_frame += (act->animation->fps * act->animation_speed_factor) * timer_get_delta();
-        if((int)act->animation_frame >= act->animation->frame_count) {
-            if(act->animation->repeat)
-                act->animation_frame = (((int)act->animation_frame % act->animation->frame_count) + act->animation->repeat_from) % act->animation->frame_count;
-            else
-                act->animation_frame = act->animation->frame_count-1;
+        if(!(act->synchronized_animation) || !(act->animation->repeat)) {
+            /* the animation isn't synchronized: every object updates its animation at its own pace */
+            act->animation_frame += (act->animation->fps * act->animation_speed_factor) * timer_get_delta();
+            if((int)act->animation_frame >= act->animation->frame_count) {
+                if(act->animation->repeat)
+                    act->animation_frame = (((int)act->animation_frame % act->animation->frame_count) + act->animation->repeat_from) % act->animation->frame_count;
+                else
+                    act->animation_frame = act->animation->frame_count-1;
+            }
+        }
+        else {
+            /* the animation is synchronized: this only makes sense if the animation does repeat */
+            act->animation_frame = (act->animation->fps * act->animation_speed_factor) * (0.001f * timer_get_ticks());
+            act->animation_frame = (((int)act->animation_frame % act->animation->frame_count) + act->animation->repeat_from) % act->animation->frame_count;
         }
 
         /* render */
@@ -361,6 +370,16 @@ int actor_animation_finished(actor_t *act)
     return (!act->animation->repeat && (int)frame >= act->animation->frame_count);
 }
 
+
+
+/*
+ * actor_synchronize_animation()
+ * should I use a shared animation frame?
+ */
+void actor_synchronize_animation(actor_t *act, int sync)
+{
+    act->synchronized_animation = sync;
+}
 
 
 /*
