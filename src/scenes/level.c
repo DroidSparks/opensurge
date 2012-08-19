@@ -220,6 +220,7 @@ static int editor_is_enabled();
 static int editor_want_to_activate();
 static void editor_render_background();
 static void editor_moveable_platforms_path_render(brick_list_t *major_bricks);
+static void editor_waterline_render(int ycoord, uint32 color);
 static void editor_save();
 static void editor_scroll();
 static int editor_is_eraser_enabled();
@@ -2655,6 +2656,9 @@ void editor_render()
         image_draw(cursor, video_get_backbuffer(), (int)editor_cursor.x - image_width(cursor)/2, (int)editor_cursor.y - image_height(cursor)/2, IF_NONE);
     }
 
+    /* draw editor water line */
+    editor_waterline_render((int)(waterlevel - topleft.y), image_rgb(255, 255, 255));
+
     /* object properties */
     font_render(editor_properties_font, v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2));
 
@@ -2759,6 +2763,21 @@ void editor_moveable_platforms_path_render(brick_list_t *major_bricks)
 
     for(it=major_bricks; it; it=it->next)
         brick_render_path(it->data, editor_camera);
+}
+
+
+
+/*
+ * editor_waterline_render()
+ * Renders the line of the water
+ */
+void editor_waterline_render(int ycoord, uint32 color)
+{
+    int x, x0 = 19 - (timer_get_ticks() / 25) % 20;
+    image_t *buf = video_get_backbuffer();
+
+    for(x=x0-10; x<VIDEO_SCREEN_W; x+=20)
+        image_line(buf, x, ycoord, x+10, ycoord, color);
 }
 
 
