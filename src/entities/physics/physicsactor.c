@@ -769,8 +769,9 @@ void run_simulation(physicsactor_t *pa, const obstaclemap_t *obstaclemap)
 
         /* jumping */
         if(input_button_down(pa->input, IB_FIRE1) && !input_button_down(pa->input, IB_DOWN) && !input_button_down(pa->input, IB_UP)) {
+            float grv_attenuation = (sign(pa->gsp * SIN(pa->angle)) < 0.0f) ? 1.0f : 0.5f;
             pa->xsp = pa->jmp * SIN(pa->angle) + pa->gsp * COS(pa->angle);
-            pa->ysp = pa->jmp * COS(pa->angle);
+            pa->ysp = pa->jmp * COS(pa->angle) - pa->gsp * SIN(pa->angle) * grv_attenuation;
             pa->gsp = 0.0f;
             pa->angle = 0x0;
             UPDATE_MOVMODE
