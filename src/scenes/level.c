@@ -312,7 +312,6 @@ static void editor_grid_render();
 
 static v2d_t editor_grid_size(); /* returns the size of the grid */
 static v2d_t editor_grid_snap(v2d_t position); /* aligns position to a cell in the grid */
-static v2d_t editor_grid64_snap(v2d_t position); /* aligns position to a cell in the 64x64 grid */
 
 
 /* implementing UNDO and REDO */
@@ -3233,7 +3232,7 @@ void editor_grid_render()
 {
     if(editor_grid_enabled) {
         int i, j;
-        image_t *grid, *grid64;
+        image_t *grid;
         uint32 color;
         v2d_t v, topleft = v2d_subtract(editor_camera, v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2));
 
@@ -3254,25 +3253,7 @@ void editor_grid_render()
             }
         }
 
-        /* creating the grid64 image */
-        grid64 = image_create(EDITOR_GRID_W*8, EDITOR_GRID_H*8);
-        color = image_rgb(0,192,124);
-        image_clear(grid64, video_get_maskcolor());
-        for(i=0; i<image_height(grid64); i++)
-            image_putpixel(grid64, image_width(grid64)-1, i, color);
-        for(i=0; i<image_width(grid64); i++)
-            image_putpixel(grid64, i, image_height(grid64)-1, color);
-
-        /* drawing the 64x64 grid */
-        for(i=0; i<=VIDEO_SCREEN_W/image_width(grid64); i++) {
-            for(j=0; j<=1+VIDEO_SCREEN_H/image_height(grid64); j++) {
-                v = v2d_subtract(editor_grid64_snap(v2d_new(i*image_width(grid64), j*image_height(grid64))), topleft);
-                image_draw(grid64, video_get_backbuffer(), (int)v.x, (int)v.y, IF_NONE);
-            }
-        }
-
         /* done! */
-        image_destroy(grid64);
         image_destroy(grid);
     }
 }
@@ -3302,23 +3283,6 @@ v2d_t editor_grid_snap(v2d_t position)
 
     return v2d_add(topleft, v2d_new(xpos, ypos));
 }
-
-/* aligns position to a cell in the 64x64 grid */
-v2d_t editor_grid64_snap(v2d_t position)
-{
-    v2d_t topleft = v2d_subtract(editor_camera, v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2));
-
-    int w = EDITOR_GRID_W * 8;
-    int h = EDITOR_GRID_H * 8;
-    int cx = (int)topleft.x % w;
-    int cy = (int)topleft.y % h;
-
-    int xpos = -cx + ((int)position.x / w) * w;
-    int ypos = -cy + ((int)position.y / h) * h;
-
-    return v2d_add(topleft, v2d_new(xpos, ypos));
-}
-
 
 
 /* level editor actions */

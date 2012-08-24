@@ -177,7 +177,7 @@ void font_init()
 
     /* reading the parse tree */
     for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)&fonts);
+        foreach_file(abs_path[j], dirfill, (void*)&fonts, TRUE);
 
     /* loading the fontdata list */
     nanoparser_traverse_program(fonts, traverse);

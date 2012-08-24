@@ -105,7 +105,7 @@ void objects_init()
 
     /* reading the parse tree */
     for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)(&objects));
+        foreach_file(abs_path[j], dirfill, (void*)(&objects), TRUE);
 
     /* creating the name table */
     name_table.length = 0;

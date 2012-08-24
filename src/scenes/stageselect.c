@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * stageselect.c - stage selection screen
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -76,6 +76,7 @@ static stagedata_t *stage_data[STAGE_MAX]; /* vector of stagedata_t* */
 static int stage_count; /* length of stage_data[] */
 static int option; /* current option: 0 .. stage_count - 1 */
 static font_t **stage_label; /* vector */
+static int enable_debug = FALSE; /* debug mode????????? must start out as false. */
 
 
 
@@ -131,6 +132,8 @@ void stageselect_init()
  */
 void stageselect_release()
 {
+    enable_debug = FALSE;
+
     bgtheme = background_unload(bgtheme);
     unload_stage_list();
 
@@ -256,7 +259,7 @@ void stageselect_render()
 
     for(i=0; i<stage_count; i++) {
         if(i/STAGE_MAXPERPAGE == option/STAGE_MAXPERPAGE) {
-            if(stage_data[i]->act > 0)
+            if(stage_data[i]->act > 0 && !enable_debug)
                 font_set_text(stage_label[i], (option==i) ? "<color=ffff00>%s - %s %d</color>" : "%s - %s %d", stage_data[i]->name, lang_get("STAGESELECT_ACT"), stage_data[i]->act);
             else
                 font_set_text(stage_label[i], (option==i) ? "<color=ffff00>%s</color>" : "%s", stage_data[i]->name);
@@ -268,6 +271,15 @@ void stageselect_render()
 }
 
 
+/*
+ * stageselect_enable_debug()
+ * Enables or disables debug mode. When in debug mode, every installed level is displayed.
+ * Call this before starting this scene.
+ */
+void stageselect_enable_debug(int enable)
+{
+    enable_debug = enable;
+}
 
 
 
@@ -294,7 +306,7 @@ void load_stage_list()
     /* loading data */
     stage_count = 0;
     for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, NULL);
+        foreach_file(abs_path[j], dirfill, NULL, enable_debug);
     qsort(stage_data, stage_count, sizeof(stagedata_t*), sort_cmp);
 
     /* fatal error */
@@ -348,6 +360,11 @@ int dirfill(const char *filename, void *param)
 
         if(game_version_compare(ver, subver, wipver) >= 0) {
             stage_data[ stage_count++ ] = s;
+            if(enable_debug) { /* debug mode: changing the names... */
+                char abs_path[1024];
+                absolute_filepath(abs_path, "levels/", sizeof(abs_path));
+                snprintf(s->name, sizeof(s->name), "%s", s->filepath + strlen(abs_path));
+            }
         }
         else {
             logfile_message("Warning: level file \"%s\" (requires: %d.%d.%d) isn't compatible with this version of the game (%d.%d.%d)", filename, ver, subver, wipver, GAME_VERSION, GAME_SUB_VERSION, GAME_WIP_VERSION);

@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * options.c - options screen
- * Copyright (C) 2010-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -37,6 +37,7 @@
 #include "../core/font.h"
 #include "../entities/actor.h"
 #include "../entities/background.h"
+#include "stageselect.h"
 
 
 /* private data */
@@ -849,6 +850,8 @@ static int group_stageselect_is_highlighted(group_t *g)
 
 static void group_stageselect_update(group_t *g)
 {
+    static int cnt = 0;
+
     /* base class */
     group_highlightable_update(g);
 
@@ -858,7 +861,17 @@ static void group_stageselect_update(group_t *g)
             if(input_button_pressed(input, IB_FIRE1) || input_button_pressed(input, IB_FIRE3)) {
                 sound_play( soundfactory_get("select") );
                 jump_to = storyboard_get_scene(SCENE_STAGESELECT);
+                cnt = 0;
             }
+            else if(input_button_pressed(input, IB_RIGHT)) { /* stage select: debug mode trick */
+                if(cnt >= 0 && ++cnt == 3) {
+                    sound_play( soundfactory_get("ring") );
+                    stageselect_enable_debug(TRUE);
+                    cnt = -1;
+                }
+            }
+            else if(input_button_pressed(input, IB_UP) || input_button_pressed(input, IB_DOWN))
+                cnt = min(cnt, 0);
         }
     }
 }

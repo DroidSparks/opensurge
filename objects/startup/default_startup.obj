@@ -11,14 +11,14 @@
 // You MUST NOT modify this script! If you need a different functionality
 // in a level you make, please create a different startup object script.
 
-#include "default_startup/hud.inc"
-#include "default_startup/opening_animation.inc"
-#include "default_startup/level_cleared.inc"
-#include "default_startup/switch_character.inc"
-#include "default_startup/pause.inc"
-#include "default_startup/quit.inc"
-#include "default_startup/camera.inc"
-#include "default_startup/water.inc"
+#include "hud.inc"
+#include "opening_animation.inc"
+#include "level_cleared.inc"
+#include "switch_character.inc"
+#include "pause.inc"
+#include "quit.inc"
+#include "camera.inc"
+#include "water.inc"
 
 // ----------------------------------------------
 // This object is created by default

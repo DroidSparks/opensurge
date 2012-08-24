@@ -192,12 +192,33 @@ float symboltable_get(symboltable_t *st, const char *key)
     if(!st) return 0.0f;
 
     /* searching... */
-    for(node=st->data; node!=NULL; node=node->next) {
-        if(strcmp(node->key, key) == 0)
-            return node->value;
+    if(!IS_GLOBAL_VARIABLE(key)) {
+        /* linear search */
+        for(node=st->data; node; node=node->next) {
+            if(strcmp(node->key, key) == 0)
+                return node->value;
+        }
+    }
+    else {
+        /* linear search + MoveToFront heuristic for linked lists */
+        association_t *prev = NULL;
+        for(node=st->data; node; node=node->next) {
+            if(strcmp(node->key, key) == 0) {
+                float value = node->value;
+                if(prev != NULL) {
+                    prev->next = node->next;
+                    node->next = st->data;
+                    st->data = node;
+                }
+                return value;
+            }
+            else
+                prev = node;
+        }
     }
 
-    return 0.0f; /* element not found */
+    /* element not found */
+    return 0.0f;
 }
 
 /* does the given variable exist? */

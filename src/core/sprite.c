@@ -73,7 +73,7 @@ void sprite_init()
 
     /* Reading the parse tree */
     for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)(&prog));
+        foreach_file(abs_path[j], dirfill, (void*)(&prog), TRUE);
 
     if(prog == NULL)
         fatal_error("FATAL ERROR: no sprites have been found. Please reinstall the game.");

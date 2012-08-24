@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * stageselect.h - stage selection screen
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,5 +27,8 @@ void stageselect_init();
 void stageselect_release();
 void stageselect_update();
 void stageselect_render();
+
+/* debug mode: display all levels, including hidden ones */
+void stageselect_enable_debug(int enable);
 
 #endif

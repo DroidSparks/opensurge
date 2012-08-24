@@ -45,7 +45,7 @@
 
 /* private data */
 #define DEFAULT_QUEST   "quests/default.qst"
-#define MENU_MUSICFILE  "musics/title.ogg"
+#define MENU_MUSICFILE  "musics/theme_song.ogg"
 #define MENU_BGFILE     "themes/menu.bg"
 #define FADEIN_TIME     0.5f
 #define FADEOUT_TIME    0.5f
@@ -178,7 +178,7 @@ void menu_update()
 
     /* current option */
     arrow->position.x = font_get_position(menufnt[menuopt]).x - 20 + 3*cos(2*PI * t);
-    arrow->position.y = font_get_position(menufnt[menuopt]).y - 2;
+    arrow->position.y = font_get_position(menufnt[menuopt]).y - 1;
 
     for(j=0; j<MENU_MAXOPTIONS; j++)
         font_set_text(menufnt[j], (j==menuopt) ? "<color=ffff00>%s</color>" : "%s", menu[j]);

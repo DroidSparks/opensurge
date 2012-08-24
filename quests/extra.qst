@@ -16,4 +16,5 @@ image           "images/quest_extra.png"
 
 // level list (in order of appearance)
 level           "levels/template.lev"
+level           "levels/grassland.lev"
 level           "levels/desert1.lev"

@@ -111,11 +111,28 @@ static cache_t *cachetree_search(cache_t *node, const char *key);
 static cache_t *cachetree_insert(cache_t *node, const char *key, const char *value);
 #endif
 
+
+/* expandable table of strings */
+typedef struct xptable_t {
+    int capacity, length;
+    char **data;
+} xptable_t;
+
+static xptable_t *xptable_create();
+static xptable_t *xptable_destroy(xptable_t *table);
+static void xptable_add(xptable_t *table, const char *str); /* amortized cost: O(1) */
+static int xptable_foreach(xptable_t *table, int (*callback)(const char *str, void *param), void *param); /* returns the number of successful calls to 'callback'; the callback must return 0 to let the enumeration proceed, or non-zero to stop it */
+
+
 /* url encoding routines */
 /*static char hex2ch(char ch);*/
 static char ch2hex(char code);
 static char *url_encode(const char *str);
 /*static char *url_decode(const char *str);*/
+
+
+/* misc */
+static void list_directory_recursively(xptable_t *table, const char *wildcard);
 
 
 /* public functions */
@@ -431,19 +448,30 @@ char *basename(const char *path)
  * Traverses a directory, calling callback on each file
  * wildcard may be a relative path, e.g.: "images / *.png"
  *
- * Note: this function doesn't recurse
- * Note 2: callback must return 0 to let the enumeration proceed, or non-zero to stop it
+ * Note: callback must return 0 to let the enumeration proceed, or non-zero to stop it
  *
- * Returns the number of successfull calls to callback.
+ * Returns the number of successful calls to callback.
  */
-int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param)
+int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param, int recursive)
 {
-    int deny_flags = FA_DIREC | FA_LABEL;
     char abs_path[1024];
-    foreach_file_helper h = { callback, param };
-
     absolute_filepath(abs_path, wildcard, sizeof(abs_path));
-    return for_each_file_ex(abs_path, 0, deny_flags, foreach_file_callback, (void*)(&h));
+
+    if(recursive) {
+        int sum = 0;
+        xptable_t *table = xptable_create();
+
+        list_directory_recursively(table, wildcard);
+        sum += xptable_foreach(table, callback, param);
+
+        xptable_destroy(table);
+        return sum;
+    }
+    else {
+        int deny_flags = FA_DIREC | FA_LABEL;
+        foreach_file_helper h = { callback, param };
+        return for_each_file_ex(abs_path, 0, deny_flags, foreach_file_callback, (void*)(&h));
+    }
 }
 
 
@@ -516,6 +544,55 @@ int foreach_file_callback(const char *filename, int attrib, void *param)
 {
     foreach_file_helper *h = (foreach_file_helper*)param;
     return h->callback(filename, h->param);
+}
+
+
+/* lists the files whose names are matched by wildcard. We go deep inside every directory we find. */
+void list_directory_recursively(xptable_t *table, const char *wildcard)
+{
+    struct al_ffblk info;
+    char *q, *current_dir = str_dup(wildcard), *curinga = basename(wildcard), *ilovesurge;
+
+    /* sweet strings */
+    if(NULL != (q = strstr(current_dir, curinga)))
+        *q = 0;
+
+    ilovesurge = mallocx((strlen(current_dir) + 2) * sizeof(*ilovesurge));
+    strcpy(ilovesurge, current_dir);
+    strcat(ilovesurge, "*"); /* example: "/home/alexandre/.opensurge/sprites/ *" */
+
+    /* list the files matching the wildcard */
+    if(al_findfirst(wildcard, &info, FA_ALL & ~FA_LABEL & ~FA_DIREC) == 0) {
+        do {
+            if(!(info.attrib & FA_DIREC) && !(info.attrib & FA_LABEL)) { /* why do I need to check this? can't trust Allegro on this one? */
+                char *file = mallocx((strlen(current_dir) + strlen(info.name) + 1) * sizeof(*file));
+                strcpy(file, current_dir);
+                strcat(file, info.name);
+                xptable_add(table, file);
+                free(file);
+            }
+        } while(al_findnext(&info) == 0);
+        al_findclose(&info);
+    }
+
+    /* look inside the directories, recursively */
+    if(al_findfirst(ilovesurge, &info, FA_DIREC) == 0) {
+        do {
+            if((info.attrib & FA_DIREC) && strcmp(info.name, "") != 0 && strcmp(info.name, ".") != 0 && strcmp(info.name, "..") != 0) {
+                char *new_wildcard = mallocx((strlen(current_dir) + strlen(info.name) + strlen(curinga) + 2) * sizeof(*new_wildcard));
+                strcpy(new_wildcard, current_dir);
+                strcat(new_wildcard, info.name);
+                strcat(new_wildcard, "/");
+                strcat(new_wildcard, curinga);
+                list_directory_recursively(table, new_wildcard);
+                free(new_wildcard);
+            }
+        } while(al_findnext(&info) == 0);
+        al_findclose(&info);
+    }
+
+    free(ilovesurge);
+    free(current_dir);
 }
 
 /* backtracking routine used in fix_case_path()
@@ -780,3 +857,51 @@ cache_t *cachetree_insert(cache_t *node, const char *key, const char *value)
 }
 #endif
 
+
+
+
+
+/* ----------- expandable table of strings ---------------- */
+
+xptable_t *xptable_create()
+{
+    xptable_t *table = mallocx(sizeof *table);
+    table->capacity = 32;
+    table->length = 0;
+    table->data = malloc(table->capacity * sizeof(char*));
+    return table;
+}
+
+xptable_t *xptable_destroy(xptable_t *table)
+{
+    int i;
+
+    for(i=0; i<table->length; i++)
+        free(table->data[i]);
+    free(table->data);
+    free(table);
+
+    return NULL;
+}
+
+void xptable_add(xptable_t *table, const char *str)
+{
+    if(table->length == table->capacity) {
+        table->capacity *= 2;
+        table->data = reallocx(table->data, table->capacity * sizeof(char*));
+    }
+
+    table->data[ (table->length)++ ] = str_dup(str);
+}
+
+int xptable_foreach(xptable_t *table, int (*callback)(const char *str, void *param), void *param)
+{
+    int i;
+
+    for(i=0; i<table->length; i++) {
+        if(callback(table->data[i], param) != 0)
+            return i;
+    }
+
+    return table->length;
+}

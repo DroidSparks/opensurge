@@ -254,11 +254,11 @@ void load_lang_list()
     /* loading language data */
     lngcount = 0;
     for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dircount, NULL);
+        foreach_file(abs_path[j], dircount, NULL, TRUE);
 
     lngdata = mallocx(lngcount * sizeof(lngdata_t));
     for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)&c);
+        foreach_file(abs_path[j], dirfill, (void*)&c, TRUE);
     qsort(lngdata, lngcount, sizeof(lngdata_t), sort_cmp);
 
     /* fatal error */

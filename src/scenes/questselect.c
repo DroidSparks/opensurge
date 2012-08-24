@@ -297,11 +297,11 @@ void load_quest_list()
     /* loading data */
     quest_count = 0;
     for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dircount, NULL);
+        foreach_file(abs_path[j], dircount, NULL, TRUE);
 
     quest_data = mallocx(quest_count * sizeof(quest_t*));
     for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)&c);
+        foreach_file(abs_path[j], dirfill, (void*)&c, TRUE);
     qsort(quest_data, quest_count, sizeof(quest_t*), sort_cmp);
 
     /* fatal error */
