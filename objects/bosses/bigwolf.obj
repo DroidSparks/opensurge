@@ -1,0 +1,708 @@
+// ----------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// Changelog:
+// 2012-12-24 - first version by Alexandre
+// ----------------------------------------
+
+object "Big Wolf"
+{
+    requires 0.2.0
+    always_active
+    category "boss" "level 1"
+    annotation "Boss: Sunshine Paradise"
+    hide_unless_in_editor_mode
+
+    state "main"
+    {
+        // emotional states
+        let "$_BIGWOLF_NORMAL = 0"
+        let "$_BIGWOLF_ANGRY = 1"
+        let "$_BIGWOLF_DEAD = 2"
+
+        // hp, a value between 0 and 1
+        let "$hp = 1"
+
+        // each hit discards this amount from the hp
+        let "$hit_loss = 0.34"
+
+        // other stuff
+        set_animation "SD_BIGWOLF" 0
+        set_alpha 0.4
+        set_zindex 0.6
+        change_state init_fight
+    }
+
+    state init_fight
+    {
+        create_child .bigwolf_head -22 -70 head
+        create_child .bigwolf_body 10 64 body
+        create_child .bigwolf_hand -90 20 righthand
+        create_child .bigwolf_hand 45 20 lefthand
+        change_state stopped
+    }
+
+    state stopped
+    {
+        execute !update_hp
+
+add_rings -collectibles()+50
+        let "$margin = 50"
+        if "xpos()-30 > player_xpos() + $margin" walk_left
+        if "xpos()-30 < player_xpos() - $margin" walk_right
+
+        //let "$rnd = (-0.5 + random(2)) * 2"
+        let "$rnd = cond(player_xpos() > xpos()-30, (-1), 1)"
+        change_state walk_rnd
+    }
+
+    state walk_left
+    {
+        execute !update_hp
+        execute !stop_if_punching
+        if $am_i_punching stopped
+
+        let "$multiplier = (2-$hp)"
+        let "$multiplier = 1"
+        set_absolute_position xpos() spawnpoint_y()+(5*$multiplier)*cos(3*pi()*($t+=dt()))
+        move "-50 * $multiplier" 0
+
+        unless "xpos()-30 > player_xpos() + $margin" stopped
+    }
+
+    state walk_right
+    {
+        execute !update_hp
+        execute !stop_if_punching
+        if $am_i_punching stopped
+
+        let "$multiplier = (2-$hp)"
+        let "$multiplier = 1"
+        set_absolute_position xpos() spawnpoint_y()+(5)*cos(3*pi()*($t+=dt()))
+        move "50 * $multiplier" 0
+
+        unless "xpos()-30 < player_xpos() - $margin" stopped
+    }
+
+    state walk_rnd
+    {
+        execute !update_hp
+        execute !stop_if_punching
+        if $am_i_punching stopped
+
+        let "$multiplier = (2-$hp)"
+        let "$multiplier = 1"
+        set_absolute_position xpos() spawnpoint_y()+(5*$multiplier)*cos(3*pi()*($t+=dt()))
+        move "($rnd * 50) * $multiplier" 0
+
+        if "(xpos()-30 > player_xpos() + $margin) or (xpos()-30 < player_xpos() - $margin)" stopped
+    }
+
+    state dead
+    {
+        move 0 200
+        if "ypos() >= spawnpoint_y() + screen_height() * 1.5" destroy
+    }
+
+    state destroy
+    {
+        change_child_state body @destroy
+        change_child_state head @destroy
+        change_child_state lefthand @destroy
+        change_child_state righthand @destroy
+        clear_level
+        destroy
+    }
+
+
+
+    // ======= callbacks =======
+    state @get_emotional_state
+    {
+        let "$_bigwolf_emotional_state = cond($hp > 0.2, $_BIGWOLF_NORMAL, cond($hp > 0, $_BIGWOLF_ANGRY, $_BIGWOLF_DEAD))"
+        return_to_previous_state
+    }
+
+    state @get_position
+    {
+        let "$_bigwolf_xpos = xpos()"
+        let "$_bigwolf_ypos = ypos()"
+        return_to_previous_state
+    }
+
+    state @is_dead?
+    {
+        let "$_bigwolf_is_dead = ($hp <= 0)"
+        return_to_previous_state
+    }
+
+
+    // ======= misc =======
+    state !stop_if_punching
+    {
+        let "$am_i_punching = 0"
+        change_child_state lefthand @is_punching?
+        let "$am_i_punching = $am_i_punching or $_bigwolf_is_punching"
+        change_child_state righthand @is_punching?
+        let "$am_i_punching = $am_i_punching or $_bigwolf_is_punching"
+        if $am_i_punching stopped
+    }
+
+    state !update_hp
+    {
+        change_child_state head @got_hit?
+        let "$hp = cond($_bigwolf_head_got_hit, $hp - $hit_loss, $hp)"
+        if "$hp <= 0" dead
+    }
+}
+
+object .bigwolf_head
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        set_animation SD_BIGWOLF_HEAD 0
+        set_zindex 0.45
+        change_state init_fight
+    }
+
+    state init_fight
+    {
+        // grab offset
+        change_parent_state @get_position
+        let "$offset_x = xpos() - $_bigwolf_xpos"
+        let "$offset_y = ypos() - $_bigwolf_ypos"
+
+        // start
+        change_state vulnerable
+    }
+
+    state vulnerable
+    {
+        execute !update_position
+        execute !check_if_dead
+        on_player_rect_collision -5 -35 5 -20 very_vulnerable
+    }
+
+    state very_vulnerable
+    {
+        execute !update_position
+        execute !check_if_dead
+        on_player_attack get_hit
+        change_state vulnerable
+    }
+
+    state get_hit
+    {
+        bounce_player
+        create_child .bigwolf_hitfx 0 0
+        play_sample samples/bosshit.wav
+        set_animation SD_BIGWOLF_HEAD 2
+        let "$t2 = 2"
+        let "$got_hit = 1"
+        change_state cooldown
+    }
+
+    state cooldown
+    {
+        execute !update_position
+        execute !check_if_dead
+        set_absolute_position xpos() "ypos() + ($t2-=dt())*cos(4*pi()*($t+=dt()))"
+        if "$t2 <= 0" restore
+    }
+
+    state restore
+    {
+        execute !update_position
+        execute !check_if_dead
+        set_animation SD_BIGWOLF_HEAD 0
+        change_state vulnerable
+    }
+
+    state dead
+    {
+        execute !update_position
+        set_animation SD_BIGWOLF_HEAD 3
+    }
+
+
+
+    // ======= callbacks =======
+    state @destroy
+    {
+        destroy
+    }
+
+    state @got_hit?
+    {
+        let "$_bigwolf_head_got_hit = $got_hit"
+        let "$got_hit = 0"
+        return_to_previous_state
+    }
+
+
+
+    // ======= misc =======
+    state !update_position
+    {
+        change_parent_state @get_position
+        let "$xpos = $offset_x + $_bigwolf_xpos"
+        let "$ypos = $offset_y + $_bigwolf_ypos"
+        set_absolute_position $xpos $ypos
+    }
+
+    state !check_if_dead
+    {
+        change_parent_state @is_dead?
+        if $_bigwolf_is_dead dead
+    }
+}
+
+object .bigwolf_body
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        set_animation SD_BIGWOLF_BODY 0
+        set_zindex 0.4
+        change_state init_fight
+    }
+
+    state init_fight
+    {
+        // grab offset
+        change_parent_state @get_position
+        let "$offset_x = xpos() - $_bigwolf_xpos"
+        let "$offset_y = ypos() - $_bigwolf_ypos"
+
+        // start
+        change_state loop
+    }
+
+    state loop
+    {
+        execute !update_position
+        execute !check_if_dead
+    }
+
+    state dead
+    {
+        execute !update_position
+    }
+
+
+
+    // ======= callbacks =======
+    state @destroy
+    {
+        destroy
+    }
+
+
+
+    // ======= misc =======
+    state !update_position
+    {
+        change_parent_state @get_position
+        let "$xpos = $offset_x + $_bigwolf_xpos"
+        let "$ypos = $offset_y + $_bigwolf_ypos"
+        set_absolute_position $xpos $ypos
+    }
+
+    state !check_if_dead
+    {
+        change_parent_state @is_dead?
+        if $_bigwolf_is_dead dead
+    }
+}
+
+object .bigwolf_hand
+{
+    requires 0.2.0
+    always_active
+    hide_unless_in_editor_mode
+
+    state main
+    {
+        set_animation SD_BIGWOLF_HANDCOLLIDER 0
+        set_zindex 0.444
+//        hide
+        change_state init_fight
+    }
+
+    state init_fight
+    {
+        // grab offset
+        change_parent_state @get_position
+        let "$offset_x = xpos() - $_bigwolf_xpos"
+        let "$offset_y = ypos() - $_bigwolf_ypos"
+
+        // my children
+        create_child .bigwolf_hand_skin 0 15 skin
+        create_child .bigwolf_hand_damager 0 15+39 damager
+
+        // am i the left or the right hand?
+        let "$left_hand = ($offset_x > 0)"
+
+        // im not punching
+        let "$punching = 0"
+
+        // done
+        change_state watching
+    }
+
+    state watching
+    {
+        execute !update_position
+        execute !check_if_dead
+        on_player_rect_collision -2 0 2 200 punch
+    }
+
+    state punch
+    {
+        execute !check_if_dead
+        let "$punching = 1"
+
+        change_parent_state @get_position
+        let "$xpos = $offset_x + $_bigwolf_xpos"
+        let "$ypos = ypos() + 300*dt()"
+        set_absolute_position $xpos $ypos
+
+        if "brick_exists(0, 35)" punched
+        if "ypos() > spawnpoint_y()+200" cooldown
+    }
+
+    state punched
+    {
+        create_child .bigwolf_punchfx 0 35
+        change_state cooldown
+    }
+
+    state cooldown
+    {
+        execute !check_if_dead
+        change_parent_state @get_position
+        let "$xpos = $offset_x + $_bigwolf_xpos"
+        let "$ypos = ypos()"
+        set_absolute_position $xpos $ypos
+
+        on_player_gethit got_him
+        set_obstacle TRUE
+        on_timeout 3.0 go_up
+    }
+
+    state got_him
+    {
+        execute !check_if_dead
+        set_obstacle FALSE
+        on_timeout 1.0 cooldown
+    }
+
+    state go_up
+    {
+        execute !check_if_dead
+        let "$goingup = 1"
+
+        change_parent_state @get_position
+        let "$still_moving = (ypos() > $_bigwolf_ypos + $offset_y)"
+        let "$xpos = $offset_x + $_bigwolf_xpos"
+        let "$ypos = cond($still_moving, ypos() - 250*dt(), $offset_y + $_bigwolf_ypos)"
+        set_absolute_position $xpos $ypos
+
+        if $still_moving go_up
+        set_obstacle FALSE
+
+        let "$goingup = 0"
+        let "$punching = 0"
+        change_state watching
+    }
+
+    state dead
+    {
+        change_child_state damager @destroy
+        change_state dead2
+    }
+
+    state dead2
+    {
+        execute !update_position
+    }
+
+
+
+
+    // ======= callbacks =======
+    state @destroy
+    {
+        change_child_state skin @destroy
+        destroy
+    }
+
+    state @is_punching?
+    {
+        let "$_bigwolf_is_punching = $punching"
+        return_to_previous_state
+    }
+
+    state @is_goingup?
+    {
+        let "$_bigwolf_is_goingup = $goingup"
+        return_to_previous_state
+    }
+
+    state @is_lefthand?
+    {
+        let "$_bigwolf_hand_is_left = $left_hand"
+        return_to_previous_state
+    }
+
+    state @get_position
+    {
+        let "$_bigwolf_hand_xpos = xpos()"
+        let "$_bigwolf_hand_ypos = ypos()"
+        return_to_previous_state
+    }
+
+    state @is_dead?
+    {
+        change_parent_state @is_dead?
+        let "$_bigwolf_hand_is_dead = $_bigwolf_is_dead"
+        return_to_previous_state
+    }
+
+
+
+    // ======= misc =======
+    state !update_position
+    {
+        change_parent_state @get_position
+        let "$xpos = $offset_x + $_bigwolf_xpos"
+        let "$ypos = $offset_y + $_bigwolf_ypos"
+        set_absolute_position $xpos $ypos
+    }
+
+    state !check_if_dead
+    {
+        change_parent_state @is_dead?
+        if $_bigwolf_is_dead dead
+    }
+}
+
+
+
+object .bigwolf_hand_skin
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        set_animation SD_BIGWOLF_HAND 0
+        set_zindex 0.44
+        change_state init_fight
+    }
+
+    state init_fight
+    {
+        // grab offset
+        change_parent_state @get_position
+        let "$offset_x = xpos() - $_bigwolf_hand_xpos"
+        let "$offset_y = ypos() - $_bigwolf_hand_ypos"
+
+        // left or right hand?
+        change_parent_state @is_lefthand?
+        look_right
+        if $_bigwolf_hand_is_left loop
+        look_left
+
+        // done
+        change_state loop
+    }
+
+    state loop
+    {
+        execute !update_position
+
+        change_parent_state @is_punching?
+        let "$punching = $_bigwolf_is_punching"
+
+        set_animation SD_BIGWOLF_HAND "cond($punching, 1, 0)"
+
+        change_parent_state @is_goingup?
+        unless $_bigwolf_is_goingup loop
+        on_player_rect_collision -5 -32 5 0 moveup
+    }
+
+    state moveup
+    {
+        execute !update_position
+
+        move_player 0 -250
+        change_parent_state @is_goingup?
+        unless $_bigwolf_is_goingup loop
+    }
+
+    state dead
+    {
+        execute !update_position
+    }
+
+    // ======= callbacks =======
+    state @destroy
+    {
+        destroy
+    }
+
+    // ======= misc =======
+    state !update_position
+    {
+        change_parent_state @get_position
+        let "$xpos = $offset_x + $_bigwolf_hand_xpos"
+        let "$ypos = $offset_y + $_bigwolf_hand_ypos"
+        set_absolute_position $xpos $ypos
+    }
+
+    state !check_if_dead
+    {
+        change_parent_state @is_dead?
+        if $_bigwolf_hand_is_dead dead
+    }
+}
+
+
+
+
+object .bigwolf_hand_damager
+{
+    requires 0.2.0
+    always_active
+    hide_unless_in_editor_mode
+
+    state main
+    {
+        set_animation SD_BIGWOLF_HANDDAMAGER 0
+        set_zindex 0.444
+        change_state init_fight
+    }
+
+    state init_fight
+    {
+        // grab offset
+        change_parent_state @get_position
+        let "$offset_x = xpos() - $_bigwolf_hand_xpos"
+        let "$offset_y = ypos() - $_bigwolf_hand_ypos"
+
+        // done
+        change_state loop
+    }
+
+    state loop
+    {
+        execute !update_position
+
+        change_parent_state @is_punching?
+        let "$punching = $_bigwolf_is_punching"
+        change_parent_state @is_goingup?
+        let "$goingdown = not($_bigwolf_is_goingup)"
+
+        if "not($punching and $goingdown)" loop
+        on_player_collision damage
+    }
+
+    state damage
+    {
+        execute !update_position
+        hit_player
+        change_state cooldown
+    }
+
+    state cooldown
+    {
+        execute !update_position
+        on_timeout 2.0 loop
+    }
+
+
+    // ======= callbacks =======
+    state @destroy
+    {
+        destroy
+    }
+
+    // ======= misc =======
+    state !update_position
+    {
+        change_parent_state @get_position
+        let "$xpos = $offset_x + $_bigwolf_hand_xpos"
+        let "$ypos = $offset_y + $_bigwolf_hand_ypos"
+        set_absolute_position $xpos $ypos
+    }
+}
+
+
+
+object .bigwolf_punchfx
+{
+    requires 0.2.0
+    destroy_if_far_from_play_area
+
+    state main
+    {
+        set_animation SD_EXPLOSION 0
+        set_animation_speed_factor 2
+        set_scale 2.0 0.3
+        change_state find_position
+    }
+
+    state find_position
+    {
+        execute "!move_up" for "$i=0" "$i<=50 and brick_exists(0,0)" "$i+=1"
+        change_state wait
+    }
+
+    state wait
+    {
+        on_animation_finished destroy
+    }
+
+    state destroy
+    {
+        destroy
+    }
+
+    state !move_up
+    {
+        set_absolute_position xpos() -1+ypos()
+    }
+}
+
+
+
+object .bigwolf_hitfx
+{
+    requires 0.2.0
+    destroy_if_far_from_play_area
+
+    state main
+    {
+        set_animation SD_EXPLOSION 0
+        set_zindex 0.6
+        set_absolute_position player_xpos()+0.2*player_xspeed() player_ypos()-10
+        change_state wait
+    }
+
+    state wait
+    {
+        on_animation_finished destroy
+    }
+
+    state destroy
+    {
+        destroy
+    }
+}
