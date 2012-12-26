@@ -10,7 +10,7 @@ version "1.0"
 requires 0.2.0
 act 3
 theme "themes/template.brk"
-bgtheme "themes/template.bg"
+bgtheme "themes/sunshine.bg"
 spawn_point 64 5068
 music "musics/boss.ogg"
 grouptheme "themes/template.grp"

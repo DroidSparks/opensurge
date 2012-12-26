@@ -9,11 +9,11 @@
 
 // quest properties
 name            "Default quest"
-author          "OS Team"
+author          "Open Surge Team"
 version         "1.0"
-description     "Default quest"
+description     "The default quest"
 image           "images/null.png"
-hidden
+//hidden
 
 // level list (in order of appearance)
 level           "levels/cutscenes/cutscene1.lev"

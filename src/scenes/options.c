@@ -850,7 +850,8 @@ static int group_stageselect_is_highlighted(group_t *g)
 
 static void group_stageselect_update(group_t *g)
 {
-    static int cnt = 0;
+    static int cnt = 0, cnt2 = 0;
+    static scenetype_t scn = SCENE_STAGESELECT;
 
     /* base class */
     group_highlightable_update(g);
@@ -860,18 +861,30 @@ static void group_stageselect_update(group_t *g)
         if(!fadefx_is_fading()) {
             if(input_button_pressed(input, IB_FIRE1) || input_button_pressed(input, IB_FIRE3)) {
                 sound_play( soundfactory_get("select") );
-                jump_to = storyboard_get_scene(SCENE_STAGESELECT);
-                cnt = 0;
+                jump_to = storyboard_get_scene(scn);
+                cnt = cnt2 = 0;
+                scn = SCENE_STAGESELECT;
             }
             else if(input_button_pressed(input, IB_RIGHT)) { /* stage select: debug mode trick */
                 if(cnt >= 0 && ++cnt == 3) {
                     sound_play( soundfactory_get("ring") );
+                    scn = SCENE_STAGESELECT;
                     stageselect_enable_debug(TRUE);
                     cnt = -1;
                 }
             }
-            else if(input_button_pressed(input, IB_UP) || input_button_pressed(input, IB_DOWN))
+            else if(input_button_pressed(input, IB_LEFT)) { /* stage select: quest select trick */
+                if(cnt2 >= 0 && ++cnt2 == 3) {
+                    sound_play( soundfactory_get("ring") );
+                    scn = SCENE_QUESTSELECT;
+                    cnt2 = -1;
+                }
+            }
+            else if(input_button_pressed(input, IB_UP) || input_button_pressed(input, IB_DOWN)) {
                 cnt = min(cnt, 0);
+                cnt2 = min(cnt2, 0);
+                scn = SCENE_STAGESELECT;
+            }
         }
     }
 }

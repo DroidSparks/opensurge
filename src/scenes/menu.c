@@ -57,7 +57,7 @@ static bgtheme_t *bgtheme;
 
 
 /* main menu */
-#define MENU_MAXOPTIONS 4
+#define MENU_MAXOPTIONS 3
 static float start_time;
 static int control_restored;
 static char menu[MENU_MAXOPTIONS][64];
@@ -118,9 +118,8 @@ void menu_init()
     actor_change_animation(arrow, sprite_get_animation("SD_GUIARROW", 0));
 
     lang_getstring("MENU_1PGAME", menu[0], sizeof(menu[0]));
-    lang_getstring("MENU_CUSTOMQUESTS", menu[1], sizeof(menu[1]));
-    lang_getstring("MENU_OPTIONS", menu[2], sizeof(menu[2]));
-    lang_getstring("MENU_EXIT", menu[3], sizeof(menu[3]));
+    lang_getstring("MENU_OPTIONS", menu[1], sizeof(menu[1]));
+    lang_getstring("MENU_EXIT", menu[2], sizeof(menu[2]));
 
     for(j=0; j<MENU_MAXOPTIONS; j++) {
         menufnt[j] = font_create("menu.main");
@@ -286,20 +285,14 @@ void select_option(int opt)
             game_start( load_quest(abs_path) );
             return;
 
-        /* EXTRAS */
-        case 1:
-            jump_to = storyboard_get_scene(SCENE_QUESTSELECT);
-            fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
-            break;
-
         /* OPTIONS */
-        case 2:
+        case 1:
             jump_to = storyboard_get_scene(SCENE_OPTIONS);
             fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
             return;
 
         /* EXIT */
-        case 3:
+        case 2:
             quit = TRUE;
             fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
             return;

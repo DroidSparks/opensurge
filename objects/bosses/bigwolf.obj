@@ -16,16 +16,11 @@ object "Big Wolf"
 
     state "main"
     {
-        // emotional states
-        let "$_BIGWOLF_NORMAL = 0"
-        let "$_BIGWOLF_ANGRY = 1"
-        let "$_BIGWOLF_DEAD = 2"
-
         // hp, a value between 0 and 1
         let "$hp = 1"
 
         // each hit discards this amount from the hp
-        let "$hit_loss = 0.34"
+        let "$hit_loss = 0.8"
 
         // other stuff
         set_animation "SD_BIGWOLF" 0
@@ -46,62 +41,66 @@ object "Big Wolf"
     state stopped
     {
         execute !update_hp
+        execute !check_if_angry
 
 add_rings -collectibles()+50
-        let "$margin = 50"
-        if "xpos()-30 > player_xpos() + $margin" walk_left
-        if "xpos()-30 < player_xpos() - $margin" walk_right
+        let "$margin = cond(not($angry), 50, 50)"
+        if "xpos()-25 >= player_xpos() + $margin" walk_left
+        if "xpos()-25 < player_xpos() - $margin" walk_right
 
         //let "$rnd = (-0.5 + random(2)) * 2"
-        let "$rnd = cond(player_xpos() > xpos()-30, (-1), 1)"
-        change_state walk_rnd
+        let "$rnd = sign( (xpos() - 25) - player_xpos() )"
+        if "player_xpos() >= xpos()-25-$margin/1.3 and player_xpos() <= xpos()-25+$margin/1.3" walk_rnd
     }
 
     state walk_left
     {
         execute !update_hp
+        execute !check_if_angry
         execute !stop_if_punching
-        if $am_i_punching stopped
+        if "$am_i_punching and not($angry)" stopped
+        if "$_bigwolf_moviefx_active" stopped
 
-        let "$multiplier = (2-$hp)"
-        let "$multiplier = 1"
-        set_absolute_position xpos() spawnpoint_y()+(5*$multiplier)*cos(3*pi()*($t+=dt()))
+        let "$multiplier = cond($angry, 2, 1)"
+        set_absolute_position xpos() spawnpoint_y()+5*cos($multiplier*3*pi()*($t+=dt()))
         move "-50 * $multiplier" 0
 
-        unless "xpos()-30 > player_xpos() + $margin" stopped
+        unless "xpos()-25 >= player_xpos() + $margin" stopped
     }
 
     state walk_right
     {
         execute !update_hp
+        execute !check_if_angry
         execute !stop_if_punching
-        if $am_i_punching stopped
+        if "$am_i_punching and not($angry)" stopped
+        if "$_bigwolf_moviefx_active" stopped
 
-        let "$multiplier = (2-$hp)"
-        let "$multiplier = 1"
-        set_absolute_position xpos() spawnpoint_y()+(5)*cos(3*pi()*($t+=dt()))
+        let "$multiplier = cond($angry, 2, 1)"
+        set_absolute_position xpos() spawnpoint_y()+5*cos($multiplier*3*pi()*($t+=dt()))
         move "50 * $multiplier" 0
 
-        unless "xpos()-30 < player_xpos() - $margin" stopped
+        unless "xpos()-25 < player_xpos() - $margin" stopped
     }
 
     state walk_rnd
     {
         execute !update_hp
+        execute !check_if_angry
         execute !stop_if_punching
-        if $am_i_punching stopped
+        if "$am_i_punching and not($angry)" stopped
+        if "$_bigwolf_moviefx_active" stopped
 
-        let "$multiplier = (2-$hp)"
-        let "$multiplier = 1"
-        set_absolute_position xpos() spawnpoint_y()+(5*$multiplier)*cos(3*pi()*($t+=dt()))
+        let "$multiplier = cond($angry, 2, 1)"
+        set_absolute_position xpos() spawnpoint_y()+5*cos($multiplier*3*pi()*($t+=dt()))
         move "($rnd * 50) * $multiplier" 0
 
-        if "(xpos()-30 > player_xpos() + $margin) or (xpos()-30 < player_xpos() - $margin)" stopped
+        if "(xpos()-25 > player_xpos() + $margin) or (xpos()-25 < player_xpos() - $margin)" stopped
     }
 
     state dead
     {
-        move 0 200
+        move 0 50
         if "ypos() >= spawnpoint_y() + screen_height() * 1.5" destroy
     }
 
@@ -118,12 +117,6 @@ add_rings -collectibles()+50
 
 
     // ======= callbacks =======
-    state @get_emotional_state
-    {
-        let "$_bigwolf_emotional_state = cond($hp > 0.2, $_BIGWOLF_NORMAL, cond($hp > 0, $_BIGWOLF_ANGRY, $_BIGWOLF_DEAD))"
-        return_to_previous_state
-    }
-
     state @get_position
     {
         let "$_bigwolf_xpos = xpos()"
@@ -134,6 +127,12 @@ add_rings -collectibles()+50
     state @is_dead?
     {
         let "$_bigwolf_is_dead = ($hp <= 0)"
+        return_to_previous_state
+    }
+
+    state @is_angry?
+    {
+        let "$_bigwolf_is_angry = $angry"
         return_to_previous_state
     }
 
@@ -154,6 +153,11 @@ add_rings -collectibles()+50
         change_child_state head @got_hit?
         let "$hp = cond($_bigwolf_head_got_hit, $hp - $hit_loss, $hp)"
         if "$hp <= 0" dead
+    }
+
+    state !check_if_angry
+    {
+        let "$angry = ($hp <= 0.2 and not($_bigwolf_justgothit))"
     }
 }
 
@@ -184,6 +188,12 @@ object .bigwolf_head
     {
         execute !update_position
         execute !check_if_dead
+        execute !check_if_angry
+
+        execute !play_angry_movie if "($angry and not($angry_movie_played))"
+        if $_bigwolf_moviefx_active vulnerable
+
+        set_animation SD_BIGWOLF_HEAD "cond(not($angry), 0, 3)"
         on_player_rect_collision -5 -35 5 -20 very_vulnerable
     }
 
@@ -199,7 +209,7 @@ object .bigwolf_head
     {
         bounce_player
         create_child .bigwolf_hitfx 0 0
-        play_sample samples/bosshit.wav
+        play_sample samples/destroypop.wav
         set_animation SD_BIGWOLF_HEAD 2
         let "$t2 = 2"
         let "$got_hit = 1"
@@ -210,6 +220,9 @@ object .bigwolf_head
     {
         execute !update_position
         execute !check_if_dead
+        execute !check_if_angry
+
+        let "$_bigwolf_justgothit = 1"
         set_absolute_position xpos() "ypos() + ($t2-=dt())*cos(4*pi()*($t+=dt()))"
         if "$t2 <= 0" restore
     }
@@ -218,6 +231,8 @@ object .bigwolf_head
     {
         execute !update_position
         execute !check_if_dead
+
+        let "$_bigwolf_justgothit = 0"
         set_animation SD_BIGWOLF_HEAD 0
         change_state vulnerable
     }
@@ -225,7 +240,7 @@ object .bigwolf_head
     state dead
     {
         execute !update_position
-        set_animation SD_BIGWOLF_HEAD 3
+        set_animation SD_BIGWOLF_HEAD 1
     }
 
 
@@ -251,6 +266,7 @@ object .bigwolf_head
         change_parent_state @get_position
         let "$xpos = $offset_x + $_bigwolf_xpos"
         let "$ypos = $offset_y + $_bigwolf_ypos"
+        let "$ypos += cond($angry, abs(3*cos(5*2*pi()*($tt+=dt()))), 0)"
         set_absolute_position $xpos $ypos
     }
 
@@ -258,6 +274,20 @@ object .bigwolf_head
     {
         change_parent_state @is_dead?
         if $_bigwolf_is_dead dead
+    }
+
+    state !check_if_angry
+    {
+        change_parent_state @is_angry?
+        let "$angry = $_bigwolf_is_angry"
+    }
+
+    state !play_angry_movie
+    {
+        let "$angry_movie_played = 1"
+        let "$_bigwolf_moviefx_timeout = 3"
+        set_animation SD_BIGWOLF_HEAD 3
+        create_child .bigwolf_moviefx 0 0
     }
 }
 
@@ -331,7 +361,7 @@ object .bigwolf_hand
     {
         set_animation SD_BIGWOLF_HANDCOLLIDER 0
         set_zindex 0.444
-//        hide
+        let "$id = ($_bigwolf_hand_id += 1) mod 2"
         change_state init_fight
     }
 
@@ -360,32 +390,62 @@ object .bigwolf_hand
     {
         execute !update_position
         execute !check_if_dead
+        execute !check_if_angry
+
+        if $_bigwolf_justgothit watching // cooling down; the head is shaking
         on_player_rect_collision -2 0 2 200 punch
+
+        if $dead dead
+        unless $angry watching
+        execute angry_punch unless $_bigwolf_handlock
+    }
+
+    state watching_nopunch
+    {
+        execute !update_position
+        execute !check_if_dead
+        execute !check_if_angry
+
+        if $angry watching
+        on_timeout 1.0 watching
+    }
+
+    state angry_punch
+    {
+        let "$_bigwolf_handlock = 1"
+        change_state punch
     }
 
     state punch
     {
         execute !check_if_dead
+        execute !check_if_angry
+        if $_bigwolf_justgothit watching
+        if $_bigwolf_moviefx_active watching
+
         let "$punching = 1"
+        let "$yspeed = cond($angry, 500, 300)"
 
         change_parent_state @get_position
         let "$xpos = $offset_x + $_bigwolf_xpos"
-        let "$ypos = ypos() + 300*dt()"
+        let "$ypos = ypos() + $yspeed*dt()"
         set_absolute_position $xpos $ypos
 
         if "brick_exists(0, 35)" punched
-        if "ypos() > spawnpoint_y()+200" cooldown
+        if "ypos() > spawnpoint_y()+150" cooldown_pre
     }
 
     state punched
     {
         create_child .bigwolf_punchfx 0 35
-        change_state cooldown
+        play_sample samples/impact.wav
+        change_state cooldown_pre
     }
 
     state cooldown
     {
         execute !check_if_dead
+        execute !check_if_angry
         change_parent_state @get_position
         let "$xpos = $offset_x + $_bigwolf_xpos"
         let "$ypos = ypos()"
@@ -393,25 +453,33 @@ object .bigwolf_hand
 
         on_player_gethit got_him
         set_obstacle TRUE
-        on_timeout 3.0 go_up
+        on_timeout "cond(not($angry), 3.0, 0.5)" go_up
     }
 
     state got_him
     {
         execute !check_if_dead
         set_obstacle FALSE
-        on_timeout 1.0 cooldown
+        on_timeout "cond(not($angry), 1.0, 0.0)" cooldown
+    }
+
+    state cooldown_pre
+    {
+        let "$_bigwolf_handlock = 0"
+        change_state cooldown
     }
 
     state go_up
     {
         execute !check_if_dead
+        execute !check_if_angry
         let "$goingup = 1"
+        let "$yspeed = cond($angry, 350, 250)"
 
         change_parent_state @get_position
         let "$still_moving = (ypos() > $_bigwolf_ypos + $offset_y)"
         let "$xpos = $offset_x + $_bigwolf_xpos"
-        let "$ypos = cond($still_moving, ypos() - 250*dt(), $offset_y + $_bigwolf_ypos)"
+        let "$ypos = cond($still_moving, ypos() - $yspeed*dt(), $offset_y + $_bigwolf_ypos)"
         set_absolute_position $xpos $ypos
 
         if $still_moving go_up
@@ -419,11 +487,12 @@ object .bigwolf_hand
 
         let "$goingup = 0"
         let "$punching = 0"
-        change_state watching
+        change_state watching_nopunch
     }
 
     state dead
     {
+        set_obstacle FALSE
         change_child_state damager @destroy
         change_state dead2
     }
@@ -491,6 +560,12 @@ object .bigwolf_hand
         change_parent_state @is_dead?
         if $_bigwolf_is_dead dead
     }
+
+    state !check_if_angry
+    {
+        change_parent_state @is_angry?
+        let "$angry = $_bigwolf_is_angry"
+    }
 }
 
 
@@ -531,7 +606,8 @@ object .bigwolf_hand_skin
         change_parent_state @is_punching?
         let "$punching = $_bigwolf_is_punching"
 
-        set_animation SD_BIGWOLF_HAND "cond($punching, 1, 0)"
+        change_parent_state @is_dead?
+        set_animation SD_BIGWOLF_HAND "cond($punching or $_bigwolf_hand_is_dead or $_bigwolf_moviefx_active, 1, 0)"
 
         change_parent_state @is_goingup?
         unless $_bigwolf_is_goingup loop
@@ -617,7 +693,11 @@ object .bigwolf_hand_damager
     state damage
     {
         execute !update_position
+        execute !check_if_dead
+
+        if $dead damage
         hit_player
+
         change_state cooldown
     }
 
@@ -642,6 +722,12 @@ object .bigwolf_hand_damager
         let "$ypos = $offset_y + $_bigwolf_hand_ypos"
         set_absolute_position $xpos $ypos
     }
+
+    state !check_if_dead
+    {
+        change_parent_state @is_dead?
+        if $_bigwolf_hand_is_dead dead
+    }
 }
 
 
@@ -653,9 +739,8 @@ object .bigwolf_punchfx
 
     state main
     {
-        set_animation SD_EXPLOSION 0
-        set_animation_speed_factor 2
-        set_scale 2.0 0.3
+        set_animation SD_IMPACT 0
+        set_scale 1.3 1
         change_state find_position
     }
 
@@ -692,7 +777,8 @@ object .bigwolf_hitfx
     {
         set_animation SD_EXPLOSION 0
         set_zindex 0.6
-        set_absolute_position player_xpos()+0.2*player_xspeed() player_ypos()-10
+        set_scale 2 2
+        set_absolute_position player_xpos()+0.2*player_xspeed() player_ypos()-10+20
         change_state wait
     }
 
@@ -704,5 +790,79 @@ object .bigwolf_hitfx
     state destroy
     {
         destroy
+    }
+}
+
+
+
+
+// spawn this object where you want to focus the camera
+// you may set $_bigwolf_moviefx_timeout (in seconds) if you wish
+// ...or, you just call @destroy when you're done
+// in order to see if this is active, use $_bigwolf_moviefx_active (boolean)
+
+object .bigwolf_moviefx
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        let "$_bigwolf_moviefx_active = 1"
+        hide
+        create_child .moviefx 0 0 moviefx
+        let "$tmr = cond($_bigwolf_moviefx_timeout > 0, $_bigwolf_moviefx_timeout, infinity())"
+        let "$done = 0"
+        let "$_bigwolf_moviefx_timeout = 0"
+
+        let "$dist = sqrt((xpos() - camera_x())^2 + (ypos() - camera_y())^2)"
+        let "$time = 0.2"
+        let "$sp = $dist / $time"
+        let "$dest_x = xpos()"
+        let "$dest_y = ypos()"
+        let "$src_x = camera_x()"
+        let "$src_y = camera_y()"
+
+        set_absolute_position camera_x() camera_y()
+        request_camera_focus
+        change_state loop
+    }
+
+    state loop
+    {
+        if "$done or (($tmr -= dt()) <= 0)" unfocus
+
+        // move the camera
+        let "$vx = ($dest_x - xpos())"
+        let "$vy = ($dest_y - ypos())"
+        let "$length = sqrt($vx^2 + $vy^2)"
+        if "$length <= 10" loop
+        set_absolute_position "xpos() + $sp*$vx*dt()/$length" "ypos() + $sp*$vy*dt()/$length"
+    }
+
+    state unfocus
+    {
+        let "$vx = ($src_x - xpos())"
+        let "$vy = ($src_y - ypos())"
+        let "$length = sqrt($vx^2 + $vy^2)"
+        set_absolute_position "xpos() + $sp*$vx*dt()/$length" "ypos() + $sp*$vy*dt()/$length"
+
+        // destroy
+        if "$length <= 10" destroy
+    }
+
+    state destroy
+    {
+        let "$_bigwolf_moviefx_active = 0"
+        change_child_state moviefx hide
+        drop_camera_focus
+        destroy
+    }
+
+    // ======= callbacks =======
+    state @destroy
+    {
+        let "$done = 1"
+        return_to_previous_state
     }
 }

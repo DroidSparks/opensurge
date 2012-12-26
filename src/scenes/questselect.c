@@ -166,13 +166,7 @@ void questselect_update()
     font_set_position(info, v2d_new(10, VIDEO_SCREEN_H - font_get_textsize(info).y * 5.0f));
 
     /* music */
-    if(state == QUESTSTATE_PLAY || state == QUESTSTATE_QUIT) {
-        if(!fadefx_is_fading()) {
-            music_stop();
-            music_unref(OPTIONS_MUSICFILE);
-        }
-    }
-    else if(!music_is_playing()) {
+    if(!music_is_playing()) {
         music_t *m = music_load(OPTIONS_MUSICFILE);
         music_play(m, INFINITY);
     }
@@ -209,7 +203,6 @@ void questselect_update()
         case QUESTSTATE_QUIT: {
             if(fadefx_over()) {
                 scenestack_pop();
-                scenestack_push(storyboard_get_scene(SCENE_MENU));
                 return;
             }
             fadefx_out(image_rgb(0,0,0), 1.0);
