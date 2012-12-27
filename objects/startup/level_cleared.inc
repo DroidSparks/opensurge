@@ -279,7 +279,7 @@ object ".default_startup.level_cleared.title2"
     state "move3"
     {
         set_absolute_position "max(160, xpos()-1280*dt())" "ypos()"
-        textout_centre "hud_levelend" 0 0 "$HUD_CLEARED_LINE2 <color=0022aa>$HUD_CLEARED_LINE2_ACT 3</color>"
+        textout_centre "hud_levelend" 0 0 "$HUD_CLEARED_LINE2 <color=0022ff>$HUD_CLEARED_LINE2_ACT 3</color>"
     }
 }
 

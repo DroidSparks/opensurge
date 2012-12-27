@@ -186,6 +186,14 @@ void camera_set_position(v2d_t position)
     camera.dest = camera.position = position;
 }
 
+/*
+ * camera_is_locked()
+ * Is the camera locked?
+ */
+int camera_is_locked()
+{
+    return camera.is_locked;
+}
 
 /* private methods */
 void define_boundaries(int x1, int y1, int x2, int y2)

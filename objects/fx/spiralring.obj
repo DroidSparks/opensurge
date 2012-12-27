@@ -9,11 +9,11 @@
 // spiral ring special effect
 //
 // before creating this object, you may optionally
-// set the variable $_spiralring_numberofrings to
+// set the variable $_spiralringfx_numberofrings to
 // something like, say, 50. If you don't set it,
 // 25 rings will be created by default.
 
-object .spiralring
+object .spiralringfx
 {
     requires 0.2.0
     always_active
@@ -22,9 +22,9 @@ object .spiralring
     {
         hide
 
-        let "$counter = $_spiralring_numberofrings"
+        let "$counter = $_spiralringfx_numberofrings"
         let "$counter = cond($counter <= 0, 25, 0)"
-        let "$_spiralring_numberofrings = 0"
+        let "$_spiralringfx_numberofrings = 0"
 
         change_state loop
     }
@@ -32,12 +32,13 @@ object .spiralring
     state loop
     {
         on_timeout 0.01 create_ring
+let $_spiralringfx_initialangle+=2*pi()*dt()
     }
 
     state create_ring
     {
         if "$counter <= 0" destroy
-        create_child .spiralring.ring
+        create_child .spiralringfx.ring
         let "$counter -= 1"
         change_state loop
     }
@@ -49,7 +50,7 @@ object .spiralring
 }
 
 
-object .spiralring.ring
+object .spiralringfx.ring
 {
     requires 0.2.0
     always_active
@@ -58,11 +59,11 @@ object .spiralring.ring
     {
         set_animation SD_RING 0
         set_zindex 0.6
-        let "$angle = $_spiralring_initialangle"
-        let "$radius = max(screen_width(), screen_height())"
+        let "$angle = $_spiralringfx_initialangle"
+        let "$radius = max(screen_width(), screen_height())/2"
 
-        let "$secs_to_complete = 2.0"
-        let "$angular_speed = 1.5*(2*pi())"
+        let "$secs_to_complete = 1.2"
+        let "$angular_speed = 2.5*(2*pi())"
         let "$speed = $radius / $secs_to_complete"
 
         hide
@@ -75,7 +76,7 @@ object .spiralring.ring
         set_absolute_position "player_xpos() + $radius * cos($angle)" "player_ypos()-40 + $radius * sin($angle)"
         let "$angle += $angular_speed * dt()"
         let "$radius -= $speed * dt()"
-let "$angular_speed += 2*pi()*dt()"
+        //let "$angular_speed += 2*pi()*dt()"
         show
     }
 
@@ -83,6 +84,7 @@ let "$angular_speed += 2*pi()*dt()"
     {
         set_animation SD_RING 1
         play_sample samples/ring.wav
+        add_collectibles 1
         change_state wait
     }
 

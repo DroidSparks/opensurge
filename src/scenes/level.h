@@ -76,6 +76,7 @@ void level_call_dialogbox(const char *title, const char *message);
 void level_hide_dialogbox();
 void level_lock_camera(int x1, int y1, int x2, int y2);
 void level_unlock_camera();
+int level_is_camera_locked();
 void level_restore_music();
 int level_inside_screen(int x, int y, int w, int h);
 int level_has_been_cleared();

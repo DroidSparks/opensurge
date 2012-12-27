@@ -89,6 +89,7 @@ objectmachine_t* objectdecorator_onrightwallcollision_new(objectmachine_t *decor
 /* camera events */
 objectmachine_t* objectdecorator_oncamerafocus_new(objectmachine_t *decorated_machine, const char *new_state_name);
 objectmachine_t* objectdecorator_oncamerafocusplayer_new(objectmachine_t *decorated_machine, const char *new_state_name);
+objectmachine_t* objectdecorator_oncameralock_new(objectmachine_t *decorated_machine, const char *new_state_name);
 
 /* audio events */
 objectmachine_t* objectdecorator_onmusicplay_new(objectmachine_t *decorated_machine, const char *new_state_name);

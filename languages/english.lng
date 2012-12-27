@@ -242,6 +242,17 @@ OPENING_9				"will be over!"
     DIALOGBOX_MESSAGE_113   "I will. Now, hurry!"
     DIALOGBOX_MESSAGE_114   "Go!"
 
+// cutscene 2: Sunshine Paradise, between act 1 and 2
+
+// cutscene 3: Sunshine Paradise, between act 2 and 3
+
+// cutscene 4: Sunshine Paradise, boss
+    // dialog boxes
+    DIALOGBOX_MESSAGE_400   "Wh-what are you?! Where are all my friends?!"
+    DIALOGBOX_MESSAGE_401   "Okay, that's IT! You're going down! I've had it with with you monsters! I'm gonna put a stop to the disappearances right here and now!"
+
+// cutscene 5: Sunshine Paradise, after the boss
+
 
 
 // ========================== LEVELS ====================================

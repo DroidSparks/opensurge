@@ -2040,6 +2040,10 @@ void level_unlock_camera()
     camera_unlock();
 }
 
+int level_is_camera_locked()
+{
+    return camera_is_locked();
+}
 
 
 

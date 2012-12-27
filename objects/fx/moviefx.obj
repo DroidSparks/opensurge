@@ -29,7 +29,7 @@ object ".moviefx"
     {
         hide
         let "$_moviefx_stripspeed = 90"
-        let "$_moviefx_zindex = 9999999"
+        let "$_moviefx_zindex = 999"
         let "$_moviefx_end = 0"
         let "$old_hide_hud = $_hide_hud"
         let "$old_char_switch = $_disable_character_switching"

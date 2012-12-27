@@ -256,5 +256,29 @@ sprite SD_SURGE
         fps         8
         data        68 69 70 68 69 70 68 69 70 68 69 70 68 69 70
     }
+
+    // pointing the finger
+    animation 31
+    {
+        repeat      TRUE
+        fps         8
+        data        71
+    }
+
+    // looking up, very shocked
+    animation 32
+    {
+        repeat      TRUE
+        fps         8
+        data        72
+    }
+
+    // looking up, a bit shocked
+    animation 33
+    {
+        repeat      TRUE
+        fps         8
+        data        73
+    }
 }
 

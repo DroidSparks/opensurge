@@ -4,15 +4,32 @@
 sprite SD_BIGWOLF
 {
     source_file     images/levels/1/boss2x.png
-    source_rect     50 480 274 779
+    source_rect     0 492 896 791
     frame_size      224 299
     hot_spot        112 149
 
+    // normal
     animation 0
     {
         repeat      TRUE
         fps         8
         data        0
+    }
+
+    // closed eyes
+    animation 1
+    {
+        repeat      TRUE
+        fps         8
+        data        1
+    }
+
+    // roaring
+    animation 2
+    {
+        repeat      TRUE
+        fps         24
+        data        2 3
     }
 }
 
@@ -35,8 +52,8 @@ sprite SD_BIGWOLF_HEAD
 {
     source_file     images/levels/1/boss2x.png
     source_rect     0 0 664 150
-    frame_size      164 150
-    hot_spot        82 75
+    frame_size      166 150
+    hot_spot        83 75
 
     // normal
     animation 0

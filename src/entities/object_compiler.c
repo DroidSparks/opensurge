@@ -250,6 +250,7 @@ static void on_button_pressed(objectmachine_t** m, int n, const char **p, const 
 static void on_button_up(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_camera_focus(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_camera_focus_player(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void on_camera_lock(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void on_music_play(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 
 /* variables */
@@ -423,6 +424,7 @@ static entry_t command_table[] = {
     { "on_button_up", on_button_up },
     { "on_camera_focus", on_camera_focus },
     { "on_camera_focus_player", on_camera_focus_player },
+    { "on_camera_lock", on_camera_lock },
     { "on_music_play", on_music_play },
 
     /* variables */
@@ -1365,6 +1367,14 @@ void on_camera_focus_player(objectmachine_t** m, int n, const char **p, const pa
         *m = objectdecorator_oncamerafocusplayer_new(*m, p[0]);
     else
         COMPILE_ERROR("Object script error - on_camera_focus_player expects one parameter: new_state_name");
+}
+
+void on_camera_lock(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_oncameralock_new(*m, p[0]);
+    else
+        COMPILE_ERROR("Object script error - on_camera_lock expects one parameter: new_state_name");
 }
 
 void change_closest_object_state(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)

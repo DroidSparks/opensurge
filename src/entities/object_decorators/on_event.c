@@ -56,6 +56,7 @@ typedef struct onleftwallcollision_t onleftwallcollision_t;
 typedef struct onrightwallcollision_t onrightwallcollision_t;
 typedef struct onbutton_t onbutton_t;
 typedef struct oncameraevent_t oncameraevent_t;
+typedef struct oncameralock_t oncameralock_t;
 typedef struct onmusicplay_t onmusicplay_t;
 
 /* objectdecorator_onevent_t class */
@@ -281,6 +282,15 @@ static const actor_t* oncameraevent_mux_observedplayer(object_t *o) { return ene
 
 static eventstrategy_t* oncamerafocus_new() { return oncameraevent_new(oncameraevent_mux_object); }
 static eventstrategy_t* oncamerafocusplayer_new() { return oncameraevent_new(oncameraevent_mux_observedplayer); }
+
+/* oncameralock_t concrete strategy */
+struct oncameralock_t {
+    eventstrategy_t base; /* implements eventstrategy_t */
+};
+static eventstrategy_t* oncameralock_new();
+static void oncameralock_init(eventstrategy_t *event);
+static void oncameralock_release(eventstrategy_t *event);
+static int oncameralock_should_trigger_event(eventstrategy_t *event, object_t *object, player_t** team, int team_size, brick_list_t *brick_list, item_list_t *item_list, object_list_t *object_list);
 
 /* onmusicplay_t concrete strategy */
 struct onmusicplay_t {
@@ -561,6 +571,11 @@ objectmachine_t* objectdecorator_oncamerafocus_new(objectmachine_t *decorated_ma
 objectmachine_t* objectdecorator_oncamerafocusplayer_new(objectmachine_t *decorated_machine, const char *new_state_name)
 {
     return make_decorator(decorated_machine, new_state_name, oncamerafocusplayer_new());
+}
+
+objectmachine_t* objectdecorator_oncameralock_new(objectmachine_t *decorated_machine, const char *new_state_name)
+{
+    return make_decorator(decorated_machine, new_state_name, oncameralock_new());
 }
 
 /* ---------------------------------- */
@@ -1340,6 +1355,39 @@ int oncameraevent_should_trigger_event(eventstrategy_t *event, object_t *object,
 {
     return level_get_camera_focus() == ((oncameraevent_t*)event)->multiplexer(object);
 }
+
+
+/* oncameralock_t strategy */
+eventstrategy_t* oncameralock_new()
+{
+    oncameralock_t *x = mallocx(sizeof *x);
+    eventstrategy_t *e = (eventstrategy_t*)x;
+
+    e->init = oncameralock_init;
+    e->release = oncameralock_release;
+    e->should_trigger_event = oncameralock_should_trigger_event;
+
+    return e;
+}
+
+void oncameralock_init(eventstrategy_t *event)
+{
+    ; /* empty */
+}
+
+void oncameralock_release(eventstrategy_t *event)
+{
+    ; /* empty */
+}
+
+int oncameralock_should_trigger_event(eventstrategy_t *event, object_t *object, player_t** team, int team_size, brick_list_t *brick_list, item_list_t *item_list, object_list_t *object_list)
+{
+    return level_is_camera_locked();
+    /*player_t *player = enemy_get_observed_player(object);
+    return player->in_locked_area;*/
+}
+
+
 
 
 /* onmusicplay_t strategy */

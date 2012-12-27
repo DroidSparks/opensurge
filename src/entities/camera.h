@@ -42,6 +42,9 @@ void camera_lock(int x1, int y1, int x2, int y2);
 /* unlocks the camera, so it will move freely in the level */
 void camera_unlock();
 
+/* is the camera locked? */
+int camera_is_locked();
+
 /* returns the position of the camera */
 v2d_t camera_get_position();
 

@@ -12,29 +12,117 @@ object "Big Wolf"
     always_active
     category "boss" "level 1"
     annotation "Boss: Sunshine Paradise"
-    hide_unless_in_editor_mode
+    //hide_unless_in_editor_mode
 
     state "main"
     {
-        // hp, a value between 0 and 1
-        let "$hp = 1"
+        // hp, health points
+        let "$hp = 100"
 
         // each hit discards this amount from the hp
-        let "$hit_loss = 0.8"
+        let "$hit_loss = 20"
+
+        // anger threshold (if hp is this or less, the boss gets angry)
+        let "$anger_threshold = 40"
 
         // other stuff
         set_animation "SD_BIGWOLF" 0
+        set_zindex 0.3
+
+        // done
+        create_child .bigwolf_playerintheair 0 0 playerintheair
+        change_state wait_for_opponent
+    }
+
+    state wait_for_opponent
+    {
+        on_player_rect_collision -320 -240 320 240 appear_in_playfield
+    }
+
+
+
+
+    // ======= appearing animation =========
+
+    state appear_in_playfield
+    {
+        let "$locker_x = xpos()"
+        let "$locker_y = ypos()"
+
+        set_animation "SD_BIGWOLF" 1
+        set_absolute_position spawnpoint_x() spawnpoint_y()+screen_height()
+        play_sample samples/bosshit.wav
+
+        create_child .bigwolf_apexpfx -96 -96
+        create_child .bigwolf_apexpfx -64 -96
+        create_child .bigwolf_apexpfx -32 -96
+        create_child .bigwolf_apexpfx 0 -96
+        create_child .bigwolf_apexpfx 32 -96
+        create_child .bigwolf_apexpfx 64 -96
+
+        create_child .bigwolf_introcutscene -23 -50 introcutscene
+        change_state appearing_in_playfield
+    }
+
+    state appearing_in_playfield
+    {
+        set_absolute_position xpos() "max(spawnpoint_y(), ypos() - 0.7*screen_height()*dt())"
+        if ypos()<=spawnpoint_y() appeared_in_playfield
+    }
+
+    state appeared_in_playfield
+    {
+        set_absolute_position xpos() spawnpoint_y()
+    }
+
+    state roaring
+    {
+        set_animation "SD_BIGWOLF" 2
+        create_child .bigwolf_roar
+        change_state roaring2
+    }
+
+    state roaring2
+    {
+    }
+
+    state roared
+    {
+        set_animation "SD_BIGWOLF" 0
         set_alpha 0.4
-        set_zindex 0.6
+        hide
         change_state init_fight
     }
 
+    // callbacks (called by .bigwolf_introcutscene)
+    state @intro_roar
+    {
+        change_state roaring
+    }
+
+    state @intro_end
+    {
+        change_state roared
+    }
+
+    // =============== big wolf programming ===============
+
     state init_fight
     {
-        create_child .bigwolf_head -22 -70 head
+        // lock the player
+        let "$mx = xpos()"
+        let "$my = ypos()"
+        set_absolute_position $locker_x $locker_y
+        create_child .bigwolf_arenalocker 0 0 arenalocker
+        set_absolute_position $mx $my
+
+        // create body parts
+        create_child .bigwolf_head -23 -70 head
         create_child .bigwolf_body 10 64 body
         create_child .bigwolf_hand -90 20 righthand
         create_child .bigwolf_hand 45 20 lefthand
+
+        // go!!
         change_state stopped
     }
 
@@ -43,7 +131,6 @@ object "Big Wolf"
         execute !update_hp
         execute !check_if_angry
 
-add_rings -collectibles()+50
         let "$margin = cond(not($angry), 50, 50)"
         if "xpos()-25 >= player_xpos() + $margin" walk_left
         if "xpos()-25 < player_xpos() - $margin" walk_right
@@ -60,8 +147,9 @@ add_rings -collectibles()+50
         execute !stop_if_punching
         if "$am_i_punching and not($angry)" stopped
         if "$_bigwolf_moviefx_active" stopped
+        if "$_bigwolf_justgothit" stopped
 
-        let "$multiplier = cond($angry, 2, 1)"
+        let "$multiplier = cond($angry, 3, 1)"
         set_absolute_position xpos() spawnpoint_y()+5*cos($multiplier*3*pi()*($t+=dt()))
         move "-50 * $multiplier" 0
 
@@ -75,8 +163,9 @@ add_rings -collectibles()+50
         execute !stop_if_punching
         if "$am_i_punching and not($angry)" stopped
         if "$_bigwolf_moviefx_active" stopped
+        if "$_bigwolf_justgothit" stopped
 
-        let "$multiplier = cond($angry, 2, 1)"
+        let "$multiplier = cond($angry, 3, 1)"
         set_absolute_position xpos() spawnpoint_y()+5*cos($multiplier*3*pi()*($t+=dt()))
         move "50 * $multiplier" 0
 
@@ -90,8 +179,9 @@ add_rings -collectibles()+50
         execute !stop_if_punching
         if "$am_i_punching and not($angry)" stopped
         if "$_bigwolf_moviefx_active" stopped
+        if "$_bigwolf_justgothit" stopped
 
-        let "$multiplier = cond($angry, 2, 1)"
+        let "$multiplier = cond($angry, 3, 1)"
         set_absolute_position xpos() spawnpoint_y()+5*cos($multiplier*3*pi()*($t+=dt()))
         move "($rnd * 50) * $multiplier" 0
 
@@ -100,7 +190,13 @@ add_rings -collectibles()+50
 
     state dead
     {
-        move 0 50
+        play_sample samples/growlmod.wav
+        change_state dying
+    }
+
+    state dying
+    {
+        move 0 50 // falling down...
         if "ypos() >= spawnpoint_y() + screen_height() * 1.5" destroy
     }
 
@@ -110,7 +206,25 @@ add_rings -collectibles()+50
         change_child_state head @destroy
         change_child_state lefthand @destroy
         change_child_state righthand @destroy
+        change_child_state arenalocker @destroy
+        change_child_state playerintheair @destroy
+        change_state destroy_wait
+    }
+
+    state destroy_wait
+    {
+        set_absolute_position player_xpos() player_ypos()
+        on_timeout 0.5 destroy_really
+    }
+
+    state destroy_really
+    {
         clear_level
+        //change_state destroy_dammit
+    }
+
+    state destroy_dammit
+    {
         destroy
     }
 
@@ -157,7 +271,7 @@ add_rings -collectibles()+50
 
     state !check_if_angry
     {
-        let "$angry = ($hp <= 0.2 and not($_bigwolf_justgothit))"
+        let "$angry = ($hp <= $anger_threshold)"
     }
 }
 
@@ -194,7 +308,7 @@ object .bigwolf_head
         if $_bigwolf_moviefx_active vulnerable
 
         set_animation SD_BIGWOLF_HEAD "cond(not($angry), 0, 3)"
-        on_player_rect_collision -5 -35 5 -20 very_vulnerable
+        on_player_rect_collision -5 -85 5 -65 very_vulnerable
     }
 
     state very_vulnerable
@@ -285,8 +399,9 @@ object .bigwolf_head
     state !play_angry_movie
     {
         let "$angry_movie_played = 1"
-        let "$_bigwolf_moviefx_timeout = 3"
+        let "$_bigwolf_moviefx_timeout = 2.5"
         set_animation SD_BIGWOLF_HEAD 3
+        create_child .bigwolf_roar
         create_child .bigwolf_moviefx 0 0
     }
 }
@@ -377,7 +492,7 @@ object .bigwolf_hand
         create_child .bigwolf_hand_damager 0 15+39 damager
 
         // am i the left or the right hand?
-        let "$left_hand = ($offset_x > 0)"
+        let "$left_hand = ($offset_x+25 > 0)"
 
         // im not punching
         let "$punching = 0"
@@ -431,14 +546,14 @@ object .bigwolf_hand
         let "$ypos = ypos() + $yspeed*dt()"
         set_absolute_position $xpos $ypos
 
-        if "brick_exists(0, 35)" punched
+        if "brick_exists(cond($left_hand, -34, 34), 35)" punched
         if "ypos() > spawnpoint_y()+150" cooldown_pre
     }
 
     state punched
     {
         create_child .bigwolf_punchfx 0 35
-        play_sample samples/impact.wav
+        play_sample samples/floorhit.wav
         change_state cooldown_pre
     }
 
@@ -544,6 +659,13 @@ object .bigwolf_hand
         return_to_previous_state
     }
 
+    state @is_angry?
+    {
+        change_parent_state @is_angry?
+        let "$_bigwolf_hand_is_angry = $_bigwolf_is_angry"
+        return_to_previous_state
+    }
+
 
 
     // ======= misc =======
@@ -602,12 +724,13 @@ object .bigwolf_hand_skin
     state loop
     {
         execute !update_position
+        execute !check_if_angry
 
         change_parent_state @is_punching?
         let "$punching = $_bigwolf_is_punching"
 
         change_parent_state @is_dead?
-        set_animation SD_BIGWOLF_HAND "cond($punching or $_bigwolf_hand_is_dead or $_bigwolf_moviefx_active, 1, 0)"
+        set_animation SD_BIGWOLF_HAND "cond($punching or $angry or $_bigwolf_hand_is_dead or $_bigwolf_moviefx_active, 1, 0)"
 
         change_parent_state @is_goingup?
         unless $_bigwolf_is_goingup loop
@@ -647,6 +770,12 @@ object .bigwolf_hand_skin
     {
         change_parent_state @is_dead?
         if $_bigwolf_hand_is_dead dead
+    }
+
+    state !check_if_angry
+    {
+        change_parent_state @is_angry?
+        let "$angry = $_bigwolf_hand_is_angry"
     }
 }
 
@@ -696,8 +825,15 @@ object .bigwolf_hand_damager
         execute !check_if_dead
 
         if $dead damage
-        hit_player
+        if "$_bigwolf_justgothit" damage
 
+        on_player_collision damage_gambiarra
+        change_state cooldown
+    }
+
+    state damage_gambiarra
+    {
+        hit_player
         change_state cooldown
     }
 
@@ -705,6 +841,11 @@ object .bigwolf_hand_damager
     {
         execute !update_position
         on_timeout 2.0 loop
+    }
+
+    state dead
+    {
+        execute !update_position
     }
 
 
@@ -727,6 +868,24 @@ object .bigwolf_hand_damager
     {
         change_parent_state @is_dead?
         if $_bigwolf_hand_is_dead dead
+    }
+}
+
+object .bigwolf_arenalocker
+{
+    requires 0.2.0
+    always_active
+    hide_unless_in_editor_mode
+
+    state main
+    {
+        lock_camera -360 -240 360 240
+    }
+
+    // ======= callbacks =======
+    state @destroy
+    {
+        destroy
     }
 }
 
@@ -793,7 +952,303 @@ object .bigwolf_hitfx
     }
 }
 
+object .bigwolf_apexpfx
+{
+    requires 0.2.0
+    always_active
 
+    state main
+    {
+        set_animation SD_EXPLOSION 0
+        set_animation_speed_factor 0.5
+        set_zindex 0.6
+        set_scale 2 2
+        change_state wait
+    }
+
+    state wait
+    {
+        on_animation_finished destroy
+    }
+
+    state destroy
+    {
+        destroy
+    }
+}
+
+object .bigwolf_roar
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        hide
+        let "$vol = music_volume()"
+        set_music_volume 0.5*$vol
+        play_sample samples/roar.ogg
+        change_state loop
+    }
+
+    state loop
+    {
+        on_timeout 2.5 end
+    }
+
+    state end
+    {
+        set_music_volume $vol
+        destroy
+    }
+}
+
+
+object .bigwolf_introcutscene
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        hide
+        disable_player_movement
+        set_player_xspeed 0
+        set_player_yspeed 0
+
+        // grab offset
+        change_parent_state @get_position
+        let "$offset_x = xpos() - $_bigwolf_xpos"
+        let "$offset_y = ypos() - $_bigwolf_ypos"
+
+        // handle music
+        create_child .bigwolf_introcutscene.music 0 0 music
+
+        // ok
+        create_child .moviefx 0 0 moviefx
+        change_state focus_on_wolf
+    }
+
+    state focus_on_wolf
+    {
+        change_parent_state @get_position
+        let $_scm_source_x=player_xpos()
+        let $_scm_source_y=player_ypos()
+        let $_scm_destiny_x=$offset_x+$_bigwolf_xpos
+        let $_scm_destiny_y=$offset_y+$_bigwolf_ypos
+        let $_scm_timespan=0.5
+        create_child .smooth_camera_movement 0 0 scm
+
+        disable_player_movement
+        change_state focus_on_wolf_wait
+    }
+
+    state focus_on_wolf_wait
+    {
+        disable_player_movement
+        on_timeout 3 focus_on_surge
+    }
+
+    state focus_on_surge
+    {
+        change_child_state scm @destroy
+
+        change_parent_state @get_position
+        let $_scm_source_x=$_scm_destiny_x
+        let $_scm_source_y=$_scm_destiny_y
+        let $_scm_destiny_x=player_xpos()
+        let $_scm_destiny_y=player_ypos()
+        let $_scm_timespan=0.5
+        create_child .smooth_camera_movement 0 0 scm
+
+        disable_player_movement
+        change_state focus_on_surge_wait
+    }
+
+    state focus_on_surge_wait
+    {
+        on_button_pressed fire1 destroy // SKIP CUTSCENE!!!!
+        on_button_pressed fire2 destroy // SKIP CUTSCENE!!!!
+
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 32)"
+        on_timeout 1.0 focus_on_surge_wait2
+    }
+
+    state focus_on_surge_wait2
+    {
+        let $_dialogbox_text_id=400
+        let $_dialogbox_avatar_id=1
+        create_child .dialogbox.default
+        let "$dlg=1"
+
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 32)"
+        change_state focus_on_surge_wait3
+    }
+
+    state focus_on_surge_wait3
+    {
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 32)"
+        // wait for the dialog box...
+    }
+
+    state focus_on_wolf2
+    {
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 32)"
+        change_child_state scm @destroy
+
+        change_parent_state @get_position
+        let $_scm_source_x=player_xpos()
+        let $_scm_source_y=player_ypos()
+        let $_scm_destiny_x=$offset_x+$_bigwolf_xpos
+        let $_scm_destiny_y=$offset_y+$_bigwolf_ypos
+        let $_scm_timespan=0.5
+        create_child .smooth_camera_movement 0 0 scm
+
+        change_parent_state @intro_roar
+        change_state focus_on_wolf2_wait
+    }
+
+    state focus_on_wolf2_wait
+    {
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 33)"
+        on_timeout 3.0 focus_on_surge2
+    }
+
+    state focus_on_surge2
+    {
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 33)"
+        change_child_state scm @destroy
+
+        change_parent_state @get_position
+        let $_scm_source_x=$_scm_destiny_x
+        let $_scm_source_y=$_scm_destiny_y
+        let $_scm_destiny_x=player_xpos()
+        let $_scm_destiny_y=player_ypos()
+        let $_scm_timespan=0.5
+        create_child .smooth_camera_movement 0 0 scm
+
+        change_state focus_on_surge2_wait
+    }
+
+    state focus_on_surge2_wait
+    {
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 33)"
+        on_timeout 2.0 focus_on_surge2_wait2
+    }
+
+    state focus_on_surge2_wait2
+    {
+        let $_dialogbox_text_id=401
+        let $_dialogbox_avatar_id=1
+        create_child .dialogbox.default
+        let "$dlg=2"
+
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 33)"
+        change_state focus_on_surge2_wait3
+    }
+
+    state focus_on_surge2_wait3
+    {
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 33)"
+        // wait for the dialog box...
+    }
+
+    // ------------------------
+
+    state .dialogbox:on_destroy
+    {
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, cond($dlg==1,32,33))"
+        on_timeout 1.0 dialog_is_over
+    }
+
+    state dialog_is_over
+    {
+        disable_player_movement
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, cond($dlg==1,32,33))"
+        if $dlg==1 focus_on_wolf2
+        change_state destroy
+    }
+
+    state destroy
+    {
+        create_child .spiralringfx // give rings to Surge
+        change_child_state scm @destroy
+        change_child_state music @destroy
+        change_child_state moviefx hide
+        change_parent_state @intro_end
+        enable_player_movement
+        destroy
+    }
+}
+
+object .bigwolf_introcutscene.music
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        hide
+        let $vol=music_volume()
+        change_state fadeout
+    }
+
+    state fadeout
+    {
+        set_music_volume max(0,music_volume()-0.3*dt())
+    }
+
+    // ============
+    state @destroy
+    {
+        set_music_volume $vol
+        play_music musics/boss.ogg -1
+        destroy
+    }
+}
+
+
+object .bigwolf_playerintheair
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        hide
+        change_state no
+    }
+
+    state no
+    {
+        let $_bigwolf_playerintheair=0
+        on_player_in_the_air yes
+    }
+
+    state yes
+    {
+        let $_bigwolf_playerintheair=1
+        on_player_in_the_air yes
+        change_state no
+    }
+
+    // callback
+    state @destroy
+    {
+        let $_bigwolf_playerintheair=0
+        destroy
+    }
+}
 
 
 // spawn this object where you want to focus the camera
