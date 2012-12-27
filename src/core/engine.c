@@ -49,6 +49,7 @@
 #include "../scenes/quest.h"
 #include "../scenes/level.h"
 #include "../entities/actor.h"
+#include "../entities/enemy.h"
 #include "../entities/player.h"
 #include "../entities/character.h"
 

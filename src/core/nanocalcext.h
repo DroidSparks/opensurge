@@ -22,10 +22,13 @@
 #ifndef _NANOCALCEXT_H
 #define _NANOCALCEXT_H
 
-#include "../entities/enemy.h"
+struct enemy_t;
+struct enemy_list_t;
+struct item_list_t;
+struct brick_list_t;
 
 void nanocalcext_register_bifs();
-void nanocalcext_set_target_object(object_t *o);
+void nanocalcext_set_target_object(struct enemy_t *o, struct brick_list_t *bricks_nearby, struct item_list_t *items_nearby, struct enemy_list_t *objects_nearby);
 
 #endif
 

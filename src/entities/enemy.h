@@ -74,7 +74,6 @@ struct enemy_t {
     enemy_t *parent; /* if someone has created me, who is that? */
     struct object_children_t *children; /* I have created my children */
     struct player_t *observed_player; /* NULL iff I'm observing the active player */
-    const struct brick_list_t *brick_list; /* bricks close to me. I get this from enemy_update() */
 };
 
 /* linked list of enemies */

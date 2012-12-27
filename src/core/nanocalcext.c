@@ -31,14 +31,20 @@
 #include "../entities/actor.h"
 #include "../entities/player.h"
 #include "../entities/enemy.h"
+#include "../entities/item.h"
 #include "../entities/brick.h"
 #include "../entities/camera.h"
 
 /* private stuff ;) */
 #define PLAYER (enemy_get_observed_player(target))
-#define BRICK_AT(ox,oy) actor_brick_at(target->actor,target->brick_list,v2d_new(ox,oy))
+#define BRICK_AT(ox,oy) actor_brick_at(target->actor,target_bricks_nearby,v2d_new(ox,oy))
+#define OBSTACLE_EXISTS(ox,oy) obstacle_exists(target,target_bricks_nearby,target_items_nearby,target_objects_nearby,v2d_new(ox,oy))
 static object_t *target; /* target object */
+static brick_list_t *target_bricks_nearby;
+static item_list_t *target_items_nearby;
+static object_list_t *target_objects_nearby;
 static const struct tm* timeinfo() { time_t raw = time(NULL); return localtime(&raw); }
+static int obstacle_exists(object_t *o, brick_list_t *bs, item_list_t *is, object_list_t *os, v2d_t offset);
 
 /* BIFs */
 static float f_elapsed_time() { return 0.001f * timer_get_ticks(); } /* elapsed time, in seconds */
@@ -100,6 +106,8 @@ static float f_brick_exists(float offset_x, float offset_y) { return (NULL == BR
 static float f_brick_type(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return (b && b->brick_ref) ? (float)(b->brick_ref->property) : 0.0f; }
 static float f_brick_angle(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return (b && b->brick_ref) ? (float)(b->brick_ref->angle) : 0.0f; }
 static float f_brick_layer(float offset_x, float offset_y) { const brick_t *b = BRICK_AT(offset_x, offset_y); return b ? (float)(b->layer) : 0.0f; }
+
+static float f_obstacle_exists(float offset_x, float offset_y) { return OBSTACLE_EXISTS(offset_x, offset_y); }
 
 
 
@@ -168,6 +176,7 @@ void nanocalcext_register_bifs()
     nanocalc_register_bif_arity2("brick_type", f_brick_type);
     nanocalc_register_bif_arity2("brick_angle", f_brick_angle);
     nanocalc_register_bif_arity2("brick_layer", f_brick_layer);
+    nanocalc_register_bif_arity2("obstacle_exists", f_obstacle_exists);
 
     target = NULL;
 }
@@ -177,8 +186,52 @@ void nanocalcext_register_bifs()
  * nanocalcext_set_target_object()
  * Defines a target object, used in some built-in functions called by nanocalc
  */
-void nanocalcext_set_target_object(object_t *o)
+void nanocalcext_set_target_object(object_t *o, brick_list_t *bricks_nearby, item_list_t *items_nearby, object_list_t *objects_nearby)
 {
     target = o;
+    target_bricks_nearby = bricks_nearby;
+    target_items_nearby = items_nearby;
+    target_objects_nearby = objects_nearby;
 }
 
+
+/* ------------------------- */
+
+
+/* is there an obstacle at (ox, oy) from object o? */
+int obstacle_exists(object_t *o, brick_list_t *bs, item_list_t *is, object_list_t *os, v2d_t offset)
+{
+    actor_t *me = o->actor, *other;
+    v2d_t p = v2d_add(me->position, offset), q;
+    image_t *img;
+
+    if(!actor_brick_at(me, bs, offset)) {
+        for(; is; is = is->next) {
+            other = is->data->actor;
+            img = actor_image(other);
+            if(p.x >= other->position.x - other->hot_spot.x && p.x < other->position.x - other->hot_spot.x + image_width(img)) {
+                if(p.y >= other->position.y - other->hot_spot.y && p.y < other->position.y - other->hot_spot.y + image_height(img)) {
+                    q = v2d_subtract(p, v2d_subtract(other->position, other->hot_spot));
+                    if(image_getpixel(img, (int)q.x, (int)q.y) != video_get_maskcolor())
+                        return TRUE;
+                }
+            }
+        }
+
+        for(; os; os = os->next) {
+            other = os->data->actor;
+            img = actor_image(other);
+            if(p.x >= other->position.x - other->hot_spot.x && p.x < other->position.x - other->hot_spot.x + image_width(img)) {
+                if(p.y >= other->position.y - other->hot_spot.y && p.y < other->position.y - other->hot_spot.y + image_height(img)) {
+                    q = v2d_subtract(p, v2d_subtract(other->position, other->hot_spot));
+                    if(image_getpixel(img, (int)q.x, (int)q.y) != video_get_maskcolor())
+                        return TRUE;
+                }
+            }
+        }
+
+        return FALSE;
+    }
+    else
+        return TRUE;
+}

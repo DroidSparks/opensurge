@@ -131,11 +131,6 @@ TUTORIAL_QUEST_NAME         "Tutorial"
 EXTRA_LEVELS_NAME           "Extra levels"
 
 
-// Bonus levels
-BONUSMSG_TITLE              "BONUS"
-BONUSMSG_TEXT               "Bonus stages not yet implemented ;)"
-
-
 // Confirm boxes
     // Quit game?
     CBOX_QUIT_QUESTION      "DO YOU REALLY WANT TO QUIT?"

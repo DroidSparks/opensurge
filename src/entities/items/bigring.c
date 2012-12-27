@@ -89,7 +89,6 @@ void bigring_update(item_t* item, player_t** team, int team_size, brick_list_t* 
             player_set_rings( player_get_rings() + 50 );
             level_add_to_secret_bonus(5000);
             sound_play( soundfactory_get("big ring") );
-            level_call_dialogbox("$BONUSMSG_TITLE", "$BONUSMSG_TEXT");
         }
     }
 }

@@ -168,7 +168,7 @@ void createchild_strategy(objectdecorator_children_t *me, player_t **team, int t
     if(child != NULL) {
         enemy_add_child(object, me->child_name, child);
         enemy_update(child, team, team_size, brick_list, item_list, object_list); /* important to exchange data between objects */
-        nanocalcext_set_target_object(object);
+        nanocalcext_set_target_object(object, brick_list, item_list, object_list); /* restore nanocalc's target object */
     }
 }
 
@@ -182,7 +182,7 @@ void changechildstate_strategy(objectdecorator_children_t *me, player_t **team, 
     if(child != NULL) {
         objectvm_set_current_state(child->vm, me->new_state_name);
         enemy_update(child, team, team_size, brick_list, item_list, object_list); /* important to exchange data between objects */
-        nanocalcext_set_target_object(object);
+        nanocalcext_set_target_object(object, brick_list, item_list, object_list); /* restore nanocalc's target object */
     }
 }
 
@@ -196,7 +196,7 @@ void changeparentstate_strategy(objectdecorator_children_t *me, player_t **team,
     if(parent != NULL) {
         objectvm_set_current_state(parent->vm, me->new_state_name);
         enemy_update(parent, team, team_size, brick_list, item_list, object_list); /* important to exchange data between objects */
-        nanocalcext_set_target_object(object);
+        nanocalcext_set_target_object(object, brick_list, item_list, object_list); /* restore nanocalc's target object */
     }
 }
 

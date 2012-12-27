@@ -220,8 +220,7 @@ void enemy_update(enemy_t *enemy, player_t **team, int team_size, brick_list_t *
 {
     objectmachine_t *machine = *(objectvm_get_reference_to_current_state(enemy->vm));
     if(enemy->state == ES_DEAD) return;
-    enemy->brick_list = brick_list;
-    nanocalcext_set_target_object((object_t*)enemy);
+    nanocalcext_set_target_object((object_t*)enemy, brick_list, item_list, object_list);
     machine->update(machine, team, team_size, brick_list, item_list, object_list);
 }
 
@@ -383,7 +382,6 @@ enemy_t* create_from_script(const char *object_name)
     e->observed_player = NULL;
     e->attached_to_player = FALSE;
     e->attached_to_player_offset = v2d_new(0,0);
-    e->brick_list = NULL;
 
     /* Let's compile the object */
     object_code = hashtable_objectcode_t_find(lookup_table, object_name);
