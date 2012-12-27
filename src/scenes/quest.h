@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * quest.h - quest scene
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,8 @@
 #define _QUESTSCENE_H
 
 /*
-   There is only one quest running at a time.
+   Multiple quests may be pushed onto the
+   scene stack. It will work.
 
    This is actually a "mock" scene that just
    dispatches the player to the correct levels.
@@ -46,19 +47,9 @@ void quest_render();
 void quest_release();
 
 /* specific methods */
-void quest_run(quest_t *qst, int standalone_quest); /* executes the given quest; standalone_quest = not(go_back_to_menu) */
+void quest_run(quest_t *qst); /* executes the given quest */
 void quest_setlevel(int lev); /* jumps to the given level (0..n-1) */
 void quest_abort(); /* aborts the current quest */
 const char *quest_getname(); /* returns the name of the current quest */
-
-/* quest values */
-typedef enum questvalue_t {
-    QUESTVALUE_TOTALTIME,   /* total quest time, in seconds */
-    QUESTVALUE_BIGRINGS,    /* how many big rings has the player got so far? */
-    QUESTVALUE_GLASSES      /* how many magic glasses has the player got so far? */
-} questvalue_t;
-
-void quest_setvalue(questvalue_t key, float value);
-float quest_getvalue(questvalue_t key);
 
 #endif

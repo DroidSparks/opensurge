@@ -48,7 +48,7 @@ static input_t *input;
 static int line_count;
 static bgtheme_t *bgtheme;
 static char credits_header[] =
-    "\n<color=ff8000>"
+    "\n<color=$COLOR_MENUHIGHLIGHT>"
     GAME_TITLE
     " version "
     GAME_VERSION_STRING

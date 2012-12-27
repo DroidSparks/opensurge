@@ -137,6 +137,9 @@ float symboltable_get(symboltable_t *st, const char *key);
 /* does the given variable exist? */
 int symboltable_is_defined(symboltable_t *st, const char *key);
 
+/* clears (resets) the symbol table */
+void symboltable_clear(symboltable_t *st);
+
 /* returns a fixed, global symbol table */
 symboltable_t *symboltable_get_global_table();
 

@@ -34,6 +34,7 @@ object ".creativecommons_startup"
     state skipper
     {
         on_timeout 4.0 fadeout2
+        on_button_pressed fire1 fadeout
         on_button_pressed fire3 fadeout
         on_button_pressed fire4 fadeout
     }

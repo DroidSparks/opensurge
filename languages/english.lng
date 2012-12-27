@@ -10,7 +10,7 @@
 // Meta data
 LANG_LANGUAGE               "English"
 LANG_AUTHOR                 "Alexandre Martins"
-LANG_LASTUPDATE             "2011-10-01"
+LANG_LASTUPDATE             "2012-12-27"
 LANG_COMPATIBILITY          "0.2.0"
 
 
@@ -18,8 +18,12 @@ LANG_COMPATIBILITY          "0.2.0"
 COLOR_P1                    "ff8000"
 COLOR_P2                    "bf7a0d"
 COLOR_P3                    "aca5a5"
-COLOR_INPUT                 "aaaaaa"
-COLOR_SPECIAL               "ffff00"
+COLOR_INPUT                 "e99f42"
+COLOR_MENUSELECTEDOPTION    "ffe13e"
+COLOR_MENUTITLE             "e99f42"
+COLOR_HIGHLIGHT             "e99f42"
+COLOR_SUBHIGHLIGHT          "ffe13e"
+COLOR_SUBSUBHIGHLIGHT       "cdc3b6"
 
 
 // Main menu
@@ -30,7 +34,7 @@ MENU_EXIT                   "EXIT"
 
 
 // Options
-OPTIONS_TITLE               "<color=$COLOR_P1>OPTIONS</color>"
+OPTIONS_TITLE               "<color=$COLOR_MENUTITLE>OPTIONS</color>"
 OPTIONS_YES                 "YES"
 OPTIONS_NO                  "NO"
 OPTIONS_GRAPHICS            "GRAPHICS"
@@ -51,32 +55,31 @@ OPTIONS_CREDITS             "Credits"
 OPTIONS_BACK                "BACK"
 
 
-// Stage Select
-STAGESELECT_TITLE           "<color=$COLOR_P1>STAGE SELECT</color>"
-STAGESELECT_MSG             "Press <color=ffff00>$INPUT_FIRE4</color> to cancel"
+// stage select
+STAGESELECT_TITLE           "<color=$COLOR_MENUTITLE>STAGE SELECT</color>"
+STAGESELECT_MSG             "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to cancel"
 STAGESELECT_PAGE            "page %d/%d"
 STAGESELECT_ACT             "Act"
 
 
-// Custom quests
-QUESTSELECT_TITLE           "<color=$COLOR_P1>QUEST SELECT</color>"
-QUESTSELECT_MSG             "Press <color=ffff00>$INPUT_FIRE4</color> to cancel"
+// quest select
+QUESTSELECT_TITLE           "<color=$COLOR_MENUTITLE>QUEST SELECT</color>"
+QUESTSELECT_MSG             "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to cancel"
 QUESTSELECT_PAGE            "page %d/%d"
-QUESTSELECT_INFO            "<color=ffff00>Version:</color> %s\n<color=ffff00>Author:</color> %s\n<color=ffff00>Description:</color> %s"
-MENU_CQ_TUTORIAL            "Learn how to play Open Surge"
+QUESTSELECT_INFO            "<color=$COLOR_MENUSELECTEDOPTION>Version:</color> %s\n<color=$COLOR_MENUSELECTEDOPTION>Author:</color> %s\n<color=$COLOR_MENUSELECTEDOPTION>Description:</color> %s"
 MENU_CQ_EXTRA               "Extra levels"
 
 
 // Languages (please do not translate these!)
-LANGSELECT_TITLE1           "<color=$COLOR_P1>SELECT YOUR</color>"
-LANGSELECT_TITLE2           "<color=$COLOR_P1>LANGUAGE</color>"
-LANGSELECT_AUTHOR           "<color=ffff00>Translation by:</color> %s"
+LANGSELECT_TITLE1           "<color=$COLOR_MENUTITLE>SELECT YOUR</color>"
+LANGSELECT_TITLE2           "<color=$COLOR_MENUTITLE>LANGUAGE</color>"
+LANGSELECT_AUTHOR           "<color=$COLOR_MENUSELECTEDOPTION>Translation by:</color> %s"
 LANGSELECT_PAGE             "page %d/%d"
 
 
 // Credits
-CREDITS_TITLE               "<color=$COLOR_P1>CREDITS</color>"
-CREDITS_KEY                 "Press <color=ffff00>$INPUT_FIRE4</color> to go back, or <color=ffff00>$INPUT_FIRE8</color> to see the donors"
+CREDITS_TITLE               "<color=$COLOR_MENUTITLE>CREDITS</color>"
+CREDITS_KEY                 "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to go back, or <color=$COLOR_INPUT>$INPUT_FIRE8</color> to see the donors"
 CREDITS_ACTIVE              "Open Surge team"
 CREDITS_CONTRIB             "Special contributors"
 CREDITS_RETIRED             "Retired members"
@@ -111,14 +114,14 @@ CREDITS_RES_SCRIPTS_TEXT    "The authors are specified within the scripts themse
 
 
 // Donations
-DONORS_TITLE                "<color=$COLOR_P1>DONORS</color>"
-DONORS_KEY                  "Press <color=ffff00>$INPUT_FIRE4</color> to go back"
+DONORS_TITLE                "<color=$COLOR_MENUTITLE>DONORS</color>"
+DONORS_KEY                  "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to go back"
 DONORS_HEADER               "As an open source game, Open Surge needs money to pay for code, art, music, etc.\n\nThese are the enthusiasts who have helped fund the project:"
 
 
 // "Please donate" screen
-DONATE_TITLE                "<color=$COLOR_P1>PLEASE DONATE</color>"
-DONATE_TEXT                 "Please help us create Episode 2!\n\nOpen Surge is a free and open source game, made available for you at no cost. However, making a game costs us real money. <color=ffff00>Please show your support.</color> By making a <color=ffff00>donation of any value</color>, you'll be helping us to create to next episode.\n\nYour donation is absolutely critical to the advancement of this project. Your money will be invested in code, art, music, etc.\n\nWould you like to donate now?"
+DONATE_TITLE                "<color=$COLOR_MENUTITLE>PLEASE DONATE</color>"
+DONATE_TEXT                 "Please help us create Episode 2!\n\nOpen Surge is a free and open source game, made available for you at no cost. However, making a game costs us real money. <color=$COLOR_MENUSELECTEDOPTION>Please show your support.</color> By making a <color=$COLOR_MENUSELECTEDOPTION>donation of any value</color>, you'll be helping us to create to next episode.\n\nYour donation is absolutely critical to the advancement of this project. Your money will be invested in code, art, music, etc.\n\nWould you like to donate now?"
 DONATE_YES                  "Sure!"
 DONATE_NO                   "Later."
 DONATE_ALREADYHAVE          "Already have."
@@ -223,7 +226,7 @@ OPENING_9				"will be over!"
 
 // cutscene 1: Surge and Neon
     // generic texts
-    CUTSCENE1_SKIP          "Press <color=ffff00>$INPUT_FIRE4</color> to skip the cutscene"
+    CUTSCENE1_SKIP          "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to skip the cutscene"
 
     // dialog boxes
     DIALOGBOX_MESSAGE_100   "Ahhh, this is the life, eh buddy?"

@@ -66,7 +66,7 @@ object "Big Wolf"
 
     state appearing_in_playfield
     {
-        set_absolute_position xpos() "max(spawnpoint_y(), ypos() - 0.7*screen_height()*dt())"
+        set_absolute_position xpos() "max(spawnpoint_y(), ypos() - 1.0*screen_height()*dt())"
         if ypos()<=spawnpoint_y() appeared_in_playfield
     }
 
@@ -79,19 +79,11 @@ object "Big Wolf"
     {
         set_animation "SD_BIGWOLF" 2
         create_child .bigwolf_roar
-        change_state roaring2
-    }
-
-    state roaring2
-    {
+        change_state roared
     }
 
     state roared
     {
-        set_animation "SD_BIGWOLF" 0
-        set_alpha 0.4
-        hide
-        change_state init_fight
     }
 
     // callbacks (called by .bigwolf_introcutscene)
@@ -102,10 +94,27 @@ object "Big Wolf"
 
     state @intro_end
     {
-        change_state roared
+        set_animation "SD_BIGWOLF" 0
+        set_alpha 0.4
+        hide
+
+        change_state init_fight
     }
 
     // =============== big wolf programming ===============
+
+    state !reset_globals
+    {
+
+        let $_bigwolf_moviefx_active=0
+        let $_bigwolf_justgothit=0
+        let $_bigwolf_is_dead=0
+        let $_bigwolf_is_angry=0
+        let $_bigwolf_is_punching=0
+        let $_bigwolf_head_got_hit=0
+        let $_bigwolf_handlock=0
+        let $_bigwolf_playerintheair=0
+    }
 
     state init_fight
     {
@@ -119,10 +128,11 @@ object "Big Wolf"
         // create body parts
         create_child .bigwolf_head -23 -70 head
         create_child .bigwolf_body 10 64 body
-        create_child .bigwolf_hand -90 20 righthand
-        create_child .bigwolf_hand 45 20 lefthand
+        create_child .bigwolf_hand -90+4 20 righthand
+        create_child .bigwolf_hand 45-4 20 lefthand
 
         // go!!
+        execute !reset_globals
         change_state stopped
     }
 
@@ -1072,7 +1082,7 @@ object .bigwolf_introcutscene
 
         disable_player_movement
         set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 32)"
-        on_timeout 1.0 focus_on_surge_wait2
+        on_timeout 1.25 focus_on_surge_wait2
     }
 
     state focus_on_surge_wait2
@@ -1115,7 +1125,7 @@ object .bigwolf_introcutscene
     state focus_on_wolf2_wait
     {
         disable_player_movement
-        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 33)"
+        set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, 32)"
         on_timeout 3.0 focus_on_surge2
     }
 
@@ -1176,16 +1186,17 @@ object .bigwolf_introcutscene
         disable_player_movement
         set_player_animation SD_SURGE "cond($_bigwolf_playerintheair, 3, cond($dlg==1,32,33))"
         if $dlg==1 focus_on_wolf2
-        change_state destroy
+        change_parent_state @intro_end
+        execute destroy
     }
 
     state destroy
     {
         create_child .spiralringfx // give rings to Surge
+        change_parent_state @intro_end
         change_child_state scm @destroy
         change_child_state music @destroy
         change_child_state moviefx hide
-        change_parent_state @intro_end
         enable_player_movement
         destroy
     }

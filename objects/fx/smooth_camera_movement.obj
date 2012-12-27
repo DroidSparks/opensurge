@@ -17,8 +17,7 @@
 // 2. You may optionally set $_scm_timespan (in seconds) to specify how long
 //    should the movement take.
 //
-// 3. In order to get the camera back, you must manually destroy this object
-//    by calling:
+// 3. In order to get the camera back, you must manually destroy this object:
 //    change_closest_object_state ".smooth_camera_movement" "@destroy"
 
 object .smooth_camera_movement

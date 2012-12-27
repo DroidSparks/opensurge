@@ -26,6 +26,7 @@
 #include "options.h"
 #include "level.h"
 #include "../entities/player.h"
+#include "../core/nanocalc/nanocalc.h"
 #include "../core/util.h"
 #include "../core/scene.h"
 #include "../core/storyboard.h"
@@ -220,6 +221,7 @@ void stageselect_update()
         /* fade-out effect (play a level) */
         case STAGESTATE_PLAY: {
             if(fadefx_over()) {
+                symboltable_clear(symboltable_get_global_table()); /* scripting: reset global variables */
                 player_set_lives(PLAYER_INITIAL_LIVES);
                 player_set_score(0);
                 scenestack_push(storyboard_get_scene(SCENE_LEVEL));
@@ -260,9 +262,9 @@ void stageselect_render()
     for(i=0; i<stage_count; i++) {
         if(i/STAGE_MAXPERPAGE == option/STAGE_MAXPERPAGE) {
             if(stage_data[i]->act > 0 && !enable_debug)
-                font_set_text(stage_label[i], (option==i) ? "<color=ffff00>%s - %s %d</color>" : "%s - %s %d", stage_data[i]->name, lang_get("STAGESELECT_ACT"), stage_data[i]->act);
+                font_set_text(stage_label[i], (option==i) ? "<color=$COLOR_MENUSELECTEDOPTION>%s - %s %d</color>" : "%s - %s %d", stage_data[i]->name, lang_get("STAGESELECT_ACT"), stage_data[i]->act);
             else
-                font_set_text(stage_label[i], (option==i) ? "<color=ffff00>%s</color>" : "%s", stage_data[i]->name);
+                font_set_text(stage_label[i], (option==i) ? "<color=$COLOR_MENUSELECTEDOPTION>%s</color>" : "%s", stage_data[i]->name);
             font_render(stage_label[i], cam);
         }
     }

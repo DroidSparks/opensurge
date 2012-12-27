@@ -1,4 +1,4 @@
-<color=ffff00>$CREDITS_ACTIVE</color>
+<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_ACTIVE</color>
 
 Alexandre Martins:
 $CREDITS_ALEXANDRE
@@ -12,14 +12,11 @@ $CREDITS_JOAO
 Mateus Reis:
 $CREDITS_MATEUSREIS
 
-Ruben Caceres:
-$CREDITS_RUBEN
-
 Johan Brodd:
 $CREDITS_JOHAN
 
 
-<color=ffff00>$CREDITS_CONTRIB</color>
+<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_CONTRIB</color>
 
 Christopher Martinus:
 $CREDITS_CHRISTOPHER
@@ -52,7 +49,7 @@ Raxillan:
 $CREDITS_RAXILLAN
 
 
-<color=ffff00>$CREDITS_RETIRED</color>
+<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RETIRED</color>
 
 Brian Zablocky:
 $CREDITS_CELDECEA
@@ -60,14 +57,16 @@ $CREDITS_CELDECEA
 Colin Beard:
 $CREDITS_COLIN
 
+Ruben Caceres:
+$CREDITS_RUBEN
 
-<color=ffff00>$CREDITS_THANKS</color>
+<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_THANKS</color>
 
 SourceForge.net
 allegro.cc
 OpenGameArt.org
 FreeGamer
-GagaGames.com.br
+gagagames.com.br
 VSoftGames
 Redshrike
 lunarrush
@@ -80,11 +79,11 @@ Lainz
 S32X
 
 
-<color=ff8000>$CREDITS_RES_TITLE</color>
+<color=$COLOR_MENUHIGHLIGHT>$CREDITS_RES_TITLE</color>
 
 $CREDITS_RES_TEXT
 
-<color=ffff00>$CREDITS_RES_IMAGES</color>
+<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RES_IMAGES</color>
 
 Joao Victor
 --- images/neon.png
@@ -261,7 +260,7 @@ creative commons (creativecommons.org)
 Sascha de waal & Colin Beard
 --- images/zipline.png
 
-<color=ffff00>$CREDITS_RES_MUSICS</color>
+<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RES_MUSICS</color>
 
 Di Rodrigues
 --- musics/options.ogg
@@ -295,7 +294,7 @@ Johan Brodd
 --- musics/sharp.ogg (public domain)
 --- samples/allegro.ogg (public domain)
 
-<color=ffff00>$CREDITS_RES_SAMPLES</color>
+<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RES_SAMPLES</color>
 
 Mateus Reis
 --- samples/break.wav
@@ -368,6 +367,6 @@ d1337r
 CGEffex (freesound.org)
 --- samples/roar.ogg (CC-BY 3.0)
 
-<color=ffff00>$CREDITS_RES_SCRIPTS</color>
+<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RES_SCRIPTS</color>
 
 $CREDITS_RES_SCRIPTS_TEXT

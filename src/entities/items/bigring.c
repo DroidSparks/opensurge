@@ -23,7 +23,6 @@
 #include "../../core/util.h"
 #include "../../core/soundfactory.h"
 #include "../../scenes/level.h"
-#include "../../scenes/quest.h"
 #include "../player.h"
 #include "../brick.h"
 #include "../item.h"
@@ -91,7 +90,6 @@ void bigring_update(item_t* item, player_t** team, int team_size, brick_list_t* 
             level_add_to_secret_bonus(5000);
             sound_play( soundfactory_get("big ring") );
             level_call_dialogbox("$BONUSMSG_TITLE", "$BONUSMSG_TEXT");
-            quest_setvalue(QUESTVALUE_BIGRINGS, quest_getvalue(QUESTVALUE_BIGRINGS) + 1);
         }
     }
 }

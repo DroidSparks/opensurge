@@ -43,13 +43,11 @@ static image_t* bg;
 static input_t* in;
 
 static char *text = 
- "<color=ff8000>"
+ "<color=eabd85>"
  GAME_TITLE " version " GAME_VERSION_STRING
  "</color>\n"
- "<color=ffffff>"
- "Copyright (C) " GAME_YEAR "  Open Surge Team"
- "</color>\n"
- "<color=ffffff>"
+ "<color=cdc3b6>"
+ "Copyright (C) " GAME_YEAR "  Open Surge Team\n"
  GAME_WEBSITE "\n"
  "</color>\n"
  "This program is free software; you can redistribute it and/or modify\n"
@@ -145,7 +143,8 @@ void load_intro_quest()
 {
     char abs_path[1024];
     resource_filepath(abs_path, INTRO_QUEST, sizeof(abs_path), RESFP_READ);
-    quest_run(load_quest(abs_path), FALSE);
+    scenestack_push(storyboard_get_scene(SCENE_MENU));
+    quest_run(load_quest(abs_path));
     scenestack_push(storyboard_get_scene(SCENE_QUEST));
 }
 

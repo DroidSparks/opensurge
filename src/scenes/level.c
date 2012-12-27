@@ -1142,7 +1142,6 @@ void level_update()
                 if(player_get_lives() > 1) {
                     /* restart the level! */
                     if(fadefx_over()) {
-                        quest_setvalue(QUESTVALUE_TOTALTIME, quest_getvalue(QUESTVALUE_TOTALTIME)+level_timer);
                         player_set_lives(player_get_lives()-1);
                         restart(TRUE);
                         return;

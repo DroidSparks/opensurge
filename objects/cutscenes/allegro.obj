@@ -17,6 +17,7 @@ object ".allegro_startup"
 
     state wait
     {
+        on_button_pressed fire1 stop
         on_button_pressed fire3 stop
         on_button_pressed fire4 stop
         on_timeout 3.5 fadeout

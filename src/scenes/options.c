@@ -172,7 +172,6 @@ void options_update()
         if(fadefx_over()) {
             save_preferences();
             scenestack_pop();
-            scenestack_push(storyboard_get_scene(SCENE_MENU));
             return;
         }
         fadefx_out(image_rgb(0,0,0), 1.0);
@@ -300,7 +299,7 @@ static void group_highlightable_update(group_t *g)
     group_label_update(g);
     font_set_text(g->font, lang_get(data->lang_key));
     if(group_highlightable_is_highlighted(g)) {
-        font_set_text(g->font, "<color=ffff00>%s</color>", lang_get(data->lang_key));
+        font_set_text(g->font, "<color=$COLOR_MENUSELECTEDOPTION>%s</color>", lang_get(data->lang_key));
         icon->position = v2d_add(font_get_position(g->font), v2d_new(-20+3*cos(2*PI*scene_time),0));
     }
 }
@@ -430,9 +429,9 @@ static void group_fullscreen_render(group_t *g, v2d_t camera_position)
     str_cpy(v[1], lang_get("OPTIONS_NO"), sizeof(v[1]));
 
     if(video_is_fullscreen())
-        font_set_text(f, "<color=ffff00>%s</color>  %s", v[0], v[1]);
+        font_set_text(f, "<color=$COLOR_MENUSELECTEDOPTION>%s</color>  %s", v[0], v[1]);
     else
-        font_set_text(f, "%s  <color=ffff00>%s</color>", v[0], v[1]);
+        font_set_text(f, "%s  <color=$COLOR_MENUSELECTEDOPTION>%s</color>", v[0], v[1]);
 
     font_render(f, camera_position);
     font_destroy(f);
@@ -507,9 +506,9 @@ static void group_smooth_render(group_t *g, v2d_t camera_position)
 
     if(video_get_color_depth() == 32) {
         if(video_is_smooth())
-            font_set_text(f, "<color=ffff00>%s</color>  %s", v[0], v[1]);
+            font_set_text(f, "<color=$COLOR_MENUSELECTEDOPTION>%s</color>  %s", v[0], v[1]);
         else
-            font_set_text(f, "%s  <color=ffff00>%s</color>", v[0], v[1]);
+            font_set_text(f, "%s  <color=$COLOR_MENUSELECTEDOPTION>%s</color>", v[0], v[1]);
     }
     else
         font_set_text(f, "<color=ff8888>%s</color>", lang_get("OPTIONS_SMOOTHGFX_ERROR"));
@@ -584,9 +583,9 @@ static void group_fps_render(group_t *g, v2d_t camera_position)
     str_cpy(v[1], lang_get("OPTIONS_NO"), sizeof(v[1]));
 
     if(video_is_fps_visible())
-        font_set_text(f, "<color=ffff00>%s</color>  %s", v[0], v[1]);
+        font_set_text(f, "<color=$COLOR_MENUSELECTEDOPTION>%s</color>  %s", v[0], v[1]);
     else
-        font_set_text(f, "%s  <color=ffff00>%s</color>", v[0], v[1]);
+        font_set_text(f, "%s  <color=$COLOR_MENUSELECTEDOPTION>%s</color>", v[0], v[1]);
 
     font_render(f, camera_position);
     font_destroy(f);
@@ -697,19 +696,19 @@ static void group_resolution_render(group_t *g, v2d_t camera_position)
 
     switch(video_get_resolution()) {
         case VIDEORESOLUTION_1X:
-            font_set_text(f, "<color=ffff00>%s</color> %s %s %s", v[0], v[1], v[2], v[3]);
+            font_set_text(f, "<color=$COLOR_MENUSELECTEDOPTION>%s</color> %s %s %s", v[0], v[1], v[2], v[3]);
             break;
 
         case VIDEORESOLUTION_2X:
-            font_set_text(f, "%s <color=ffff00>%s</color> %s %s", v[0], v[1], v[2], v[3]);
+            font_set_text(f, "%s <color=$COLOR_MENUSELECTEDOPTION>%s</color> %s %s", v[0], v[1], v[2], v[3]);
             break;
 
         case VIDEORESOLUTION_3X:
-            font_set_text(f, "%s %s <color=ffff00>%s</color> %s", v[0], v[1], v[2], v[3]);
+            font_set_text(f, "%s %s <color=$COLOR_MENUSELECTEDOPTION>%s</color> %s", v[0], v[1], v[2], v[3]);
             break;
 
         case VIDEORESOLUTION_4X:
-            font_set_text(f, "%s %s %s <color=ffff00>%s</color>", v[0], v[1], v[2], v[3]);
+            font_set_text(f, "%s %s %s <color=$COLOR_MENUSELECTEDOPTION>%s</color>", v[0], v[1], v[2], v[3]);
             break;
     }
 
@@ -1002,9 +1001,9 @@ static void group_gamepad_render(group_t *g, v2d_t camera_position)
     str_cpy(v[1], lang_get("OPTIONS_NO"), sizeof(v[1]));
 
     if(!input_is_joystick_ignored())
-        font_set_text(f, "<color=ffff00>%s</color>  %s", v[0], v[1]);
+        font_set_text(f, "<color=$COLOR_MENUSELECTEDOPTION>%s</color>  %s", v[0], v[1]);
     else
-        font_set_text(f, "%s  <color=ffff00>%s</color>", v[0], v[1]);
+        font_set_text(f, "%s  <color=$COLOR_MENUSELECTEDOPTION>%s</color>", v[0], v[1]);
 
     font_render(f, camera_position);
     font_destroy(f);

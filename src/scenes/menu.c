@@ -59,13 +59,11 @@ static bgtheme_t *bgtheme;
 /* main menu */
 #define MENU_MAXOPTIONS 3
 static float start_time;
-static int control_restored;
 static char menu[MENU_MAXOPTIONS][64];
 static int menuopt; /* current option */
 static font_t *menufnt[MENU_MAXOPTIONS];
 static actor_t *arrow;
 static int quit;
-static int not_first_time = 0;
 
 /* marquee */
 static struct marquee_t {
@@ -103,11 +101,8 @@ void menu_init()
     /* initializing... */
     quit = FALSE;
     start_time = timer_get_ticks()*0.001;
-    control_restored = FALSE;
     jump_to = NULL;
     input = input_create_user(NULL);
-    input_ignore(input);
-    music_play( music_load(MENU_MUSICFILE) , INFINITY);
 
     /* background init */
     bgtheme = background_load(MENU_BGFILE);
@@ -129,12 +124,6 @@ void menu_init()
 
     /* marquee */
     marquee_init();
-
-    /* fade in */
-    if(not_first_time++)
-        fadefx_in(image_rgb(0,0,0), FADEIN_TIME);
-    /*else
-        fadefx_in(image_rgb(255,255,255), FADEIN_TIME);*/
 }
 
 
@@ -147,10 +136,15 @@ void menu_update()
     int j;
     float t = timer_get_ticks() * 0.001f;
 
+    /* music */
+    if(!music_is_playing())
+        music_play( music_load(MENU_MUSICFILE) , INFINITY);
+
     /* game start */
     if(jump_to != NULL && fadefx_over()) {
-        scenestack_pop();
+        music_stop();
         scenestack_push(jump_to);
+        jump_to = NULL;
         return;
     }
 
@@ -158,14 +152,6 @@ void menu_update()
     if(quit && fadefx_over()) {
         game_quit();
         return;
-    }
-
-    /* ignore/restore control */
-    if(t <= start_time + FADEIN_TIME)
-        input_ignore(input);
-    else if(!control_restored) {
-        input_restore(input);
-        control_restored = TRUE;
     }
 
     /* background movement */
@@ -303,9 +289,8 @@ void select_option(int opt)
 /* closes the menu and starts the game. Call return after this. */
 void game_start(quest_t *q)
 {
-    quest_run(q, FALSE);
+    quest_run(q);
     jump_to = storyboard_get_scene(SCENE_QUEST);
-    input_ignore(input);
     fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
 }
 

@@ -166,7 +166,7 @@ void questselect_update()
     font_set_position(info, v2d_new(10, VIDEO_SCREEN_H - font_get_textsize(info).y * 5.0f));
 
     /* music */
-    if(!music_is_playing()) {
+    if(!music_is_playing() && state != QUESTSTATE_PLAY) {
         music_t *m = music_load(OPTIONS_MUSICFILE);
         music_play(m, INFINITY);
     }
@@ -187,9 +187,10 @@ void questselect_update()
                 if(input_button_pressed(input, IB_FIRE1) || input_button_pressed(input, IB_FIRE3)) {
                     quest_t *clone = load_quest(quest_data[option]->file);
                     logfile_message("Loading quest \"%s\", \"%s\"", clone->name, clone->file);
-                    quest_run(clone, TRUE);
+                    quest_run(clone);
                     sound_play( soundfactory_get("select") );
                     state = QUESTSTATE_PLAY;
+                    music_stop();
                 }
                 if(input_button_pressed(input, IB_FIRE4)) {
                     sound_play( soundfactory_get("return") );
@@ -212,8 +213,6 @@ void questselect_update()
         /* fade-out effect (play a level) */
         case QUESTSTATE_PLAY: {
             if(fadefx_over()) {
-                player_set_lives(PLAYER_INITIAL_LIVES);
-                player_set_score(0);
                 scenestack_push(storyboard_get_scene(SCENE_QUEST));
                 state = QUESTSTATE_FADEIN;
                 return;
@@ -256,7 +255,7 @@ void questselect_render()
 
     for(i=0; i<quest_count; i++) {
         if(i/QUEST_MAXPERPAGE == option/QUEST_MAXPERPAGE) {
-            font_set_text(quest_label[i], (option==i) ? "<color=ffff00>%s</color>" : "%s", quest_data[i]->name);
+            font_set_text(quest_label[i], (option==i) ? "<color=$COLOR_MENUSELECTEDOPTION>%s</color>" : "%s", quest_data[i]->name);
             font_render(quest_label[i], cam);
         }
     }

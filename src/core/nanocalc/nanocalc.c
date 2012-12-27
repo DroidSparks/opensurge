@@ -140,6 +140,13 @@ symboltable_t *symboltable_new()
 /* destroys an existing symbol table */
 void symboltable_destroy(symboltable_t *st)
 {
+    symboltable_clear(st);
+    free(st);
+}
+
+/* clears an existing symbol table */
+void symboltable_clear(symboltable_t *st)
+{
     association_t *node, *next;
 
     for(node=st->data; node!=NULL; node=next) {
@@ -148,7 +155,7 @@ void symboltable_destroy(symboltable_t *st)
         free(node);
     }
 
-    free(st);
+    st->data = NULL;
 }
 
 /* adds or updates an association */
@@ -1416,7 +1423,6 @@ void nanocalc_error(const char *fmt, ...)
 
     exit(1);
 }
-
 
 
 #ifdef __cplusplus

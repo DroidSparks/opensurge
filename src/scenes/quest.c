@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * quest.c - quest scene
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,17 +25,19 @@
 #include "../entities/player.h"
 #include "../core/global.h"
 #include "../core/util.h"
+#include "../core/audio.h"
 #include "../core/logfile.h"
 #include "../core/storyboard.h"
+#include "../core/nanocalc/nanocalc.h"
 
 /* private data */
-#define QUESTVALUE_MAX              3
-static quest_t* current_quest;
-static int current_level;
-static int abort_quest;
-static int go_back_to_menu;
-static float questvalue[QUESTVALUE_MAX];
-static char lastname[512] = "NO_QUEST_NAME";
+#define STACK_MAX 16
+static int top = -1;
+static struct {
+    quest_t* current_quest;
+    int current_level;
+    int abort_quest;
+} stack[STACK_MAX]; /* one can stack quests */
 
 
 
@@ -45,15 +47,15 @@ static char lastname[512] = "NO_QUEST_NAME";
 /*
  * quest_init()
  * Initializes the quest scene. Remember to load
- * some quest before running this scene!
+ * some quest (i.e., quest_run) before running this scene!
  */
 void quest_init()
 {
-    int i;
+    if(top < 0)
+        fatal_error("Must execute quest_run() before quest_init()");
 
-    abort_quest = FALSE;
-    for(i=0; i<QUESTVALUE_MAX; i++)
-        questvalue[i] = 0;
+    stack[top].abort_quest = FALSE;
+    music_stop();
 }
 
 
@@ -63,7 +65,9 @@ void quest_init()
  */
 void quest_release()
 {
-    unload_quest(current_quest);
+    unload_quest(stack[top].current_quest);
+    if(0 >= --top)
+        symboltable_clear(symboltable_get_global_table()); /* scripting: reset global variables */
 }
 
 
@@ -83,32 +87,19 @@ void quest_render()
 void quest_update()
 {
     /* invalid quest */
-    if(current_quest->level_count == 0) {
-        logfile_message("Quest '%s' has no levels.", current_quest->file);
-
-        if(go_back_to_menu) {
-            scenestack_pop();
-            scenestack_push(storyboard_get_scene(SCENE_MENU));
-        }
-        else
-            game_quit();
-
-        return;
-    }
+    if(stack[top].current_quest->level_count == 0)
+        fatal_error("Quest '%s' has no levels.", stack[top].current_quest->file);
 
     /* quest manager */
-    if(current_level < current_quest->level_count && !abort_quest) {
+    if(stack[top].current_level < stack[top].current_quest->level_count && !stack[top].abort_quest) {
         /* next level... */
-        level_setfile(current_quest->level_path[current_level]);
+        level_setfile(stack[top].current_quest->level_path[stack[top].current_level]);
         scenestack_push(storyboard_get_scene(SCENE_LEVEL));
-        current_level++;
+        stack[top].current_level++;
     }
     else {
         /* the user has cleared the quest! */
         scenestack_pop();
-        if(go_back_to_menu) /* if it's not a standalone quest */
-            scenestack_push(storyboard_get_scene(SCENE_MENU));
-
         return;
     }
 }
@@ -118,15 +109,16 @@ void quest_update()
  * quest_run()
  * Executes the given quest
  */
-void quest_run(quest_t *qst, int standalone_quest)
+void quest_run(quest_t *qst)
 {
-    current_quest = qst;
-    strcpy(lastname, qst->name);
-    go_back_to_menu = !standalone_quest;
+    top++;
+    stack[top].current_quest = qst;
+    stack[top].current_level = 0;
+
     player_set_lives(PLAYER_INITIAL_LIVES);
     player_set_score(0);
+
     logfile_message("Running quest %s, '%s'...", qst->file, qst->name);
-    quest_setlevel(0);
 }
 
 
@@ -136,7 +128,7 @@ void quest_run(quest_t *qst, int standalone_quest)
  */
 void quest_setlevel(int lev)
 {
-    current_level = max(0, lev);
+    stack[top].current_level = max(0, lev);
 }
 
 /*
@@ -146,7 +138,7 @@ void quest_setlevel(int lev)
 void quest_abort()
 {
     logfile_message("Quest aborted!");
-    abort_quest = TRUE;
+    stack[top].abort_quest = TRUE;
 }
 
 
@@ -156,35 +148,5 @@ void quest_abort()
  */
 const char *quest_getname()
 {
-    return lastname;
+    return stack[top].current_quest->name;
 }
-
-
-
-
-/* quest values */
-
-/*
- * quest_setvalue()
- * Sets a new value to a quest value
- *
- * key = QUESTVALUE_*
- * value = new value
- */
-void quest_setvalue(questvalue_t key, float value)
-{
-    int k = clip((int)key, 0, QUESTVALUE_MAX-1);
-    questvalue[k] = value;
-}
-
-
-/*
- * quest_getvalue()
- * Returns a quest value
- */
-float quest_getvalue(questvalue_t key)
-{
-    int k = clip((int)key, 0, QUESTVALUE_MAX-1);
-    return questvalue[k];
-}
-

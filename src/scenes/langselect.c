@@ -274,7 +274,7 @@ void load_lang_list()
         lngfnt[0][i] = font_create("menu.text");
         lngfnt[1][i] = font_create("menu.text");
         font_set_text(lngfnt[0][i], "%2d. %s", i+1, lngdata[i].title);
-        font_set_text(lngfnt[1][i], "<color=ffff00>% 2d. %s</color>", i+1, lngdata[i].title);
+        font_set_text(lngfnt[1][i], "<color=$COLOR_MENUSELECTEDOPTION>% 2d. %s</color>", i+1, lngdata[i].title);
         font_set_position(lngfnt[0][i], v2d_new(25, 77 + 20*(i%LANG_MAXPERPAGE)));
         font_set_position(lngfnt[1][i], v2d_new(25, 77 + 20*(i%LANG_MAXPERPAGE)));
     }

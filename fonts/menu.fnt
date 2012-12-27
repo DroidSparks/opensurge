@@ -2,8 +2,8 @@
 // Open Surge Engine
 // http://opensnc.sourceforge.net
 //
-// File:   fonts/title.fnt
-// Desc:   title font
+// File:   fonts/menu.fnt
+// Desc:   menus
 // Author: Alexandre (script),
 //         Ste Pickford (images/font.png),
 //         DejaVu (ttf/DejaVuSans.ttf)
@@ -17,6 +17,7 @@ font "menu.title"
         source_file             "ttf/DejaVuSans.ttf"
         size                    24
         antialias
+        shadow
     }
 }
 
