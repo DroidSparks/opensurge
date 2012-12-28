@@ -26,6 +26,9 @@
 // 5. Optionally, you may also spawn .darkambiance (for a nice fog effect & music fade-in/out). When you're
 //    done with the cutscene, change the state of .darkambiance to @destroy (so the fog and the music will fade-out).
 //
+// PS: other callbacks:
+//     @get_numberoftexts, @get_currenttextindex
+//
 //
 // Example:
 //
@@ -64,7 +67,6 @@ object .textualcutscene
 
     state main
     {
-        set_zindex 99
         let "$FADE_DURATION = 0.5"
 
         let "$text = clone_array($_textualcutscene_text)"
@@ -89,6 +91,7 @@ object .textualcutscene
 
         let "$_fade_in = 1"
         let "$_fade_duration = $FADE_DURATION"
+        let "$_fade_zindex = 999"
         create_child ".fade_effect" 0 0 fade
 
         change_state start_cooldown
@@ -108,7 +111,7 @@ object .textualcutscene
 
         on_button_pressed fire1 skip // SKIP TEXT!!!
         on_button_pressed fire3 skip // SKIP TEXT!!!
-        on_button_pressed fire4 abort // SKIP TEXT!!!
+        //on_button_pressed fire4 abort // bugs things
     }
 
     state finish
@@ -117,6 +120,7 @@ object .textualcutscene
 
         let "$_fade_in = 0"
         let "$_fade_duration = $FADE_DURATION"
+        let "$_fade_zindex = 999"
         create_child ".fade_effect" 0 0 fade
 
         let $t=0

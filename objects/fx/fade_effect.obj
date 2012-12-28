@@ -5,7 +5,7 @@
 // File:   objects/fade_effect.obj
 // Desc:   this object is used to simulate a fade-in/fade-out effect
 // Author: Alexandre
-// Date:   2010-12-20
+// Date:   2010-12-20 (updated at 2012-12-18)
 // ---------------------------------------------------------------------------
 
 // How to use:
@@ -15,6 +15,7 @@
 //
 // 2. Define the duration of the effect, in seconds, using the global variable $_fade_duration.
 //    So, for example, if you want that the fade effect lasts for 1.5 seconds, define $_fade_duration = 1.5
+//    Optionally, you may also define $_fade_zindex.
 //
 // 3. Spawn an instance of the ".fade_effect" object
 //
@@ -31,9 +32,10 @@ object ".fade_effect"
     {
         // initializing...
         hide
-        set_zindex 999
+        set_zindex "cond($_fade_zindex <= 0, infinity(), $_fade_zindex)"
         set_animation SD_FADEEFFECT 0
         set_absolute_position 0 0
+        let $_fade_zindex=0
 
         // ensure that we're not dividing by zero...
         let "$speed = 1.0 / max(0.1, $_fade_duration)"
