@@ -27,7 +27,7 @@
 //    ".dialogbox.base.text:on_start"
 //
 // *) If $_dialogbox_text_id = <TEXT_ID>, it will display the
-//    DIALOGBOX_MESSAGE_<TEXT_ID> string, written in the .lng file
+//    STRING_<TEXT_ID> string, written in the .lng file
 //
 // *) The text should be positioned relative to the dialog position,
 //    $_dialogbox_base_bgx and $_dialogbox_base_bgy
@@ -73,7 +73,7 @@ object .dialogbox.base.text
 
         set_zindex $_dialogbox_base_bgz+0.1
         set_absolute_position $_dialogbox_base_bgx+$offset_x $_dialogbox_base_bgy+$offset_y
-        textout menu.small 0 0 "$DIALOGBOX_MESSAGE_$id" $width
+        textout menu.small 0 0 "$STRING_$id" $width
 
         if $completed display
         change_parent_state .dialogbox.base.text:on_complete
@@ -123,7 +123,7 @@ object .dialogbox.base.text[typewriter]
 
         set_zindex $_dialogbox_base_bgz+0.1
         set_absolute_position $_dialogbox_base_bgx+$offset_x $_dialogbox_base_bgy+$offset_y
-        textout menu.small 0 0 "$DIALOGBOX_MESSAGE_$id" $width 0 $_dialogbox_base_textadvancer_pos
+        textout menu.small 0 0 "$STRING_$id" $width 0 $_dialogbox_base_textadvancer_pos
 
         unless $_dialogbox_base_textadvancer_completed display
 
@@ -176,7 +176,7 @@ object .dialogbox.base.text[typewriter].textadvancer
         hide
 
         let $id=$_dialogbox_text_id
-        textout menu.small 0 infinity() "$DIALOGBOX_MESSAGE_$id"
+        textout menu.small 0 infinity() "$STRING_$id"
         let $len=$_STRLEN
 
         change_state idle

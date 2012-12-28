@@ -12,7 +12,7 @@
 // BASIC USAGE:
 //
 // Set $_dialogbox_text_id = <TEXT_ID> and $_dialogbox_avatar_id = <AVATAR_ID>
-// before spawning '.dialogbox.default'. The DIALOGBOX_MESSAGE_<TEXTID> string,
+// before spawning '.dialogbox.default'. The STRING_<TEXTID> string,
 // defined in the .lng file (in the languages/ folder) will be displayed along
 // with the animation #<AVATAR_ID> of the DIALOGBOX_AVATAR sprite (defined in
 // a .spr file of the sprites/ folder)
@@ -124,7 +124,7 @@ object .dialogbox.example
         // in a .spr in sprites/
         let $_dialogbox_avatar_id=1
 
-        // it will display DIALOGBOX_MESSAGE_0, defined in the current .lng
+        // it will display STRING_0, defined in the current .lng
         // file in the languages/ directory
         let $_dialogbox_text_id=0
 

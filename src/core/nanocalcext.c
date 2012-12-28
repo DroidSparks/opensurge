@@ -37,7 +37,7 @@
 
 /* private stuff ;) */
 #define PLAYER (enemy_get_observed_player(target))
-#define BRICK_AT(ox,oy) actor_brick_at(target->actor,target_bricks_nearby,v2d_new(ox,oy))
+#define BRICK_AT(ox,oy) actor_brick_at(target->actor,target_bricks_nearby,v2d_new(ox,oy)) /* this ignores passable bricks */
 #define OBSTACLE_EXISTS(ox,oy) obstacle_exists(target,target_bricks_nearby,target_items_nearby,target_objects_nearby,v2d_new(ox,oy))
 static object_t *target; /* target object */
 static brick_list_t *target_bricks_nearby;
@@ -207,25 +207,29 @@ int obstacle_exists(object_t *o, brick_list_t *bs, item_list_t *is, object_list_
 
     if(!actor_brick_at(me, bs, offset)) {
         for(; is; is = is->next) {
-            other = is->data->actor;
-            img = actor_image(other);
-            if(p.x >= other->position.x - other->hot_spot.x && p.x < other->position.x - other->hot_spot.x + image_width(img)) {
-                if(p.y >= other->position.y - other->hot_spot.y && p.y < other->position.y - other->hot_spot.y + image_height(img)) {
-                    q = v2d_subtract(p, v2d_subtract(other->position, other->hot_spot));
-                    if(image_getpixel(img, (int)q.x, (int)q.y) != video_get_maskcolor())
-                        return TRUE;
+            if(is->data->obstacle) {
+                other = is->data->actor;
+                img = actor_image(other);
+                if(p.x >= other->position.x - other->hot_spot.x && p.x < other->position.x - other->hot_spot.x + image_width(img)) {
+                    if(p.y >= other->position.y - other->hot_spot.y && p.y < other->position.y - other->hot_spot.y + image_height(img)) {
+                        q = v2d_subtract(p, v2d_subtract(other->position, other->hot_spot));
+                        if(image_getpixel(img, (int)q.x, (int)q.y) != video_get_maskcolor())
+                            return TRUE;
+                    }
                 }
             }
         }
 
         for(; os; os = os->next) {
-            other = os->data->actor;
-            img = actor_image(other);
-            if(p.x >= other->position.x - other->hot_spot.x && p.x < other->position.x - other->hot_spot.x + image_width(img)) {
-                if(p.y >= other->position.y - other->hot_spot.y && p.y < other->position.y - other->hot_spot.y + image_height(img)) {
-                    q = v2d_subtract(p, v2d_subtract(other->position, other->hot_spot));
-                    if(image_getpixel(img, (int)q.x, (int)q.y) != video_get_maskcolor())
-                        return TRUE;
+            if(os->data->obstacle) {
+                other = os->data->actor;
+                img = actor_image(other);
+                if(p.x >= other->position.x - other->hot_spot.x && p.x < other->position.x - other->hot_spot.x + image_width(img)) {
+                    if(p.y >= other->position.y - other->hot_spot.y && p.y < other->position.y - other->hot_spot.y + image_height(img)) {
+                        q = v2d_subtract(p, v2d_subtract(other->position, other->hot_spot));
+                        if(image_getpixel(img, (int)q.x, (int)q.y) != video_get_maskcolor())
+                            return TRUE;
+                    }
                 }
             }
         }

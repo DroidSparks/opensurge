@@ -1,0 +1,97 @@
+// cutscene2 script
+// by Alexandre @ 2012-12-27
+
+object ".cutscene2_startup"
+{
+    requires 0.2.0
+    always_active
+
+    // main
+    state "main"
+    {
+        hide
+        let $step=0
+        create_child .darkambiance 0 0 darkambiance
+
+        let "$_textualcutscene_text=new_array(9)"
+        let "set_array_element($_textualcutscene_text, 0, 200)"
+        let "set_array_element($_textualcutscene_text, 1, 201)"
+        let "set_array_element($_textualcutscene_text, 2, 202)"
+        let "set_array_element($_textualcutscene_text, 3, 203)"
+        let "set_array_element($_textualcutscene_text, 4, 204)"
+        let "set_array_element($_textualcutscene_text, 5, 205)"
+        let "set_array_element($_textualcutscene_text, 6, 206)"
+        let "set_array_element($_textualcutscene_text, 7, 207)"
+        let "set_array_element($_textualcutscene_text, 8, 208)"
+        let "$_textualcutscene_timeout=new_array(9)"
+        let "set_array_element($_textualcutscene_timeout, 0, 3)"
+        let "set_array_element($_textualcutscene_timeout, 1, 3)"
+        let "set_array_element($_textualcutscene_timeout, 2, 0.25)"
+        let "set_array_element($_textualcutscene_timeout, 3, 3)"
+        let "set_array_element($_textualcutscene_timeout, 4, 2)"
+        let "set_array_element($_textualcutscene_timeout, 5, 3)"
+        let "set_array_element($_textualcutscene_timeout, 6, 0.25)"
+        let "set_array_element($_textualcutscene_timeout, 7, 3)"
+        let "set_array_element($_textualcutscene_timeout, 8, 0.25)"
+        create_child .textualcutscene
+        let "delete_array($_textualcutscene_text)"
+        let "delete_array($_textualcutscene_timeout)"
+
+        change_state frozen
+    }
+
+    state frozen
+    {
+        on_button_down fire4 finish // SKIP CUTSCENE!!!
+    }
+
+    state .textualcutscene:on_finish
+    {
+        let $step+=1
+        if $step==1 show_dlgbox
+        change_state finish
+    }
+
+    // ---- show dialogbox ----
+    state show_dlgbox
+    {
+        let $_dialogbox_text_id=209
+        let $_dialogbox_avatar_id=1
+        create_child .dialogbox.default
+
+        change_state frozen
+    }
+
+    state .dialogbox:on_destroy
+    {
+        let "$_textualcutscene_text=new_array(2)"
+        let "set_array_element($_textualcutscene_text, 0, 210)"
+        let "set_array_element($_textualcutscene_text, 1, 211)"
+        let "$_textualcutscene_timeout=new_array(2)"
+        let "set_array_element($_textualcutscene_timeout, 0, 0.5)"
+        let "set_array_element($_textualcutscene_timeout, 1, 4)"
+        create_child .textualcutscene
+        let "delete_array($_textualcutscene_text)"
+        let "delete_array($_textualcutscene_timeout)"
+
+        change_state frozen
+    }
+
+
+    // ---- we're done ----
+    state finish
+    {
+        change_child_state darkambiance @destroy
+        change_state wait
+    }
+
+    state wait
+    {
+        on_timeout 3 end
+    }
+
+    state end
+    {
+        next_level
+    }
+}

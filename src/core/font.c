@@ -337,7 +337,7 @@ void font_render(const font_t *f, v2d_t camera_position)
     /* this routine is horrible (it has suffered too many mutations through time).
        it should be rewritten some time... :(
        
-       ...but it works and I'm lazy ;) (lame excuse, I know) */
+       ...but it works and I'm lazy ;) */
 
     int offx = 0, offy = 0;
     char *p, s[8];

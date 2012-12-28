@@ -31,7 +31,7 @@ object ".fade_effect"
     {
         // initializing...
         hide
-        set_zindex infinity()
+        set_zindex 999
         set_animation SD_FADEEFFECT 0
         set_absolute_position 0 0
 
