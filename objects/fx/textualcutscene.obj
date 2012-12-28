@@ -27,7 +27,7 @@
 //    done with the cutscene, change the state of .darkambiance to @destroy (so the fog and the music will fade-out).
 //
 // PS: other callbacks:
-//     @get_numberoftexts, @get_currenttextindex
+//     @destroy (terminates before the animation is over), @get_numberoftexts, @get_currenttextindex
 //
 //
 // Example:
@@ -111,7 +111,7 @@ object .textualcutscene
 
         on_button_pressed fire1 skip // SKIP TEXT!!!
         on_button_pressed fire3 skip // SKIP TEXT!!!
-        //on_button_pressed fire4 abort // bugs things
+        //on_button_pressed fire4 abort // no way. bugs things
     }
 
     state finish
@@ -152,8 +152,8 @@ object .textualcutscene
     {
         change_child_state text @destroy
         change_child_state translucency @destroy
-        let delete_array($text)
-        let delete_array($timeout)
+        let cond(is_array($text),delete_array($text),0)
+        let cond(is_array($timeout),delete_array($timeout),0)
         destroy
     }
 
@@ -185,6 +185,11 @@ object .textualcutscene
 
 
     // ====== callbacks =======
+
+    state @destroy
+    {
+        change_state abort
+    }
 
     state @get_currenttextindex // 0 <= idx < n
     {

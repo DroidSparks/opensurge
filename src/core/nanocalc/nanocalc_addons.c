@@ -145,6 +145,30 @@ struct ncarray_t {
     float *value;
 } ncarray[MAX_ARRAYS];
 
+static void init_arrays()
+{
+    int i = MAX_ARRAYS;
+    while(i--) {
+        ncarray[i].length = 0;
+        ncarray[i].value = NULL;
+    }
+}
+
+static void release_arrays()
+{
+    int i = MAX_ARRAYS;
+    while(i--) {
+        ncarray[i].length = 0;
+        if(ncarray[i].value) {
+            free(ncarray[i].value);
+            ncarray[i].value = NULL;
+        }
+    }
+}
+
+
+
+
 /* creates a new array */
 static float f_new_array(float length)
 {
@@ -271,11 +295,7 @@ static float f_clone_array(float handle)
 void nanocalc_addons_init()
 {
     /* array system */
-    int i = MAX_ARRAYS;
-    while(i--) {
-        ncarray[i].length = 0;
-        ncarray[i].value = NULL;
-    }
+    init_arrays();
     nanocalc_register_bif_arity3("set_array_element", f_set_array_element);
     nanocalc_register_bif_arity2("array_element", f_array_element);
     nanocalc_register_bif_arity2("resize_array", f_resize_array);
@@ -326,16 +346,16 @@ void nanocalc_addons_init()
 void nanocalc_addons_release()
 {
     /* clear any existing arrays */
-    int i = MAX_ARRAYS;
-    while(i--) {
-        ncarray[i].length = 0;
-        if(ncarray[i].value) {
-            free(ncarray[i].value);
-            ncarray[i].value = NULL;
-        }
-    }
+    release_arrays();
 
     /* done! ;) */
+}
+
+/* reset all arrays */
+void nanocalc_addons_resetarrays()
+{
+    release_arrays();
+    init_arrays();
 }
 
 #ifdef __cplusplus

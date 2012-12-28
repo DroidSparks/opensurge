@@ -93,8 +93,8 @@ void langselect_init()
     title[1] = font_create("menu.title");
     font_set_text(title[0], "$LANGSELECT_TITLE1");
     font_set_text(title[1], "$LANGSELECT_TITLE2");
-    font_set_position(title[0], v2d_new((VIDEO_SCREEN_W - font_get_textsize(title[0]).x)/2,10));
-    font_set_position(title[1], v2d_new((VIDEO_SCREEN_W - font_get_textsize(title[1]).x)/2, font_get_position(title[0]).y + font_get_textsize(title[1]).y + 10));
+    font_set_position(title[0], v2d_new((VIDEO_SCREEN_W - font_get_textsize(title[0]).x)/2,5));
+    font_set_position(title[1], v2d_new((VIDEO_SCREEN_W - font_get_textsize(title[1]).x)/2, font_get_position(title[0]).y + font_get_textsize(title[1]).y + 1));
 
     bgtheme = background_load(LANG_BGFILE);
 
@@ -162,7 +162,7 @@ void langselect_update()
             sound_play( soundfactory_get("select") );
             quit = TRUE;
         }
-        if(input_button_pressed(input, IB_FIRE4)) {
+        if(input_button_pressed(input, IB_FIRE4) && !before_the_intro_screen) {
             sound_play( soundfactory_get("return") );
             quit = TRUE;
         }
@@ -171,7 +171,7 @@ void langselect_update()
     /* page label */
     font_set_text(page_label, lang_get("LANGSELECT_PAGE"), 1+option/LANG_MAXPERPAGE, 1+max(0,lngcount-1)/LANG_MAXPERPAGE);
     pos.x = VIDEO_SCREEN_W - font_get_textsize(page_label).x - 10;
-    pos.y = VIDEO_SCREEN_H - font_get_textsize(page_label).y - 3;
+    pos.y = VIDEO_SCREEN_H - font_get_textsize(page_label).y - 5;
     font_set_position(page_label, pos);
 
     /* author label */
@@ -213,7 +213,7 @@ void langselect_render()
     font_render(title[0], cam);
     font_render(title[1], cam);
     font_render(page_label, cam);
-    font_render(author_label, cam);
+    /*font_render(author_label, cam);*/ /* why do we need this? */
 
     for(i=0; i<lngcount; i++) {
         if(i/LANG_MAXPERPAGE == option/LANG_MAXPERPAGE)
@@ -275,8 +275,8 @@ void load_lang_list()
         lngfnt[1][i] = font_create("menu.text");
         font_set_text(lngfnt[0][i], "%2d. %s", i+1, lngdata[i].title);
         font_set_text(lngfnt[1][i], "<color=$COLOR_MENUSELECTEDOPTION>% 2d. %s</color>", i+1, lngdata[i].title);
-        font_set_position(lngfnt[0][i], v2d_new(25, 77 + 20*(i%LANG_MAXPERPAGE)));
-        font_set_position(lngfnt[1][i], v2d_new(25, 77 + 20*(i%LANG_MAXPERPAGE)));
+        font_set_position(lngfnt[0][i], v2d_new(25, 72 + 20*(i%LANG_MAXPERPAGE)));
+        font_set_position(lngfnt[1][i], v2d_new(25, 72 + 20*(i%LANG_MAXPERPAGE)));
     }
 }
 

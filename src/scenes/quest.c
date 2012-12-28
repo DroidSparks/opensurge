@@ -29,6 +29,7 @@
 #include "../core/logfile.h"
 #include "../core/storyboard.h"
 #include "../core/nanocalc/nanocalc.h"
+#include "../core/nanocalc/nanocalc_addons.h"
 
 /* private data */
 #define STACK_MAX 16
@@ -66,8 +67,11 @@ void quest_init()
 void quest_release()
 {
     unload_quest(stack[top].current_quest);
-    if(0 >= --top)
-        symboltable_clear(symboltable_get_global_table()); /* scripting: reset global variables */
+    if(0 >= --top) {
+        /* scripting: reset global variables & arrays */
+        symboltable_clear(symboltable_get_global_table());
+        nanocalc_addons_resetarrays();
+    }
 }
 
 

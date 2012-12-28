@@ -37,6 +37,8 @@ void nanocalc_addons_init();
 /* call this when you're done, but before nanocalc_release() */
 void nanocalc_addons_release();
 
+/* resets any arrays you may have */
+void nanocalc_addons_resetarrays();
 
 #ifdef __cplusplus
 }

@@ -27,6 +27,7 @@
 #include "level.h"
 #include "../entities/player.h"
 #include "../core/nanocalc/nanocalc.h"
+#include "../core/nanocalc/nanocalc_addons.h"
 #include "../core/util.h"
 #include "../core/scene.h"
 #include "../core/storyboard.h"
@@ -221,9 +222,15 @@ void stageselect_update()
         /* fade-out effect (play a level) */
         case STAGESTATE_PLAY: {
             if(fadefx_over()) {
-                symboltable_clear(symboltable_get_global_table()); /* scripting: reset global variables */
+                /* scripting: reset global variables & arrays */
+                symboltable_clear(symboltable_get_global_table());
+                nanocalc_addons_resetarrays();
+
+                /* reset lives & score */
                 player_set_lives(PLAYER_INITIAL_LIVES);
                 player_set_score(0);
+
+                /* push the level scene */
                 scenestack_push(storyboard_get_scene(SCENE_LEVEL));
                 state = STAGESTATE_FADEIN;
                 return;
