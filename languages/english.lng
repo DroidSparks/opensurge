@@ -246,7 +246,7 @@ STRING_131          "GET LOST!"
 
 // cutscene 2: Sunshine Paradise, between act 1 and 2
 // each one of these strings should fit in ONE line (i.e., they must not be larger than STRING_200)
-STRING_200          "Suddenly, <color=$COLOR_SURGE>Surge</color> is ambushed by a giant creature"
+STRING_200          "Suddenly, <color=$COLOR_SURGE>Surge</color> is ambushed by a purple creature"
 STRING_201          "with sharp claws and a threatening roar."
 STRING_202          ""
 STRING_203          "The beast lunges at him,"

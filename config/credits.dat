@@ -132,7 +132,7 @@ svgmovement
 --- images/levels/1/waterskimmer.png
 --- ./logo.png
 
-Brian Zablocky
+Brian Zablocky (Celdecea)
 --- images/blue_door.png
 --- images/bumper.png
 --- images/checkpoint_orb.png
@@ -142,8 +142,10 @@ Brian Zablocky
 --- images/lady_bugsy.png
 --- images/ring_shields.png
 --- images/spikes.png
---- images/spring_pads.png
 --- images/switches.png
+
+Brian Zablocky (Celdecea) & Alex V. (squirrel)
+--- images/spring_pads.png
 
 Alexandre Martins
 --- images/arrow_right.png
@@ -370,6 +372,9 @@ d1337r
 
 CGEffex (freesound.org)
 --- samples/roar.ogg (CC-BY 3.0)
+
+Johan Brodd
+--- samples/creativecommons2.ogg
 
 <color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RES_SCRIPTS</color>
 

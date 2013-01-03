@@ -26,7 +26,7 @@ object ".creativecommons_startup"
 
     state create_logo
     {
-        play_sample samples/creativecommons.ogg
+        play_sample samples/creativecommons2.ogg
         create_child .creativecommons_startup.logo
         change_state skipper
     }
