@@ -221,6 +221,7 @@ SET(
   src/core/resourcemanager.c
   src/core/scene.c
   src/core/screenshot.c
+  src/core/fadefx.c
   src/core/soundfactory.c
   src/core/sprite.c
   src/core/storyboard.c
@@ -399,6 +400,7 @@ IF(WIN32)
       src/core/resourcemanager.h
       src/core/scene.h
       src/core/screenshot.h
+      src/core/fadefx.h
       src/core/soundfactory.h
       src/core/spatialhash.h
       src/core/sprite.h

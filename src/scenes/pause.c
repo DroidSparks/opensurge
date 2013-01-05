@@ -26,6 +26,7 @@
 #include "../core/scene.h"
 #include "../core/storyboard.h"
 #include "../core/util.h"
+#include "../core/fadefx.h"
 #include "../core/video.h"
 #include "../core/input.h"
 #include "../core/lang.h"

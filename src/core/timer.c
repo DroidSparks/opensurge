@@ -21,28 +21,15 @@
 
 
 
-/*
- * Uncomment the line below to use Allegro routines to
- * handle the timers (so you don't have to rely on
- * platform-specific code).
- *
- * Please keep in mind that Allegro timers may be
- * slower, though.
- */
-
-/*#define USE_ALLEGRO_TIMERS*/
-
-
-
 #include <allegro.h>
 #include "global.h"
 #include "timer.h"
 #include "util.h"
 #include "logfile.h"
 
-#if !defined(USE_ALLEGRO_TIMERS) && !defined(__WIN32__)
+#ifndef __WIN32__
 #include <sys/time.h>
-#elif !defined(USE_ALLEGRO_TIMERS) && defined(__WIN32__)
+#else
 #include <winalleg.h>
 #endif
 
@@ -58,15 +45,13 @@
 static int partial_fps, fps_accum, fps;
 static uint32 last_time;
 static float delta;
-static int yield_cpu;
-
-#ifdef USE_ALLEGRO_TIMERS
+static int must_yield_cpu;
 static volatile uint32 elapsed_time;
-static void update_timer();
-#else
 static uint32 start_time;
-static uint32 get_tick_count(); /* platform-specific code */
-#endif
+
+/* platform-specific code */
+static uint32 get_tick_count(); /* tell me the time */
+static void yield_cpu(); /* we don't like using 100% of the cpu */
 
 
 /*
@@ -83,23 +68,14 @@ void timer_init(int optimize_cpu_usage)
         logfile_message("install_timer() failed: %s", allegro_error);
 
     /* should we optimize the cpu usage? */
-    yield_cpu = optimize_cpu_usage;
+    must_yield_cpu = optimize_cpu_usage;
 
     /* initializing... */
     partial_fps = 0;
     fps_accum = 0;
     fps = 0;
     delta = 0.0;
-
-#ifdef USE_ALLEGRO_TIMERS
-    /* tracking the time manually */
-    elapsed_time = 0;
-    LOCK_VARIABLE(elapsed_time);
-    LOCK_FUNCTION(update_timer);
-    install_int(update_timer, 10);
-#else
     start_time = get_tick_count();
-#endif
 
     /* done! */
     last_time = timer_get_ticks();
@@ -123,14 +99,10 @@ void timer_update()
         last_time = (current_time >= last_time) ? last_time : current_time;
 
         if(delta_time < MIN_FRAME_INTERVAL) {
-            if(yield_cpu) {
-                /* we don't like having the cpu usage at 100%. will the OS make our process active again on time? */
-#ifndef __WIN32__
-                /*rest(0);*/ /* if we use rest(0), probably not... */
-                rest(1);
-#else
-                Sleep(1);
-#endif
+            if(must_yield_cpu) {
+                /* we don't like having the cpu usage at 100%. */
+                /* will the OS make our process active again on time? */
+                yield_cpu();
             }
         }
         else
@@ -182,14 +154,10 @@ float timer_get_delta()
  */
 uint32 timer_get_ticks()
 {
-#ifdef USE_ALLEGRO_TIMERS
-    return elapsed_time * 10;
-#else
     uint32 ticks = get_tick_count();
     if(ticks < start_time)
         start_time = ticks;
     return ticks - start_time;
-#endif
 }
 
 
@@ -208,7 +176,7 @@ int timer_get_fps()
  */
 int timer_is_cpu_usage_optimized()
 {
-    return yield_cpu;
+    return must_yield_cpu;
 }
 
 /*
@@ -217,34 +185,42 @@ int timer_is_cpu_usage_optimized()
  */
 void timer_optimize_cpu_usage(int optimize)
 {
-    yield_cpu = optimize;
+    must_yield_cpu = optimize;
 }
 
 
-/* internal methods */
 
-#ifdef USE_ALLEGRO_TIMERS
 
-void update_timer()
-{
-    elapsed_time++;
-}
-END_OF_FUNCTION(update_timer)
 
-#elif defined(__WIN32__)
+
+
+/* platform-specific code */
+
+#ifndef __WIN32__
 
 uint32 get_tick_count()
 {
-    return GetTickCount();
+    static struct timeval now;
+    gettimeofday(&now, NULL);
+    return (now.tv_sec*1000) + (now.tv_usec/1000);
+}
+
+
+void yield_cpu()
+{
+    rest(1); /* don't use rest(0) */
 }
 
 #else
 
 uint32 get_tick_count()
 {
-    struct timeval now;
-    gettimeofday(&now, NULL);
-    return (now.tv_sec*1000) + (now.tv_usec/1000);
+    return GetTickCount();
+}
+
+void yield_cpu()
+{
+    Sleep(1);
 }
 
 #endif

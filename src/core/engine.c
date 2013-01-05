@@ -34,6 +34,7 @@
 #include "audio.h"
 #include "input.h"
 #include "timer.h"
+#include "fadefx.h"
 #include "sprite.h"
 #include "soundfactory.h"
 #include "lang.h"
@@ -119,6 +120,7 @@ void engine_mainloop()
         if(scn == scenestack_top()) /* scn may have been 'popped' out */
             scn->render();
         screenshot_update();
+        fadefx_update();
         video_render();
 
         /* calling the garbage collector */
@@ -209,6 +211,7 @@ void init_accessories(commandline_t cmd)
     objects_init();
     storyboard_init();
     screenshot_init();
+    fadefx_init();
     lang_init();
     if(strcmp(cmd.language_filepath, "") != 0)
         lang_loadfile(cmd.language_filepath);
@@ -258,6 +261,7 @@ void release_accessories()
     scenestack_release();
     storyboard_release();
     lang_release();
+    fadefx_release();
     screenshot_release();
     objects_release();
     charactersystem_release();

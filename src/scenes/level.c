@@ -35,6 +35,7 @@
 #include "../core/storyboard.h"
 #include "../core/global.h"
 #include "../core/input.h"
+#include "../core/fadefx.h"
 #include "../core/video.h"
 #include "../core/audio.h"
 #include "../core/timer.h"

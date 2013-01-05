@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * video.c - video manager
- * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -32,10 +32,8 @@
 #include "logfile.h"
 #include "util.h"
 
-
 /* private stuff */
 #define IMAGE2BITMAP(img)       (*((BITMAP**)(img)))   /* whoooa, this is crazy stuff */
-
 
 /* video manager */
 static image_t *video_buffer;
@@ -56,17 +54,7 @@ static void setup_color_depth(int bpp);
 
 /* playarea video size (usually, 320x240) */
 static const v2d_t default_playarea_size = { 320, 240 }; /* this is set on stone! TODO: load these parameters from a file? */
-static v2d_t playarea_size = { 320, 240 }; /* represents the size of the playarea. This may change (eg, is the user on the level editor?) */
-
-/* Fade-in & fade-out */
-#define FADEFX_NONE            0
-#define FADEFX_IN              1
-#define FADEFX_OUT             2
-static int fadefx_type;
-static int fadefx_end;
-static uint32 fadefx_color;
-static float fadefx_elapsed_time;
-static float fadefx_total_time;
+static v2d_t playarea_size = { 0, 0 }; /* represents the size of the playarea. This may change (eg, is the user on the level editor?) */
 
 /* Video Message */
 #define VIDEOMSG_TIMEOUT       5000
@@ -293,55 +281,13 @@ image_t* video_get_backbuffer()
  */
 void video_render()
 {
-    /* fade effect */
-    fadefx_end = FALSE;
-    if(fadefx_type != FADEFX_NONE) {
-        fadefx_elapsed_time += timer_get_delta();
-        if(fadefx_elapsed_time < fadefx_total_time) {
-            if(video_get_color_depth() > 8) {
-                /* true-color fade effect */
-                int n;
-
-                n = (int)( (float)255 * (fadefx_elapsed_time*1.25 / fadefx_total_time) );
-                n = clip(n, 0, 255);
-                n = (fadefx_type == FADEFX_IN) ? 255-n : n;
-
-                drawing_mode(DRAW_MODE_TRANS, NULL, 0, 0);
-                set_trans_blender(0, 0, 0, n);
-                rectfill(IMAGE2BITMAP(video_get_backbuffer()), 0, 0, VIDEO_SCREEN_W, VIDEO_SCREEN_H, fadefx_color);
-                solid_mode();
-            }
-            else {
-                /* 256-color fade effect */
-                ;
-            }
-        }
-        else {
-            /* the fade effect is over */
-            fadefx_end = TRUE;
-
-            /* fade-out improvements */
-            if(fadefx_type == FADEFX_OUT)
-                rectfill(IMAGE2BITMAP(video_get_backbuffer()), 0, 0, VIDEO_SCREEN_W, VIDEO_SCREEN_H, fadefx_color);
-
-            /* reset the fade effect: a quick hack */
-            fadefx_type = FADEFX_NONE;
-            fadefx_total_time = fadefx_elapsed_time = 0;
-            fadefx_color = 0;
-        }
-    }
-
-
-
     /* video message */
     if(timer_get_ticks() < videomsg_endtime)
         textout_ex(IMAGE2BITMAP(video_get_backbuffer()), font, videomsg_data, 0, VIDEO_SCREEN_H-text_height(font), makecol(255,255,255), makecol(0,0,0));
 
-
     /* fps counter */
     if(video_is_fps_visible())
         textprintf_right_ex(IMAGE2BITMAP(video_get_backbuffer()), font, VIDEO_SCREEN_W, 0, makecol(255,255,255), makecol(0,0,0),"FPS:%3d", timer_get_fps());
-
 
     /* render */
     switch(video_get_resolution()) {
@@ -370,10 +316,12 @@ void video_render()
         case VIDEORESOLUTION_3X:
         {
             image_t *tmp = window_surface;
-            v2d_t scale = v2d_new((float)image_width(tmp) / (float)image_width(video_get_backbuffer()), (float)image_height(tmp) / (float)image_height(video_get_backbuffer()));
 
-            if(!video_is_smooth())
-                image_draw_scaled(video_get_backbuffer(), tmp, 0, 0, scale, IF_NONE);
+            if(!video_is_smooth()) {
+                float sx = (float)image_width(tmp) / (float)image_width(video_get_backbuffer());
+                float sy = (float)image_height(tmp) / (float)image_height(video_get_backbuffer());
+                image_draw_scaled(video_get_backbuffer(), tmp, 0, 0, v2d_new(sx, sy), IF_NONE);
+            }
             else
                 smooth3x_blit(video_get_backbuffer(), tmp);
 
@@ -385,9 +333,9 @@ void video_render()
         case VIDEORESOLUTION_4X:
         {
             image_t *tmp = window_surface;
-            image_t *half = window_surface_half;
 
             if(!video_is_smooth()) {
+                image_t *half = window_surface_half;
                 fast2x_blit(video_get_backbuffer(), half);
                 fast2x_blit(half, tmp);
             }
@@ -483,14 +431,7 @@ int video_is_window_active()
  */
 uint32 video_get_maskcolor()
 {
-    switch(video_get_color_depth()) {
-        case 8:  return MASK_COLOR_8;
-        case 16: return MASK_COLOR_16;
-        case 24: return MASK_COLOR_24;
-        case 32: return MASK_COLOR_32;
-    }
-
-    return bitmap_mask_color(IMAGE2BITMAP(video_get_backbuffer()));
+    return makecol(255, 0, 255);
 }
 
 
@@ -523,7 +464,6 @@ void video_display_loading_screen()
     image_t *img = image_load(LOADINGSCREEN_FILE);
     image_blit(img, video_get_backbuffer(), 0, 0, 0, 0, image_width(img), image_height(img));
     image_unref(LOADINGSCREEN_FILE);
-
     video_render();
 }
 
@@ -563,13 +503,6 @@ void fast2x_blit(image_t *src, image_t *dest)
 
     switch(video_get_color_depth())
     {
-        case 8:
-            for(j=0; j<image_height(dest); j++) {
-                for(i=0; i<image_width(dest); i++)
-                    ((uint8*)IMAGE2BITMAP(dest)->line[j])[i] = ((uint8*)IMAGE2BITMAP(src)->line[j/2])[i/2];
-            }
-            break;
-
         case 16:
             for(j=0; j<image_height(dest); j++) {
                 for(i=0; i<image_width(dest); i++)
@@ -578,7 +511,6 @@ void fast2x_blit(image_t *src, image_t *dest)
             break;
 
         case 24:
-            /* TODO */
             stretch_blit(IMAGE2BITMAP(src), IMAGE2BITMAP(dest), 0, 0, image_width(src), image_height(src), 0, 0, image_width(dest), image_height(dest));
             break;
 
@@ -642,68 +574,9 @@ void window_switch_out()
 /* setups the color depth */
 void setup_color_depth(int bpp)
 {
+    if(!(bpp == 16 || bpp == 24 || bpp == 32))
+        fatal_error("Invalid color depth: %d. Valid modes are: 16, 24, 32.", bpp);
+
     set_color_depth(bpp);
-
-    if(bpp == 8)
-        set_color_conversion(COLORCONV_REDUCE_TO_256 | COLORCONV_DITHER_PAL);
-    else
-        set_color_conversion(COLORCONV_TOTAL);
+    set_color_conversion(COLORCONV_TOTAL);
 }
-
-
-
-/* fade effects */
-
-/*
- * fadefx_in()
- * Fade-in effect
- */
-void fadefx_in(uint32 color, float seconds)
-{
-    if(fadefx_type == FADEFX_NONE) {
-        fadefx_type = FADEFX_IN;
-        fadefx_end = FALSE;
-        fadefx_color = color;
-        fadefx_elapsed_time = 0;
-        fadefx_total_time = seconds;
-    }
-}
-
-
-/*
- * fadefx_out()
- * Fade-out effect
- */
-void fadefx_out(uint32 color, float seconds)
-{
-    if(fadefx_type == FADEFX_NONE) {
-        fadefx_type = FADEFX_OUT;
-        fadefx_end = FALSE;
-        fadefx_color = color;
-        fadefx_elapsed_time = 0;
-        fadefx_total_time = seconds;
-    }
-}
-
-
-
-/*
- * fadefx_over()
- * Asks if the fade effect has ended
- * (only one action when this event loops)
- */
-int fadefx_over()
-{
-    return fadefx_end;
-}
-
-
-/*
- * fadefx_is_fading()
- * Is the fade effect ocurring?
- */
-int fadefx_is_fading()
-{
-    return (fadefx_type != FADEFX_NONE);
-}
-

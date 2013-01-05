@@ -27,6 +27,7 @@
 #include "input.h"
 
 /* private data */
+#define MAX_SCREENSHOTS     (1 << 30)
 static input_t *in;
 static char *next_available_filename();
 
@@ -77,10 +78,12 @@ char *next_available_filename()
     static char f[64], abs_path[1024];
     int i;
 
-    for(i=0;;i++) {
+    for(i=0; i<MAX_SCREENSHOTS; i++) {
         sprintf(f, "screenshots/s%03d.png", i);
         resource_filepath(abs_path, f, sizeof(abs_path), RESFP_WRITE);
         if(!filepath_exists(abs_path))
             return abs_path;
     }
+
+    return abs_path;
 }

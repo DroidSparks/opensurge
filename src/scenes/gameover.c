@@ -25,6 +25,7 @@
 #include "../core/scene.h"
 #include "../core/audio.h"
 #include "../core/util.h"
+#include "../core/fadefx.h"
 #include "../core/video.h"
 #include "../core/timer.h"
 

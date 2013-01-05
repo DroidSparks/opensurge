@@ -23,6 +23,7 @@
 #include "donors.h"
 #include "options.h"
 #include "../core/util.h"
+#include "../core/fadefx.h"
 #include "../core/video.h"
 #include "../core/audio.h"
 #include "../core/lang.h"

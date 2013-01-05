@@ -172,7 +172,7 @@ void swap_ex(void *a, void *b, size_t size)
  */
 void fatal_error(const char *fmt, ...)
 {
-    char buf[1024];
+    char buf[2048];
     va_list args;
 
     va_start(args, fmt);
@@ -254,8 +254,7 @@ void merge_sort_mix(void *base, size_t size, int (*comparator)(const void*,const
     memcpy(arr, (uint8*)base + p * size, (q-p+1) * size);
 
     while(i < arr + (m+1-p) * size && j <= arr + (q-p) * size) {
-        int cmp = comparator((const void*)i, (const void*)j);
-        if(cmp <= 0) {
+        if(comparator((const void*)i, (const void*)j) <= 0) {
             memcpy((uint8*)base + (k++) * size, i, size);
             i += size;
         }

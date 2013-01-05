@@ -25,8 +25,6 @@
 #include "image.h"
 #include "v2d.h"
 
-
-
 /* video modes */
 #define VIDEORESOLUTION_1X        0 /* original size */
 #define VIDEORESOLUTION_2X        1 /* double size */
@@ -34,12 +32,10 @@
 #define VIDEORESOLUTION_4X        3 /* quadruple size */
 #define VIDEORESOLUTION_EDT       4 /* level editor (the window size varies) */
 
-
 /* video manager */
 void video_init(const char *window_title, int resolution, int smooth, int fullscreen, int bpp);
 void video_release();
 void video_render();
-void video_showmessage(const char *fmt, ...);
 int video_get_desktop_color_depth();
 int video_get_color_depth();
 int video_is_window_active();
@@ -50,31 +46,21 @@ int video_is_smooth();
 int video_is_fullscreen();
 v2d_t video_get_playarea_size(); /* usually, 320x240 */
 v2d_t video_get_window_size(); /* the real size of the window, in pixels */
-void video_display_loading_screen();
 const image_t* video_get_window_surface();
-
 
 /* backbuffer */
 #define VIDEO_SCREEN_W            ((int)(video_get_playarea_size().x))
 #define VIDEO_SCREEN_H            ((int)(video_get_playarea_size().y))
 image_t *video_get_backbuffer();
 
-
-
 /* fps counter */
 void video_show_fps(int show);
 int video_is_fps_visible();
 
+/* video message */
+void video_showmessage(const char *fmt, ...);
 
-
-/* Fade-in & fade-out */
-void fadefx_in(uint32 color, float seconds); /* fade in */
-void fadefx_out(uint32 color, float seconds); /* fade out */
-int fadefx_over(); /* end of fade effect? (only one action when this event loops) */
-int fadefx_is_fading(); /* is the fade effect ocurring? */
-
-
-
-
+/* loading screen */
+void video_display_loading_screen();
 
 #endif

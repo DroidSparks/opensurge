@@ -45,6 +45,9 @@ typedef struct { const char *key; const char *value; } inout_t;
 static int traverse(const parsetree_statement_t *stmt);
 static int traverse_inout(const parsetree_statement_t *stmt, void *inout);
 
+/* comparable game versions */
+#define VER(major, minor, wip)          ((major)*(1000*1000) + (minor)*(1000) + (wip))
+
 
 /*
  * lang_init()
@@ -83,7 +86,7 @@ void lang_loadfile(const char *filepath)
     logfile_message("lang_loadfile(\"%s\")...", filepath);
 
     lang_readcompatibility(filepath, &ver, &subver, &wipver);
-    if(!(GAME_VERSION == ver && GAME_SUB_VERSION == subver && GAME_WIP_VERSION == wipver))
+    if(!(VER(GAME_VERSION, GAME_SUB_VERSION, GAME_WIP_VERSION) >= VER(ver, subver, wipver))) /* backwards compatibility */
         fatal_error("\"%s\" (version %d.%d.%d) is not compatible with version %d.%d.%d of the engine", filepath, ver, subver, wipver, GAME_VERSION, GAME_SUB_VERSION, GAME_WIP_VERSION);
 
     resource_filepath(abs_path, filepath, sizeof(abs_path), RESFP_READ);

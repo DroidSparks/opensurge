@@ -51,8 +51,8 @@ typedef int (*fast_getb_funptr)(int);
 
 /* private stuff */
 static void maskcolor_bugfix(image_t *img);
-static fast_getpixel_funptr fast_getpixel_fun(); /* returns a function. this won't do any clipping, so take care. */
-static fast_putpixel_funptr fast_putpixel_fun(); /* returns a function. this won't do any clipping, so take care. */
+static fast_getpixel_funptr fast_getpixel_fun(); /* returns a function. this won't do any clipping, so be careful. */
+static fast_putpixel_funptr fast_putpixel_fun(); /* returns a function. this won't do any clipping, so be careful. */
 static fast_makecol_funptr fast_makecol_fun(); /* returns a function */
 static fast_getr_funptr fast_getr_fun(); /* returns a function */
 static fast_getg_funptr fast_getg_fun(); /* returns a function */
@@ -132,19 +132,11 @@ void image_save(const image_t *img, const char *path)
 {
     char abs_path[1024];
     int i, j, c, bpp = video_get_color_depth();
-    PALETTE pal;
-    BITMAP *tmp;
 
     resource_filepath(abs_path, path, sizeof(abs_path), RESFP_WRITE);
     logfile_message("image_save(%p,'%s')", img, abs_path);
 
     switch(bpp) {
-        case 8:
-            get_palette(pal);
-            save_bitmap(abs_path, img->data, pal);
-            break;
-
-        case 15:
         case 16:
         case 24:
             save_bitmap(abs_path, img->data, NULL);
@@ -153,6 +145,7 @@ void image_save(const image_t *img, const char *path)
         case 32:
             if(IS_PNG(abs_path)) {
                 /* we must do this to make loadpng save the 32-bit image properly */
+                BITMAP *tmp;
                 if(NULL != (tmp = create_bitmap(img->w, img->h))) {
                     for(j=0; j<tmp->h; j++) {
                         for(i=0; i<tmp->w; i++) {
@@ -582,8 +575,6 @@ void maskcolor_bugfix(image_t *img)
 fast_getpixel_funptr fast_getpixel_fun()
 {
     switch(video_get_color_depth()) {
-        case 8:  return _getpixel;
-        case 15: return _getpixel15;
         case 16: return _getpixel16;
         case 24: return _getpixel24;
         case 32: return _getpixel32;
@@ -599,8 +590,6 @@ fast_getpixel_funptr fast_getpixel_fun()
 fast_putpixel_funptr fast_putpixel_fun()
 {
     switch(video_get_color_depth()) {
-        case 8:  return _putpixel;
-        case 15: return _putpixel15;
         case 16: return _putpixel16;
         case 24: return _putpixel24;
         case 32: return _putpixel32;
@@ -613,8 +602,6 @@ fast_putpixel_funptr fast_putpixel_fun()
 fast_makecol_funptr fast_makecol_fun()
 {
     switch(video_get_color_depth()) {
-        case 8:  return makecol8;
-        case 15: return makecol15;
         case 16: return makecol16;
         case 24: return makecol24;
         case 32: return makecol32;
@@ -625,8 +612,6 @@ fast_makecol_funptr fast_makecol_fun()
 fast_getr_funptr fast_getr_fun()
 {
     switch(video_get_color_depth()) {
-        case 8:  return getr8;
-        case 15: return getr15;
         case 16: return getr16;
         case 24: return getr24;
         case 32: return getr32;
@@ -637,8 +622,6 @@ fast_getr_funptr fast_getr_fun()
 fast_getg_funptr fast_getg_fun()
 {
     switch(video_get_color_depth()) {
-        case 8:  return getg8;
-        case 15: return getg15;
         case 16: return getg16;
         case 24: return getg24;
         case 32: return getg32;
@@ -649,8 +632,6 @@ fast_getg_funptr fast_getg_fun()
 fast_getb_funptr fast_getb_fun()
 {
     switch(video_get_color_depth()) {
-        case 8:  return getb8;
-        case 15: return getb15;
         case 16: return getb16;
         case 24: return getb24;
         case 32: return getb32;
