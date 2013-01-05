@@ -240,26 +240,15 @@ void save_preferences(const char *filepath)
 /* reads the language list from the languages/ folder */
 void load_lang_list()
 {
-    int i, j, c = 0;
-    int max_paths;
+    int i, c = 0;
     char path[] = "languages/*.lng";
-    char abs_path[2][1024];
-
     logfile_message("load_lang_list()");
-
-    /* official and $HOME files */
-    absolute_filepath(abs_path[0], path, sizeof(abs_path[0]));
-    home_filepath(abs_path[1], path, sizeof(abs_path[1]));
-    max_paths = (strcmp(abs_path[0], abs_path[1]) == 0) ? 1 : 2;
 
     /* loading language data */
     lngcount = 0;
-    for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dircount, NULL, TRUE);
-
+    foreach_resource(path, dircount, NULL, TRUE);
     lngdata = mallocx(lngcount * sizeof(lngdata_t));
-    for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)&c, TRUE);
+    foreach_resource(path, dirfill, (void*)&c, TRUE);
     qsort(lngdata, lngcount, sizeof(lngdata_t), sort_cmp);
 
     /* fatal error */

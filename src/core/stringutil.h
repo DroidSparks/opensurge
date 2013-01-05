@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * stringutil.h - string utilities
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -32,6 +32,7 @@ char* str_cpy(char *dest, const char *src, size_t dest_size); /* safe version of
 void str_trim(char *dest, const char *src); /* trim */
 char *str_dup(const char *str); /* duplicates a string - strdup() isn't ANSI C */
 const char* str_addslashes(const char *str); /* replaces " by \\", returning a static char* */
+char* str_rstr(char *haystack, const char *needle); /* reverse strstr() */
 
 #endif
 

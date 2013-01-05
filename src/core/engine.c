@@ -56,7 +56,7 @@
 
 /* private stuff ;) */
 static void clean_garbage();
-static void init_basic_stuff();
+static void init_basic_stuff(const char *basedir);
 static void init_managers(commandline_t cmd);
 static void init_accessories(commandline_t cmd);
 static void init_game_data();
@@ -72,6 +72,7 @@ static void release_nanoparser();
 static void calc_error(const char *msg);
 static void init_nanocalc();
 static void release_nanocalc();
+static const char* find_basedir(int argc, char *argv[]);
 static int display_langselect_screen = FALSE;
 
 
@@ -87,7 +88,7 @@ void engine_init(int argc, char **argv)
 {
     commandline_t cmd;
 
-    init_basic_stuff();
+    init_basic_stuff(find_basedir(argc, argv));
     cmd = commandline_parse(argc, argv);
 
     init_managers(cmd);
@@ -167,12 +168,12 @@ void clean_garbage()
  * Initializes the basic stuff, such as Allegro.
  * Call this before anything else.
  */
-void init_basic_stuff()
+void init_basic_stuff(const char *basedir) /* basedir may be NULL */
 {
     set_uformat(U_UTF8);
     allegro_init();
     randomize();
-    osspec_init();
+    osspec_init(basedir);
     logfile_init();
     init_nanoparser();
     init_nanocalc();
@@ -376,3 +377,21 @@ void release_nanocalc()
     nanocalc_release();
 }
 
+/*
+ * find_basedir()
+ * Parses the command line and tries to find the value of --basedir
+ * Returns NULL if there is no such value
+ */
+const char* find_basedir(int argc, char *argv[])
+{
+    int i;
+
+    for(i=0; i<argc; i++) {
+        if(str_icmp(argv[i], "--basedir") == 0) {
+            if(++i < argc)
+                return argv[i];
+        }
+    }
+
+    return NULL;
+}

@@ -63,6 +63,7 @@ commandline_t commandline_parse(int argc, char **argv)
     cmd.custom_quest = FALSE;
     str_cpy(cmd.custom_quest_path, "", sizeof(cmd.custom_quest_path));
     str_cpy(cmd.language_filepath, preferences_get_languagepath(), sizeof(cmd.language_filepath));
+    str_cpy(cmd.basedir, "", sizeof(cmd.basedir));
     cmd.use_gamepad = preferences_get_usegamepad();
     cmd.optimize_cpu_usage = TRUE;
 
@@ -92,6 +93,7 @@ commandline_t commandline_parse(int argc, char **argv)
                 "    --level \"FILEPATH\"        runs the level located at FILEPATH\n"
                 "    --quest \"FILEPATH\"        runs the quest located at FILEPATH\n"
                 "    --language \"FILEPATH\"     sets the language file to FILEPATH (for example, %s)\n"
+                "    --basedir \"/path/to/data\" pretends that all data files are located in the provided folder (***)\n"
                 "    --full-cpu-usage          uses 100%% of the CPU\n"
                 "\n"
                 "(*) This option may be used to improve the graphic quality using a special algorithm.\n"
@@ -99,11 +101,14 @@ commandline_t commandline_parse(int argc, char **argv)
                 "\n"
                 "(**) This option should be used on slow computers.\n"
                 "\n"
+                "(***) Please provide an absolute path. If this option is not specified, then the data files will be loaded\n"
+                "      from the installation folder (and also from $HOME/.%s, if applicable).\n"
+                "\n"
                 "Please read the user manual for more information.",
-            GAME_TITLE, GAME_UNIXNAME,
+            GAME_TITLE, basename(argv[0]),
             VIDEO_SCREEN_W, VIDEO_SCREEN_H, VIDEO_SCREEN_W*2, VIDEO_SCREEN_H*2,
             VIDEO_SCREEN_W*3, VIDEO_SCREEN_H*3, VIDEO_SCREEN_W*4, VIDEO_SCREEN_H*4,
-            DEFAULT_LANGUAGE_FILEPATH);
+            DEFAULT_LANGUAGE_FILEPATH, GAME_UNIXNAME);
             exit(0);
         }
 
@@ -142,9 +147,10 @@ commandline_t commandline_parse(int argc, char **argv)
         else if(str_icmp(argv[i], "--color-depth") == 0) {
             if(++i < argc) {
                 cmd.color_depth = atoi(argv[i]);
-                if(/*cmd.color_depth != 8 &&*/ cmd.color_depth != 16 && cmd.color_depth != 24 && cmd.color_depth != 32) {
-                    display_message("WARNING: invalid color depth (%d). Changing to %d...", cmd.color_depth, 16);
-                    cmd.color_depth = 16;
+                if(cmd.color_depth != 16 && cmd.color_depth != 24 && cmd.color_depth != 32) {
+                    int d = 16;
+                    display_message("WARNING: invalid color depth (%d). Changing to %d...", cmd.color_depth, d);
+                    cmd.color_depth = d;
                 }
             }
         }
@@ -182,6 +188,11 @@ commandline_t commandline_parse(int argc, char **argv)
                 if(!filepath_exists(cmd.language_filepath))
                     fatal_error("FATAL ERROR: file '%s' does not exist!\n", cmd.language_filepath);
             }
+        }
+
+        else if(str_icmp(argv[i], "--basedir") == 0) {
+            if(++i < argc)
+                str_cpy(cmd.basedir, argv[i], sizeof(cmd.basedir));
         }
 
         else { /* unknown option */

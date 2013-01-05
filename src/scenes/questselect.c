@@ -274,27 +274,17 @@ void questselect_render()
 /* loads the quest list from the quests/ folder */
 void load_quest_list()
 {
-    int i, j, c = 0;
-    int max_paths;
+    int i, c = 0;
     char path[] = "quests/*.qst";
-    char abs_path[2][1024];
 
     video_display_loading_screen();
     logfile_message("load_quest_list()");
 
-    /* official and $HOME files */
-    absolute_filepath(abs_path[0], path, sizeof(abs_path[0]));
-    home_filepath(abs_path[1], path, sizeof(abs_path[1]));
-    max_paths = (strcmp(abs_path[0], abs_path[1]) == 0) ? 1 : 2;
-
     /* loading data */
     quest_count = 0;
-    for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dircount, NULL, TRUE);
-
+    foreach_resource(path, dircount, NULL, TRUE);
     quest_data = mallocx(quest_count * sizeof(quest_t*));
-    for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)&c, TRUE);
+    foreach_resource(path, dirfill, (void*)&c, TRUE);
     qsort(quest_data, quest_count, sizeof(quest_t*), sort_cmp);
 
     /* fatal error */

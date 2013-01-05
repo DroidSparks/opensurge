@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * osspec.c - OS Specific Routines
- * Copyright (C) 2009-2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2009-2010, 2012-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -76,11 +76,18 @@
 
 
 /* private stuff */
+static char *base_dir; /* absolute path to the base directory. It can be "" (read resources from install folder and from $HOME), or some other absolute path */
+
+static void absolute_filepath(char *dest, const char *relativefp, size_t dest_size);
+static void home_filepath(char *dest, const char *relativefp, size_t dest_size);
+static int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param, int recursive);
+static int directory_exists(const char *dirpath);
+/*static void create_process(const char *path, int argc, char *argv[]);*/
+
 #ifndef __WIN32__
 static struct passwd *userinfo;
 #endif
 
-static char executable_name[1024];
 static char* fix_case_path(char *filepath);
 static int fix_case_path_backtrack(const char *pwd, const char *remaining_path, const char *delim, char *dest);
 static void search_the_file(char *dest, const char *relativefp, size_t dest_size);
@@ -140,47 +147,55 @@ static void list_directory_recursively(xptable_t *table, const char *wildcard);
 /* 
  * osspec_init()
  * Operating System Specifics - initialization
+ * basedir is the absolute path to the base directory. It can be "" (read resources from install folder and from $HOME), or some other absolute path.
  */
-void osspec_init()
+void osspec_init(const char *basedir)
 {
-#ifndef __WIN32__
-    int i;
-    char tmp[1024];
-    char subdirs[][32] = {   /* subfolders at $HOME/.$GAME_UNIXNAME/ */
-        { "" },
-        { "characters" },
-        { "config" },
-        { "fonts" },
-        { "images" },
-        { "languages" },
-        { "levels" },
-        { "musics" },
-        { "objects" },
-        { "quests" },
-        { "samples" },
-        { "screenshots" },
-        { "sprites" },
-        { "themes" },
-        { "ttf" }
-    };
-
-
-
-    /* retrieving user data */
-    if(NULL == (userinfo = getpwuid(getuid())))
-        fprintf(stderr, "WARNING: couldn't obtain information about your user. User-specific data may not work.\n");
-
-
-
-    /* creating sub-directories */
-    for(i=0; i<sizeof(subdirs)/32; i++) {
-        home_filepath(tmp, subdirs[i], sizeof(tmp));
-        mkdir(tmp, 0755);
+    /* base directory */
+    base_dir = (basedir ? str_dup(basedir) : NULL);
+    if(base_dir != NULL && !directory_exists(base_dir)) {
+        fprintf(stderr, "ERROR: invalid base directory \"%s\"\n", base_dir);
+        free(base_dir);
+        exit(1);
     }
-#endif
 
-    /* executable name */
-    get_executable_name(executable_name, sizeof(executable_name));
+    /* stuff related to the $HOME folder */
+#ifndef __WIN32__
+    if(base_dir == NULL) {
+        /* retrieving user data */
+        if(NULL != (userinfo = getpwuid(getuid()))) {
+            char *subdirs[] = {   /* subfolders at $HOME/.$GAME_UNIXNAME/ */
+                "",
+                "characters",
+                "config",
+                "fonts",
+                "images",
+                "languages",
+                "levels",
+                "licenses",
+                "musics",
+                "objects",
+                "quests",
+                "samples",
+                "screenshots",
+                "sprites",
+                "themes",
+                "ttf",
+                NULL /* end of list */
+            }, **p, tmp[1024];
+
+            /* creating sub-directories */
+            for(p = subdirs; *p; p++) {
+                home_filepath(tmp, *p, sizeof(tmp));
+                mkdir(tmp, 0755);
+            }
+        }
+        else
+            fprintf(stderr, "WARNING: couldn't obtain information about your user. User-specific data may not work.\n");
+    }
+    else
+        userinfo = NULL;
+#endif
 
 #ifndef DISABLE_FILEPATH_OPTIMIZATIONS
     /* initializing the cache */
@@ -199,6 +214,10 @@ void osspec_release()
     /* releasing the cache */
     cache_release();
 #endif
+
+    /* base directory */
+    if(base_dir != NULL)
+        free(base_dir);
 }
 
 
@@ -225,68 +244,30 @@ int directory_exists(const char *dirpath)
 }
 
 
-
-
 /*
- * absolute_filepath()
- * Converts a relative filepath into an
- * absolute filepath.
+ * foreach_resource()
+ * Traverses a directory, calling callback on each resource file
+ * wildcard must be a resource path, e.g.: "images / *.png"
+ * Note: callback must return 0 to let the enumeration proceed, or non-zero to stop it
+ * Returns the number of successful calls to callback.
  */
-void absolute_filepath(char *dest, const char *relativefp, size_t dest_size)
+int foreach_resource(const char *wildcard, int (*callback)(const char *filename, void *param), void *param, int recursive)
 {
-    if(is_relative_filename(relativefp)) {
-#ifndef __WIN32__
-        char *tmp = mallocx(sizeof(char) * (1 + max(strlen(executable_name), strlen(GAME_UNIX_EXECDIR))));
-        strcpy(tmp, executable_name);
-        tmp[ strlen(GAME_UNIX_EXECDIR) ] = '\0';
-        if(strcmp(tmp, GAME_UNIX_EXECDIR) != 0) {
-            str_cpy(dest, executable_name, dest_size);
-            replace_filename(dest, dest, relativefp, dest_size);
-        }
-        else
-            snprintf(dest, dest_size, "%s/%s", GAME_UNIX_INSTALLDIR, relativefp);
-        free(tmp);
-#else
-        str_cpy(dest, executable_name, dest_size);
-        replace_filename(dest, dest, relativefp, dest_size);
-#endif
-    }
-    else
-        str_cpy(dest, relativefp, dest_size); /* relativefp is already an absolute filepath */
+    static char abs_path[2][1024];
+    int j, max_paths, sum = 0;
 
-    fix_filename_slashes(dest);
-    canonicalize_filename(dest, dest, dest_size);
-    fix_case_path(dest);
+    /* official and $HOME filepaths */
+    absolute_filepath(abs_path[0], wildcard, sizeof(abs_path[0]));
+    home_filepath(abs_path[1], wildcard, sizeof(abs_path[1]));
+    max_paths = (strcmp(abs_path[0], abs_path[1]) == 0) ? 1 : 2;
+
+    /* reading the parse tree */
+    for(j=0; j<max_paths; j++)
+        sum += foreach_file(abs_path[j], callback, param, recursive);
+
+    /* done! ;) */
+    return sum;
 }
-
-
-
-/*
- * home_filepath()
- * Similar to absolute_filepath(), but this routine considers
- * the $HOME/.$GAME_UNIXNAME/ directory instead
- */
-void home_filepath(char *dest, const char *relativefp, size_t dest_size)
-{
-#ifndef __WIN32__
-
-    if(userinfo) {
-        snprintf(dest, dest_size, "%s/.%s/%s", userinfo->pw_dir, GAME_UNIXNAME, relativefp);
-        fix_filename_slashes(dest);
-        canonicalize_filename(dest, dest, dest_size);
-        fix_case_path(dest);
-    }
-    else
-        absolute_filepath(dest, relativefp, dest_size);
-
-#else
-
-    absolute_filepath(dest, relativefp, dest_size);
-
-#endif
-}
-
-
 
 
 /*
@@ -295,9 +276,9 @@ void home_filepath(char *dest, const char *relativefp, size_t dest_size)
  * searches the specified file both in the home directory and in the
  * game directory
  */
-void resource_filepath(char *dest, const char *relativefp, size_t dest_size, int resfp_mode)
+void resource_filepath(char *dest, const char *relativefp, size_t dest_size, resfp_t mode)
 {
-    switch(resfp_mode) {
+    switch(mode) {
         /* I'll read the file */
         case RESFP_READ:
         {
@@ -374,13 +355,6 @@ void resource_filepath(char *dest, const char *relativefp, size_t dest_size, int
 #endif
             break;
         }
-
-        /* Unknown mode */
-        default:
-        {
-            fprintf(stderr, "resource_filepath(): invalid resfp_mode (%d)", resfp_mode);
-            break;
-        }
     }
 }
 
@@ -395,13 +369,14 @@ void resource_filepath(char *dest, const char *relativefp, size_t dest_size, int
  *
  * NOTE: argv[0] also contains the absolute path of the executable
  */
+/*
 void create_process(const char *path, int argc, char *argv[])
 {
 #ifndef __WIN32__
     pid_t pid;
 
     argv[argc] = NULL;
-    if(0 == (pid=fork())) /* if(child process) */
+    if(0 == (pid=fork()))
         execv(path, argv);
 #else
     STARTUPINFO si;
@@ -410,12 +385,12 @@ void create_process(const char *path, int argc, char *argv[])
     int i, is_file;
 
     for(i=0; i<argc; i++) {
-        is_file = filepath_exists(argv[i]); /* TODO: test folders with spaces (must test program.exe AND level.lev) */
+        is_file = filepath_exists(argv[i]);
         if(is_file) strcat(cmd, "\"");
         strcat(cmd, argv[i]);
         strcat(cmd, is_file ? "\" " : " ");
     }
-    cmd[strlen(cmd)-1] = '\0'; /* erase the last blank space */
+    cmd[strlen(cmd)-1] = '\0';
 
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
@@ -431,6 +406,7 @@ void create_process(const char *path, int argc, char *argv[])
     CloseHandle(pi.hThread);
 #endif
 }
+*/
 
 
 /*
@@ -442,37 +418,6 @@ char *basename(const char *path)
     return get_filename(path);
 }
 
-
-/*
- * foreach_file()
- * Traverses a directory, calling callback on each file
- * wildcard may be a relative path, e.g.: "images / *.png"
- *
- * Note: callback must return 0 to let the enumeration proceed, or non-zero to stop it
- *
- * Returns the number of successful calls to callback.
- */
-int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param, int recursive)
-{
-    char abs_path[1024];
-    absolute_filepath(abs_path, wildcard, sizeof(abs_path));
-
-    if(recursive) {
-        int sum = 0;
-        xptable_t *table = xptable_create();
-
-        list_directory_recursively(table, wildcard);
-        sum += xptable_foreach(table, callback, param);
-
-        xptable_destroy(table);
-        return sum;
-    }
-    else {
-        int deny_flags = FA_DIREC | FA_LABEL;
-        foreach_file_helper h = { callback, param };
-        return for_each_file_ex(abs_path, 0, deny_flags, foreach_file_callback, (void*)(&h));
-    }
-}
 
 
 
@@ -538,6 +483,112 @@ int launch_url(const char *url)
 
 
 /* private methods */
+
+
+/*
+ * foreach_file()
+ * Traverses a directory, calling callback on each file
+ * wildcard must be an absolute path, e.g.: "/ usr / share / opensurge / images / *.png"
+ * Note: callback must return 0 to let the enumeration proceed, or non-zero to stop it
+ * Returns the number of successful calls to callback.
+ */
+int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param, int recursive)
+{
+    if(recursive) {
+        int sum = 0;
+        xptable_t *table = xptable_create();
+        list_directory_recursively(table, wildcard);
+        sum += xptable_foreach(table, callback, param);
+        xptable_destroy(table);
+        return sum;
+    }
+    else {
+        int deny_flags = FA_DIREC | FA_LABEL;
+        foreach_file_helper h = { callback, param };
+        return for_each_file_ex(wildcard, 0, deny_flags, foreach_file_callback, (void*)(&h));
+    }
+}
+
+/*
+ * absolute_filepath()
+ * Converts a relative filepath into an
+ * absolute filepath.
+ */
+void absolute_filepath(char *dest, const char *relativefp, size_t dest_size)
+{
+    /* did we receive a relative filepath? */
+    if(is_relative_filename(relativefp)) {
+        /* we don't need to deal with any strange base directory, do we? */
+        if(base_dir == NULL) {
+            static char executable_name[1024] = "";
+            if(strcmp(executable_name, "") == 0)
+                get_executable_name(executable_name, sizeof(executable_name));
+#ifndef __WIN32__
+            char *tmp = mallocx(sizeof(char) * (1 + max(strlen(executable_name), strlen(GAME_UNIX_EXECDIR))));
+            strcpy(tmp, executable_name);
+            tmp[ strlen(GAME_UNIX_EXECDIR) ] = '\0';
+            if(strcmp(tmp, GAME_UNIX_EXECDIR) != 0) {
+                str_cpy(dest, executable_name, dest_size);
+                replace_filename(dest, dest, relativefp, dest_size);
+            }
+            else
+                snprintf(dest, dest_size, "%s/%s", GAME_UNIX_INSTALLDIR, relativefp);
+            free(tmp);
+#else
+            str_cpy(dest, executable_name, dest_size);
+            replace_filename(dest, dest, relativefp, dest_size);
+#endif
+        }
+        else {
+            const char *dummy = "/" GAME_UNIXNAME;
+            char *tmp = mallocx(sizeof(char) * (1 + strlen(base_dir) + strlen(dummy)));
+            strcpy(tmp, base_dir);
+            strcat(tmp, dummy);
+            str_cpy(dest, tmp, dest_size);
+            free(tmp);
+            replace_filename(dest, dest, relativefp, dest_size);
+        }
+    }
+    else
+        str_cpy(dest, relativefp, dest_size); /* relativefp is already an absolute filepath */
+
+    /* adjustments */
+    fix_filename_slashes(dest);
+    canonicalize_filename(dest, dest, dest_size);
+    fix_case_path(dest);
+}
+
+
+
+/*
+ * home_filepath()
+ * Similar to absolute_filepath(), but this routine considers
+ * the $HOME/.$GAME_UNIXNAME/ directory instead
+ */
+void home_filepath(char *dest, const char *relativefp, size_t dest_size)
+{
+#ifndef __WIN32__
+
+    if(userinfo && base_dir == NULL) {
+        snprintf(dest, dest_size, "%s/.%s/%s", userinfo->pw_dir, GAME_UNIXNAME, relativefp);
+        fix_filename_slashes(dest);
+        canonicalize_filename(dest, dest, dest_size);
+        fix_case_path(dest);
+    }
+    else
+        absolute_filepath(dest, relativefp, dest_size);
+
+#else
+
+    absolute_filepath(dest, relativefp, dest_size);
+
+#endif
+}
+
+
+
+
+
 
 /* helps foreach_file() */
 int foreach_file_callback(const char *filename, int attrib, void *param)

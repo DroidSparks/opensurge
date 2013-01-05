@@ -58,23 +58,14 @@ static int traverse_animation_attributes(const parsetree_statement_t *stmt, void
  */
 void sprite_init()
 {
-    parsetree_program_t *prog = NULL;
     const char *path = "sprites/*.spr";
-    char abs_path[2][1024];
-    int j, max_paths;
+    parsetree_program_t *prog = NULL;
 
     logfile_message("Loading sprites...");
     sprites = hashtable_spriteinfo_t_create(spriteinfo_destroy);
 
-    /* official and $HOME files */
-    absolute_filepath(abs_path[0], path, sizeof(abs_path[0]));
-    home_filepath(abs_path[1], path, sizeof(abs_path[1]));
-    max_paths = (strcmp(abs_path[0], abs_path[1]) == 0) ? 1 : 2;
-
-    /* Reading the parse tree */
-    for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)(&prog), TRUE);
-
+    /* reading the parse tree */
+    foreach_resource(path, dirfill, (void*)(&prog), TRUE);
     if(prog == NULL)
         fatal_error("FATAL ERROR: no sprites have been found. Please reinstall the game.");
 

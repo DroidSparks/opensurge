@@ -1,4 +1,7 @@
-<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_ACTIVE</color>
+$CREDITS_HEADER
+
+
+<color=$COLOR_SUBHIGHLIGHT>$CREDITS_ACTIVE</color>
 
 Alexandre Martins:
 $CREDITS_ALEXANDRE
@@ -16,7 +19,7 @@ Johan Brodd:
 $CREDITS_JOHAN
 
 
-<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_CONTRIB</color>
+<color=$COLOR_SUBHIGHLIGHT>$CREDITS_CONTRIB</color>
 
 Christopher Martinus:
 $CREDITS_CHRISTOPHER
@@ -49,7 +52,7 @@ Raxillan:
 $CREDITS_RAXILLAN
 
 
-<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RETIRED</color>
+<color=$COLOR_SUBHIGHLIGHT>$CREDITS_RETIRED</color>
 
 Brian Zablocky:
 $CREDITS_CELDECEA
@@ -60,7 +63,8 @@ $CREDITS_COLIN
 Ruben Caceres:
 $CREDITS_RUBEN
 
-<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_THANKS</color>
+
+<color=$COLOR_SUBHIGHLIGHT>$CREDITS_THANKS</color>
 
 SourceForge.net
 allegro.cc
@@ -79,11 +83,11 @@ Lainz
 S32X
 
 
-<color=$COLOR_MENUHIGHLIGHT>$CREDITS_RES_TITLE</color>
+<color=$COLOR_HIGHLIGHT>$CREDITS_RES_TITLE</color>
 
 $CREDITS_RES_TEXT
 
-<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RES_IMAGES</color>
+<color=$COLOR_SUBHIGHLIGHT>$CREDITS_RES_IMAGES</color>
 
 Joao Victor
 --- images/neon.png
@@ -263,7 +267,7 @@ creative commons (creativecommons.org)
 Sascha de waal & Colin Beard
 --- images/zipline.png
 
-<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RES_MUSICS</color>
+<color=$COLOR_SUBHIGHLIGHT>$CREDITS_RES_MUSICS</color>
 
 Di Rodrigues
 --- musics/options.ogg
@@ -300,7 +304,7 @@ Johan Brodd
 Philippe Groarke (opengameart.org)
 --- musics/darkambiance.ogg (cut from 1:45 to 2:45)
 
-<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RES_SAMPLES</color>
+<color=$COLOR_SUBHIGHLIGHT>$CREDITS_RES_SAMPLES</color>
 
 Mateus Reis
 --- samples/break.wav
@@ -376,6 +380,6 @@ CGEffex (freesound.org)
 Johan Brodd
 --- samples/creativecommons2.ogg
 
-<color=COLOR_MENUSUBHIGHLIGHT>$CREDITS_RES_SCRIPTS</color>
+<color=$COLOR_SUBHIGHLIGHT>$CREDITS_RES_SCRIPTS</color>
 
 $CREDITS_RES_SCRIPTS_TEXT

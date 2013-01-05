@@ -159,8 +159,6 @@ struct fontscript_t {
 void font_init()
 {
     const char *path = "fonts/*.fnt";
-    char abs_path[2][1024];
-    int j, max_paths;
     parsetree_program_t *fonts = NULL;
 
     logfile_message("Initializing alfont...");
@@ -170,14 +168,8 @@ void font_init()
     logfile_message("Loading font scripts...");
     fontdata_list_init();
 
-    /* official and $HOME filepaths */
-    absolute_filepath(abs_path[0], path, sizeof(abs_path[0]));
-    home_filepath(abs_path[1], path, sizeof(abs_path[1]));
-    max_paths = (strcmp(abs_path[0], abs_path[1]) == 0) ? 1 : 2;
-
     /* reading the parse tree */
-    for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)&fonts, TRUE);
+    foreach_resource(path, dirfill, (void*)&fonts, TRUE);
 
     /* loading the fontdata list */
     nanoparser_traverse_program(fonts, traverse);

@@ -48,23 +48,14 @@ static int traverse_samples(const parsetree_statement_t *stmt, void *character);
 /* public */
 void charactersystem_init()
 {
-    parsetree_program_t *prog = NULL;
     const char *path = "characters/*.chr";
-    char abs_path[2][1024];
-    int j, max_paths;
+    parsetree_program_t *prog = NULL;
 
     logfile_message("Loading characters...");
     characters = hashtable_character_t_create(character_delete);
 
-    /* official and $HOME files */
-    absolute_filepath(abs_path[0], path, sizeof(abs_path[0]));
-    home_filepath(abs_path[1], path, sizeof(abs_path[1]));
-    max_paths = (strcmp(abs_path[0], abs_path[1]) == 0) ? 1 : 2;
-
     /* Reading the parse tree */
-    for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)(&prog), TRUE);
-
+    foreach_resource(path, dirfill, (void*)(&prog), TRUE);
     if(prog == NULL)
         fatal_error("FATAL ERROR: no characters have been found. Please reinstall the game.");
 

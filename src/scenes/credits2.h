@@ -1,6 +1,6 @@
 /*
  * Open Surge Engine
- * donors.h - donors scene
+ * credits2.h - second credits screen
  * Copyright (C) 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
@@ -19,13 +19,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _DONATORS_H
-#define _DONATORS_H
+#ifndef _CREDITS2_H
+#define _CREDITS2_H
 
 /* public functions */
-void donors_init();
-void donors_release();
-void donors_update();
-void donors_render();
+void credits2_init();
+void credits2_release();
+void credits2_update();
+void credits2_render();
 
 #endif

@@ -92,20 +92,12 @@ static hashtable_objectcode_t* lookup_table;
 void objects_init()
 {
     const char *path = "objects/*.obj";
-    char abs_path[2][1024];
-    int j, max_paths;
 
     logfile_message("Loading objects scripts...");
     objects = NULL;
 
-    /* official and $HOME filepaths */
-    absolute_filepath(abs_path[0], path, sizeof(abs_path[0]));
-    home_filepath(abs_path[1], path, sizeof(abs_path[1]));
-    max_paths = (strcmp(abs_path[0], abs_path[1]) == 0) ? 1 : 2;
-
     /* reading the parse tree */
-    for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, (void*)(&objects), TRUE);
+    foreach_resource(path, dirfill, (void*)(&objects), TRUE);
 
     /* creating the name table */
     name_table.length = 0;

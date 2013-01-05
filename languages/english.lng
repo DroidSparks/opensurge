@@ -9,11 +9,11 @@
 
 // =============== GENERIC ======================
 
-// Meta data
+// Translation metadata
 LANG_LANGUAGE               "English"
 LANG_AUTHOR                 "Alexandre Martins"
 LANG_LASTUPDATE             "2012-12-27"
-LANG_COMPATIBILITY          "0.2.0"
+LANG_COMPATIBILITY          "0.2.0"                 // required engine version
 
 // Colors
 COLOR_SURGE                 "ff8000"
@@ -26,6 +26,11 @@ COLOR_HIGHLIGHT             "e99f42"
 COLOR_SUBHIGHLIGHT          "ffe13e"
 COLOR_SUBSUBHIGHLIGHT       "cdc3b6"
 
+// Game data
+GAME_NAME                   "Open Surge"
+GAME_VERSION                "0.2.0"
+GAME_WEBSITE                "$ENGINE_WEBSITE"
+GAME_YEAR                   "$ENGINE_YEAR"
 
 
 
@@ -78,12 +83,19 @@ MENU_CQ_EXTRA               "Extra levels"
 
 // Credits
 CREDITS_TITLE               "<color=$COLOR_MENUTITLE>CREDITS</color>"
-CREDITS_KEY                 "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to go back, or <color=$COLOR_INPUT>$INPUT_FIRE8</color> to see the donors"
+CREDITS_KEY                 "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to go back" //, or <color=$COLOR_INPUT>$INPUT_FIRE2</color> to see the donors"
+CREDITS_HEADER              "<color=$COLOR_HIGHLIGHT>$GAME_NAME version $GAME_VERSION</color>\n<color=$COLOR_SUBHIGHLIGHT>powered by $ENGINE_NAME version $ENGINE_VERSION</color>\n<color=$COLOR_SUBSUBHIGHLIGHT>$ENGINE_WEBSITE</color>"
 CREDITS_ACTIVE              "Open Surge team"
 CREDITS_CONTRIB             "Special contributors"
 CREDITS_RETIRED             "Retired members"
 CREDITS_THANKS              "Thanks to"
-
+CREDITS_RES_TITLE           "Credits per individual resources"
+CREDITS_RES_TEXT            "Unless explicitly told otherwise, the files listed below are licensed under the Creative Commons Attribution-ShareAlike 3.0 (CC-BY-SA 3.0)."
+CREDITS_RES_IMAGES          "Images"
+CREDITS_RES_MUSICS          "Musics"
+CREDITS_RES_SAMPLES         "Sound effects"
+CREDITS_RES_SCRIPTS         "Scripts"
+CREDITS_RES_SCRIPTS_TEXT    "The authors are specified within the scripts themselves."
 CREDITS_ALEXANDRE           "Founder, Programmer"
 CREDITS_DI                  "Musician"
 CREDITS_COLIN               "Forum moderator, Story designer"
@@ -103,18 +115,10 @@ CREDITS_FRANCESCO           "Italian translation"
 CREDITS_SANTIAGO            "Spanish translation"
 CREDITS_RAXILLAN            "Russian translation"
 
-CREDITS_RES_TITLE           "Credits per individual resources"
-CREDITS_RES_TEXT            "Unless explicitly told otherwise, the files listed below are licensed under the Creative Commons Attribution-ShareAlike 3.0 (CC-BY-SA 3.0)."
-CREDITS_RES_IMAGES          "Images"
-CREDITS_RES_MUSICS          "Musics"
-CREDITS_RES_SAMPLES         "Sound effects"
-CREDITS_RES_SCRIPTS         "Scripts"
-CREDITS_RES_SCRIPTS_TEXT    "The authors are specified within the scripts themselves."
-
-// Donations
-DONORS_TITLE                "<color=$COLOR_MENUTITLE>DONORS</color>"
-DONORS_KEY                  "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to go back"
-DONORS_HEADER               "As an open source game, Open Surge needs money to pay for code, art, music, etc.\n\nThese are the enthusiasts who have helped fund the project:"
+// Second credits screen
+CREDITS2_TITLE              "<color=$COLOR_MENUTITLE>DONORS</color>"
+CREDITS2_KEY                "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to go back"
+CREDITS2_HEADER             "As an open source game, Open Surge needs money to pay for code, art, music, etc.\n\nThese are the enthusiasts who have helped fund the project:"
 
 // "Please donate" screen
 DONATE_TITLE                "<color=$COLOR_MENUTITLE>PLEASE DONATE</color>"
@@ -124,7 +128,6 @@ DONATE_NO                   "Later."
 DONATE_ALREADYHAVE          "Already have."
 
 // Quest names
-TUTORIAL_QUEST_NAME         "Tutorial"
 EXTRA_LEVELS_NAME           "Extra levels"
 
 

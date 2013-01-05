@@ -300,23 +300,15 @@ void stageselect_enable_debug(int enable)
 /* loads the stage list from the level/ folder */
 void load_stage_list()
 {
-    int i, j;
-    int max_paths;
+    int i;
     char path[] = "levels/*.lev";
-    char abs_path[2][1024];
 
     video_display_loading_screen();
     logfile_message("load_stage_list()");
 
-    /* official and $HOME files */
-    absolute_filepath(abs_path[0], path, sizeof(abs_path[0]));
-    home_filepath(abs_path[1], path, sizeof(abs_path[1]));
-    max_paths = (strcmp(abs_path[0], abs_path[1]) == 0) ? 1 : 2;
-
     /* loading data */
     stage_count = 0;
-    for(j=0; j<max_paths; j++)
-        foreach_file(abs_path[j], dirfill, NULL, enable_debug);
+    foreach_resource(path, dirfill, NULL, enable_debug);
     qsort(stage_data, stage_count, sizeof(stagedata_t*), sort_cmp);
 
     /* fatal error */
@@ -357,7 +349,8 @@ int dirfill(const char *filename, void *param)
 {
     int ver, subver, wipver;
     stagedata_t *s;
-
+printf("file: %s\n", filename);
+fflush(stdout);
     /* can't have more than STAGE_MAX levels installed */
     if(stage_count >= STAGE_MAX)
         return 0;
@@ -371,9 +364,8 @@ int dirfill(const char *filename, void *param)
         if(game_version_compare(ver, subver, wipver) >= 0) {
             stage_data[ stage_count++ ] = s;
             if(enable_debug) { /* debug mode: changing the names... */
-                char abs_path[1024];
-                absolute_filepath(abs_path, "levels/", sizeof(abs_path));
-                snprintf(s->name, sizeof(s->name), "%s", s->filepath + strlen(abs_path));
+                char *p = str_rstr(s->filepath, "levels/");
+                snprintf(s->name, sizeof(s->name), "%s", p + strlen("levels/"));
             }
         }
         else {

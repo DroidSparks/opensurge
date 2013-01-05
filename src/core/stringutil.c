@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * stringutil.c - string utilities
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -177,4 +177,22 @@ const char* str_addslashes(const char *str)
     *p = '\0';
 
     return buf;
+}
+
+
+/*
+ * str_rstr()
+ * Finds the last occurrence of needle in haystack. It's something
+ * like strstr(), but reversed (i.e., "strrstr"). Returns NULL
+ * if it doesn't find anything.
+ */
+char* str_rstr(char *haystack, const char *needle)
+{
+    if(*haystack) {
+        char *p, *q;
+        for(q = NULL; NULL != (p = strstr(haystack, needle)); q = p, haystack = p+1);
+        return q;
+    }
+    else
+        return NULL;
 }

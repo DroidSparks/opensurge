@@ -1,6 +1,6 @@
 /*
  * Open Surge Engine
- * donors.c - donors scene
+ * credits2.c - second credits screen
  * Copyright (C) 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
@@ -20,7 +20,7 @@
  */
 
 #include <math.h>
-#include "donors.h"
+#include "credits2.h"
 #include "options.h"
 #include "../core/util.h"
 #include "../core/fadefx.h"
@@ -39,8 +39,8 @@
 
 
 /* private data */
-#define DONORS_FILE               "config/donors.dat"
-#define DONORS_BGFILE             "themes/donors.bg"
+#define CREDITS2_FILE               "config/credits2.dat"
+#define CREDITS2_BGFILE             "themes/credits2.bg"
 static image_t *box;
 static int quit;
 static font_t *title, *text, *back;
@@ -48,7 +48,7 @@ static input_t *input;
 static int line_count;
 static bgtheme_t *bgtheme;
 
-static char* read_donors_file();
+static char* read_credits2_file();
 
 
 
@@ -56,28 +56,28 @@ static char* read_donors_file();
 /* public functions */
 
 /*
- * donors_init()
+ * credits2_init()
  * Initializes the scene
  */
-void donors_init()
+void credits2_init()
 {
     const char *p;
-    char *donors_text = read_donors_file();
+    char *credits2_text = read_credits2_file();
 
     /* initializing stuff... */
     quit = FALSE;
     input = input_create_user(NULL);
 
     title = font_create("menu.title");
-    font_set_text(title, "%s", lang_get("DONORS_TITLE"));
+    font_set_text(title, "%s", lang_get("CREDITS2_TITLE"));
     font_set_position(title, v2d_new((VIDEO_SCREEN_W - font_get_textsize(title).x)/2, 5));
 
     back = font_create("menu.text");
-    font_set_text(back, "%s", lang_get("DONORS_KEY"));
+    font_set_text(back, "%s", lang_get("CREDITS2_KEY"));
     font_set_position(back, v2d_new(10, VIDEO_SCREEN_H - font_get_textsize(back).y - 5));
 
     text = font_create("menu.credits");
-    font_set_text(text, "%s", donors_text);
+    font_set_text(text, "%s", credits2_text);
     font_set_width(text, 300);
     font_set_position(text, v2d_new(10, VIDEO_SCREEN_H));
     for(line_count=1,p=font_get_text(text); *p; p++)
@@ -86,20 +86,20 @@ void donors_init()
     box = image_create(VIDEO_SCREEN_W, 30);
     image_clear(box, image_rgb(0,0,0));
 
-    bgtheme = background_load(DONORS_BGFILE);
+    bgtheme = background_load(CREDITS2_BGFILE);
 
     fadefx_in(image_rgb(0,0,0), 1.0);
 
     /* done! */
-    free(donors_text);
+    free(credits2_text);
 }
 
 
 /*
- * donors_release()
+ * credits2_release()
  * Releases the scene
  */
-void donors_release()
+void credits2_release()
 {
     bgtheme = background_unload(bgtheme);
     image_destroy(box);
@@ -113,10 +113,10 @@ void donors_release()
 
 
 /*
- * donors_update()
+ * credits2_update()
  * Updates the scene
  */
-void donors_update()
+void credits2_update()
 {
     float dt = timer_get_delta();
     v2d_t textpos;
@@ -158,10 +158,10 @@ void donors_update()
 
 
 /*
- * donors_render()
+ * credits2_render()
  * Renders the scene
  */
-void donors_render()
+void credits2_render()
 {
     v2d_t cam = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
 
@@ -183,16 +183,16 @@ void donors_render()
 
 /* private stuff */
 
-/* reads the contents of DONORS_FILE */
-char* read_donors_file()
+/* reads the contents of CREDITS2_FILE */
+char* read_credits2_file()
 {
     char *buf, filename[1024];
     FILE* fp;
     long size;
 
-    resource_filepath(filename, DONORS_FILE, sizeof filename, RESFP_READ);
+    resource_filepath(filename, CREDITS2_FILE, sizeof filename, RESFP_READ);
     if(NULL == (fp = fopen(filename, "r"))) {
-        fatal_error("Can't open '%s' for reading.", DONORS_FILE);
+        fatal_error("Can't open '%s' for reading.", CREDITS2_FILE);
         return NULL;
     }
 
@@ -203,7 +203,7 @@ char* read_donors_file()
     buf = mallocx(1 + size);
     buf[size] = 0;
     if(fread(buf, 1, size, fp) != size)
-        logfile_message("Warning: invalid return value of fread() when reading '%s'", DONORS_FILE);
+        logfile_message("Warning: invalid return value of fread() when reading '%s'", CREDITS2_FILE);
 
     fclose(fp);
     return buf;

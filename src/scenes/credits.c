@@ -48,14 +48,6 @@ static font_t *title, *text, *back;
 static input_t *input;
 static int line_count;
 static bgtheme_t *bgtheme;
-static char credits_header[] =
-    "\n<color=$COLOR_MENUHIGHLIGHT>"
-    GAME_TITLE
-    " version "
-    GAME_VERSION_STRING
-    "</color>\n"
-    GAME_WEBSITE
-    "\n\n";
 
 static scene_t *next_scene;
 static char* read_credits_file();
@@ -88,7 +80,7 @@ void credits_init()
     font_set_position(back, v2d_new(10, VIDEO_SCREEN_H - font_get_textsize(back).y - 5));
 
     text = font_create("menu.credits");
-    font_set_text(text, "%s\n%s", credits_header, credits_text);
+    font_set_text(text, "\n%s", credits_text);
     font_set_width(text, 300);
     font_set_position(text, v2d_new(10, VIDEO_SCREEN_H));
     for(line_count=1,p=font_get_text(text); *p; p++)
@@ -149,9 +141,9 @@ void credits_update()
             next_scene = NULL;
             quit = TRUE;
         }
-        else if(input_button_pressed(input, IB_FIRE8)) {
+        else if(input_button_pressed(input, IB_FIRE2)) {
             sound_play( soundfactory_get("select") );
-            next_scene = storyboard_get_scene(SCENE_DONORS);
+            next_scene = storyboard_get_scene(SCENE_CREDITS2);
             quit = TRUE;
         }
     }

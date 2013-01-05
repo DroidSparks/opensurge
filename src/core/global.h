@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * global.h - global definitions
- * Copyright (C) 2008-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@
 #define GAME_SUB_VERSION        2
 #define GAME_WIP_VERSION        0
 #define GAME_WEBSITE            "http://opensnc.sourceforge.net"
-#define GAME_YEAR               "2008-2012"
+#define GAME_YEAR               "2008-2013"
 
 /* Cute stuff */
 #ifndef GAME_UNIX_INSTALLDIR

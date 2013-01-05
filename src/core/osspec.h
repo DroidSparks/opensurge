@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * osspec.h - OS Specific Routines
- * Copyright (C) 2009, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2009, 2012-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -24,24 +24,18 @@
 
 #include <stdlib.h>
 
-
-/* resource_filepath() modes */
-#define RESFP_READ                            0
-#define RESFP_WRITE                           1
-
-
-/* public functions */
-void osspec_init(); /* call this before everything else */
+/* engine functions */
+void osspec_init(const char *basedir); /* call this before everything else. You may pass NULL to basedir. */
 void osspec_release(); /* call this after everything else */
-int filepath_exists(const char *filepath);
-int directory_exists(const char *dirpath);
-void absolute_filepath(char *dest, const char *relativefp, size_t dest_size);
-void home_filepath(char *dest, const char *relativefp, size_t dest_size);
-void resource_filepath(char *dest, const char *relativefp, size_t dest_size, int resfp_mode);
-void create_process(const char *path, int argc, char *argv[]);
-char* basename(const char *path);
-int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param, int recursive);
-int launch_url(const char *url); /* launches an URL: returns TRUE on success */
 
+/* resource access. Resources are stored either in the game folder, or in the home folder (*nix). */
+typedef enum { RESFP_READ, RESFP_WRITE } resfp_t; /* do you want to access the resource for writing or for reading? */
+void resource_filepath(char *dest, const char *relativefp, size_t dest_size, resfp_t mode); /* returns the absolute path of relativefp */
+int foreach_resource(const char *wildcard, int (*callback)(const char *filename, void *param), void *param, int recursive); /* filename is an absolute filepath */
+
+/* simple file access */
+int filepath_exists(const char *filepath); /* does the given (absolute) filepath exist? */
+char* basename(const char *path); /* basename of path */
+int launch_url(const char *url); /* launches an URL: returns TRUE on success */
 
 #endif
