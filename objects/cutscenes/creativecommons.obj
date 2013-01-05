@@ -9,6 +9,7 @@ object ".creativecommons_startup"
 
     state main
     {
+        create_child .cutscene_skipper[pedantic]
         set_zindex 0
         set_animation SD_FADEEFFECT_WHITE 0
 
@@ -28,20 +29,17 @@ object ".creativecommons_startup"
     {
         play_sample samples/creativecommons2.ogg
         create_child .creativecommons_startup.logo
-        change_state skipper
+        change_state wait_some_more
     }
 
-    state skipper
+    state wait_some_more
     {
         on_timeout 4.0 fadeout2
-        on_button_pressed fire1 fadeout
-        on_button_pressed fire3 fadeout
-        on_button_pressed fire4 fadeout
     }
 
     state fadeout
     {
-        stop_sample samples/creativecommons.ogg
+        stop_sample samples/creativecommons2.ogg
         let $_fade_in=0
         let $_fade_duration=0.5
         create_child .fade_effect
@@ -56,7 +54,7 @@ object ".creativecommons_startup"
 
     state fadeout2
     {
-        stop_sample samples/creativecommons.ogg
+        stop_sample samples/creativecommons2.ogg
         let $_fade_in=0
         let $_fade_duration=0.5
         create_child .fade_effect
@@ -68,6 +66,13 @@ object ".creativecommons_startup"
         if ($wt+=dt())<1 wait3
         next_level
         //load_level levels/cutscenes/allegro.lev
+    }
+
+    // ---------------------
+
+    state .cutscene_skipper:on_skip
+    {
+        execute fadeout
     }
 }
 

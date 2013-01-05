@@ -65,7 +65,7 @@ static int traverse(const parsetree_statement_t *stmt, void *stagedata);
 
 /* private data */
 #define STAGE_BGFILE             "themes/levelselect.bg"
-#define STAGE_MAXPERPAGE         8
+#define STAGE_MAXPERPAGE         (VIDEO_SCREEN_H / 30)
 #define STAGE_MAX                1024 /* can't have more than STAGE_MAX levels installed */
 static font_t *title; /* title */
 static font_t *msg; /* message */
@@ -349,8 +349,7 @@ int dirfill(const char *filename, void *param)
 {
     int ver, subver, wipver;
     stagedata_t *s;
-printf("file: %s\n", filename);
-fflush(stdout);
+
     /* can't have more than STAGE_MAX levels installed */
     if(stage_count >= STAGE_MAX)
         return 0;

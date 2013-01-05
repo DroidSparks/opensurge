@@ -255,8 +255,9 @@ object .textualcutscene.translucency
 
     state main
     {
+hide // ???
         set_zindex 99.9
-        set_alpha 0.35
+        set_alpha 0.15
         set_animation SD_CUTSCENETOPSTRIP 0
         set_absolute_position 0 screen_height()/2
         change_state foo

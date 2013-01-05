@@ -78,7 +78,7 @@ void credits2_init()
 
     text = font_create("menu.credits");
     font_set_text(text, "%s", credits2_text);
-    font_set_width(text, 300);
+    font_set_width(text, VIDEO_SCREEN_W - 20);
     font_set_position(text, v2d_new(10, VIDEO_SCREEN_H));
     for(line_count=1,p=font_get_text(text); *p; p++)
         line_count += (*p == '\n') ? 1 : 0;

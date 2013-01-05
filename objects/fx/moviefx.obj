@@ -16,9 +16,6 @@
 //
 // 2. When you're done with the cutscene,
 //    change_closest_object_state ".moviefx" "hide"
-//
-// Additionally, you may spawn ".moviefx_skipper" if you want that FIRE4
-// make the engine go to the next level.
 
 object ".moviefx"
 {
@@ -128,22 +125,5 @@ object ".moviefx.bottomstrip"
     {
         let "$_moviefx_end += 1"
         destroy
-    }
-}
-
-object ".moviefx_skipper"
-{
-    requires 0.2.0
-    always_active
-
-    state main
-    {
-        hide
-        on_button_pressed fire4 end
-    }
-
-    state end
-    {
-        next_level
     }
 }

@@ -16,10 +16,16 @@ object ".intro_startup"
         create_child ".moviefx"
         create_child ".intro_subtitles"
         create_child ".intro_background"
-        create_child ".intro_skipper
+        create_child ".cutscene_skipper[pedantic]"
 
         play_music "musics/intro.ogg" 0
         change_state "start 1st slide"
+    }
+
+    // skip cutscene
+    state .cutscene_skipper:on_skip
+    {
+        next_level
     }
 
     // first slide
@@ -429,25 +435,6 @@ object ".intro_subtitles"
     state "end"
     {
         let $_hide_hud=0
-        next_level
-    }
-}
-
-object ".intro_skipper"
-{
-    requires 0.2.0
-    always_active
-
-    state "main"
-    {
-        hide
-        on_button_pressed "fire1" "end"
-        on_button_pressed "fire3" "end"
-        on_button_pressed "fire4" "end"
-    }
-
-    state "end"
-    {
         next_level
     }
 }

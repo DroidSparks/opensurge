@@ -21,6 +21,7 @@
 //
 // You can stop the fade effect by changing the state of the ".fade_effect" object to "destroy". In other words,
 // -- change_closest_object_state ".fade_effect" "destroy"
+// You may also, optionally, set $_fade_zindex to some value of your liking before spawing the object.
 
 object ".fade_effect"
 {

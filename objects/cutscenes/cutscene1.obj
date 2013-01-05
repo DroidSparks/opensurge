@@ -14,10 +14,17 @@ object ".cutscene1_startup"
         request_camera_focus
         set_absolute_position 160 1130
         create_child ".moviefx"
-        create_child ".moviefx_skipper"
+        create_child ".cutscene_skipper"
         create_child ".cutscene1_neon" 0 0 "neon"
         create_child ".cutscene1_surge" 0 0 "surge"
         change_state "step 1"
+    }
+
+    // cutscene skipper
+    state .cutscene_skipper:on_skip
+    {
+        play_music musics/silence.ogg -1
+        next_level
     }
 
     // interface with the dialog box

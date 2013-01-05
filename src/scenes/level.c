@@ -1985,7 +1985,7 @@ void render_water()
 {
     int y = waterlevel - ( (int)camera_get_position().y - VIDEO_SCREEN_H/2 );
     if(y < VIDEO_SCREEN_H)
-        image_waterfx(video_get_backbuffer(), y, watercolor);
+        image_draw_waterfx(video_get_backbuffer(), y, watercolor);
 }
 
 

@@ -9,6 +9,7 @@ object ".allegro_startup"
     // main
     state "main"
     {
+        create_child .cutscene_skipper[pedantic]
         set_absolute_position screen_width()/2 screen_height()/2
         set_animation SD_ALLEGRO 0
         play_sample samples/allegro.ogg
@@ -17,9 +18,6 @@ object ".allegro_startup"
 
     state wait
     {
-        on_button_pressed fire1 stop
-        on_button_pressed fire3 stop
-        on_button_pressed fire4 stop
         on_timeout 3.5 fadeout
     }
 
@@ -66,5 +64,12 @@ object ".allegro_startup"
     state cc
     {
         load_level levels/cutscenes/creativecommons.lev
+    }
+
+    // -------------
+
+    state .cutscene_skipper:on_skip
+    {
+        execute stop
     }
 }

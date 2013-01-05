@@ -12,6 +12,7 @@ object ".cutscene2_startup"
         hide
         let $step=0
         create_child .darkambiance 0 0 darkambiance
+        create_child .cutscene_skipper
 
         let "$_textualcutscene_text=new_array(9)"
         let "set_array_element($_textualcutscene_text, 0, 200)"
@@ -42,7 +43,6 @@ object ".cutscene2_startup"
 
     state frozen
     {
-        on_button_down fire4 skip_cutscene // SKIP CUTSCENE!!!
     }
 
     state .textualcutscene:on_finish
@@ -95,7 +95,9 @@ object ".cutscene2_startup"
         next_level
     }
 
-    state skip_cutscene
+
+    // ---- cutscene skipper ----
+    state .cutscene_skipper:on_skip
     {
         // this may actually cause a memory leak
         // in .textualcutscene, since its internal
@@ -103,7 +105,7 @@ object ".cutscene2_startup"
         // FIXME: reference counting?
 
         let $step=999
-        change_child_state textualcutscene @destroy // well, maybe not.
+        change_child_state textualcutscene @destroy // well, maybe doesn't leak :)
         change_state do_nothing
     }
 

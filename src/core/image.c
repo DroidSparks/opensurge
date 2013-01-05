@@ -36,7 +36,7 @@
 
 /* image structure */
 struct image_t {
-    BITMAP *data;
+    BITMAP *data; /* this must be the first field */
     int w, h;
 };
 
@@ -498,10 +498,10 @@ int image_pixelperfect_collision(const image_t *img1, const image_t *img2, int x
 }
 
 /*
- * image_waterfx()
+ * image_draw_waterfx()
  * pixels below y will have a water effect
  */
-void image_waterfx(image_t *img, int y, uint32 color)
+void image_draw_waterfx(image_t *img, int y, uint32 color)
 {
     fast_getpixel_funptr fast_getpixel = fast_getpixel_fun();
     fast_putpixel_funptr fast_putpixel = fast_putpixel_fun();

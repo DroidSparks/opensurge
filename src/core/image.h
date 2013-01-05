@@ -44,15 +44,13 @@ image_t *image_create_shared(const image_t *parent, int x, int y, int width, int
 /* properties */
 inline int image_width(const image_t *img);
 inline int image_height(const image_t *img);
-
-/* utilities */
 uint32 image_rgb(uint8 r, uint8 g, uint8 b);
 void image_color2rgb(uint32 color, uint8 *r, uint8 *g, uint8 *b);
-uint32 image_getpixel(const image_t *img, int x, int y);
-void image_clear(image_t *img, uint32 color);
 int image_pixelperfect_collision(const image_t *img1, const image_t *img2, int x1, int y1, int x2, int y2);
+uint32 image_getpixel(const image_t *img, int x, int y);
 
 /* drawing primitives */
+void image_clear(image_t *img, uint32 color);
 void image_putpixel(image_t *img, int x, int y, uint32 color);
 void image_line(image_t *img, int x1, int y1, int x2, int y2, uint32 color);
 void image_ellipse(image_t *img, int cx, int cy, int radius_x, int radius_y, uint32 color);
@@ -65,8 +63,6 @@ void image_draw_scaled(const image_t *src, image_t *dest, int x, int y, v2d_t sc
 void image_draw_rotated(const image_t *src, image_t *dest, int x, int y, int cx, int cy, float ang, uint32 flags);
 void image_draw_trans(const image_t *src, image_t *dest, int x, int y, float alpha, uint32 flags);
 void image_draw_lit(const image_t *src, image_t *dest, int x, int y, uint32 color, float alpha, uint32 flags);
-
-/* special effects */
-void image_waterfx(image_t *img, int y, uint32 color); /* pixels below y will have a water effect */
+void image_draw_waterfx(image_t *img, int y, uint32 color); /* pixels below y will have a water effect */
 
 #endif
