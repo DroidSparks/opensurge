@@ -1,0 +1,204 @@
+// cutscene3 script
+// by Alexandre @ 2013-01-06
+
+object ".cutscene3_startup"
+{
+    requires 0.2.0
+    always_active
+
+    // ----- main logic -----
+    state "main"
+    {
+        hide
+        let $step=0
+        create_child .darkambiance 0 0 darkambiance
+        create_child .cutscene_skipper
+        change_state next_step
+    }
+
+    state next_step
+    {
+        let $step+=1
+
+        execute !step1 if $step==1
+        execute !step2 if $step==2
+        execute !step3 if $step==3
+        execute !step4 if $step==4
+        execute !step5 if $step==5
+        execute !step6 if $step==6
+        execute !step7 if $step==7
+        execute !step8 if $step==8
+        execute !step9 if $step==9
+        execute !step10 if $step==10
+
+        if "$step > 10" finish
+        change_state do_nothing
+    }
+
+    state do_nothing
+    {
+        //  omg,      .---.
+        //  it's   .-|'---'|
+        //  1:11  (( |     |
+        //  AM     '-|     |
+        //  !!!!     '.___.'
+    }
+
+    state finish
+    {
+        change_child_state darkambiance @destroy
+        change_state wait
+    }
+
+    state wait
+    {
+        on_timeout 2 end
+    }
+
+    state end
+    {
+        next_level
+    }
+
+
+
+
+
+    // ----- callbacks -----
+    state .cutscene_skipper:on_skip
+    {
+        let $step=999
+        change_child_state textualcutscene @destroy
+        change_child_state dlgbox @destroy
+        change_state finish
+    }
+
+    state .dialogbox:on_destroy
+    {
+        on_timeout 0.5 next_step
+    }
+
+    state .textualcutscene:on_finish
+    {
+        on_timeout 0.5 next_step
+    }
+
+
+
+
+
+    // ----- steps of the cutscene -----
+    state !step1
+    {
+        let "$_textualcutscene_text=new_array(1)"
+        let "set_array_element($_textualcutscene_text, 0, 300)"
+        let "$_textualcutscene_timeout=new_array(1)"
+        let "set_array_element($_textualcutscene_timeout, 0, 3)"
+        create_child .textualcutscene 0 0 textualcutscene
+        let "delete_array($_textualcutscene_text)"
+        let "delete_array($_textualcutscene_timeout)"
+    }
+
+    state !step2
+    {
+        let $_dialogbox_text_id=301
+        let $_dialogbox_avatar_id=1
+        create_child .dialogbox 0 0 dlgbox
+    }
+
+    state !step3
+    {
+        let "$_textualcutscene_text=new_array(1)"
+        let "set_array_element($_textualcutscene_text, 0, 302)"
+        let "$_textualcutscene_timeout=new_array(1)"
+        let "set_array_element($_textualcutscene_timeout, 0, 3)"
+        create_child .textualcutscene 0 0 textualcutscene
+        let "delete_array($_textualcutscene_text)"
+        let "delete_array($_textualcutscene_timeout)"
+    }
+
+    state !step4
+    {
+        let $_dialogbox_text_id=303
+        let $_dialogbox_avatar_id=1
+        create_child .dialogbox 0 0 dlgbox
+    }
+
+    state !step5
+    {
+        let "$_textualcutscene_text=new_array(1)"
+        let "set_array_element($_textualcutscene_text, 0, 0)" // empty string
+        let "$_textualcutscene_timeout=new_array(1)"
+        let "set_array_element($_textualcutscene_timeout, 0, 1)"
+        create_child .textualcutscene 0 0 textualcutscene
+        let "delete_array($_textualcutscene_text)"
+        let "delete_array($_textualcutscene_timeout)"
+    }
+
+    state !step6
+    {
+        let $_dialogbox_text_id=304
+        let $_dialogbox_avatar_id=1
+        create_child .dialogbox 0 0 dlgbox
+    }
+
+    state !step7
+    {
+        let "$_textualcutscene_text=new_array(2)"
+        let "set_array_element($_textualcutscene_text, 0, 0)"
+        let "set_array_element($_textualcutscene_text, 1, 305)"
+        let "$_textualcutscene_timeout=new_array(2)"
+        let "set_array_element($_textualcutscene_timeout, 0, 1)"
+        let "set_array_element($_textualcutscene_timeout, 1, 3)"
+        create_child .textualcutscene 0 0 textualcutscene
+        let "delete_array($_textualcutscene_text)"
+        let "delete_array($_textualcutscene_timeout)"
+    }
+
+    state !step8
+    {
+        let $_dialogbox_text_id=306
+        let $_dialogbox_avatar_id=-1
+        create_child .dialogbox 0 0 dlgbox
+    }
+
+    state !step9
+    {
+        let "$_textualcutscene_text=new_array(5)"
+        let "set_array_element($_textualcutscene_text, 0, 0)"
+        let "set_array_element($_textualcutscene_text, 1, 307)"
+        let "set_array_element($_textualcutscene_text, 2, 308)"
+        let "set_array_element($_textualcutscene_text, 3, 0)"
+        let "set_array_element($_textualcutscene_text, 4, 309)"
+        let "$_textualcutscene_timeout=new_array(5)"
+        let "set_array_element($_textualcutscene_timeout, 0, 1)"
+        let "set_array_element($_textualcutscene_timeout, 1, 3.5)"
+        let "set_array_element($_textualcutscene_timeout, 2, 3)"
+        let "set_array_element($_textualcutscene_timeout, 3, 1)"
+        let "set_array_element($_textualcutscene_timeout, 4, 4)"
+        create_child .textualcutscene 0 0 textualcutscene
+        let "delete_array($_textualcutscene_text)"
+        let "delete_array($_textualcutscene_timeout)"
+    }
+
+    state !step10
+    {
+        // this may leak out, if the cutscene is skipped at this point D:
+        // we need reference counting for the arrays in the engine...
+        let "$_dialogbox_text_id = new_array(5)"
+        let "set_array_element($_dialogbox_text_id, 0, 310)"
+        let "set_array_element($_dialogbox_text_id, 1, 311)"
+        let "set_array_element($_dialogbox_text_id, 2, 312)"
+        let "set_array_element($_dialogbox_text_id, 3, 313)"
+        let "set_array_element($_dialogbox_text_id, 4, 314)"
+        let "$_dialogbox_avatar_id = new_array(5)"
+        let "set_array_element($_dialogbox_avatar_id, 0, 1)"
+        let "set_array_element($_dialogbox_avatar_id, 1, 1)"
+        let "set_array_element($_dialogbox_avatar_id, 2, 1)"
+        let "set_array_element($_dialogbox_avatar_id, 3, 1)"
+        let "set_array_element($_dialogbox_avatar_id, 4, 1)"
+        create_child .dialogbox 0 0 dlgbox
+        let "delete_array($_dialogbox_avatar_id)"
+        let "delete_array($_dialogbox_text_id)"
+    }
+}

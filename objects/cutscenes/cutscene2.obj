@@ -57,7 +57,7 @@ object ".cutscene2_startup"
     {
         let $_dialogbox_text_id=209
         let $_dialogbox_avatar_id=1
-        create_child .dialogbox.default
+        create_child .dialogbox
 
         change_state frozen
     }

@@ -25,6 +25,7 @@ COLOR_MENUTITLE             "e99f42"
 COLOR_HIGHLIGHT             "e99f42"
 COLOR_SUBHIGHLIGHT          "ffe13e"
 COLOR_SUBSUBHIGHLIGHT       "cdc3b6"
+COLOR_DANGER                "ff7777"
 
 // Game data
 GAME_NAME                   "Open Surge"
@@ -83,7 +84,7 @@ MENU_CQ_EXTRA               "Extra levels"
 
 // Credits
 CREDITS_TITLE               "<color=$COLOR_MENUTITLE>CREDITS</color>"
-CREDITS_KEY                 "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to go back" //, or <color=$COLOR_INPUT>$INPUT_FIRE2</color> to see the donors"
+CREDITS_KEY                 "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to go back"
 CREDITS_HEADER              "<color=$COLOR_HIGHLIGHT>$GAME_NAME version $GAME_VERSION</color>\n<color=$COLOR_SUBHIGHLIGHT>powered by $ENGINE_NAME version $ENGINE_VERSION</color>\n<color=$COLOR_SUBSUBHIGHLIGHT>$ENGINE_WEBSITE</color>"
 CREDITS_ACTIVE              "Open Surge team"
 CREDITS_CONTRIB             "Special contributors"
@@ -116,9 +117,8 @@ CREDITS_SANTIAGO            "Spanish translation"
 CREDITS_RAXILLAN            "Russian translation"
 
 // Second credits screen
-CREDITS2_TITLE              "<color=$COLOR_MENUTITLE>DONORS</color>"
+CREDITS2_TITLE              "<color=$COLOR_MENUTITLE>CREDITS</color>"
 CREDITS2_KEY                "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to go back"
-CREDITS2_HEADER             "As an open source game, Open Surge needs money to pay for code, art, music, etc.\n\nThese are the enthusiasts who have helped fund the project:"
 
 // "Please donate" screen
 DONATE_TITLE                "<color=$COLOR_MENUTITLE>PLEASE DONATE</color>"
@@ -174,7 +174,7 @@ CBOX_QUIT_OPTION1       "YES"
 CBOX_QUIT_OPTION2       "NO"
 
 // HUD (Heads-Up Display)
-HUD_SCORE                   "Score:"
+HUD_SCORE                   "Score:" // === translation notes: ===
 HUD_TIME                    "Time: " // the same amount of characters as HUD_SCORE
 HUD_COLLECTIBLES            "Rings:" // the same amount of characters as HUD_SCORE
 HUD_SPACES                  "      " // the same amount of characters as HUD_SCORE
@@ -263,6 +263,21 @@ STRING_210          ""
 STRING_211          "- Surge rushes to the waterfall -"
 
 // cutscene 3: Sunshine Paradise, between act 2 and 3
+STRING_300          "Not so far away, <color=$COLOR_SURGE>Surge</color> sees a dam."
+STRING_301          "What the... that dam wasn't here yesterday. How the heck did that get built so fast?!"
+STRING_302          "Surge looks around, but Neon isn't there."
+STRING_303          "Neeeeeeeooooooooon? Are you okay? Where are you? Neeeooon? Neeoon?!"
+STRING_304          "Neon must've been captured... or maybe he ran off when he saw some of those creatures. Either way, he's in trouble and I have to find him."
+STRING_305          "A young animal comes out of the woods."
+STRING_306          "<color=$COLOR_DANGER>HELP!!!</color> They're coming! Run! Run for your life!"
+STRING_307          "The animal gets grabbed by two of them..."
+STRING_308          "and they disappear with it."
+STRING_309          "<color=$COLOR_SURGE>Surge</color> is in shock."
+STRING_310          "What!? It's just... gone."
+STRING_311          "just like when Neon and I – wait a second... I remember these things! They appear out of nowhere and ambush whoever they are after."
+STRING_312          "So, these strange creatures of darkness are the ones behind the disappearances of innocent animals..."
+STRING_313          "and more of them are starting to appear."
+STRING_314          "Looks like it's up to me to stop whoever's behind this..."
 
 // cutscene 4: Sunshine Paradise, boss
 STRING_400          "Wh-what are you?! Where are all my friends?!"

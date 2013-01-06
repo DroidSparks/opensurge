@@ -48,7 +48,8 @@ object "Awesome (O)Possum"
     state talk
     {
         let $_dialogbox_text_id=130+(min(($x+=1),2)-1)
-        create_child .dialogbox.default[no_avatar]
+        let $_dialogbox_avatar_id=-1
+        create_child .dialogbox
         change_state talking
     }
 

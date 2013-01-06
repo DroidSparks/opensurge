@@ -1089,7 +1089,7 @@ object .bigwolf_introcutscene
     {
         let $_dialogbox_text_id=400
         let $_dialogbox_avatar_id=1
-        create_child .dialogbox.default
+        create_child .dialogbox
         let "$dlg=1"
 
         disable_player_movement
@@ -1157,7 +1157,7 @@ object .bigwolf_introcutscene
     {
         let $_dialogbox_text_id=401
         let $_dialogbox_avatar_id=1
-        create_child .dialogbox.default
+        create_child .dialogbox
         let "$dlg=2"
 
         disable_player_movement

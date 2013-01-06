@@ -255,7 +255,8 @@ object .textualcutscene.translucency
 
     state main
     {
-hide // ???
+        hide // do we need this???
+
         set_zindex 99.9
         set_alpha 0.15
         set_animation SD_CUTSCENETOPSTRIP 0

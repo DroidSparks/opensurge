@@ -35,7 +35,8 @@ object .dialogbox.base.avatar
     {
         hide
         let $_dialogbox_base_avatar_exists=1
-        change_state refresh
+        let $id=$_dialogbox_avatar_id
+        change_state idle
     }
 
     state refresh

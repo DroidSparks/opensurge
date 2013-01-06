@@ -1,9 +1,113 @@
 // dialog boxes
 // script by Alexandre
-
 // for a complete documentation, please read
 // dialogbox.obj
 
+
+
+
+//
+// Here's an example dialogbox, so that you can study it.
+// Experiment spawning it in a level.
+//
+object .dialogbox.example
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        hide
+
+        // it will display animation #1 of the DIALOGBOX_AVATAR sprite, defined
+        // in a .spr in sprites/
+        let $_dialogbox_avatar_id=1
+
+        // it will display DIALOGBOX_MESSAGE_0, defined in the current .lng
+        // file in the languages/ directory
+        let $_dialogbox_text_id=0
+
+        // it will create the components of the dialog box
+        create_child .dialogbox.base.background 0 0 background
+        create_child .dialogbox.base.avatar 0 0 avatar
+        create_child .dialogbox.base.text 0 0 text
+
+        // wait a bit
+        disable_player_movement
+        change_state wait
+    }
+
+    state wait
+    {
+        // do nothing!
+    }
+
+    state .dialogbox.base.background:on_appear
+    {
+        // when the dialog box fully appears on the screen, start the text
+        // rendering routines
+        change_child_state text start
+        change_state wait
+    }
+
+    state .dialogbox.base.background:on_disappear
+    {
+        // when the dialog box fully disappears from the screen, destroy
+        // its components and itself
+        change_child_state background destroy
+        change_child_state avatar destroy
+        change_child_state text destroy
+        change_parent_state .dialogbox:on_destroy
+        enable_player_movement
+        destroy
+    }
+
+    state .dialogbox.base.text:on_complete
+    {
+        // after the text is fully rendered to the screen...
+        on_timeout 5.0 disappear
+    }
+
+    state .dialogbox.base.text:on_start
+    {
+    }
+
+    state disappear
+    {
+        // disappear
+        change_child_state background disappear
+        change_state wait
+    }
+
+    state hide
+    {
+        // hide
+        change_child_state background hide
+        change_state wait
+    }
+
+    state show
+    {
+        // show the dialog box after it's been hidden
+        change_child_state background show
+        change_state wait
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//
+// another example
+//
 object balloon.example
 {
     requires 0.2.0
@@ -42,6 +146,17 @@ object balloon.example
     }
 }
 
+
+
+
+
+
+
+
+
+//
+// a more advanced example
+//
 object balloon.example2
 {
     requires 0.2.0
@@ -78,7 +193,6 @@ object balloon.example2
     }
 }
 
-// --------------------------------------
 
 object .dialogbox.balloon.advancedexample
 {

@@ -36,8 +36,9 @@ static const float one = 1.0f;
 #define INFI                (1.0f / (1.0f - one))
 #define MAX_ARRAYS          2048
 #define ARRAY_MAXLEN        1024
-#define ARRAY_PTR2HANDLE(x) (float)(1337 + x)
-#define ARRAY_HANDLE2PTR(x) (int)x - 1337
+#define ARRAY_MAGIC         (0xDEAD + 0xBEEF)
+#define ARRAY_PTR2HANDLE(x) (float)(ARRAY_MAGIC + (x))
+#define ARRAY_HANDLE2PTR(x) ((int)(x) - ARRAY_MAGIC)
 
 
 
