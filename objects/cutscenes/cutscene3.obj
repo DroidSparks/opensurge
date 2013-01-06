@@ -160,6 +160,7 @@ object ".cutscene3_startup"
         let $_dialogbox_text_id=306
         let $_dialogbox_avatar_id=-1
         create_child .dialogbox 0 0 dlgbox
+        create_child .cutscene3.younganimal
     }
 
     state !step9
@@ -200,5 +201,68 @@ object ".cutscene3_startup"
         create_child .dialogbox 0 0 dlgbox
         let "delete_array($_dialogbox_avatar_id)"
         let "delete_array($_dialogbox_text_id)"
+    }
+}
+
+
+// -------------------
+
+object .cutscene3.younganimal
+{
+    requires 0.2.0
+    always_active
+    detach_from_camera
+
+    state main
+    {
+        set_animation SD_ANIMAL 3
+        set_animation_speed_factor 2
+        set_scale 2 2
+        set_absolute_position -width() screen_height()/2+height()
+
+        create_child .cutscene3.monster -200 -50
+        create_child .cutscene3.monster -300 -70
+        create_child .cutscene3.younganimal.panic 0 -63
+
+        change_state run
+    }
+
+    state run
+    {
+        move 180 0
+    }
+}
+
+object .cutscene3.monster
+{
+    requires 0.2.0
+    always_active
+    detach_from_camera
+
+    state main
+    {
+        let "$id = ($_ct3m_id += 1) mod 2"
+        set_animation Crococopter 0
+        set_scale 0.6 0.6
+        change_state run
+    }
+
+    state run
+    {
+        let $speed=215
+        set_absolute_position "xpos() + $speed * dt()" "spawnpoint_y() + 10*cos(2*pi()*($t+=dt()) + pi()*($id/2))"
+    }
+}
+
+object .cutscene3.younganimal.panic
+{
+    requires 0.2.0
+    always_active
+    detach_from_camera
+
+    state main
+    {
+        set_animation SD_SHOUTPANIC 0
+        move 180 0
     }
 }
