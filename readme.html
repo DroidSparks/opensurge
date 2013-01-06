@@ -258,7 +258,7 @@
   <pre>opensurge --help</pre>
 
   <h2>Game resources</h2>
-  <p>You can store various forms of game media (levels, images, sounds and so on) in GAMEDIR/ (default) and also in $HOME/.opensurge/ (*nix only). GAMEDIR is, not surprisingly, the directory where the game is located.</p>
+  <p>You can store various forms of game media (levels, images, sounds and so on) in GAMEDIR/ (default) and also in $HOME/.opensurge/ (Linux only). GAMEDIR is, not surprisingly, the directory where the game is located. If you're a modder, this is for you.</p>
 
 
 
@@ -281,12 +281,12 @@
       </ul>
     </li>
     <li><a href="http://opensnc.sourceforge.net/alfont/">Modified Alfont 2.0.9</a></li>
-    <li>Under *nix, you'll also need <a href="http://kcat.strangesoft.net/openal.html">OpenAL</a> and <a href="http://kcat.strangesoft.net/alure.html">ALURE</a> (with VorbisFile enabled)</li>
+    <li>Linux user? You'll also need <a href="http://kcat.strangesoft.net/openal.html">OpenAL</a> and <a href="http://kcat.strangesoft.net/alure.html">ALURE</a> (with VorbisFile enabled)</li>
   </ul>
   <p>In a regular installation of Allegro 4.4, JPGalleg and loadpng and LOGG are already included by default.</p>
   <p>We won't get into details on how to install these libraries. Please check out their respective websites to know the detailed instructions.</p>
 
-  <h2>Compiling for GNU/Linux - gcc</h2>
+  <h2>Compiling: GNU/Linux - gcc</h2>
   <p>Open a terminal, go to GAMEDIR and run the following commands:</p>
   <pre>./configure
 make
@@ -295,16 +295,16 @@ sudo make install</pre>
   <pre>opensurge</pre>
   <p class="tip"><strong>Note:</strong> if you find errors related to &quot;allegro-config&quot;, we recommend that you compile Allegro from the source code.</p>
 
-  <h2>Compiling for Windows - MinGW</h2>
-  <p><a href="http://www.mingw.org/">MinGW</a> user? Make sure both <em>lib\</em> and <em>bin\</em> folders are listed on your PATH. You don't know? If MinGW is installed on C:\MinGW\, simply open a Command Prompt and type</p>
+  <h2>Compiling: Windows - MinGW</h2>
+  <p>Are you a <a href="http://www.mingw.org/">MinGW</a> user? Make sure both <em>lib\</em> and <em>bin\</em> folders are listed on your PATH. You don't know? If MinGW is installed on C:\MinGW\, simply open a Command Prompt and type</p>
   <pre>set PATH=%PATH%;C:\MinGW\bin;C:\MinGW\lib</pre>
   <p>On the same Command Prompt, please go to GAMEDIR and run the following commands:</p>
   <pre>cmake -G "MinGW Makefiles" .
 mingw32-make</pre>
   <p>Note that little '.' at the end of the first command. If everything works well, <em>opensurge.exe</em> will be in GAMEDIR.</p>
 
-  <h2>Compiling for Mac OS X</h2>
-  <p>We have no idea how to compile this on a Mac, but the instructions for Linux may give you some insight.</p>
+  <h2>Compiling: Mac OS X</h2>
+  <p>We have no idea how to compile this on a Mac, but the instructions for Linux may give you some insight. ;)</p>
 
   <h2>Other compilers/IDEs</h2>
   <p>Please open a terminal and run:</p>
@@ -321,7 +321,7 @@ mingw32-make</pre>
   <p>The code of the engine is licensed under the GPL version 2 (or, at your option, any later version). The media attached to the game (graphics, sounds, levels, scripts, etc.) is mostly licensed under the Creative Commons Attribution-ShareAlike 3.0. Please check the credits screen and the licenses/ folder for more information.</p>
 
   <h2>About this game</h2>
-  <p>Open Surge&trade; is written from the ground up in <a href="http://en.wikipedia.org/wiki/C_language">C language</a>, using the <a href="http://alleg.sourceforge.net/">Allegro game programming library</a>. It also uses <a href="http://trent.gamblin.ca/logg/">LOGG</a> for music playback, <a href="http://tjaden.strangesoft.net/loadpng/">loadpng</a> and <a href="http://www.ecplusplus.com/index.php?page=projects&amp;pid=1">JPGalleg</a> for image loading/saving routines, <a href="http://chernsha.sitesled.com/">alfont</a> for True-Type font routines (which uses code from the <a href="http://www.freetype.org">FreeType</a> project) and <a href="http://code.google.com/p/hqx/">hqx</a> for improved graphic rendering. <a href="http://kcat.strangesoft.net/openal.html">OpenAL</a> and <a href="http://kcat.strangesoft.net/alure.html">ALURE</a> may be optionally used for audio playback. This game was originally written by <a href="http://opensnc.sourceforge.net/alemart">Alexandre Martins</a>, a computer science student from Brazil. Nowadays, this project has several contributors all over the world! Game development is a such a beautiful and fascinating area, and one can learn a lot with it.</p>
+  <p>Open Surge&trade; is written from the ground up in <a href="http://en.wikipedia.org/wiki/C_language">C language</a>, using the <a href="http://alleg.sourceforge.net/">Allegro game programming library</a>. It also uses <a href="http://trent.gamblin.ca/logg/">LOGG</a> for music playback, <a href="http://tjaden.strangesoft.net/loadpng/">loadpng</a> and <a href="http://www.ecplusplus.com/index.php?page=projects&amp;pid=1">JPGalleg</a> for image loading/saving routines, <a href="http://opensnc.sourceforge.net/alfont/">alfont</a> for True-Type font routines (which uses code from the <a href="http://www.freetype.org">FreeType</a> project) and <a href="http://code.google.com/p/hqx/">hqx</a> for improved graphic rendering. <a href="http://kcat.strangesoft.net/openal.html">OpenAL</a> and <a href="http://kcat.strangesoft.net/alure.html">ALURE</a> may be optionally used for audio playback. This game was originally written by <a href="http://opensnc.sourceforge.net/alemart">Alexandre Martins</a>, a computer science student from Brazil. Nowadays, this project has several contributors all over the world! Game development is a such a beautiful and fascinating area, and one can learn a lot with it.</p>
   <p>Thank you for reading.</p>
 
 

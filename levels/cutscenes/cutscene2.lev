@@ -12,3 +12,4 @@ bgtheme "themes/template.bg"
 startup ".cutscene2_startup"
 music "musics/darkambiance.ogg"
 players "none"
+readonly

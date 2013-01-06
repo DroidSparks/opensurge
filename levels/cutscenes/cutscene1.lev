@@ -15,6 +15,7 @@ spawn_point 0 1000
 grouptheme "themes/sunshine.grp"
 startup ".cutscene1_startup"
 players "none"
+readonly
 
 // dialog regions (xpos ypos width height title message)
 

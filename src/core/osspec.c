@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <time.h>
 #include <allegro.h>
 #include "global.h"
 #include "osspec.h"
@@ -78,7 +79,7 @@
 /* private stuff */
 static char *base_dir; /* absolute path to the base directory. It can be "" (read resources from install folder and from $HOME), or some other absolute path */
 
-static void absolute_filepath(char *dest, const char *relativefp, size_t dest_size);
+static void install_filepath(char *dest, const char *relativefp, size_t dest_size);
 static void home_filepath(char *dest, const char *relativefp, size_t dest_size);
 static int foreach_file(const char *wildcard, int (*callback)(const char *filename, void *param), void *param, int recursive);
 static int directory_exists(const char *dirpath);
@@ -257,7 +258,7 @@ int foreach_resource(const char *wildcard, int (*callback)(const char *filename,
     int j, max_paths, sum = 0;
 
     /* official and $HOME filepaths */
-    absolute_filepath(abs_path[0], wildcard, sizeof(abs_path[0]));
+    install_filepath(abs_path[0], wildcard, sizeof(abs_path[0]));
     home_filepath(abs_path[1], wildcard, sizeof(abs_path[1]));
     max_paths = (strcmp(abs_path[0], abs_path[1]) == 0) ? 1 : 2;
 
@@ -272,7 +273,7 @@ int foreach_resource(const char *wildcard, int (*callback)(const char *filename,
 
 /*
  * resource_filepath()
- * Similar to absolute_filepath() and home_filepath(), but this routine
+ * Similar to install_filepath() and home_filepath(), but this routine
  * searches the specified file both in the home directory and in the
  * game directory
  */
@@ -316,7 +317,7 @@ void resource_filepath(char *dest, const char *relativefp, size_t dest_size, res
         {
             FILE *fp;
             struct al_ffblk info;
-            absolute_filepath(dest, relativefp, dest_size);
+            install_filepath(dest, relativefp, dest_size);
 
             if(al_findfirst(dest, &info, FA_HIDDEN) == 0) {
                 /* the file exists AND it's NOT read-only */
@@ -510,11 +511,11 @@ int foreach_file(const char *wildcard, int (*callback)(const char *filename, voi
 }
 
 /*
- * absolute_filepath()
+ * install_filepath()
  * Converts a relative filepath into an
- * absolute filepath.
+ * absolute filepath (in relation to the installation folder).
  */
-void absolute_filepath(char *dest, const char *relativefp, size_t dest_size)
+void install_filepath(char *dest, const char *relativefp, size_t dest_size)
 {
     /* did we receive a relative filepath? */
     if(is_relative_filename(relativefp)) {
@@ -562,7 +563,7 @@ void absolute_filepath(char *dest, const char *relativefp, size_t dest_size)
 
 /*
  * home_filepath()
- * Similar to absolute_filepath(), but this routine considers
+ * Similar to install_filepath(), but this routine considers
  * the $HOME/.$GAME_UNIXNAME/ directory instead
  */
 void home_filepath(char *dest, const char *relativefp, size_t dest_size)
@@ -576,11 +577,12 @@ void home_filepath(char *dest, const char *relativefp, size_t dest_size)
         fix_case_path(dest);
     }
     else
-        absolute_filepath(dest, relativefp, dest_size);
+        install_filepath(dest, relativefp, dest_size);
 
 #else
 
-    absolute_filepath(dest, relativefp, dest_size);
+    /* home_filepath() is not applicable on Windows */
+    install_filepath(dest, relativefp, dest_size);
 
 #endif
 }
@@ -746,9 +748,27 @@ char* fix_case_path(char *filepath)
  * finds the absolute path (either in the home directory or in the game directory) */
 void search_the_file(char *dest, const char *relativefp, size_t dest_size)
 {
-    home_filepath(dest, relativefp, dest_size);
-    if(!filepath_exists(dest) && !directory_exists(dest))
-        absolute_filepath(dest, relativefp, dest_size);
+    char *home_path = mallocx(dest_size * sizeof(*dest));
+    char *install_path = mallocx(dest_size * sizeof(*dest));
+
+    home_filepath(home_path, relativefp, dest_size);
+    install_filepath(install_path, relativefp, dest_size);
+
+    if(filepath_exists(home_path) || directory_exists(home_path)) {
+        if(filepath_exists(install_path) || directory_exists(install_path)) {
+            if(difftime(file_time(install_path), file_time(home_path)) > 0)
+                strcpy(dest, install_path);
+            else
+                strcpy(dest, home_path);
+        }
+        else
+            strcpy(dest, home_path);
+    }
+    else
+        strcpy(dest, install_path);
+
+    free(install_path);
+    free(home_path);
 }
 
 

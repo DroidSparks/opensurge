@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Configuration script
-# Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+# Copyright (C) 2010, 2012-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +18,32 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-# Tip: you may run 'ccmake .' access the advanced options
+# Tip: you may run 'ccmake .' to access the advanced options
 if [ -e ./CMakeLists.txt ]; then
+
+  # can I remove $HOMEDATA_DIR ?
+  HOMEDATA_DIR=`echo ~/.opensurge/`
+  if [ -e "$HOMEDATA_DIR" ]; then
+    echo "==============================================================================="
+    echo "                                 ATTENTION !                                   "
+    echo "==============================================================================="
+    echo "It looks like you have already executed some version of the Open Surge Engine"
+    echo -e "in this computer. Do you wish to remove the data folder \"$HOMEDATA_DIR\","
+    echo -n "so that you get a clean installation? (y/n) "
+    while true; do
+      read dummy
+      case $dummy in
+        y|Y|yes|YES|Yes)
+          rm -rf "$HOMEDATA_DIR"
+          echo -e "The folder has been removed.\n"
+          break ;;
+        n|N|no|NO|No)
+          echo -e "Okay then.\n"
+          break;;
+      esac
+      echo -ne "Delete folder \"$HOMEDATA_DIR\"? (y/n) "
+    done
+  fi
 
   # calling cmake
   cmake $@ .

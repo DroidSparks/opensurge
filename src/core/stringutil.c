@@ -190,7 +190,7 @@ char* str_rstr(char *haystack, const char *needle)
 {
     if(*haystack) {
         char *p, *q;
-        for(q = NULL; NULL != (p = strstr(haystack, needle)); q = p, haystack = p+1);
+        for(q = NULL; (p = strstr(haystack, needle)); q = p, haystack = p+1);
         return q;
     }
     else
