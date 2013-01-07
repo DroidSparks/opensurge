@@ -48,7 +48,7 @@ object ".cutscene4_startup"
 
     state wait
     {
-        on_timeout 2 end
+        on_timeout 3.5 end
     }
 
     state end
@@ -173,6 +173,7 @@ object .cutscene4.animal
         set_animation SD_ANIMAL 19
         set_animation_speed_factor 1.5
         set_absolute_position screen_width() $floor_y
+        set_alpha 0
         look_left
 
         change_state appear
@@ -180,6 +181,7 @@ object .cutscene4.animal
 
     state appear
     {
+        set_alpha "min(1, alpha() + 0.5 * dt())"
         set_absolute_position "max(xpos() - $speed * dt(), $min_x)" $floor_y
         if "xpos() <= $min_x" appeared
     }
@@ -192,6 +194,7 @@ object .cutscene4.animal
 
     state keep_jumping
     {
+        set_alpha "min(1, alpha() + 0.5 * dt())"
         set_animation_speed_factor 1.0
         set_absolute_position xpos() "$floor_y - abs(15 * sin(2*pi()*($t+=dt())))"
     }
@@ -263,7 +266,7 @@ object .cutscene4.surge
     // callbacks
     state @cross_arms
     {
-        set_animation SD_SURGE 28
+        set_animation SD_SURGE 36
     }
 
     state @fadeout

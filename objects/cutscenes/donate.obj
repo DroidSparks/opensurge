@@ -67,6 +67,16 @@ object ".donate_startup.options"
         change_state no
     }
 
+    state yes
+    {
+        change_child_state text yes
+        on_button_pressed fire1 chose_yes
+        on_button_pressed fire3 chose_yes
+        on_button_pressed fire4 chose_no
+        on_button_pressed left change_to_dontask
+        on_button_pressed right change_to_no
+    }
+
     state no
     {
         change_child_state text no
@@ -74,17 +84,17 @@ object ".donate_startup.options"
         on_button_pressed fire3 chose_no
         on_button_pressed fire4 chose_no
         on_button_pressed left change_to_yes
-        on_button_pressed right change_to_yes
+        on_button_pressed right change_to_dontask
     }
 
-    state yes
+    state dontask
     {
-        change_child_state text yes
-        on_button_pressed fire1 chose_yes
-        on_button_pressed fire3 chose_yes
-        on_button_pressed fire4 chose_no
+        change_child_state text dontask
+        on_button_pressed fire1 chose_dontask
+        on_button_pressed fire3 chose_dontask
+        on_button_pressed fire4 chose_dontask
         on_button_pressed left change_to_no
-        on_button_pressed right change_to_no
+        on_button_pressed right change_to_yes
     }
 
     state change_to_no
@@ -99,26 +109,43 @@ object ".donate_startup.options"
         change_state yes
     }
 
+    state change_to_dontask
+    {
+        play_sample samples/switch.wav
+        change_state dontask
+    }
+
     state chose_yes
     {
-        change_child_state text yes
-        play_sample samples/select.wav
+        create_child .launch_donation_url
+
         let $_fade_in=0
         let $_fade_duration=1
         create_child .fade_effect
-        change_closest_object_state .donate_startup.options.text.yes @already_donated
-        execute _launch_url if not($_already_donated)
-        execute _dont_show_again if $_already_donated
+
+        play_sample samples/select.wav
         change_state wait
     }
 
     state chose_no
     {
-        change_child_state text no
-        play_sample samples/return.wav
         let $_fade_in=0
         let $_fade_duration=1
         create_child .fade_effect
+
+        play_sample samples/return.wav
+        change_state wait
+    }
+
+    state chose_dontask
+    {
+        create_child .donate_startup.dont_show_again
+
+        let $_fade_in=0
+        let $_fade_duration=1
+        create_child .fade_effect
+
+        play_sample samples/return.wav
         change_state wait
     }
 
@@ -131,17 +158,6 @@ object ".donate_startup.options"
     {
         let $_force_donation_screen=0
         next_level
-    }
-
-    state _launch_url
-    {
-        launch_url "http://www.wikipedia.org"
-    }
-
-    state _dont_show_again
-    {
-        create_child .donate_startup.dont_show_again 0 0 dsa
-        change_child_state dsa @save
     }
 }
 
@@ -157,6 +173,7 @@ object ".donate_startup.options.text"
         set_absolute_position screen_width()/2 screen_height()-32
         create_child .donate_startup.options.text.yes 0 0 yes
         create_child .donate_startup.options.text.no 0 0 no
+        create_child .donate_startup.options.text.dontask 0 0 dontask
         change_state no
     }
 
@@ -164,12 +181,21 @@ object ".donate_startup.options.text"
     {
         change_child_state yes enabled
         change_child_state no disabled
+        change_child_state dontask disabled
     }
 
     state no
     {
-        change_child_state no enabled
         change_child_state yes disabled
+        change_child_state no enabled
+        change_child_state dontask disabled
+    }
+
+    state dontask
+    {
+        change_child_state yes disabled
+        change_child_state no disabled
+        change_child_state dontask enabled
     }
 }
 
@@ -182,41 +208,21 @@ object ".donate_startup.options.text.yes"
     state "main"
     {
         set_animation SD_HUDHEAD 0
-        set_absolute_position screen_width()*0.33 ypos()
-        let $already_have=0
+        look_right
+        set_absolute_position screen_width()/6 ypos()
         change_state disabled
     }
 
     state enabled
     {
         show
-        textout_centre menu.small 0 10+screen_height()*$already_have "<color=ffff00>$DONATE_YES</color>"
-        textout_centre menu.small 0 10+screen_height()*(1-$already_have) "<color=ffff00>$DONATE_ALREADYHAVE</color>"
-        if ($t+=dt())<2 enabled
-        on_button_pressed up toggle
-        on_button_pressed down toggle
+        textout_centre menu.small 0 10 "<color=$COLOR_MENUSELECTEDOPTION>$DONATE_YES</color>"
     }
 
     state disabled
     {
         hide
-        textout_centre menu.small 0 10+screen_height()*$already_have "$DONATE_YES"
-        textout_centre menu.small 0 10+screen_height()*(1-$already_have) "$DONATE_ALREADYHAVE"
-    }
-
-    state toggle
-    {
-        play_sample samples/switch.wav
-        let $already_have=1-$already_have
-        textout_centre menu.small 0 10+screen_height()*$already_have "$DONATE_YES"
-        textout_centre menu.small 0 10+screen_height()*(1-$already_have) "$DONATE_ALREADYHAVE"
-        return_to_previous_state
-    }
-
-    state @already_donated // called by someone else
-    {
-        let $_already_donated=$already_have
-        return_to_previous_state
+        textout_centre menu.small 0 10 "$DONATE_YES"
     }
 }
 
@@ -230,14 +236,14 @@ object ".donate_startup.options.text.no"
     {
         set_animation SD_HUDHEAD 0
         look_left
-        set_absolute_position screen_width()*0.66 ypos()
+        set_absolute_position screen_width()/2 ypos()
         change_state disabled
     }
 
     state enabled
     {
         show
-        textout_centre menu.small 0 10 "<color=ffff00>$DONATE_NO</color>"
+        textout_centre menu.small 0 10 "<color=$COLOR_MENUSELECTEDOPTION>$DONATE_NO</color>"
     }
 
     state disabled
@@ -247,30 +253,87 @@ object ".donate_startup.options.text.no"
     }
 }
 
-object ".donate_startup.dont_show_again"
+object ".donate_startup.options.text.dontask"
 {
     requires 0.2.0
     detach_from_camera
     always_active
 
+    state "main"
+    {
+        set_animation SD_HUDHEAD 0
+        look_left
+        set_absolute_position screen_width()*5/6 ypos()
+        change_state disabled
+    }
+
+    state enabled
+    {
+        show
+        textout_centre menu.small 0 10 "<color=$COLOR_MENUSELECTEDOPTION>$DONATE_DONTASK</color>"
+    }
+
+    state disabled
+    {
+        hide
+        textout_centre menu.small 0 10 "$DONATE_DONTASK"
+    }
+}
+
+
+
+
+
+// ======= prevents this scene from showing up again =======
+
+object ".donate_startup.dont_show_again"
+{
+    requires 0.2.0
+    always_active
+
     state main
     {
+        hide
+        create_child .donate_startup.skip_scene 0 0 skip
+        change_child_state skip @save_and_destroy
+
+        // warning!
+        //destroy // this generates an obscure bug: it will create many copies of this object!
+                  // well... wait for an immediate callback from skip_scene instead.
+    }
+
+    // --- callbacks ---
+    state @destroy
+    {
+        destroy
+    }
+}
+
+object ".donate_startup.skip_scene"
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        hide
         change_state next
     }
 
     state next
     {
-        change_state next2 // some safety delay...
+        change_state next2 // some safety delay... is this really needed?
     }
 
     state next2
     {
-        if $_force_donation_screen next2
         next_level
     }
 
-    state @save // called by someone else
+    // --- callbacks ---
+    state @save_and_destroy
     {
+        change_parent_state @destroy // this will execute immediately, before save_level
         save_level
         destroy
     }

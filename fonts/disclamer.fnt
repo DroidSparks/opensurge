@@ -1,0 +1,19 @@
+// ---------------------------------------------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// File:   fonts/disclamer.fnt
+// Desc:   disclamer font
+// Author: Alexandre (script),
+//         DejaVu (ttf/DejaVuSans.ttf)
+// ---------------------------------------------------------------------------
+
+font "disclamer"
+{
+    truetype
+    {
+        source_file             "ttf/DejaVuSans.ttf"
+        size                    12
+        antialias
+    }
+}

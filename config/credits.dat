@@ -303,7 +303,6 @@ Johan Brodd
 --- musics/silence.ogg (public domain)
 --- musics/intro_cutscene/Jobromedia-Intro.ogg (public domain)
 --- musics/sharp.ogg (public domain)
---- samples/allegro.ogg (public domain)
 
 Philippe Groarke (opengameart.org)
 --- musics/darkambiance.ogg (cut from 1:45 to 2:45)
@@ -348,6 +347,11 @@ Mateus Reis
 --- samples/cannon.ogg
 --- samples/floorhit.wav
 --- samples/growlmod.wav
+--- samples/grab_npc.wav
+--- samples/help.wav
+--- samples/crococopter.wav
+--- samples/crococopter_swoop_up.wav
+--- samples/crococopter_swoop_down.wav
 
 Di Rodrigues
 --- samples/1up.ogg
@@ -382,7 +386,8 @@ CGEffex (freesound.org)
 --- samples/roar.ogg (CC-BY 3.0)
 
 Johan Brodd
---- samples/creativecommons2.ogg
+--- samples/allegro.ogg (public domain)
+--- samples/creativecommons2.ogg (public domain)
 
 <color=$COLOR_SUBHIGHLIGHT>$CREDITS_RES_SCRIPTS</color>
 

@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * intro.c - introduction scene
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2011, 2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,21 +51,21 @@ static char *text =
  "Copyright (C) " GAME_YEAR "  Open Surge Team\n"
  GAME_WEBSITE "\n"
  "</color>\n"
- "This program is free software; you can redistribute it and/or modify\n"
- "it under the terms of the GNU General Public License as published by\n"
- "the Free Software Foundation; either version 2 of the License, or\n"
+ "This program is free software; you can redistribute it and/or modify "
+ "it under the terms of the GNU General Public License as published by "
+ "the Free Software Foundation; either version 2 of the License, or "
  "(at your option) any later version.\n"
  "\n"
- "This program is distributed in the hope that it will be useful,\n"
- "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
- "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+ "This program is distributed in the hope that it will be useful, "
+ "but WITHOUT ANY WARRANTY; without even the implied warranty of "
+ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the "
  "GNU General Public License for more details.\n"
  "\n"
- "You should have received a copy of the GNU General Public License\n"
- "along with this program; if not, write to the Free Software Foundation,\n"
+ "You should have received a copy of the GNU General Public License "
+ "along with this program; if not, write to the Free Software Foundation, "
  "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n"
  "\n"
- "The following game was built using the Open Surge Engine.\n"
+ "The following game was built using the Open Surge Engine."
 ;
 
 static image_t* create_background();
@@ -132,7 +132,7 @@ void intro_update()
  */
 void intro_render()
 {
-    image_blit(bg, video_get_backbuffer(), 0, 0, 0, 0, image_width(bg), image_height(bg));
+    image_blit(bg, video_get_backbuffer(), 0, 0, (VIDEO_SCREEN_W - image_width(bg))/2, (VIDEO_SCREEN_H - image_height(bg))/2, image_width(bg), image_height(bg));
 }
 
 
@@ -153,14 +153,15 @@ void load_intro_quest()
 image_t* create_background()
 {
     image_t* img = image_create(VIDEO_SCREEN_W, VIDEO_SCREEN_H);
-    font_t *fnt = font_create("menu.small");
+    font_t *fnt = font_create("disclamer");
     v2d_t camera = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
 
     image_clear(video_get_backbuffer(), image_rgb(0,0,0));
+    font_set_width(fnt, VIDEO_SCREEN_W - 6);
     font_set_text(fnt, "%s", text);
-    font_set_position(fnt, v2d_new(5,5));
+    font_set_position(fnt, v2d_new(3,3));
     font_render(fnt, camera);
-    image_blit(video_get_backbuffer(), img, 0, 0, 0, 0, image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
+    image_blit(video_get_backbuffer(), img, 0, 0, 0, 0, image_width(img), image_height(img));
 
     font_destroy(fnt);
     return img;

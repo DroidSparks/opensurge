@@ -296,5 +296,13 @@ sprite SD_SURGE
         fps         8
         data        59
     }
+
+    // crossing the arms
+    animation 36
+    {
+        repeat      FALSE
+        fps         8
+        data        64 65
+    }
 }
 

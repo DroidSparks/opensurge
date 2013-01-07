@@ -593,18 +593,22 @@ int level_save(const char *filepath)
 
     /* brick list */
     fprintf(fp, "\n// brick list\n");
-    for(itb=brick_list; itb; itb=itb->next) 
-        fprintf(fp, "brick %d %d %d%s%s\n", get_brick_id(itb->data), (int)itb->data->sx, (int)itb->data->sy, itb->data->layer != BRL_DEFAULT ? " " : "", itb->data->layer != BRL_DEFAULT ? bricklayer2colorname(itb->data->layer) : "");
+    for(itb=brick_list; itb; itb=itb->next)  {
+        if(itb->data->state != BRS_DEAD)
+            fprintf(fp, "brick %d %d %d%s%s\n", get_brick_id(itb->data), (int)itb->data->sx, (int)itb->data->sy, itb->data->layer != BRL_DEFAULT ? " " : "", itb->data->layer != BRL_DEFAULT ? bricklayer2colorname(itb->data->layer) : "");
+    }
 
     /* item list */
     fprintf(fp, "\n// item list\n");
-    for(iti=item_list; iti; iti=iti->next)
-        fprintf(fp, "item %d %d %d\n", iti->data->type, (int)iti->data->actor->spawn_point.x, (int)iti->data->actor->spawn_point.y);
+    for(iti=item_list; iti; iti=iti->next) {
+        if(iti->data->state != IS_DEAD)
+           fprintf(fp, "item %d %d %d\n", iti->data->type, (int)iti->data->actor->spawn_point.x, (int)iti->data->actor->spawn_point.y);
+    }
 
     /* object list */
     fprintf(fp, "\n// object list\n");
     for(ite=object_list; ite; ite=ite->next) {
-        if(ite->data->created_from_editor)
+        if(ite->data->created_from_editor && ite->data->state != ES_DEAD)
             fprintf(fp, "object \"%s\" %d %d\n", str_addslashes(ite->data->name), (int)ite->data->actor->spawn_point.x, (int)ite->data->actor->spawn_point.y);
     }
 
