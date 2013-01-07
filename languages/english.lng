@@ -279,9 +279,18 @@ STRING_312          "So, these strange creatures of darkness are the ones behind
 STRING_313          "and more of them are starting to appear."
 STRING_314          "Looks like it's up to me to stop whoever's behind this..."
 
-// cutscene 4: Sunshine Paradise, boss
+// Sunshine Paradise, boss
 STRING_400          "Wh-what are you?! Where are all my friends?!"
 STRING_401          "Okay, that's IT! You're going down! I've had it with with you monsters! I'm gonna put a stop to the disappearances right here and now!"
 
-// cutscene 5: Sunshine Paradise, after the boss
-
+// cutscene 4: Sunshine Paradise, after the boss
+STRING_420          "After the boss is beaten,"
+STRING_421          "a little monkey comes out of the woods."
+STRING_422          "<color=$COLOR_SURGE>Surge</color>! Please help us!"
+STRING_423          "What's wrong?"
+STRING_424          "That dam is cutting off our water supply... we are running out of clean water to drink!"
+STRING_425          "Don't worry, I'll get your water back!"
+STRING_426          "All right, then!"
+STRING_427          "Now, run! It isn't safe here!"
+STRING_428          "hmmm... Maybe <color=$COLOR_NEON>Neon</color> just was concerned about this thing too and went to investigate..."
+STRING_429          "Either way, I've got to figure out a way to get these animals' water supplies back!"

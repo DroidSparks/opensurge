@@ -280,5 +280,21 @@ sprite SD_SURGE
         fps         8
         data        73
     }
+
+    // taking off his glasses
+    animation 34
+    {
+        repeat      FALSE
+        fps         8
+        data        42 41 40 39 0
+    }
+
+    // listening, a bit worried
+    animation 35
+    {
+        repeat      TRUE
+        fps         8
+        data        59
+    }
 }
 
