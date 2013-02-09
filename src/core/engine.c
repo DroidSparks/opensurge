@@ -205,7 +205,7 @@ void init_accessories(commandline_t cmd)
 {
     video_display_loading_screen();
     sprite_init();
-    font_init();
+    font_init(cmd.allow_font_smoothing);
     fontext_register_variables();
     soundfactory_init();
     charactersystem_init();

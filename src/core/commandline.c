@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * commandline.c - command line parser
- * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -66,6 +66,7 @@ commandline_t commandline_parse(int argc, char **argv)
     str_cpy(cmd.basedir, "", sizeof(cmd.basedir));
     cmd.use_gamepad = preferences_get_usegamepad();
     cmd.optimize_cpu_usage = TRUE;
+    cmd.allow_font_smoothing = TRUE;
 
     /* logfile */
     logfile_message("game arguments:");
@@ -84,6 +85,7 @@ commandline_t commandline_parse(int argc, char **argv)
                 "    --help                    displays this message\n"
                 "    --version                 shows the version of this program\n"
                 "    --fullscreen              fullscreen mode\n"
+                "    --windowed                windowed mode\n"
                 "    --resolution X            sets the window size, where X = 1 (%dx%d), 2 (%dx%d), 3 (%dx%d) or 4 (%dx%d)\n"
                 "    --smooth                  improves the graphic quality (*)\n"
                 "    --tiny                    small game window (improves the speed **). This is the same as --resolution 1\n"
@@ -94,12 +96,13 @@ commandline_t commandline_parse(int argc, char **argv)
                 "    --quest \"FILEPATH\"        runs the quest located at FILEPATH\n"
                 "    --language \"FILEPATH\"     sets the language file to FILEPATH (for example, %s)\n"
                 "    --basedir \"/path/to/data\" pretends that all data files are located in the provided folder (***)\n"
-                "    --full-cpu-usage          uses 100%% of the CPU\n"
+                "    --full-cpu-usage          uses 100%% of the CPU (**)\n"
+                "    --no-font-smoothing       disable antialiased fonts (improves the speed **)\n"
                 "\n"
                 "(*) This option may be used to improve the graphic quality using a special algorithm.\n"
                 "    You should NOT use this option on slow computers, since it may imply a severe performance hit.\n"
                 "\n"
-                "(**) This option should be used on slow computers.\n"
+                "(**) These options should be used on slow computers.\n"
                 "\n"
                 "(***) Please provide an absolute path. If this option is not specified, then the data files will be loaded\n"
                 "      from the installation folder (and also from $HOME/.%s, if applicable).\n"
@@ -144,6 +147,9 @@ commandline_t commandline_parse(int argc, char **argv)
         else if(str_icmp(argv[i], "--fullscreen") == 0)
             cmd.fullscreen = TRUE;
 
+        else if(str_icmp(argv[i], "--windowed") == 0)
+            cmd.fullscreen = FALSE;
+
         else if(str_icmp(argv[i], "--color-depth") == 0) {
             if(++i < argc) {
                 cmd.color_depth = atoi(argv[i]);
@@ -163,6 +169,9 @@ commandline_t commandline_parse(int argc, char **argv)
 
         else if(str_icmp(argv[i], "--full-cpu-usage") == 0)
             cmd.optimize_cpu_usage = FALSE;
+
+        else if(str_icmp(argv[i], "--no-font-smoothing") == 0)
+            cmd.allow_font_smoothing = FALSE;
 
         else if(str_icmp(argv[i], "--level") == 0) {
             if(++i < argc) {

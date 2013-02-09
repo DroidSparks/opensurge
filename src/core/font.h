@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * font.h - font module
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2011, 2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -43,7 +43,7 @@ void font_set_visible(font_t *f, int is_visible); /* show/hide font */
 void font_use_substring(font_t *f, int index_of_first_char, int length); /* since fonts may have color tags, variables, etc. , use this to display a substring of the font (not the whole text) */
 
 /* misc */
-void font_init(); /* initializes the font module */
+void font_init(int allow_font_smoothing); /* initializes the font module */
 void font_release(); /* releases the font module */
 void font_register_variable(const char *variable_name, const char* (*callback)()); /* variable/text interpolation */
 

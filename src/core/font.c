@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * font.c - font module
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2011, 2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,6 +36,7 @@
 
 /* private stuff */
 #define IMAGE2BITMAP(img)       (*((BITMAP**)(img)))   /* whoooa, this is crazy stuff */
+static int allow_ttf_aa = TRUE; /* allow antialiasing for all TTF fonts? */
 
 
 /* callback table: used for variable/text interpolation */
@@ -156,11 +157,12 @@ struct fontscript_t {
  * font_init()
  * Initializes the font module
  */
-void font_init()
+void font_init(int allow_font_smoothing)
 {
     const char *path = "fonts/*.fnt";
     parsetree_program_t *fonts = NULL;
 
+    allow_ttf_aa = allow_font_smoothing; /* this comes first */
     logfile_message("Initializing alfont...");
     if(0 != alfont_init())
         fatal_error("alfont_init() has failed. %s", allegro_error);
@@ -1009,11 +1011,11 @@ fontdata_t* fontdata_ttf_new(const char *source_file, int size, int antialias, i
     if(NULL != f->ttf) {
         /* configuring */
         alfont_set_font_size(f->ttf, size);
-        f->antialias = antialias;
+        f->antialias = allow_ttf_aa ? antialias : FALSE;
         f->shadow = shadow;
 
         /* caching commonly used characters */
-        if(!antialias) {
+        if(!(f->antialias)) {
             for(ch=32; ch<=127; ch++) {
                 uszprintf(buf, sizeof(buf), "%c", ch); /* UTF-8 / ASCII compatibility */
                 w = alfont_text_length(f->ttf, buf);

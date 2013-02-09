@@ -73,7 +73,7 @@ object .dialogbox.base.text
 
         set_zindex $_dialogbox_base_bgz+0.1
         set_absolute_position $_dialogbox_base_bgx+$offset_x $_dialogbox_base_bgy+$offset_y
-        textout menu.small 0 0 "$STRING_$id" $width
+        textout dialogbox 0 0 "$STRING_$id" $width
 
         if $completed display
         change_parent_state .dialogbox.base.text:on_complete
@@ -123,7 +123,7 @@ object .dialogbox.base.text[typewriter]
 
         set_zindex $_dialogbox_base_bgz+0.1
         set_absolute_position $_dialogbox_base_bgx+$offset_x $_dialogbox_base_bgy+$offset_y
-        textout menu.small 0 0 "$STRING_$id" $width 0 $_dialogbox_base_textadvancer_pos
+        textout dialogbox 0 0 "$STRING_$id" $width 0 $_dialogbox_base_textadvancer_pos
 
         unless $_dialogbox_base_textadvancer_completed display
 
@@ -176,7 +176,7 @@ object .dialogbox.base.text[typewriter].textadvancer
         hide
 
         let $id=$_dialogbox_text_id
-        textout menu.small 0 infinity() "$STRING_$id"
+        textout dialogbox 0 infinity() "$STRING_$id"
         let $len=$_STRLEN
 
         change_state idle

@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * commandline.h - command line parser
- * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -44,6 +44,7 @@ typedef struct commandline_t {
     char basedir[1024];
     int use_gamepad;
     int optimize_cpu_usage;
+    int allow_font_smoothing;
 } commandline_t;
 
 /* command line interface */
