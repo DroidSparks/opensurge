@@ -62,7 +62,7 @@ object ".default_startup.hud.score"
         on_level_cleared "go away"
 
         let "$score = score()"
-        textout "hud" 0 0 "<color=ffff00>$HUD_SCORE</color> $score"
+        textout "hud" 0 0 "<color=$COLOR_HUD>$HUD_SCORE</color> $score"
     }
 
     state "go away"
@@ -71,7 +71,7 @@ object ".default_startup.hud.score"
         set_absolute_position "xpos() - 500*dt()" "ypos()"
 
         let "$score = score()"
-        textout "hud" 0 0 "<color=ffff00>$HUD_SCORE</color> $score"
+        textout "hud" 0 0 "<color=$COLOR_HUD>$HUD_SCORE</color> $score"
     }
 
     state "hidden"
@@ -125,7 +125,7 @@ object ".default_startup.hud.time"
         let "$_ds_hud_time_xpos = xpos()"
         let "$_ds_hud_time_ypos = ypos()"
 
-        textout "hud" 0 0 "<color=ffff00>$HUD_TIME</color>"
+        textout "hud" 0 0 "<color=$COLOR_HUD>$HUD_TIME</color>"
     }
 
     state "go away"
@@ -135,7 +135,7 @@ object ".default_startup.hud.time"
         let "$_ds_hud_time_xpos = xpos()"
         let "$_ds_hud_time_ypos = ypos()"
 
-        textout "hud" 0 0 "<color=ffff00>$HUD_TIME</color>"
+        textout "hud" 0 0 "<color=$COLOR_HUD>$HUD_TIME</color>"
     }
 
     state "freeze"
@@ -147,7 +147,7 @@ object ".default_startup.hud.time"
         let "$_ds_hud_time_xpos = xpos()"
         let "$_ds_hud_time_ypos = ypos()"
 
-        textout "hud" 0 0 "<color=ffff00>$HUD_TIME</color>"
+        textout "hud" 0 0 "<color=$COLOR_HUD>$HUD_TIME</color>"
     }
 
     state "hidden"
@@ -283,7 +283,7 @@ object ".default_startup.hud.collectibles"
 
         let "$collectibles = collectibles()"
         if "$collectibles == 0" "danger"
-        textout "hud" 0 0 "<color=ffff00>$HUD_COLLECTIBLES</color> $collectibles"
+        textout "hud" 0 0 "<color=$COLOR_HUD>$HUD_COLLECTIBLES</color> $collectibles"
     }
 
     state "danger"
@@ -294,7 +294,7 @@ object ".default_startup.hud.collectibles"
 
         let "$collectibles = collectibles()"
         if "$collectibles > 0" "normal"
-        textout "hud" 0 0 "<color=ff0000>$HUD_COLLECTIBLES</color> $collectibles"
+        textout "hud" 0 0 "<color=$COLOR_HUDDANGER>$HUD_COLLECTIBLES</color> $collectibles"
 
         on_timeout "$blink_interval" "blinking_danger"
     }
@@ -307,7 +307,7 @@ object ".default_startup.hud.collectibles"
 
         let "$collectibles = collectibles()"
         if "$collectibles > 0" "normal"
-        textout "hud" 0 0 "<color=ffff00>$HUD_COLLECTIBLES</color> $collectibles"
+        textout "hud" 0 0 "<color=$COLOR_HUD>$HUD_COLLECTIBLES</color> $collectibles"
 
         on_timeout "$blink_interval" "danger"
     }
@@ -318,7 +318,7 @@ object ".default_startup.hud.collectibles"
         set_absolute_position "xpos() - 500*dt()" "ypos()"
 
         let "$collectibles = collectibles()"
-        textout "hud" 0 0 "<color=ffff00>$HUD_COLLECTIBLES</color> $collectibles"
+        textout "hud" 0 0 "<color=$COLOR_HUD>$HUD_COLLECTIBLES</color> $collectibles"
     }
 
     state "hidden"

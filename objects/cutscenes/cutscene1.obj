@@ -250,6 +250,7 @@ object ".cutscene1_startup"
 
     state "step 3.5" // Surge starts "giving orders" ... :p
     {
+        change_child_state waterfall show_waterfall
         change_closest_object_state .cutscene1_surgesigh uncross_arms
         change_state "step 3.6"
     }
@@ -605,7 +606,7 @@ object ".cutscene1_waterfall"
     {
         set_zindex 1.0
         set_absolute_position 0 0
-        set_animation SD_BIGWATERFALL 0
+        set_animation SD_BIGSUNSHINE 0
         set_alpha 0
         change_state fadein
     }
@@ -624,6 +625,8 @@ object ".cutscene1_waterfall"
 
     state create_neon
     {
+        //set_animation SD_BIGWATERFALL 0
+        change_child_state wf2 fadeout
         create_child .cutscene1_neontalk
         change_state wait
     }
@@ -641,6 +644,44 @@ object ".cutscene1_waterfall"
     {
         set_alpha alpha()-1.0*dt()
         on_timeout 2.0 destroy
+    }
+
+    state show_waterfall
+    {
+        create_child .cutscene1_waterfall2 0 0 wf2
+        return_to_previous_state
+    }
+}
+
+object ".cutscene1_waterfall2"
+{
+    requires 0.2.0
+    always_active
+    detach_from_camera
+
+    state main
+    {
+        set_zindex 1.00001
+        set_absolute_position 0 0
+        set_animation SD_BIGWATERFALL 0
+        set_alpha 0
+        change_state fadein
+    }
+
+    state fadein
+    {
+        set_alpha alpha()+2.0*dt()
+    }
+
+    state fadeout
+    {
+        set_alpha alpha()-2.0*dt()
+        on_timeout 1.0 destroy
+    }
+
+    state destroy
+    {
+        destroy
     }
 }
 

@@ -1,8 +1,16 @@
-This game was built using the Open Surge Engine.
+Open Surge is free software.
 
+This game was built using the Open Surge Engine, which is licensed under the
+GPL version 2 (or later). See the licenses/ folder for more information.
+
+The media used in this game is (mostly) under the Creative Commons Attribution
+Share-Alike 3.0. Please see config/credits.dat for more information (or simply
+see the credits screen in the game).
+
+-------
 
 Open Surge Engine
-Copyright (C) 2008-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
+Copyright (C) 2008-2013  Alexandre Martins
 http://opensnc.sourceforge.net
 
 This program is free software; you can redistribute it and/or modify

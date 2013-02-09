@@ -301,14 +301,14 @@ void stageselect_enable_debug(int enable)
 void load_stage_list()
 {
     int i;
-    char path[] = "levels/*.lev";
+    const char path[] = "levels/*.lev";
 
     video_display_loading_screen();
     logfile_message("load_stage_list()");
 
     /* loading data */
     stage_count = 0;
-    foreach_resource(path, dirfill, NULL, enable_debug);
+    foreach_resource(path, dirfill, NULL, enable_debug ? TRUE : FALSE);
     qsort(stage_data, stage_count, sizeof(stagedata_t*), sort_cmp);
 
     /* fatal error */
@@ -364,7 +364,15 @@ int dirfill(const char *filename, void *param)
             stage_data[ stage_count++ ] = s;
             if(enable_debug) { /* debug mode: changing the names... */
                 char *p = str_rstr(s->filepath, "levels/");
-                snprintf(s->name, sizeof(s->name), "%s", p + strlen("levels/"));
+                if(!p) {
+                    p = str_rstr(s->filepath, "levels\\");
+                    if(!p)
+                        snprintf(s->name, sizeof(s->name), "%s", s->filepath);
+                    else
+                        snprintf(s->name, sizeof(s->name), "%s", p + strlen("levels\\"));
+                }
+                else
+                    snprintf(s->name, sizeof(s->name), "%s", p + strlen("levels/"));
             }
         }
         else {

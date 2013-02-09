@@ -87,11 +87,10 @@ How to contact me:
 
 -------------------------- e-mail messages: -----------------------
 
-    de  Alexandre Martins <alemartf@gmail.com>
-para    xaviergonz@hotmail.com
+    de  Alexandre Martins
+para    Javier Gonzales
 data    26 de dezembro de 2010 21:43
 assunto alfont: FreeType License vs GPLv2
-enviado por gmail.com
 ocultar detalhes 26/12/10 (7 dias atrás)
 Hello Javier Gonzalez,
 
@@ -114,12 +113,10 @@ Alexandre
  Responder
  Encaminhar
 Responder
-    de  Javier Gonzalez <xaviergonz@gmail.com>
-para    Alexandre Martins <alemartf@gmail.com>
+    de  Javier Gonzalez
+para    Alexandre Martins
 data    26 de dezembro de 2010 21:46
 assunto Re: alfont: FreeType License vs GPLv2
-enviado por gmail.com
-assinado por    gmail.com
 ocultar detalhes 26/12/10 (7 dias atrás)
 Sure, go for it :)
 and good luck with the project, sounds promising!

@@ -26,6 +26,8 @@ COLOR_HIGHLIGHT             "e99f42"
 COLOR_SUBHIGHLIGHT          "ffe13e"
 COLOR_SUBSUBHIGHLIGHT       "cdc3b6"
 COLOR_DANGER                "ff7777"
+COLOR_HUD                   "ffff00"
+COLOR_HUDDANGER             "ff0000"
 
 // Game data
 GAME_NAME                   "Open Surge"
@@ -240,7 +242,7 @@ STRING_107          "But <color=$COLOR_SURGE>Surge</color>, it's dangerous! I wa
 STRING_108          "No, <color=$COLOR_NEON>Neon</color>. Wait here and stay on your guard. We don't know what these things are!"
 STRING_109          "No way!"
 STRING_110          "Fine..."
-STRING_111          "Let's meet up at the waterfall then. Just stay on your guard. Remember, if it gets to be too much, just run."
+STRING_111          "Let's meet up <color=$COLOR_DANGER>at the waterfall</color> then. Just stay on your guard. Remember, if it gets to be too much, just run."
 STRING_112          "Okay, but you be careful too!"
 STRING_113          "I will. Now, hurry!"
 STRING_114          "Go!"
