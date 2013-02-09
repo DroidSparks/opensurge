@@ -4,6 +4,8 @@
 //
 // Changelog:
 // 2012-12-24 - first version by Alexandre
+// 2012-12-25 - more stuff
+// 2013-02-09 - made the boss easier
 // ----------------------------------------
 
 object "Big Wolf"
@@ -20,10 +22,10 @@ object "Big Wolf"
         let "$hp = 100"
 
         // each hit discards this amount from the hp
-        let "$hit_loss = 20"
+        let "$hit_loss = 30"
 
         // anger threshold (if hp is this or less, the boss gets angry)
-        let "$anger_threshold = 40"
+        let "$anger_threshold = 25"
 
         // other stuff
         set_animation "SD_BIGWOLF" 0
@@ -608,9 +610,19 @@ object .bigwolf_hand
         set_absolute_position $xpos $ypos
 
         if $still_moving go_up
-        set_obstacle FALSE
-
         let "$goingup = 0"
+        if $angry go_up_done
+        change_state go_up_rest
+    }
+
+    state go_up_rest
+    {
+        on_timeout 1.0 go_up_done
+    }
+
+    state go_up_done
+    {
+        set_obstacle FALSE
         let "$punching = 0"
         change_state watching_nopunch
     }
@@ -1330,5 +1342,38 @@ object .bigwolf_moviefx
     {
         let "$done = 1"
         return_to_previous_state
+    }
+}
+
+object .bigwolf_bandage
+{
+    requires 0.2.0
+    always_active
+
+    state main
+    {
+        set_animation SD_BIGWOLF_BANDAGE 0
+        set_angle 15
+        set_zindex 0.46
+
+        change_parent_state @get_position
+        let "$offset_x = xpos() - $_bigwolf_xpos"
+        let "$offset_y = ypos() - $_bigwolf_ypos"
+
+        change_state nothing
+    }
+
+    state nothing
+    {
+        change_parent_state @get_position
+        let "$x = $_bigwolf_xpos + $offset_x"
+        let "$y = $_bigwolf_ypos + $offset_y"
+        set_absolute_position $x $y
+    }
+
+    // ======= callbacks =======
+    state @destroy
+    {
+        destroy
     }
 }

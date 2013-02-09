@@ -341,8 +341,8 @@ object .cutscene3.monster.sfx
     // -- callbacks --
     state @destroy
     {
-        let $t=2
-        return_to_previous_state
+        let $t=1.6
+        change_state p2
     }
 }
 

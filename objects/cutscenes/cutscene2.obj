@@ -17,13 +17,13 @@ object ".cutscene2_startup"
         let "$_textualcutscene_text=new_array(9)"
         let "set_array_element($_textualcutscene_text, 0, 200)"
         let "set_array_element($_textualcutscene_text, 1, 201)"
-        let "set_array_element($_textualcutscene_text, 2, 202)"
-        let "set_array_element($_textualcutscene_text, 3, 203)"
-        let "set_array_element($_textualcutscene_text, 4, 204)"
-        let "set_array_element($_textualcutscene_text, 5, 205)"
-        let "set_array_element($_textualcutscene_text, 6, 206)"
-        let "set_array_element($_textualcutscene_text, 7, 207)"
-        let "set_array_element($_textualcutscene_text, 8, 208)"
+        let "set_array_element($_textualcutscene_text, 2, 0)"
+        let "set_array_element($_textualcutscene_text, 3, 202)"
+        let "set_array_element($_textualcutscene_text, 4, 203)"
+        let "set_array_element($_textualcutscene_text, 5, 204)"
+        let "set_array_element($_textualcutscene_text, 6, 0)"
+        let "set_array_element($_textualcutscene_text, 7, 205)"
+        let "set_array_element($_textualcutscene_text, 8, 0)"
         let "$_textualcutscene_timeout=new_array(9)"
         let "set_array_element($_textualcutscene_timeout, 0, 3)"
         let "set_array_element($_textualcutscene_timeout, 1, 3)"
@@ -55,7 +55,7 @@ object ".cutscene2_startup"
     // ---- show dialogbox ----
     state show_dlgbox
     {
-        let $_dialogbox_text_id=209
+        let $_dialogbox_text_id=206
         let $_dialogbox_avatar_id=1
         create_child .dialogbox
 
@@ -65,8 +65,8 @@ object ".cutscene2_startup"
     state .dialogbox:on_destroy
     {
         let "$_textualcutscene_text=new_array(2)"
-        let "set_array_element($_textualcutscene_text, 0, 210)"
-        let "set_array_element($_textualcutscene_text, 1, 211)"
+        let "set_array_element($_textualcutscene_text, 0, 0)"
+        let "set_array_element($_textualcutscene_text, 1, 207)"
         let "$_textualcutscene_timeout=new_array(2)"
         let "set_array_element($_textualcutscene_timeout, 0, 0.5)"
         let "set_array_element($_textualcutscene_timeout, 1, 4)"

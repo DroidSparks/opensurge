@@ -43,14 +43,17 @@ static int must_fadein;
 static image_t* bg;
 static input_t* in;
 
-static char *text = 
- "<color=eabd85>"
+#define COLOR_1            "ffe13e"
+#define COLOR_2            "cdc3b6"
+#define COLOR_3            "eabd85"
+static const char *text = 
+ "<color=" COLOR_1 ">"
  GAME_TITLE " version " GAME_VERSION_STRING
  "</color>\n"
- "<color=cdc3b6>"
- "Copyright (C) " GAME_YEAR "  Open Surge Team\n"
- GAME_WEBSITE "\n"
+ "<color=" COLOR_2 ">"
+ GAME_WEBSITE
  "</color>\n"
+ "\n"
  "This program is free software; you can redistribute it and/or modify "
  "it under the terms of the GNU General Public License as published by "
  "the Free Software Foundation; either version 2 of the License, or "
@@ -62,13 +65,12 @@ static char *text =
  "GNU General Public License for more details.\n"
  "\n"
  "You should have received a copy of the GNU General Public License "
- "along with this program; if not, write to the Free Software Foundation, "
- "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.\n"
- "\n"
- "The following game was built using the Open Surge Engine."
+ "along with this program; if not, see http://www.gnu.org/licenses/"
 ;
 
 static image_t* create_background();
+
+
 
 /* public functions */
 
@@ -153,7 +155,7 @@ void load_intro_quest()
 image_t* create_background()
 {
     image_t* img = image_create(VIDEO_SCREEN_W, VIDEO_SCREEN_H);
-    font_t *fnt = font_create("disclamer");
+    font_t *fnt = font_create("disclaimer");
     v2d_t camera = v2d_new(VIDEO_SCREEN_W/2, VIDEO_SCREEN_H/2);
 
     image_clear(video_get_backbuffer(), image_rgb(0,0,0));

@@ -141,3 +141,18 @@ sprite SD_BIGWOLF_HANDDAMAGER
         data        0
     }
 }
+
+sprite SD_BIGWOLF_BANDAGE
+{
+    source_file     images/levels/1/bigwolf-bandage.png
+    source_rect     0 0 48 20
+    frame_size      48 20
+    hot_spot        24 10
+
+    animation 0
+    {
+        repeat      TRUE
+        fps         8
+        data        0
+    }
+}

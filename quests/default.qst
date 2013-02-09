@@ -17,8 +17,9 @@ image           "images/null.png"
 
 // level list (in order of appearance)
 level           "levels/cutscenes/cutscene1.lev"
+level           "levels/sunshine.lev"
 level           "levels/cutscenes/cutscene2.lev"
 level           "levels/cutscenes/cutscene3.lev"
+level           "levels/sunshine3.lev"
 level           "levels/cutscenes/cutscene4.lev"
 level           "levels/cutscenes/donate_final.lev"
-level           "levels/sunshine.lev"

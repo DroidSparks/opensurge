@@ -188,6 +188,7 @@ object .cutscene4.animal
 
     state appeared
     {
+        play_sample samples/help.wav
         change_parent_state .cutscene4.animal:just_appeared
         change_state keep_jumping
     }
