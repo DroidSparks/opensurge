@@ -867,7 +867,7 @@ static void group_stageselect_update(group_t *g)
             }
             else if(input_button_pressed(input, IB_RIGHT)) { /* stage select: debug mode trick */
                 if(cnt >= 0 && ++cnt == 3) {
-                    sound_play( soundfactory_get("ring") );
+                    sound_play( soundfactory_get("secret") );
                     scn = SCENE_STAGESELECT;
                     stageselect_enable_debug(TRUE);
                     cnt = -1;
@@ -875,7 +875,7 @@ static void group_stageselect_update(group_t *g)
             }
             else if(input_button_pressed(input, IB_LEFT)) { /* stage select: quest select trick */
                 if(cnt2 >= 0 && ++cnt2 == 3) {
-                    sound_play( soundfactory_get("ring") );
+                    sound_play( soundfactory_get("secret") );
                     scn = SCENE_QUESTSELECT;
                     cnt2 = -1;
                 }

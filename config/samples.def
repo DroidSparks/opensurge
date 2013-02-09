@@ -79,6 +79,11 @@ sample "ring"
     source_file         "samples/ring.wav"
 }
 
+sample "collectible"
+{
+    source_file         "samples/ring.wav"
+}
+
 sample "blue ring"
 {
     source_file         "samples/ring.wav"
@@ -248,6 +253,11 @@ sample "level saved"
 sample "pause"
 {
     source_file         "samples/select_2.wav"
+}
+
+sample "secret"
+{
+    source_file         "samples/secret.wav"
 }
 
 // ---------------------------------------------------------------------------
