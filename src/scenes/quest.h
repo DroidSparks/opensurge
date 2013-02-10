@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * quest.h - quest scene
- * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,33 +23,29 @@
 #define _QUESTSCENE_H
 
 /*
-   Multiple quests may be pushed onto the
+   Multiple quest scenes may be pushed onto the
    scene stack. It will work.
 
    This is actually a "mock" scene that just
    dispatches the player to the correct levels.
-   How does it know the correct levels? By
-   looking at the quest_t* structure, of course.
 
-   quest_t* contains all the data relevant to
-   a quest (including name, author and list of
-   levels), but it does nothing for itself.
-   (see ../core/quest.h)
+   Before pushing this scene onto the scene stack,
+   please call quest_setfile(). If you want to
+   abort the quest, call quest_abort().
 */
 
-#include "../core/quest.h"
-
 /* public scene functions */
-/* call quest_run() before pushing this scene into the stack! */
 void quest_init();
 void quest_update();
 void quest_render();
 void quest_release();
 
-/* specific methods */
-void quest_run(quest_t *qst); /* executes the given quest */
-void quest_setlevel(int lev); /* jumps to the given level (0..n-1) */
+/* quest stack */
+void quest_setfile(const char *filepath); /* give a path to a .qst */
 void quest_abort(); /* aborts the current quest */
+
+/* current quest */
+void quest_setlevel(int lev); /* jumps to the given level (0..n-1) */
 const char *quest_getname(); /* returns the name of the current quest */
 
 #endif

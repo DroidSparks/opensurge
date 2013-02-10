@@ -215,7 +215,10 @@ int video_is_fullscreen()
  */
 v2d_t video_get_playarea_size()
 {
-    return playarea_size;
+    if(playarea_size.x < 1) /* gotta be fast here */
+        return default_playarea_size;
+    else
+        return playarea_size;
 }
 
 

@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * quest.c - quest scene
- * Copyright (C) 2010, 2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2012-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,14 +22,12 @@
 #include <string.h>
 #include "quest.h"
 #include "level.h"
-#include "../entities/player.h"
-#include "../core/global.h"
 #include "../core/util.h"
-#include "../core/audio.h"
+#include "../core/quest.h"
 #include "../core/logfile.h"
 #include "../core/storyboard.h"
-#include "../core/nanocalc/nanocalc.h"
-#include "../core/nanocalc/nanocalc_addons.h"
+/*#include "../core/nanocalc/nanocalc.h"
+#include "../core/nanocalc/nanocalc_addons.h"*/
 
 /* private data */
 #define STACK_MAX 16
@@ -42,21 +40,17 @@ static struct {
 
 
 
-
 /* public scene functions */
 
 /*
  * quest_init()
  * Initializes the quest scene. Remember to load
- * some quest (i.e., quest_run) before running this scene!
+ * some quest (i.e., quest_push) before running this scene!
  */
 void quest_init()
 {
     if(top < 0)
-        fatal_error("Must execute quest_run() before quest_init()");
-
-    stack[top].abort_quest = FALSE;
-    music_stop();
+        fatal_error("quest_init() error: empty quest stack");
 }
 
 
@@ -66,12 +60,11 @@ void quest_init()
  */
 void quest_release()
 {
-    unload_quest(stack[top].current_quest);
-    if(0 >= --top) {
-        /* scripting: reset global variables & arrays */
+    unload_quest(stack[top--].current_quest);
+    /*if(0 == top) {
         symboltable_clear(symboltable_get_global_table());
         nanocalc_addons_resetarrays();
-    }
+    }*/
 }
 
 
@@ -81,6 +74,7 @@ void quest_release()
  */
 void quest_render()
 {
+    ;
 }
 
 
@@ -97,33 +91,70 @@ void quest_update()
     /* quest manager */
     if(stack[top].current_level < stack[top].current_quest->level_count && !stack[top].abort_quest) {
         /* next level... */
-        level_setfile(stack[top].current_quest->level_path[stack[top].current_level]);
+        level_setfile(stack[top].current_quest->level_path[stack[top].current_level++]);
         scenestack_push(storyboard_get_scene(SCENE_LEVEL));
-        stack[top].current_level++;
     }
     else {
-        /* the user has cleared the quest! */
+        /* the user has cleared (or exited) the quest! */
+        if(stack[top].abort_quest)
+            logfile_message("Quest '%s' has been aborted. Popping...", stack[top].current_quest->file);
+        else
+            logfile_message("Quest '%s' has been cleared! Popping...", stack[top].current_quest->file);
+
         scenestack_pop();
         return;
     }
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 /*
- * quest_run()
- * Executes the given quest
+ * quest_setfile()
+ * Pushes the given quest onto the quest stack
  */
-void quest_run(quest_t *qst)
+void quest_setfile(const char *filepath)
 {
-    top++;
-    stack[top].current_quest = qst;
+    if(++top >= STACK_MAX)
+        fatal_error("The quest stack can't hold more than %d quests.", STACK_MAX);
+
+    stack[top].current_quest = load_quest(filepath);
     stack[top].current_level = 0;
+    stack[top].abort_quest = FALSE;
 
-    player_set_lives(PLAYER_INITIAL_LIVES);
-    player_set_score(0);
-
-    logfile_message("Running quest %s, '%s'...", qst->file, qst->name);
+    logfile_message("Pushing quest '%s' ('%s') onto the quest stack...", stack[top].current_quest->file, stack[top].current_quest->name);
 }
+
+/*
+ * quest_abort()
+ * Aborts the current quest, popping it from the stack
+ */
+void quest_abort()
+{
+    if(top >= 0)
+        stack[top].abort_quest = TRUE;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*
@@ -132,17 +163,8 @@ void quest_run(quest_t *qst)
  */
 void quest_setlevel(int lev)
 {
-    stack[top].current_level = max(0, lev);
-}
-
-/*
- * quest_abort()
- * Aborts the current quest
- */
-void quest_abort()
-{
-    logfile_message("Quest aborted!");
-    stack[top].abort_quest = TRUE;
+    if(top >= 0)
+        stack[top].current_level = max(0, lev);
 }
 
 
@@ -152,5 +174,5 @@ void quest_abort()
  */
 const char *quest_getname()
 {
-    return stack[top].current_quest->name;
+    return top >= 0 ? stack[top].current_quest->name : "null";
 }

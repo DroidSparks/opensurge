@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * questselect.c - quest selection screen
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010, 2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -40,6 +40,8 @@
 #include "../core/timer.h"
 #include "../core/soundfactory.h"
 #include "../core/nanoparser/nanoparser.h"
+#include "../core/nanocalc/nanocalc.h"
+#include "../core/nanocalc/nanocalc_addons.h"
 #include "../core/font.h"
 #include "../core/quest.h"
 #include "../entities/actor.h"
@@ -61,6 +63,7 @@ static float scene_time; /* scene time, in seconds */
 static bgtheme_t *bgtheme; /* background */
 
 static enum { QUESTSTATE_NORMAL, QUESTSTATE_QUIT, QUESTSTATE_PLAY, QUESTSTATE_FADEIN } state; /* finite state machine */
+char quest_to_be_loaded[1024];
 
 static quest_t **quest_data; /* vector of quest_t* */
 static int quest_count; /* length of quest_data[] */
@@ -186,9 +189,7 @@ void questselect_update()
                     sound_play( soundfactory_get("choose") );
                 }
                 if(input_button_pressed(input, IB_FIRE1) || input_button_pressed(input, IB_FIRE3)) {
-                    quest_t *clone = load_quest(quest_data[option]->file);
-                    logfile_message("Loading quest \"%s\", \"%s\"", clone->name, clone->file);
-                    quest_run(clone);
+                    str_cpy(quest_to_be_loaded, quest_data[option]->file, sizeof(quest_to_be_loaded));
                     sound_play( soundfactory_get("select") );
                     state = QUESTSTATE_PLAY;
                     music_stop();
@@ -214,6 +215,16 @@ void questselect_update()
         /* fade-out effect (play a level) */
         case QUESTSTATE_PLAY: {
             if(fadefx_over()) {
+                /* scripting: reset global variables & arrays */
+                symboltable_clear(symboltable_get_global_table());
+                nanocalc_addons_resetarrays();
+
+                /* reset lives & score */
+                player_set_lives(PLAYER_INITIAL_LIVES);
+                player_set_score(0);
+
+                /* push the quest scene */
+                quest_setfile(quest_to_be_loaded);
                 scenestack_push(storyboard_get_scene(SCENE_QUEST));
                 state = QUESTSTATE_FADEIN;
                 return;

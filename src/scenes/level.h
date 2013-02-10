@@ -38,6 +38,7 @@ struct enemy_list_t;
 struct sound_t;
 
 /* use this before pushing the level scene into the stack */
+/* multiple levels MUST NOT be pushed onto the scene stack */
 void level_setfile(const char *level);
 
 /* scene methods */

@@ -82,7 +82,7 @@ static void marquee_render();
 
 /* private functions */
 static void select_option(int opt);
-static void game_start(quest_t *q);
+static void game_start(const char *quest_path);
 
 
 
@@ -269,7 +269,7 @@ void select_option(int opt)
         /* START GAME */
         case 0:
             resource_filepath(abs_path, DEFAULT_QUEST, sizeof(abs_path), RESFP_READ);
-            game_start( load_quest(abs_path) );
+            game_start(abs_path);
             return;
 
         /* OPTIONS */
@@ -288,9 +288,9 @@ void select_option(int opt)
 
 
 /* closes the menu and starts the game. Call return after this. */
-void game_start(quest_t *q)
+void game_start(const char *quest_path)
 {
-    quest_run(q);
+    quest_setfile(quest_path);
     jump_to = storyboard_get_scene(SCENE_QUEST);
     fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
 }

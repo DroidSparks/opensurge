@@ -13,7 +13,7 @@ object "Barrel - right,rotation"
 {
     requires 0.2.0
     category "level 1"
-    annotation "A barrel which faces right. It rotates once the player gets into it."
+    annotation "A barrel facing right. It rotates once the player gets into it."
 
     state main
     {
@@ -28,14 +28,15 @@ object "Barrel - right,rotation"
 
     state idle
     {
+        observe_all_players
         on_player_rect_collision -2 -2 2 2 enter
     }
 
     state enter
     {
+        observe_current_player
         set_player_position 1 -5
         disable_player_movement
-        let "$t = 0"
         change_state rotate
     }
 

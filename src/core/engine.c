@@ -242,7 +242,7 @@ void push_initial_scene(commandline_t cmd)
         scenestack_push(storyboard_get_scene(SCENE_LEVEL));
     }
     else if(cmd.custom_quest) {
-        quest_run(load_quest(cmd.custom_quest_path));
+        quest_setfile(cmd.custom_quest_path);
         scenestack_push(storyboard_get_scene(SCENE_QUEST));
     }
     else {
