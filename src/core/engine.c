@@ -113,13 +113,13 @@ void engine_mainloop()
         input_update();
         audio_update();
 
-        /* updating the current scene */
+        /* current scene: logic & rendering */
         scn = scenestack_top();
         scn->update();
-
-        /* rendering the current scene */
         if(scn == scenestack_top()) /* scn may have been 'popped' out */
             scn->render();
+
+        /* more rendering */
         screenshot_update();
         fadefx_update();
         video_render();

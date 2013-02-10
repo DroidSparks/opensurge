@@ -28,10 +28,6 @@
 
    This is actually a "mock" scene that just
    dispatches the player to the correct levels.
-
-   Before pushing this scene onto the scene stack,
-   please call quest_setfile(). If you want to
-   abort the quest, call quest_abort().
 */
 
 /* public scene functions */
@@ -43,6 +39,8 @@ void quest_release();
 /* current quest */
 void quest_abort(); /* aborts the current quest */
 void quest_setlevel(int lev); /* jumps to the given level (0..n-1) */
+int quest_currentlevel(); /* id of the current level (0..n-1) */
+int quest_numberoflevels(); /* returns the number of levels (n) of the current quest */
 const char *quest_getname(); /* returns the name of the current quest */
 
 #endif

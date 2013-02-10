@@ -305,6 +305,8 @@ SET(
   src/entities/object_decorators/camera_focus.c
   src/entities/object_decorators/execute.c
   src/entities/object_decorators/launch_url.c
+  src/entities/object_decorators/quest.c
+  src/entities/object_decorators/reset_globals.c
 
   src/entities/items/util/itemutil.c
   src/entities/items/animal.c
@@ -486,6 +488,8 @@ IF(WIN32)
       src/entities/object_decorators/camera_focus.h
       src/entities/object_decorators/execute.h
       src/entities/object_decorators/launch_url.h
+      src/entities/object_decorators/quest.h
+      src/entities/object_decorators/reset_globals.h
 
       src/entities/items/util/itemutil.h
       src/entities/items/animal.h

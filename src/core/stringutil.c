@@ -108,21 +108,15 @@ int str_icmp(const char *s1, const char *s2)
 
 /*
  * str_cpy()
- * Safe version of strcpy(). Returns a
- * pointer to dest.
+ * Safe version of strcpy(). Returns dest.
  * If we have something like char str[32], then
- * the dest_size is 32, ie, sizeof(str)
+ * dest_size is 32, ie, sizeof(str)
  */
 char* str_cpy(char *dest, const char *src, size_t dest_size)
 {
-    int c;
-
-    for(c=0; c<dest_size-1; c++) {
-        dest[c] = src[c];
-        if(dest[c] == 0) break;
-    }
+    unsigned c;
+    for(c = 0; (c < dest_size) && (dest[c] = src[c]); c++);
     dest[dest_size-1] = 0;
-
     return dest;
 }
 

@@ -76,7 +76,7 @@ void logfile_message(const char *fmt, ...)
  */
 void logfile_release()
 {
-    logfile_message("logfile_release()");
+    logfile_message("logfile_release()\ntchau!");
     if(logfile)
         fclose(logfile);
 }

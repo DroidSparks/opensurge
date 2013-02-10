@@ -29,7 +29,7 @@
 #include "../core/storyboard.h"
 
 /* private data */
-#define STACK_MAX 16
+#define STACK_MAX 32 /* maximum number of simultaneous quests */
 static int top = -1;
 static struct {
     quest_t* current_quest;
@@ -99,13 +99,12 @@ void quest_update()
     }
     else {
         /* the user has cleared (or exited) the quest! */
-        if(stack[top].abort_quest)
-            logfile_message("Quest '%s' has been aborted. Popping...", stack[top].current_quest->file);
-        else
-            logfile_message("Quest '%s' has been cleared! Popping...", stack[top].current_quest->file);
-
+        logfile_message(
+            "Quest '%s' has been %s Popping...",
+            stack[top].current_quest->file,
+            (stack[top].abort_quest ? "aborted." : "cleared!")
+        );
         scenestack_pop();
-        return;
     }
 }
 
@@ -144,6 +143,23 @@ void quest_setlevel(int lev)
         stack[top].current_level = max(0, lev);
 }
 
+/*
+ * quest_currentlevel()
+ * id of the current level, 0 <= id < n
+ */
+int quest_currentlevel()
+{
+    return top >= 0 ? stack[top].current_level : 0;
+}
+
+/*
+ * quest_numberoflevels()
+ * number of levels of the current quest
+ */
+int quest_numberoflevels()
+{
+    return top >= 0 ? stack[top].current_quest->level_count : 0;
+}
 
 /*
  * quest_getname()

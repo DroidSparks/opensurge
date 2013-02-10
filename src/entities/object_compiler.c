@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * object_compiler.c - compiles object scripts
- * Copyright (C) 2010-2012  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2010-2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * Edits by Dalton Sterritt (all edits released under same license):
+ * Edits by Dalton Sterritt (all edits released under same license, copyright given to Alexandre):
  * enable_player_roll, disable_player_roll
  */
 
@@ -83,6 +83,8 @@
 #include "object_decorators/camera_focus.h"
 #include "object_decorators/execute.h"
 #include "object_decorators/launch_url.h"
+#include "object_decorators/quest.h"
+#include "object_decorators/reset_globals.h"
 
 /* expression evaluator (nanocalc) helper */
 /* given a string, makes an expression_t object */
@@ -257,6 +259,7 @@ static void on_music_play(objectmachine_t** m, int n, const char **p, const pars
 static void var_let(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void var_if(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void var_unless(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void var_resetglobals(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 
 /* level */
 static void show_dialog_box(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -270,6 +273,10 @@ static void save_level(objectmachine_t** m, int n, const char **p, const parsetr
 static void load_level(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void request_camera_focus(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 static void drop_camera_focus(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+
+/* quest */
+static void push_quest(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
+static void pop_quest(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
 
 /* audio commands */
 static void audio_play_sample(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt);
@@ -431,6 +438,7 @@ static entry_t command_table[] = {
     { "let", var_let },
     { "if", var_if },
     { "unless", var_unless },
+    { "reset_globals", var_resetglobals },
 
     /* level */
     { "show_dialog_box", show_dialog_box },
@@ -444,6 +452,10 @@ static entry_t command_table[] = {
     { "load_level", load_level },
     { "request_camera_focus", request_camera_focus },
     { "drop_camera_focus", drop_camera_focus },
+
+    /* quest */
+    { "push_quest", push_quest },
+    { "pop_quest", pop_quest },
 
     /* audio commands */
     { "play_sample", audio_play_sample },
@@ -1779,6 +1791,14 @@ void var_unless(objectmachine_t** m, int n, const char **p, const parsetree_stat
         COMPILE_ERROR("Object script error - unless expects two parameters: expression, new_state_name");
 }
 
+void var_resetglobals(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_resetglobals_new(*m);
+    else
+        COMPILE_ERROR("Object script error - reset_globals expects no parameters");
+}
+
 void t_textout(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
 {
     if(n == 4)
@@ -1851,4 +1871,20 @@ void m_launch_url(objectmachine_t** m, int n, const char **p, const parsetree_st
         *m = objectdecorator_launchurl_new(*m, p[0]);
     else
         COMPILE_ERROR("Object script error - launch_url expects one parameter: URL");
+}
+
+void push_quest(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 1)
+        *m = objectdecorator_pushquest_new(*m, p[0]);
+    else
+        COMPILE_ERROR("Object script error - push_quest expects one parameter: path_to_qst_file");
+}
+
+void pop_quest(objectmachine_t** m, int n, const char **p, const parsetree_statement_t *stmt)
+{
+    if(n == 0)
+        *m = objectdecorator_popquest_new(*m);
+    else
+        COMPILE_ERROR("Object script error - pop_quest expects no parameters");
 }

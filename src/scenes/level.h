@@ -59,6 +59,7 @@ int level_persist(); /* persists (saves) the current level */
 /* cooperative play */
 void level_change_player(struct player_t *new_player); /* character switching */
 struct player_t* level_player(); /* active player */
+void level_set_spawn_point(v2d_t newpos);
 
 /* entities */
 void level_create_particle(struct image_t *image, v2d_t position, v2d_t speed, int destroy_on_brick);
@@ -74,20 +75,18 @@ struct actor_t* level_get_camera_focus();
 int level_is_camera_locked();
 void level_lock_camera(int x1, int y1, int x2, int y2);
 void level_unlock_camera();
+int level_inside_screen(int x, int y, int w, int h);
 
 /* editor */
 int level_editmode();
 
-/* misc */
-v2d_t level_size();
-float level_gravity();
-void level_override_music(struct sound_t *sample);
-void level_set_spawn_point(v2d_t newpos);
-void level_add_to_secret_bonus(int value);
+/* dialogbox */
 void level_call_dialogbox(const char *title, const char *message);
 void level_hide_dialogbox();
+
+/* music */
+void level_override_music(struct sound_t *sample);
 void level_restore_music();
-int level_inside_screen(int x, int y, int w, int h);
 
 /* management */
 void level_clear(struct actor_t *end_sign);
@@ -102,5 +101,13 @@ int level_waterlevel();
 uint32 level_watercolor();
 void level_set_waterlevel(int ycoord);
 void level_set_watercolor(uint32 color);
+
+/* misc */
+v2d_t level_size();
+float level_gravity();
+
+/* quest stack (scripting) */
+void level_push_quest(const char* path_to_qst_file);
+void level_pop_quest();
 
 #endif

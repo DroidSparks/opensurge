@@ -52,6 +52,7 @@ static float f_dt() { return timer_get_delta(); } /* time difference between 2 c
 static float f_fps() { return (float)timer_get_fps(); } /* frames per second */
 static float f_collectibles() { return (float)player_get_rings(); } /* number of collectibles */
 static float f_lives() { return (float)player_get_lives(); } /* number of lives */
+static float f_initial_lives() { return (float)PLAYER_INITIAL_LIVES; } /* initial number of lives */
 static float f_score() { return (float)player_get_score(); } /* returns the score */
 static float f_gravity() { return level_gravity(); } /* returns the gravity strength */
 static float f_act() { return (float)level_act(); } /* returns the current act number */
@@ -122,6 +123,7 @@ void nanocalcext_register_bifs()
     nanocalc_register_bif_arity0("fps", f_fps);
     nanocalc_register_bif_arity0("collectibles", f_collectibles);
     nanocalc_register_bif_arity0("lives", f_lives);
+    nanocalc_register_bif_arity0("initial_lives", f_initial_lives);
     nanocalc_register_bif_arity0("score", f_score);
     nanocalc_register_bif_arity0("gravity", f_gravity);
     nanocalc_register_bif_arity0("act", f_act);

@@ -145,6 +145,8 @@ static image_t *quit_level_img;
 static bgtheme_t *backgroundtheme;
 static int must_load_another_level;
 static int must_restart_this_level;
+static int must_push_a_quest;
+static char quest_to_be_pushed[1024];
 static float dead_player_timeout;
 static int waterlevel; /* in pixels */
 static uint32 watercolor;
@@ -177,7 +179,6 @@ static void level_interpret_line(const char *filename, int fileline, const char 
 static void level_interpret_parsed_line(const char *filename, int fileline, const char *identifier, int param_count, const char **param);
 
 /* internal methods */
-static void setfile(const char *level);
 static int inside_screen(int x, int y, int w, int h, int margin);
 static int get_brick_id(brick_t *b);
 static void update_level_size();
@@ -235,9 +236,9 @@ enum editor_entity_type {
     EDT_GROUP
 };
 #define EDITORGRP_ENTITY_TO_EDT(t) \
-                (t == EDITORGRP_ENTITY_BRICK) ? EDT_BRICK : \
-                (t == EDITORGRP_ENTITY_ITEM) ? EDT_ITEM : \
-                EDT_ENEMY;
+                ( ((t) == EDITORGRP_ENTITY_BRICK) ? EDT_BRICK : \
+                ((t) == EDITORGRP_ENTITY_ITEM) ? EDT_ITEM : \
+                EDT_ENEMY );
 
 
 
@@ -888,13 +889,13 @@ void level_interpret_parsed_line(const char *filename, int fileline, const char 
 void level_init(void *path_to_lev_file)
 {
     int i;
+    const char *filepath = (const char*)path_to_lev_file;
 
-    logfile_message("level_init()");
+    logfile_message("level_init('%s')", filepath);
     video_display_loading_screen();
-    if(NULL != path_to_lev_file)
-        setfile((const char*)path_to_lev_file);
 
     /* main init */
+    str_cpy(file, filepath, sizeof(file));
     gravity = 787.5;
     level_width = level_height = 0;
     level_timer = 0;
@@ -905,6 +906,7 @@ void level_init(void *path_to_lev_file)
     backgroundtheme = NULL;
     must_load_another_level = FALSE;
     must_restart_this_level = FALSE;
+    must_push_a_quest = FALSE;
     dead_player_timeout = 0;
     team_size = 0;
     for(i=0; i<TEAM_MAX; i++)
@@ -974,6 +976,15 @@ void level_update()
     if(must_restart_this_level) {
         must_restart_this_level = FALSE;
         restart(TRUE);
+        return;
+    }
+
+    /* must push a quest? */
+    if(must_push_a_quest) {
+        must_push_a_quest = FALSE;
+        scenestack_pop();
+        quest_setlevel(quest_currentlevel() - 1);
+        scenestack_push(storyboard_get_scene(SCENE_QUEST), (void*)quest_to_be_pushed);
         return;
     }
 
@@ -1259,6 +1270,7 @@ void level_render()
     item_list_t *major_items;
     enemy_list_t *major_enemies;
 
+    /* very important, if we restart the level */
     if(level_timer < 0.05f)
         return;
 
@@ -1325,25 +1337,6 @@ void level_release()
     actor_destroy(dlgbox);
 
     logfile_message("level_release() ok");
-}
-
-
-
-
-/*
- * setfile()
- * Call this before initializing this scene. This
- * function tells the scene what level it must
- * load... then it gets initialized.
- * If called after the level is initialized, the
- * specified level will be loaded.
- * PS: level may be a relative file path.
- */
-void setfile(const char *level)
-{
-    strcpy(file, level);
-    must_load_another_level = TRUE;
-    logfile_message("opening level '%s'...", level);
 }
 
 
@@ -1424,7 +1417,9 @@ int level_persist()
  */
 void level_change(const char* path_to_lev_file)
 {
-    setfile(path_to_lev_file);
+    str_cpy(file, path_to_lev_file, sizeof(file));
+    must_load_another_level = TRUE;
+    logfile_message("changing level: opening '%s'...", path_to_lev_file);
 }
 
 
@@ -1627,17 +1622,6 @@ void level_clear(actor_t *end_sign)
 
 
 /*
- * level_add_to_secret_bonus()
- * Adds a value to the secret bonus
- */
-void level_add_to_secret_bonus(int value)
-{
-    /* dropped */
-}
-
-
-
-/*
  * level_call_dialogbox()
  * Calls a dialog box
  */
@@ -1759,6 +1743,33 @@ void level_set_watercolor(uint32 color)
     watercolor = color;
 }
 
+/*
+ * level_push_quest()
+ * Pops this level, pushes a new quest.
+ * So, you'll have at least two quests on the scene stack,
+ * stored in consecutive positions.
+ */
+void level_push_quest(const char* path_to_qst_file)
+{
+    /* schedules a quest push */
+    must_push_a_quest = TRUE;
+    str_cpy(quest_to_be_pushed, path_to_qst_file, sizeof(quest_to_be_pushed));
+}
+
+/*
+ * level_pop_quest()
+ * Pops this level, and also pops the current quest (if any)
+ * The scene stack is this:
+ *      [bottom] ??..?? ---> current quest --> current level [top]
+ * After this command, it will be:
+ *      [bottom] ??..?? [top]
+ */
+void level_pop_quest()
+{
+    /* schedules a quest pop */
+    quest_abort();
+    level_jump_to_next_stage();
+}
 
 
 
@@ -1899,7 +1910,7 @@ void restart(int preserve_current_spawnpoint)
     v2d_t sp = spawn_point;
 
     level_release();
-    level_init(NULL);
+    level_init((void*)file);
 
     if(preserve_current_spawnpoint) {
         spawn_point = sp;
