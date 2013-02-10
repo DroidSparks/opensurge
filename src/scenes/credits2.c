@@ -59,7 +59,7 @@ static char* read_credits2_file();
  * credits2_init()
  * Initializes the scene
  */
-void credits2_init()
+void credits2_init(void *foo)
 {
     const char *p;
     char *credits2_text = read_credits2_file();
@@ -126,7 +126,7 @@ void credits2_update()
 
     /* text movement */
     textpos = font_get_position(text);
-    textpos.y -= (2*font_get_textsize(text).y) * dt;
+    textpos.y -= (3*font_get_textsize(text).y) * dt;
     if(textpos.y < -(line_count * (font_get_textsize(text).y + font_get_charspacing(text).y)))
         textpos.y = VIDEO_SCREEN_H;
     font_set_position(text, textpos);

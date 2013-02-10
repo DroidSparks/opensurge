@@ -24,7 +24,7 @@
 
 
 /* public functions */
-void menu_init();
+void menu_init(void*);
 void menu_update();
 void menu_render();
 void menu_release();

@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * scene.h - scene management
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2010, 2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,18 +23,23 @@
 #define _SCENE_H
 
 /* Scene struct */
-typedef struct {
-    void (*init)();
+typedef struct scene_t {
+    void (*init)(void*);
     void (*update)();
     void (*render)();
     void (*release)();
 } scene_t;
 
+scene_t *scene_create(void (*init_func)(void*), void (*update_func)(), void (*render_func)(), void (*release_func)());
+void scene_destroy(scene_t *scn);
+
+
+
 /* Scene stack */
 /* this is used with the storyboard module (see storyboard.h) */
 void scenestack_init();
 void scenestack_release();
-void scenestack_push(scene_t *scn);
+void scenestack_push(scene_t *scn, void *data); /* some generic data will be passed to <scene>_init() */
 void scenestack_pop();
 scene_t *scenestack_top();
 int scenestack_empty();

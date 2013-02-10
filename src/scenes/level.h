@@ -25,6 +25,15 @@
 #include "../core/v2d.h"
 #include "../core/global.h"
 
+/* scene methods */
+void level_init(void *path_to_lev_file); /* pass an string containing the path to the .lev file */
+void level_update();
+void level_render();
+void level_release();
+
+
+
+
 /* forward declarations */
 struct image_t;
 struct actor_t;
@@ -37,54 +46,58 @@ struct enemy_t;
 struct enemy_list_t;
 struct sound_t;
 
-/* use this before pushing the level scene into the stack */
-/* multiple levels MUST NOT be pushed onto the scene stack */
-void level_setfile(const char *level);
-
-/* scene methods */
-void level_init();
-void level_update();
-void level_render();
-void level_release();
-
-/* useful stuff */
+/* read-only information */
 const char* level_name();
 int level_act();
 const char* level_version();
 const char* level_author();
 
+/* load & save */
+void level_change(const char* path_to_lev_file); /* change the stage. Useful if the .lev is active. */
+int level_persist(); /* persists (saves) the current level */
+
+/* cooperative play */
 void level_change_player(struct player_t *new_player); /* character switching */
 struct player_t* level_player(); /* active player */
 
-int level_persist(); /* persists (saves) the current level */
-
+/* entities */
 void level_create_particle(struct image_t *image, v2d_t position, v2d_t speed, int destroy_on_brick);
 struct brick_t* level_create_brick(int type, v2d_t position);
 struct item_t* level_create_item(int type, v2d_t position);
 struct enemy_t* level_create_enemy(const char *name, v2d_t position);
 void level_add_to_score(int score);
 struct item_t* level_create_animal(v2d_t position);
+
+/* camera */
 void level_set_camera_focus(struct actor_t *act);
 struct actor_t* level_get_camera_focus();
+int level_is_camera_locked();
+void level_lock_camera(int x1, int y1, int x2, int y2);
+void level_unlock_camera();
+
+/* editor */
 int level_editmode();
+
+/* misc */
 v2d_t level_size();
 float level_gravity();
 void level_override_music(struct sound_t *sample);
 void level_set_spawn_point(v2d_t newpos);
-void level_clear(struct actor_t *end_sign);
 void level_add_to_secret_bonus(int value);
 void level_call_dialogbox(const char *title, const char *message);
 void level_hide_dialogbox();
-void level_lock_camera(int x1, int y1, int x2, int y2);
-void level_unlock_camera();
-int level_is_camera_locked();
 void level_restore_music();
 int level_inside_screen(int x, int y, int w, int h);
+
+/* management */
+void level_clear(struct actor_t *end_sign);
 int level_has_been_cleared();
 void level_jump_to_next_stage();
 void level_ask_to_leave();
 void level_pause();
 void level_restart();
+
+/* water */
 int level_waterlevel();
 uint32 level_watercolor();
 void level_set_waterlevel(int ycoord);

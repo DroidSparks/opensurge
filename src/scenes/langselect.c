@@ -79,7 +79,7 @@ static int sort_cmp(const void *a, const void *b);
  * langselect_init()
  * Initializes the scene
  */
-void langselect_init()
+void langselect_init(void *foo)
 {
     option = 0;
     quit = FALSE;

@@ -23,11 +23,10 @@
 #include "quest.h"
 #include "level.h"
 #include "../core/util.h"
+#include "../core/scene.h"
 #include "../core/quest.h"
 #include "../core/logfile.h"
 #include "../core/storyboard.h"
-/*#include "../core/nanocalc/nanocalc.h"
-#include "../core/nanocalc/nanocalc_addons.h"*/
 
 /* private data */
 #define STACK_MAX 16
@@ -44,13 +43,20 @@ static struct {
 
 /*
  * quest_init()
- * Initializes the quest scene. Remember to load
- * some quest (i.e., quest_push) before running this scene!
+ * Initializes the quest scene.
  */
-void quest_init()
+void quest_init(void *path_to_qst_file)
 {
-    if(top < 0)
-        fatal_error("quest_init() error: empty quest stack");
+    const char *filepath = (const char*)path_to_qst_file;
+
+    if(++top >= STACK_MAX)
+        fatal_error("The quest stack can't hold more than %d quests.", STACK_MAX);
+
+    stack[top].current_quest = load_quest(filepath);
+    stack[top].current_level = 0;
+    stack[top].abort_quest = FALSE;
+
+    logfile_message("Pushed quest '%s' ('%s') onto the quest stack...", stack[top].current_quest->file, stack[top].current_quest->name);
 }
 
 
@@ -61,10 +67,7 @@ void quest_init()
 void quest_release()
 {
     unload_quest(stack[top--].current_quest);
-    /*if(0 == top) {
-        symboltable_clear(symboltable_get_global_table());
-        nanocalc_addons_resetarrays();
-    }*/
+    logfile_message("The quest has been released.");
 }
 
 
@@ -91,8 +94,8 @@ void quest_update()
     /* quest manager */
     if(stack[top].current_level < stack[top].current_quest->level_count && !stack[top].abort_quest) {
         /* next level... */
-        level_setfile(stack[top].current_quest->level_path[stack[top].current_level++]);
-        scenestack_push(storyboard_get_scene(SCENE_LEVEL));
+        const char *path_to_lev_file = stack[top].current_quest->level_path[stack[top].current_level++];
+        scenestack_push(storyboard_get_scene(SCENE_LEVEL), (void*)path_to_lev_file);
     }
     else {
         /* the user has cleared (or exited) the quest! */
@@ -119,21 +122,6 @@ void quest_update()
 
 
 
-/*
- * quest_setfile()
- * Pushes the given quest onto the quest stack
- */
-void quest_setfile(const char *filepath)
-{
-    if(++top >= STACK_MAX)
-        fatal_error("The quest stack can't hold more than %d quests.", STACK_MAX);
-
-    stack[top].current_quest = load_quest(filepath);
-    stack[top].current_level = 0;
-    stack[top].abort_quest = FALSE;
-
-    logfile_message("Pushing quest '%s' ('%s') onto the quest stack...", stack[top].current_quest->file, stack[top].current_quest->name);
-}
 
 /*
  * quest_abort()
@@ -144,17 +132,6 @@ void quest_abort()
     if(top >= 0)
         stack[top].abort_quest = TRUE;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*

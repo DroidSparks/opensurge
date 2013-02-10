@@ -94,7 +94,7 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
     objectmachine_t *decorated_machine = dec->decorated_machine;*/
     objectdecorator_loadlevel_t *me = (objectdecorator_loadlevel_t*)obj;
 
-    level_setfile(me->level_path);
+    level_change(me->level_path);
 
     /*decorated_machine->update(decorated_machine, team, team_size, brick_list, item_list, object_list);*/
 }

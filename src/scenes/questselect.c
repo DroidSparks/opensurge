@@ -63,7 +63,7 @@ static float scene_time; /* scene time, in seconds */
 static bgtheme_t *bgtheme; /* background */
 
 static enum { QUESTSTATE_NORMAL, QUESTSTATE_QUIT, QUESTSTATE_PLAY, QUESTSTATE_FADEIN } state; /* finite state machine */
-char quest_to_be_loaded[1024];
+char quest_to_be_loaded[1024] = "";
 
 static quest_t **quest_data; /* vector of quest_t* */
 static int quest_count; /* length of quest_data[] */
@@ -90,7 +90,7 @@ static int sort_cmp(const void *a, const void *b);
  * questselect_init()
  * Initializes the scene
  */
-void questselect_init()
+void questselect_init(void *foo)
 {
     option = 0;
     scene_time = 0;
@@ -224,8 +224,7 @@ void questselect_update()
                 player_set_score(0);
 
                 /* push the quest scene */
-                quest_setfile(quest_to_be_loaded);
-                scenestack_push(storyboard_get_scene(SCENE_QUEST));
+                scenestack_push(storyboard_get_scene(SCENE_QUEST), (void*)quest_to_be_loaded);
                 state = QUESTSTATE_FADEIN;
                 return;
             }

@@ -23,7 +23,7 @@
 #define _CREDITS_H
 
 /* public functions */
-void credits_init();
+void credits_init(void*);
 void credits_release();
 void credits_update();
 void credits_render();

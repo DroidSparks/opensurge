@@ -23,7 +23,7 @@
 #define _GAMEOVER_H
 
 /* public functions */
-void gameover_init();
+void gameover_init(void*);
 void gameover_update();
 void gameover_render();
 void gameover_release();

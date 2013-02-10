@@ -80,6 +80,7 @@ static int stage_count; /* length of stage_data[] */
 static int option; /* current option: 0 .. stage_count - 1 */
 static font_t **stage_label; /* vector */
 static int enable_debug = FALSE; /* debug mode????????? must start out as false. */
+static char level_to_be_loaded[1024] = "";
 
 
 
@@ -100,8 +101,10 @@ static int sort_cmp(const void *a, const void *b);
  * stageselect_init()
  * Initializes the scene
  */
-void stageselect_init()
+void stageselect_init(void *should_enable_debug)
 {
+    enable_debug = (int)should_enable_debug;
+
     option = 0;
     scene_time = 0;
     state = STAGESTATE_NORMAL;
@@ -198,7 +201,7 @@ void stageselect_update()
                 }
                 if(input_button_pressed(input, IB_FIRE1) || input_button_pressed(input, IB_FIRE3)) {
                     logfile_message("Loading level \"%s\", \"%s\"", stage_data[option]->name, stage_data[option]->filepath);
-                    level_setfile(stage_data[option]->filepath);
+                    str_cpy(level_to_be_loaded, stage_data[option]->filepath, sizeof(level_to_be_loaded));
                     sound_play( soundfactory_get("select") );
                     state = STAGESTATE_PLAY;
                 }
@@ -232,7 +235,7 @@ void stageselect_update()
                 player_set_score(0);
 
                 /* push the level scene */
-                scenestack_push(storyboard_get_scene(SCENE_LEVEL));
+                scenestack_push(storyboard_get_scene(SCENE_LEVEL), (void*)level_to_be_loaded);
                 state = STAGESTATE_FADEIN;
                 return;
             }
@@ -279,18 +282,6 @@ void stageselect_render()
 
     actor_render(icon, cam);
 }
-
-
-/*
- * stageselect_enable_debug()
- * Enables or disables debug mode. When in debug mode, every installed level is displayed.
- * Call this before starting this scene.
- */
-void stageselect_enable_debug(int enable)
-{
-    enable_debug = enable;
-}
-
 
 
 

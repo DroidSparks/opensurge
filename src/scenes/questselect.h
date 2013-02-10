@@ -23,7 +23,7 @@
 #define _QUESTSELECT_H
 
 /* public functions */
-void questselect_init();
+void questselect_init(void*);
 void questselect_release();
 void questselect_update();
 void questselect_render();

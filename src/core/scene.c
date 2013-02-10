@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * scene.c - scene management
- * Copyright (C) 2008-2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2010, 2013  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -68,11 +68,11 @@ void scenestack_release()
  * scenestack_push()
  * Inserts a new scene into the stack
  */
-void scenestack_push(scene_t *scn)
+void scenestack_push(scene_t *scn, void *data)
 {
     logfile_message("scenestack_push(%p)", scn);
     scenestack[scenestack_size++] = scn;
-    scn->init();
+    scn->init(data);
     logfile_message("scenestack_push() ok");
 }
 
@@ -117,11 +117,16 @@ int scenestack_empty()
 
 
 
+
+
+
+/* Scene struct */
+
 /*
  * scene_create()
  * Creates a new scene
  */
-scene_t *scene_create(void (*init_func)(), void (*update_func)(), void (*render_func)(), void (*release_func)())
+scene_t *scene_create(void (*init_func)(void*), void (*update_func)(), void (*render_func)(), void (*release_func)())
 {
     scene_t *s = mallocx(sizeof *s);
     s->init = init_func;

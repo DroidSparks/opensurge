@@ -23,7 +23,7 @@
 #define _EDITORHELP_H
 
 /* public functions */
-void editorhelp_init();
+void editorhelp_init(void*);
 void editorhelp_update();
 void editorhelp_render();
 void editorhelp_release();

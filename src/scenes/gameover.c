@@ -41,7 +41,7 @@ static float gameover_timer;
  * gameover_init()
  * Initializes the game over screen
  */
-void gameover_init()
+void gameover_init(void *foo)
 {
     gameover_timer = 0;
 

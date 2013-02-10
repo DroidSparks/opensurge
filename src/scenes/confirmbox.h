@@ -22,14 +22,16 @@
 #ifndef _CONFIRMBOX_H
 #define _CONFIRMBOX_H
 
+/* confirm box data structure */
+typedef const char* confirmboxdata_t[3]; /* an array of 3 strings: text, option 1, option 2. ps: option 2 may be null. */
+
 /* public functions */
-void confirmbox_init();
+void confirmbox_init(void *text_and_options); /* pass a pointer to a confirmboxdata_t */
 void confirmbox_release();
 void confirmbox_update();
 void confirmbox_render();
 
 /* interface */
-void confirmbox_alert(const char *ptext, const char *option1, const char *option2);
-int confirmbox_selected_option();
+int confirmbox_selected_option(); /* returns 1 or 2 (or 0 if nothing has been selected) */
 
 #endif

@@ -238,17 +238,15 @@ void init_game_data()
 void push_initial_scene(commandline_t cmd)
 {
     if(cmd.custom_level) {
-        level_setfile(cmd.custom_level_path);
-        scenestack_push(storyboard_get_scene(SCENE_LEVEL));
+        scenestack_push(storyboard_get_scene(SCENE_LEVEL), (void*)cmd.custom_level_path);
     }
     else if(cmd.custom_quest) {
-        quest_setfile(cmd.custom_quest_path);
-        scenestack_push(storyboard_get_scene(SCENE_QUEST));
+        scenestack_push(storyboard_get_scene(SCENE_QUEST), (void*)cmd.custom_quest_path);
     }
     else {
-        scenestack_push(storyboard_get_scene(SCENE_INTRO));
+        scenestack_push(storyboard_get_scene(SCENE_INTRO), NULL);
         if(display_langselect_screen)
-            scenestack_push(storyboard_get_scene(SCENE_LANGSELECT));
+            scenestack_push(storyboard_get_scene(SCENE_LANGSELECT), NULL);
     }
 }
 

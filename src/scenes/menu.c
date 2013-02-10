@@ -65,6 +65,7 @@ static int menuopt; /* current option */
 static font_t *menufnt[MENU_MAXOPTIONS];
 static actor_t *arrow;
 static int quit;
+static char quest_to_be_loaded[1024] = "";
 
 /* marquee */
 static struct marquee_t {
@@ -95,7 +96,7 @@ static void game_start(const char *quest_path);
  * menu_init()
  * Initializes the menu
  */
-void menu_init()
+void menu_init(void *foo)
 {
     int j;
 
@@ -144,7 +145,7 @@ void menu_update()
     /* game start */
     if(jump_to != NULL && fadefx_over()) {
         music_stop();
-        scenestack_push(jump_to);
+        scenestack_push(jump_to, (void*)quest_to_be_loaded);
         jump_to = NULL;
         return;
     }
@@ -290,7 +291,7 @@ void select_option(int opt)
 /* closes the menu and starts the game. Call return after this. */
 void game_start(const char *quest_path)
 {
-    quest_setfile(quest_path);
+    str_cpy(quest_to_be_loaded, quest_path, sizeof(quest_to_be_loaded));
     jump_to = storyboard_get_scene(SCENE_QUEST);
     fadefx_out(image_rgb(0,0,0), FADEOUT_TIME);
 }

@@ -23,7 +23,7 @@
 #define _INTRO_H
 
 /* public functions */
-void intro_init();
+void intro_init(void*);
 void intro_release();
 void intro_update();
 void intro_render();

@@ -175,7 +175,6 @@ void save()
         fclose(fp);
 
         /* success */
-        logfile_message("Saved user preferences");
     }
     else {
         /* error: couldn't save settings */

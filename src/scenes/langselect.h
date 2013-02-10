@@ -23,7 +23,7 @@
 #define _LANGSELECT_H
 
 /* public functions */
-void langselect_init();
+void langselect_init(void*);
 void langselect_release();
 void langselect_update();
 void langselect_render();

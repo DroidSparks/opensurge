@@ -50,6 +50,7 @@ static input_t *input;
 static scene_t *jump_to;
 static float scene_time;
 static bgtheme_t *bgtheme;
+static int stageselect_enable_debug;
 
 /* private methods */
 static void save_preferences();
@@ -70,7 +71,7 @@ static group_t *create_grouptree();
  * options_init()
  * Initializes the scene
  */
-void options_init()
+void options_init(void *foo)
 {
     option = 0;
     quit = FALSE;
@@ -78,6 +79,8 @@ void options_init()
     input = input_create_user(NULL);
     jump_to = NULL;
     fadein = TRUE;
+
+    stageselect_enable_debug = FALSE;
 
     title = font_create("menu.title");
     font_set_text(title, lang_get("OPTIONS_TITLE"));
@@ -182,7 +185,14 @@ void options_update()
     if(jump_to != NULL) {
         if(fadefx_over()) {
             save_preferences();
-            scenestack_push(jump_to);
+
+            if(jump_to == storyboard_get_scene(SCENE_STAGESELECT)) {
+                scenestack_push(jump_to, (void*)stageselect_enable_debug);
+                stageselect_enable_debug = FALSE;
+            }
+            else
+                scenestack_push(jump_to, NULL);
+
             jump_to = NULL;
             fadein = TRUE;
             return;
@@ -869,7 +879,7 @@ static void group_stageselect_update(group_t *g)
                 if(cnt >= 0 && ++cnt == 3) {
                     sound_play( soundfactory_get("secret") );
                     scn = SCENE_STAGESELECT;
-                    stageselect_enable_debug(TRUE);
+                    stageselect_enable_debug = TRUE;
                     cnt = -1;
                 }
             }

@@ -61,7 +61,7 @@ static char* read_credits_file();
  * credits_init()
  * Initializes the scene
  */
-void credits_init()
+void credits_init(void *foo)
 {
     const char *p;
     char *credits_text = read_credits_file();
@@ -159,7 +159,7 @@ void credits_update()
         if(fadefx_over()) {
             scenestack_pop();
             if(next_scene != NULL)
-                scenestack_push(next_scene);
+                scenestack_push(next_scene, NULL);
             return;
         }
         fadefx_out(image_rgb(0,0,0), 1.0);

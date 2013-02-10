@@ -177,6 +177,7 @@ static void level_interpret_line(const char *filename, int fileline, const char 
 static void level_interpret_parsed_line(const char *filename, int fileline, const char *identifier, int param_count, const char **param);
 
 /* internal methods */
+static void setfile(const char *level);
 static int inside_screen(int x, int y, int w, int h, int margin);
 static int get_brick_id(brick_t *b);
 static void update_level_size();
@@ -884,12 +885,14 @@ void level_interpret_parsed_line(const char *filename, int fileline, const char 
  * level_init()
  * Initializes the scene
  */
-void level_init()
+void level_init(void *path_to_lev_file)
 {
     int i;
 
     logfile_message("level_init()");
     video_display_loading_screen();
+    if(NULL != path_to_lev_file)
+        setfile((const char*)path_to_lev_file);
 
     /* main init */
     gravity = 787.5;
@@ -984,6 +987,7 @@ void level_update()
 
         if(wants_to_leave && !block_quit) {
             char op[3][512];
+            confirmboxdata_t cbd = { op[0], op[1], op[2] };
 
             wants_to_leave = FALSE;
             image_blit(video_get_backbuffer(), quit_level_img, 0, 0, 0, 0, image_width(quit_level_img), image_height(quit_level_img));
@@ -992,9 +996,8 @@ void level_update()
             lang_getstring("CBOX_QUIT_QUESTION", op[0], sizeof(op[0]));
             lang_getstring("CBOX_QUIT_OPTION1", op[1], sizeof(op[1]));
             lang_getstring("CBOX_QUIT_OPTION2", op[2], sizeof(op[2]));
-            confirmbox_alert(op[0], op[1], op[2]);
 
-            scenestack_push(storyboard_get_scene(SCENE_CONFIRMBOX));
+            scenestack_push(storyboard_get_scene(SCENE_CONFIRMBOX), (void*)&cbd);
             return;
         }
 
@@ -1022,7 +1025,7 @@ void level_update()
         if(wants_to_pause && !block_pause) {
             wants_to_pause = FALSE;
             sound_play( soundfactory_get("pause") );
-            scenestack_push(storyboard_get_scene(SCENE_PAUSE));
+            scenestack_push(storyboard_get_scene(SCENE_PAUSE), NULL);
             return;
         }
 
@@ -1156,7 +1159,7 @@ void level_update()
                 else {
                     /* game over */
                     scenestack_pop();
-                    scenestack_push(storyboard_get_scene(SCENE_GAMEOVER));
+                    scenestack_push(storyboard_get_scene(SCENE_GAMEOVER), NULL);
                     return;
                 }
             }
@@ -1328,7 +1331,7 @@ void level_release()
 
 
 /*
- * level_setfile()
+ * setfile()
  * Call this before initializing this scene. This
  * function tells the scene what level it must
  * load... then it gets initialized.
@@ -1336,11 +1339,11 @@ void level_release()
  * specified level will be loaded.
  * PS: level may be a relative file path.
  */
-void level_setfile(const char *level)
+void setfile(const char *level)
 {
     strcpy(file, level);
     must_load_another_level = TRUE;
-    logfile_message("level_setfile('%s')", level);
+    logfile_message("opening level '%s'...", level);
 }
 
 
@@ -1413,6 +1416,17 @@ int level_persist()
 {
     return level_save(file);
 }
+
+/*
+ * level_change()
+ * Changes the stage. Useful if the .lev
+ * is active
+ */
+void level_change(const char* path_to_lev_file)
+{
+    setfile(path_to_lev_file);
+}
+
 
 /*
  * level_change_player()
@@ -1885,7 +1899,7 @@ void restart(int preserve_current_spawnpoint)
     v2d_t sp = spawn_point;
 
     level_release();
-    level_init();
+    level_init(NULL);
 
     if(preserve_current_spawnpoint) {
         spawn_point = sp;
@@ -2427,7 +2441,7 @@ void editor_update()
 
     /* help */
      if(input_button_pressed(editor_keyboard3, IB_FIRE4)) {
-        scenestack_push(storyboard_get_scene(SCENE_EDITORHELP));
+        scenestack_push(storyboard_get_scene(SCENE_EDITORHELP), NULL);
         return;
     }   
 

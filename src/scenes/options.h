@@ -26,7 +26,7 @@
 #define OPTIONS_MUSICFILE        "musics/options.ogg"
 
 /* public functions */
-void options_init();
+void options_init(void*);
 void options_release();
 void options_update();
 void options_render();

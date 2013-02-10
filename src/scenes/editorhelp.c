@@ -68,7 +68,7 @@ static const char text[] =
  * editorhelp_init()
  * Initializes the editor help screen
  */
-void editorhelp_init()
+void editorhelp_init(void *foo)
 {
     title = font_create("powerfest");
     font_set_text(title, "<color=77ff00>LEVEL EDITOR</color>");

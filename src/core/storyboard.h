@@ -22,8 +22,6 @@
 #ifndef _STORYBOARD_H
 #define _STORYBOARD_H
 
-#include "scene.h"
-
 /* available scenes */
 typedef enum scenetype_t {
     SCENE_INTRO,
@@ -45,6 +43,6 @@ typedef enum scenetype_t {
 /* Storyboard */
 void storyboard_init();
 void storyboard_release();
-scene_t* storyboard_get_scene(scenetype_t type);
+struct scene_t* storyboard_get_scene(scenetype_t type);
 
 #endif

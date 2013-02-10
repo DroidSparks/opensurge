@@ -21,6 +21,7 @@
 
 #include "storyboard.h"
 #include "util.h"
+#include "scene.h"
 #include "../scenes/quest.h"
 #include "../scenes/level.h"
 #include "../scenes/gameover.h"
@@ -37,10 +38,9 @@
 #include "../scenes/editorhelp.h"
 
 /* private stuff */
-#define STORYBOARD_CAPACITY         256     /* up to 256 scenes in the storyboard */
+#define STORYBOARD_CAPACITY         64     /* up to this amount of scenes in the storyboard */
 static scene_t *storyboard[STORYBOARD_CAPACITY];
-extern scene_t *scene_create(void (*init_func)(), void (*update_func)(), void (*render_func)(), void (*release_func)());
-extern void scene_destroy(scene_t *scn);
+
 
 
 /*

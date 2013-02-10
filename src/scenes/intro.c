@@ -78,7 +78,7 @@ static image_t* create_background();
  * intro_init()
  * Initializes the introduction scene
  */
-void intro_init()
+void intro_init(void *foo)
 {
     elapsed_time = 0.0f;
     must_fadein = TRUE;
@@ -146,9 +146,8 @@ void load_intro_quest()
 {
     char abs_path[1024];
     resource_filepath(abs_path, INTRO_QUEST, sizeof(abs_path), RESFP_READ);
-    scenestack_push(storyboard_get_scene(SCENE_MENU));
-    quest_setfile(abs_path);
-    scenestack_push(storyboard_get_scene(SCENE_QUEST));
+    scenestack_push(storyboard_get_scene(SCENE_MENU), NULL);
+    scenestack_push(storyboard_get_scene(SCENE_QUEST), (void*)abs_path);
 }
 
 /* creates the background */

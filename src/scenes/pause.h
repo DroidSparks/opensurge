@@ -23,7 +23,7 @@
 #define _PAUSE_H
 
 /* public functions */
-void pause_init();
+void pause_init(void*);
 void pause_update();
 void pause_render();
 void pause_release();

@@ -48,18 +48,24 @@ static int option_count;
 static int current_option = NO_OPTION;
 static int fxfade_in, fxfade_out;
 
+static void setup(const char *ptext, const char *option1, const char *option2);
+
 
 /* public functions */
 
 /*
  * confirmbox_init()
- * Initializes this scene. Please remember to
- * call confirmbox_alert() before starting this
- * scene!
+ * Receives an array of 3 strings:
+ * - text
+ * - option 1
+ * - option 2 (may be null)
  */
-void confirmbox_init()
+void confirmbox_init(void *text_and_options)
 {
+    confirmboxdata_t *p = (confirmboxdata_t*)text_and_options;
     int i;
+
+    setup((*p)[0], (*p)[1], (*p)[2]);
 
     background = image_create(image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
     image_blit(video_get_backbuffer(), background, 0, 0, 0, 0, image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
@@ -189,27 +195,6 @@ void confirmbox_render()
 
 
 
-
-/*
- * confirmbox_alert()
- * Configures this scene (call me before initializing this scene!)
- * PS: option2 may be NULL
- */
-void confirmbox_alert(const char *ptext, const char *option1, const char *option2)
-{
-    current_option = -1;
-    strcpy(text, ptext);
-    strcpy(option[0], option1);
-
-    if(option2) {
-        strcpy(option[1], option2);
-        option_count = 2;
-    }
-    else
-        option_count = 1;
-}
-
-
 /*
  * confirmbox_selected_option()
  * Returns the selected option (1, 2, ..., n), or
@@ -228,3 +213,25 @@ int confirmbox_selected_option()
         return 0; /* nothing */
 }
 
+
+
+
+/* ------------ private -------------- */
+
+/*
+ * setup()
+ * PS: option2 may be NULL
+ */
+void setup(const char *ptext, const char *option1, const char *option2)
+{
+    current_option = -1;
+    strcpy(text, ptext);
+    strcpy(option[0], option1);
+
+    if(option2) {
+        strcpy(option[1], option2);
+        option_count = 2;
+    }
+    else
+        option_count = 1;
+}

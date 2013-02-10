@@ -46,7 +46,7 @@ static float pause_timer;
  * pause_init()
  * Initializes the pause screen
  */
-void pause_init()
+void pause_init(void *foo)
 {
     pause_input = input_create_user(NULL);
     pause_buf = image_create(image_width(video_get_backbuffer()), image_height(video_get_backbuffer()));
@@ -81,13 +81,13 @@ void pause_update()
     /* quit */
     if(input_button_pressed(pause_input, IB_FIRE4)) {
         char op[3][512];
+        confirmboxdata_t cbd = { op[0], op[1], op[2] };
 
         lang_getstring("CBOX_QUIT_QUESTION", op[0], sizeof(op[0]));
         lang_getstring("CBOX_QUIT_OPTION1", op[1], sizeof(op[1]));
         lang_getstring("CBOX_QUIT_OPTION2", op[2], sizeof(op[2]));
-        confirmbox_alert(op[0], op[1], op[2]);
 
-        scenestack_push(storyboard_get_scene(SCENE_CONFIRMBOX));
+        scenestack_push(storyboard_get_scene(SCENE_CONFIRMBOX), (void*)&cbd);
         return;
     }
 

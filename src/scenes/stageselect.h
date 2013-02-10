@@ -23,12 +23,9 @@
 #define _STAGESELECT_H
 
 /* public functions */
-void stageselect_init();
+void stageselect_init(void *should_enable_debug); /* pass TRUE or FALSE. debug mode = display all levels, including hidden ones. */
 void stageselect_release();
 void stageselect_update();
 void stageselect_render();
-
-/* debug mode: display all levels, including hidden ones */
-void stageselect_enable_debug(int enable);
 
 #endif

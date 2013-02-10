@@ -35,16 +35,13 @@
 */
 
 /* public scene functions */
-void quest_init();
+void quest_init(void *path_to_qst_file); /* pass an string */
 void quest_update();
 void quest_render();
 void quest_release();
 
-/* quest stack */
-void quest_setfile(const char *filepath); /* give a path to a .qst */
-void quest_abort(); /* aborts the current quest */
-
 /* current quest */
+void quest_abort(); /* aborts the current quest */
 void quest_setlevel(int lev); /* jumps to the given level (0..n-1) */
 const char *quest_getname(); /* returns the name of the current quest */
 
