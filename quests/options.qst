@@ -1,0 +1,19 @@
+// ---------------------------------------------------------------------------
+// Open Surge Engine
+// http://opensnc.sourceforge.net
+//
+// File:   quests/options.qst
+// Desc:   calls the options screen
+// Author: script by Alexandre, 2013-02-13
+// ---------------------------------------------------------------------------
+
+// quest properties
+name            "Options screen"
+author          "Alexandre"
+version         "1.0"
+description     "Calls the options screen"
+image           "images/null.png"
+hidden
+
+// level list (in order of appearance)
+<options>

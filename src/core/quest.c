@@ -174,6 +174,12 @@ int traverse_quest(const parsetree_statement_t* stmt, void *quest)
         else
             fatal_error("Quest loader: quests can't have more than %d levels", QUEST_MAXLEVELS);
     }
+    else if(id[0] == '<' && id[strlen(id)-1] == '>') { /* special */
+        if(q->level_count < QUEST_MAXLEVELS)
+            q->level_path[q->level_count++] = str_dup(id);
+        else
+            fatal_error("Quest loader: q->level_count >= (QUEST_MAXLEVELS = %d)", QUEST_MAXLEVELS);
+    }
 
     return 0;
 }

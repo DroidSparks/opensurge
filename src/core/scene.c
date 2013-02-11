@@ -70,7 +70,7 @@ void scenestack_release()
  */
 void scenestack_push(scene_t *scn, void *data)
 {
-    logfile_message("scenestack_push(0x%p)", scn);
+    logfile_message("scenestack_push(%p)", scn);
     scenestack[scenestack_size++] = scn;
     scn->init(data);
     logfile_message("scenestack_push() ok");

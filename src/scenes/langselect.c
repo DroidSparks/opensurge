@@ -103,8 +103,10 @@ void langselect_init(void *foo)
     actor_change_animation(arrow, sprite_get_animation("SD_GUIARROW", 0));
 
     load_lang_list();
-    if(before_the_intro_screen && lngcount <= 1)
+    if(before_the_intro_screen && lngcount <= 1) {
         scenestack_pop();
+        return;
+    }
 
     fadefx_in(image_rgb(0,0,0), 1.0);
 }

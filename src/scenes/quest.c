@@ -23,6 +23,7 @@
 #include "quest.h"
 #include "level.h"
 #include "../core/util.h"
+#include "../core/stringutil.h"
 #include "../core/scene.h"
 #include "../core/quest.h"
 #include "../core/logfile.h"
@@ -36,6 +37,8 @@ static struct {
     int current_level;
     int abort_quest;
 } stack[STACK_MAX]; /* one can stack quests */
+
+static void push_appropriate_scene(const char *str);
 
 
 
@@ -56,7 +59,7 @@ void quest_init(void *path_to_qst_file)
     stack[top].current_level = 0;
     stack[top].abort_quest = FALSE;
 
-    logfile_message("Pushed quest '%s' ('%s') onto the quest stack...", stack[top].current_quest->file, stack[top].current_quest->name);
+    logfile_message("Pushed quest '%s' (\"%s\") onto the quest stack...", stack[top].current_quest->file, stack[top].current_quest->name);
 }
 
 
@@ -95,7 +98,7 @@ void quest_update()
     if(stack[top].current_level < stack[top].current_quest->level_count && !stack[top].abort_quest) {
         /* next level... */
         const char *path_to_lev_file = stack[top].current_quest->level_path[stack[top].current_level++];
-        scenestack_push(storyboard_get_scene(SCENE_LEVEL), (void*)path_to_lev_file);
+        push_appropriate_scene(path_to_lev_file);
     }
     else {
         /* the user has cleared (or exited) the quest! */
@@ -168,4 +171,34 @@ int quest_numberoflevels()
 const char *quest_getname()
 {
     return top >= 0 ? stack[top].current_quest->name : "null";
+}
+
+
+
+
+
+/* ------ private --------- */
+void push_appropriate_scene(const char *str)
+{
+    if(str[0] == '<' && str[strlen(str)-1] == '>') {
+        /* not a level? */
+        if(str_icmp(str, "<options>") == 0)
+            scenestack_push(storyboard_get_scene(SCENE_OPTIONS), NULL);
+        else if(str_icmp(str, "<language_select>") == 0)
+            scenestack_push(storyboard_get_scene(SCENE_LANGSELECT), NULL);
+        else if(str_icmp(str, "<quest_select>") == 0)
+            scenestack_push(storyboard_get_scene(SCENE_QUESTSELECT), NULL);
+        else if(str_icmp(str, "<stage_select>") == 0)
+            scenestack_push(storyboard_get_scene(SCENE_STAGESELECT), (void*)FALSE);
+        else if(str_icmp(str, "<stage_select_debug>") == 0)
+            scenestack_push(storyboard_get_scene(SCENE_STAGESELECT), (void*)TRUE);
+        else if(str_icmp(str, "<credits>") == 0)
+            scenestack_push(storyboard_get_scene(SCENE_CREDITS), NULL);
+        else
+            fatal_error("Quest error: unrecognized symbol '%s'", str);
+    }
+    else {
+        /* just a regular level */
+        scenestack_push(storyboard_get_scene(SCENE_LEVEL), (void*)str);
+    }
 }
