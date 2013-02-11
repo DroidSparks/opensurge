@@ -101,6 +101,10 @@ static fontdata_t* fontdata_list_find(const char *name);
 
 /* ------------------------------- */
 
+/* font arguments: for a safe printf-like alternative (when dealing with user-provided format strings) */
+#define FONTARGS_MAX 3
+typedef char* fontargs_t[FONTARGS_MAX];
+
 /* font struct: this struct is used by the external world */
 struct font_t {
     fontdata_t *my_class;
@@ -109,6 +113,7 @@ struct font_t {
     int width; /* width (in pixels) - wordwrap? */
     int visible; /* is this font visible? */
     int index_of_first_char, length; /* substring */
+    fontargs_t argument; /* text arguments: $1, $2 ... $<FONTARGS_MAX> */
 };
 
 /* ------------------------------- */
@@ -124,7 +129,7 @@ static int traverse_bmp(const parsetree_statement_t *stmt, void *data);
 static int traverse_ttf(const parsetree_statement_t *stmt, void *data);
 static const char* get_variable(const char *key);
 static int has_variables_to_expand(const char *str);
-static void expand_variables(char *str);
+static void expand_variables(char *str, fontargs_t args);
 static uint8 hex2dec(char digit);
 static char* remove_tags(const char *str);
 
@@ -220,6 +225,7 @@ void font_register_variable(const char *variable_name, const char* (*callback)()
  */
 font_t *font_create(const char *font_name)
 {
+    int i;
     font_t *f = mallocx(sizeof *f);
 
     f->text = str_dup("");
@@ -228,10 +234,13 @@ font_t *font_create(const char *font_name)
     f->position = v2d_new(0, 0);
     f->index_of_first_char = 0;
     f->length = INFINITY;
-    f->my_class = fontdata_list_find(font_name);
 
+    f->my_class = fontdata_list_find(font_name);
     if(f->my_class == NULL)
         fatal_error("Can't find font \"%s\"", font_name);
+
+    for(i=0; i<FONTARGS_MAX; i++)
+        f->argument[i] = NULL;
 
     return f;
 }
@@ -245,6 +254,13 @@ font_t *font_create(const char *font_name)
  */
 void font_destroy(font_t *f)
 {
+    int i;
+
+    for(i=0; i<FONTARGS_MAX; i++) {
+        if(f->argument[i])
+            free(f->argument[i]);
+    }
+
     free(f->text);
     free(f);
 }
@@ -254,7 +270,7 @@ void font_destroy(font_t *f)
 
 /*
  * font_set_text()
- * Sets the text...
+ * Sets the text... printf style. Be careful with unsanitized format strings.
  */
 void font_set_text(font_t *f, const char *fmt, ...)
 {
@@ -267,7 +283,7 @@ void font_set_text(font_t *f, const char *fmt, ...)
     va_end(args);
 
     while(has_variables_to_expand(buf))
-        expand_variables(buf);
+        expand_variables(buf, f->argument);
 
     if(f->text) free(f->text);
     f->text = mallocx(sizeof(char) * (strlen(buf) + 1));
@@ -295,6 +311,27 @@ void font_set_text(font_t *f, const char *fmt, ...)
     }
 
     *q = 0;
+}
+
+
+/*
+ * font_set_textarguments()
+ * Kinda like a safe, sanitazed printf-format stuff.
+ * pass <amount> of const char*'s; they'll be stored
+ * in $1, $2, ... up to $<FONTARGS_MAX>
+ */
+void font_set_textarguments(font_t *f, int amount, ...)
+{
+    va_list ap;
+    int i, m = min(FONTARGS_MAX, amount);
+    
+    va_start(ap, amount);
+    for(i=0; i<m; i++) {
+        if(f->argument[i])
+            free(f->argument[i]);
+        f->argument[i] = str_dup(va_arg(ap, const char*));
+    }
+    va_end(ap);
 }
 
 
@@ -526,16 +563,17 @@ const char* get_variable(const char *key)
 /* expands the variables, e.g.,
  * 1) Please press the $INPUT_LEFT to go left
  * 2) Please press the LEFT CTRL KEY to go left */
-void expand_variables(char *str)
+void expand_variables(char *str, fontargs_t args)
 {
     static char buf[FONT_TEXTMAXLENGTH];
     static char varname[FONT_TEXTMAXLENGTH];
     char *p=str, *q=buf, *r;
     const char *u;
+    const char *varcontent;
 
     while(*p) {
         /* looking for variables... */
-        while(*p && *p != '$')
+        while(*p && *p != '$' && (q-buf < FONT_TEXTMAXLENGTH))
             *(q++) = *(p++);
 
         /* I found a variable! */
@@ -547,8 +585,14 @@ void expand_variables(char *str)
             } while(IS_IDENTIFIER_CHAR(*p));
             *r = 0;
 
+            /* get the contents of varname */
+            if(varname[1] >= '1' && varname[1] <= ('0' + FONTARGS_MAX) && varname[2] == '\0')
+                varcontent = args[ varname[1] - '1' ]; /* may be NULL */
+            else
+                varcontent = get_variable(varname);
+
             /* put it into buf */
-            for(u=get_variable(varname); *u; u++,q++)
+            for(u = varcontent; u && *u && (q-buf < FONT_TEXTMAXLENGTH); u++, q++)
                 *q = *u;
         }
     }

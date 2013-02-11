@@ -47,8 +47,8 @@ MENU_EXIT                   "EXIT"
 // Languages (please do not translate these!)
 LANGSELECT_TITLE1           "<color=$COLOR_MENUTITLE>SELECT YOUR</color>"
 LANGSELECT_TITLE2           "<color=$COLOR_MENUTITLE>LANGUAGE</color>"
-LANGSELECT_AUTHOR           "<color=$COLOR_MENUSELECTEDOPTION>Translation by:</color> %s"
-LANGSELECT_PAGE             "page %d/%d"
+LANGSELECT_AUTHOR           "<color=$COLOR_MENUSELECTEDOPTION>Translation by:</color> $1"
+LANGSELECT_PAGE             "page $1/$2"
 
 // Options
 OPTIONS_TITLE               "<color=$COLOR_MENUTITLE>OPTIONS</color>"
@@ -74,15 +74,19 @@ OPTIONS_BACK                "BACK"
 // stage select
 STAGESELECT_TITLE           "<color=$COLOR_MENUTITLE>STAGE SELECT</color>"
 STAGESELECT_MSG             "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to cancel"
-STAGESELECT_PAGE            "page %d/%d"
+STAGESELECT_PAGE            "page $1/$2"
 STAGESELECT_ACT             "Act"
 
 // quest select
 QUESTSELECT_TITLE           "<color=$COLOR_MENUTITLE>QUEST SELECT</color>"
 QUESTSELECT_MSG             "Press <color=$COLOR_INPUT>$INPUT_FIRE4</color> to cancel"
-QUESTSELECT_PAGE            "page %d/%d"
-QUESTSELECT_INFO            "<color=$COLOR_MENUSELECTEDOPTION>Version:</color> %s\n<color=$COLOR_MENUSELECTEDOPTION>Author:</color> %s\n<color=$COLOR_MENUSELECTEDOPTION>Description:</color> %s"
-MENU_CQ_EXTRA               "Extra levels"
+QUESTSELECT_PAGE            "page $1/$2"
+QUESTSELECT_INFO            "<color=$COLOR_MENUSELECTEDOPTION>Version:</color> $1\n<color=$COLOR_MENUSELECTEDOPTION>Author:</color> $2\n<color=$COLOR_MENUSELECTEDOPTION>Description:</color> $3"
+
+CQ_DEFAULT_NAME             "Default quest"
+CQ_DEFAULT_DESC             "The default quest"
+CQ_EXTRA_NAME               "Extra levels"
+CQ_EXTRA_DESC               "Some extra levels"
 
 // Credits
 CREDITS_TITLE               "<color=$COLOR_MENUTITLE>CREDITS</color>"
@@ -130,9 +134,6 @@ DONATE_YES                  "Sure!"
 DONATE_NO                   "Later."
 DONATE_DONTASK              "Don't ask."
 DONATE_COMMONTEXT           "Open Surge is a free and open source game, made available for you at no cost. However, making a game costs us real money. <color=$COLOR_MENUSELECTEDOPTION>Please show your support</color> by making <color=$COLOR_MENUSELECTEDOPTION>a donation of any value</color>.\n\nYour donation is critical to the advancement of this project. Your money will be invested in code, art, music, etc.\n\nWould you like to donate now?"
-
-// Quest names
-EXTRA_LEVELS_NAME           "Extra levels"
 
 
 
@@ -294,5 +295,3 @@ STRING_426          "All right, then!"
 STRING_427          "Now, run! It isn't safe here!"
 STRING_428          "hmmm... Maybe <color=$COLOR_NEON>Neon</color> just was concerned about this thing too and went to investigate..."
 STRING_429          "Either way, I've got to figure out a way to get these animals' water supplies back!"
-
-

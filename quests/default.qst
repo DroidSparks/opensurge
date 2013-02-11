@@ -8,12 +8,11 @@
 // ---------------------------------------------------------------------------
 
 // quest properties
-name            "Default quest"
+name            "$CQ_DEFAULT_NAME"
 author          "Open Surge Team"
 version         "1.0"
-description     "The default quest"
+description     "$CQ_DEFAULT_DESC"
 image           "images/null.png"
-//hidden
 
 // level list (in order of appearance)
 level           "levels/cutscenes/cutscene1.lev"
@@ -22,4 +21,4 @@ level           "levels/cutscenes/cutscene2.lev"
 level           "levels/cutscenes/cutscene3.lev"
 level           "levels/sunshine3.lev"
 level           "levels/cutscenes/cutscene4.lev"
-level           "levels/cutscenes/donate_final.lev"
+level           "levels/menus/donate_final.lev"

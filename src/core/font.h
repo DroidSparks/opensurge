@@ -31,7 +31,8 @@ typedef struct font_t font_t;
 font_t *font_create(const char *font_name); /* creates a new font instance. font_name is a font in the *.fnt scripts */
 void font_destroy(font_t *f); /* destroys an existing font instance */
 void font_render(const font_t *f, v2d_t camera_position); /* renders the font */
-void font_set_text(font_t *f, const char *fmt, ...); /* sets a new text for the font */
+void font_set_text(font_t *f, const char *fmt, ...); /* sets a new text for the font; printf style. BE CAREFUL with unsanitized fmt's! */
+void font_set_textarguments(font_t *f, int amount, ...); /* pass <amount> of const char*'s; they'll be stored in $1, $2, ... up to $9 */
 const char *font_get_text(const font_t *f); /* gets the text of the font */
 void font_set_position(font_t *f, v2d_t position); /* sets the position of the font in the scene */
 v2d_t font_get_position(const font_t *f); /* gets the position of the font in the scene */

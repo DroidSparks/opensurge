@@ -29,7 +29,6 @@ typedef enum scenetype_t {
     SCENE_PAUSE,
     SCENE_GAMEOVER,
     SCENE_QUEST,
-    SCENE_MENU,
     SCENE_CONFIRMBOX,
     SCENE_LANGSELECT,
     SCENE_CREDITS,

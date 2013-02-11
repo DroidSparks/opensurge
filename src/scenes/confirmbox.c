@@ -84,7 +84,7 @@ void confirmbox_init(void *text_and_options)
     for(i=0; i<option_count; i++) {
         optionfnt[i][0] = font_create("default_ttf_aa");
         optionfnt[i][1] = font_create("default_ttf_aa");
-        font_set_text(optionfnt[i][0], option[i]);
+        font_set_text(optionfnt[i][0], "%s", option[i]);
         font_set_text(optionfnt[i][1], "<color=$COLOR_MENUSELECTEDOPTION>%s</color>", option[i]);
     }
 

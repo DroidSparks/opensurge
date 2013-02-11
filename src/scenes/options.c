@@ -83,7 +83,7 @@ void options_init(void *foo)
     stageselect_enable_debug = FALSE;
 
     title = font_create("menu.title");
-    font_set_text(title, lang_get("OPTIONS_TITLE"));
+    font_set_text(title, "%s", "$OPTIONS_TITLE");
     font_set_position(title, v2d_new((VIDEO_SCREEN_W - font_get_textsize(title).x)/2, 10));
 
     bgtheme = background_load(OPTIONS_BGFILE);
@@ -124,7 +124,7 @@ void options_update()
     scene_time += dt;
 
     /* title */
-    font_set_text(title, lang_get("OPTIONS_TITLE"));
+    font_set_text(title, "%s", "$OPTIONS_TITLE");
 
     /* fade in */
     if(fadein) {
@@ -251,7 +251,7 @@ static void group_fixedlabel_init(group_t *g, char *lang_key)
     group_label_init(g);
     g->data = mallocx(256 * sizeof(char));
     str_cpy((char*)(g->data), lang_key, 256);
-    font_set_text(g->font, lang_get(lang_key));
+    font_set_text(g->font, "%s", lang_get(lang_key));
 }
 
 static void group_fixedlabel_release(group_t *g)
@@ -263,7 +263,7 @@ static void group_fixedlabel_release(group_t *g)
 static void group_fixedlabel_update(group_t *g)
 {
     group_label_update(g);
-    font_set_text(g->font, lang_get((char*)(g->data)));
+    font_set_text(g->font, "%s", lang_get((char*)(g->data)));
 }
 
 static void group_fixedlabel_render(group_t *g, v2d_t camera_position)
@@ -283,7 +283,7 @@ static void group_highlightable_init(group_t *g, char *lang_key, int option_inde
     group_highlightable_data_t *data;
 
     group_label_init(g);
-    font_set_text(g->font, lang_get(lang_key));
+    font_set_text(g->font, "%s", lang_get(lang_key));
 
     g->data = mallocx(sizeof(group_highlightable_data_t));
     data = (group_highlightable_data_t*)(g->data);
@@ -308,7 +308,7 @@ static void group_highlightable_update(group_t *g)
     group_highlightable_data_t *data = (group_highlightable_data_t*)(g->data);
 
     group_label_update(g);
-    font_set_text(g->font, lang_get(data->lang_key));
+    font_set_text(g->font, "%s", lang_get(data->lang_key));
     if(group_highlightable_is_highlighted(g)) {
         font_set_text(g->font, "<color=$COLOR_MENUSELECTEDOPTION>%s</color>", lang_get(data->lang_key));
         icon->position = v2d_add(font_get_position(g->font), v2d_new(-20+3*cos(2*PI*scene_time),0));

@@ -181,10 +181,10 @@ const char *quest_getname()
 void push_appropriate_scene(const char *str)
 {
     if(str[0] == '<' && str[strlen(str)-1] == '>') {
-        /* not a level? */
+        /* not a level? TODO: at the moment, the engine can't handle those scenes repeatedly on the stack */
         if(str_icmp(str, "<options>") == 0)
             scenestack_push(storyboard_get_scene(SCENE_OPTIONS), NULL);
-        else if(str_icmp(str, "<language_select>") == 0)
+        /*else if(str_icmp(str, "<language_select>") == 0)
             scenestack_push(storyboard_get_scene(SCENE_LANGSELECT), NULL);
         else if(str_icmp(str, "<quest_select>") == 0)
             scenestack_push(storyboard_get_scene(SCENE_QUESTSELECT), NULL);
@@ -193,7 +193,7 @@ void push_appropriate_scene(const char *str)
         else if(str_icmp(str, "<stage_select_debug>") == 0)
             scenestack_push(storyboard_get_scene(SCENE_STAGESELECT), (void*)TRUE);
         else if(str_icmp(str, "<credits>") == 0)
-            scenestack_push(storyboard_get_scene(SCENE_CREDITS), NULL);
+            scenestack_push(storyboard_get_scene(SCENE_CREDITS), NULL);*/
         else
             fatal_error("Quest error: unrecognized symbol '%s'", str);
     }

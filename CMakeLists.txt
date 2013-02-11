@@ -242,7 +242,6 @@ SET(
   src/scenes/intro.c
   src/scenes/langselect.c
   src/scenes/level.c
-  src/scenes/menu.c
   src/scenes/options.c
   src/scenes/pause.c
   src/scenes/quest.c
@@ -424,7 +423,6 @@ IF(WIN32)
       src/scenes/intro.h
       src/scenes/langselect.h
       src/scenes/level.h
-      src/scenes/menu.h
       src/scenes/options.h
       src/scenes/pause.h
       src/scenes/quest.h

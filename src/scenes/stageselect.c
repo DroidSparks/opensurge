@@ -111,15 +111,16 @@ void stageselect_init(void *should_enable_debug)
     input = input_create_user(NULL);
 
     title = font_create("menu.title");
-    font_set_text(title, lang_get("STAGESELECT_TITLE"));
+    font_set_text(title, "%s", "$STAGESELECT_TITLE");
     font_set_position(title, v2d_new((VIDEO_SCREEN_W - font_get_textsize(title).x)/2, 10));
 
     msg = font_create("menu.text");
-    font_set_text(msg, lang_get("STAGESELECT_MSG"));
+    font_set_text(msg, "%s", "$STAGESELECT_MSG");
     font_set_position(msg, v2d_new(10, VIDEO_SCREEN_H - font_get_textsize(msg).y * 1.5f));
 
     page = font_create("menu.text");
-    font_set_text(page, lang_get("STAGESELECT_PAGE"), 0, 0);
+    font_set_textarguments(page, 2, "0", "0");
+    font_set_text(page, "%s", "$STAGESELECT_PAGE");
     font_set_position(page, v2d_new(VIDEO_SCREEN_W - font_get_textsize(page).x - 10, font_get_position(msg).y));
 
     icon = actor_create();
@@ -159,6 +160,7 @@ void stageselect_update()
 {
     int pagenum, maxpages;
     float dt = timer_get_delta();
+    char pagestr[2][33];
     scene_time += dt;
 
     /* background movement */
@@ -171,7 +173,10 @@ void stageselect_update()
     /* page number */
     pagenum = option/STAGE_MAXPERPAGE + 1;
     maxpages = stage_count/STAGE_MAXPERPAGE + ((stage_count%STAGE_MAXPERPAGE == 0) ? 0 : 1);
-    font_set_text(page, lang_get("STAGESELECT_PAGE"), pagenum, maxpages);
+    str_cpy(pagestr[0], str_from_int(pagenum), sizeof(pagestr[0]));
+    str_cpy(pagestr[1], str_from_int(maxpages), sizeof(pagestr[1]));
+    font_set_textarguments(page, 2, pagestr[0], pagestr[1]);
+    font_set_text(page, "%s", "$STAGESELECT_PAGE");
     font_set_position(page, v2d_new(VIDEO_SCREEN_W - font_get_textsize(page).x - 10, font_get_position(page).y));
 
     /* music */

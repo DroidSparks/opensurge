@@ -146,7 +146,6 @@ void load_intro_quest()
 {
     char abs_path[1024];
     resource_filepath(abs_path, INTRO_QUEST, sizeof(abs_path), RESFP_READ);
-    scenestack_push(storyboard_get_scene(SCENE_MENU), NULL);
     scenestack_push(storyboard_get_scene(SCENE_QUEST), (void*)abs_path);
 }
 

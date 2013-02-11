@@ -61,7 +61,7 @@ item_t* flyingtext_create()
 void flyingtext_set_text(item_t *item, const char *text)
 {
     flyingtext_t *me = (flyingtext_t*)item;
-    font_set_text(me->font, text);
+    font_set_text(me->font, "%s", text);
     me->textsize = font_get_textsize(me->font);
 }
 

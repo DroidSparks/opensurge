@@ -9,7 +9,7 @@
 
 // quest properties
 name            "Introduction cutscene"
-author          "OS Team"
+author          "Alexandre"
 version         "1.0"
 description     "Introduction cutscene"
 image           "images/null.png"
@@ -17,6 +17,6 @@ hidden
 
 // level list (in order of appearance)
 level           "levels/cutscenes/allegro.lev"
-level           "levels/cutscenes/donate.lev"
+level           "levels/menus/donate.lev"
 level           "levels/cutscenes/intro.lev"
-level           "levels/cutscenes/almostmenu.lev"
+level           "levels/menus/main_menu.lev"

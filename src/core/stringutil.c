@@ -21,6 +21,7 @@
 
 #include <string.h>
 #include <ctype.h>
+#include <stdio.h>
 #include "stringutil.h"
 #include "util.h"
 
@@ -189,4 +190,16 @@ char* str_rstr(char *haystack, const char *needle)
     }
     else
         return NULL;
+}
+
+
+/*
+ * str_from_int()
+ * converts integer to string, returning a static string
+ */
+const char* str_from_int(int integer)
+{
+    static char buf[64];
+    sprintf(buf, "%d", integer);
+    return buf;
 }

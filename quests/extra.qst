@@ -8,10 +8,10 @@
 // ---------------------------------------------------------------------------
 
 // quest properties
-name            "$EXTRA_LEVELS_NAME"
+name            "$CQ_EXTRA_NAME"
 author          "Various authors"
 version         "0.1"
-description     "$MENU_CQ_EXTRA"
+description     "$CQ_EXTRA_DESC"
 image           "images/quest_extra.png"
 
 // level list (in order of appearance)

@@ -33,6 +33,7 @@ void str_trim(char *dest, const char *src); /* trim */
 char *str_dup(const char *str); /* duplicates a string - strdup() isn't ANSI C */
 const char* str_addslashes(const char *str); /* replaces " by \\", returning a static char* */
 char* str_rstr(char *haystack, const char *needle); /* reverse strstr() */
+const char* str_from_int(int integer); /* converts integer to string, returning a static char* */
 
 #endif
 

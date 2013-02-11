@@ -26,7 +26,6 @@
 #include "../scenes/level.h"
 #include "../scenes/gameover.h"
 #include "../scenes/pause.h"
-#include "../scenes/menu.h"
 #include "../scenes/intro.h"
 #include "../scenes/confirmbox.h"
 #include "../scenes/langselect.h"
@@ -60,7 +59,6 @@ void storyboard_init()
     storyboard[SCENE_PAUSE] = scene_create(pause_init, pause_update, pause_render, pause_release);
     storyboard[SCENE_GAMEOVER] = scene_create(gameover_init, gameover_update, gameover_render, gameover_release);
     storyboard[SCENE_QUEST] = scene_create(quest_init, quest_update, quest_render, quest_release);
-    storyboard[SCENE_MENU] = scene_create(menu_init, menu_update, menu_render, menu_release);
     storyboard[SCENE_INTRO] = scene_create(intro_init, intro_update, intro_render, intro_release);
     storyboard[SCENE_CONFIRMBOX] = scene_create(confirmbox_init, confirmbox_update, confirmbox_render, confirmbox_release);
     storyboard[SCENE_LANGSELECT] = scene_create(langselect_init, langselect_update, langselect_render, langselect_release);

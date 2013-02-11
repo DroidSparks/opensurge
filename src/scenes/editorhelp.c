@@ -77,7 +77,7 @@ void editorhelp_init(void *foo)
     label = font_create("default");
     font_set_position(label, v2d_new(20, 50));
     font_set_width(label, VIDEO_SCREEN_W - 40);
-    font_set_text(label, text);
+    font_set_text(label, "%s", text);
 
     quitlabel = font_create("default");
     font_set_position(quitlabel, v2d_new(20, VIDEO_SCREEN_H - 28));
