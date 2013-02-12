@@ -37,12 +37,8 @@ GAME_YEAR                   "$ENGINE_YEAR"
 
 
 
-// ============== MENUS ==========================
 
-// Main menu
-MENU_1PGAME                 "PLAY"
-MENU_OPTIONS                "OPTIONS"
-MENU_EXIT                   "EXIT"
+// ============== MENUS ==========================
 
 // Languages (please do not translate these!)
 LANGSELECT_TITLE1           "<color=$COLOR_MENUTITLE>SELECT YOUR</color>"
@@ -171,12 +167,33 @@ INPUT_JOY_FIRE8         "BUTTON 8"
 
 
 
-// ============ GENERAL GAMEPLAY ============================
 
-// Quit game? confirm box
-CBOX_QUIT_QUESTION      "DO YOU REALLY WANT TO QUIT?"
-CBOX_QUIT_OPTION1       "YES"
-CBOX_QUIT_OPTION2       "NO"
+
+
+
+// ========= NON-SPECIAL CHARACTERS ==============
+
+// ------- Note to translators: -------
+//
+// since the game sometimes uses bitmap fonts,
+// some parts of the translation can't handle
+// special characters.
+//
+// This section does not allow language-specific
+// special characters. All other areas do allow
+// them, though.
+//
+// If a translation is not possible, you may
+// leave the following sentences in English.
+
+// Title screen
+TITLE_MESSAGE               "Press $INPUT_FIRE3"
+
+// Main menu
+MENU_PLAY                   "PLAY"
+MENU_OPTIONS                "OPTIONS"
+MENU_DONATE                 "DONATE"
+MENU_EXIT                   "EXIT"
 
 // HUD (Heads-Up Display)
 HUD_SCORE                   "Score:" // === translation notes: ===
@@ -190,6 +207,17 @@ HUD_CLEARED_COLLECTIBLES    "RING BONUS"
 HUD_CLEARED_TIME            "TIME BONUS"
 HUD_CLEARED_SECRET          "SECRET BONUS"
 HUD_CLEARED_TOTAL           "TOTAL"
+
+
+
+
+
+// ============ GENERAL GAMEPLAY ============================
+
+// Quit game? confirm box
+CBOX_QUIT_QUESTION      "DO YOU REALLY WANT TO QUIT?"
+CBOX_QUIT_OPTION1       "YES"
+CBOX_QUIT_OPTION2       "NO"
 
 // Chilpoctli Temple Zone
 DESERT1_TITLE_0         "Welcome" 

@@ -56,13 +56,14 @@ font "menu.small"
     }
 }
 
-// main menu: marquee
-font "menu.main.marquee"
+// menu: tiny
+font "menu.tiny"
 {
     truetype
     {
         source_file             "ttf/DejaVuSans.ttf"
-        size                    13
+        size                    11
+        //antialias
         shadow
     }
 }

@@ -4,15 +4,15 @@
 // ------------------------------------------------------------
 
 // header
-name "Main menu"
+name "Title screen"
 author "Alexandre"
 version "1.0"
 requires 0.2.0
 act 1
 theme "themes/none.brk"
-bgtheme "themes/menu.bg"
+bgtheme "themes/title_screen.bg"
 spawn_point 0 0
-startup ".main_menu"
+startup ".title_screen"
 players "none"
 music "musics/theme_song.ogg"
 readonly

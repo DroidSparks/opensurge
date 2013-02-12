@@ -17,6 +17,7 @@ hidden
 
 // level list (in order of appearance)
 level           "levels/cutscenes/allegro.lev"
-level           "levels/menus/donate.lev"
+//level           "levels/menus/donate.lev"
 level           "levels/cutscenes/intro.lev"
-level           "levels/menus/main_menu.lev"
+level           "levels/menus/title_screen.lev"
+//level           "levels/menus/main_menu.lev"
