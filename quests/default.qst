@@ -15,6 +15,7 @@ description     "$CQ_DEFAULT_DESC"
 image           "images/null.png"
 
 // level list (in order of appearance)
+<options> // TODO: replace by main menu
 level           "levels/cutscenes/cutscene1.lev"
 level           "levels/sunshine.lev"
 level           "levels/cutscenes/cutscene2.lev"

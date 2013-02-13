@@ -83,8 +83,7 @@ object ".title_screen"
 
     state "finish"
     {
-        push_quest "quests/options.qst"
-        //push_quest "quests/default.qst"
+        push_quest "quests/default.qst"
     }
 }
 
