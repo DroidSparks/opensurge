@@ -1,16 +1,2 @@
 // script by Alexandre
 
-sprite SD_MAINMENU
-{
-    source_file     images/title.png
-    source_rect     0 0 320 240
-    frame_size      320 240
-    hot_spot        0 0
-
-    animation 0
-    {
-        repeat      TRUE
-        fps         8
-        data        0
-    }
-}

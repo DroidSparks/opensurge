@@ -32,7 +32,7 @@
 #define GAME_VERSION            0
 #define GAME_SUB_VERSION        2
 #define GAME_WIP_VERSION        0
-#define GAME_WEBSITE            "http://opensnc.sourceforge.net"
+#define GAME_WEBSITE            "opensnc.sf.net"
 #define GAME_YEAR               "2008-2013"
 
 /* Cute stuff */

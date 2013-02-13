@@ -2387,16 +2387,22 @@ void editor_update()
     /* reload level */
     if(input_button_down(editor_keyboard3, IB_FIRE1)) {
         if(input_button_pressed(editor_keyboard, IB_FIRE4)) {
-            editorgrp_release();
-            level_unload();
-            editorgrp_init();
-            level_load(file);
-            level_cleared = FALSE;
-            jump_to_next_stage = FALSE;
-            spawn_players();
-            video_showmessage("The level has been reloaded.");
+            confirmboxdata_t cbd = { "Reload the level?", "YES", "NO" };
+            scenestack_push(storyboard_get_scene(SCENE_CONFIRMBOX), (void*)&cbd);
             return;
         }
+    }
+
+    if(1 == confirmbox_selected_option()) {
+        editorgrp_release();
+        level_unload();
+        editorgrp_init();
+        level_load(file);
+        level_cleared = FALSE;
+        jump_to_next_stage = FALSE;
+        spawn_players();
+        video_showmessage("The level has been reloaded.");
+        return;
     }
 
     /* ----------------------------------------- */

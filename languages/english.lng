@@ -40,13 +40,14 @@ GAME_YEAR                   "$ENGINE_YEAR"
 
 // ============== MENUS ==========================
 
-// Languages (please do not translate these!)
+// Languages (please do not translate these sentences!)
 LANGSELECT_TITLE1           "<color=$COLOR_MENUTITLE>SELECT YOUR</color>"
 LANGSELECT_TITLE2           "<color=$COLOR_MENUTITLE>LANGUAGE</color>"
 LANGSELECT_AUTHOR           "<color=$COLOR_MENUSELECTEDOPTION>Translation by:</color> $1"
 LANGSELECT_PAGE             "page $1/$2"
 
-// Options
+
+// Options (from now on, you may translate)
 OPTIONS_TITLE               "<color=$COLOR_MENUTITLE>OPTIONS</color>"
 OPTIONS_YES                 "YES"
 OPTIONS_NO                  "NO"
@@ -187,7 +188,8 @@ INPUT_JOY_FIRE8         "BUTTON 8"
 // leave the following sentences in English.
 
 // Title screen
-TITLE_MESSAGE               "Press $INPUT_FIRE3"
+TITLE_MESSAGE               "PRESS $INPUT_FIRE3"
+TITLE_VERSION               "ver."
 
 // Main menu
 MENU_PLAY                   "PLAY"
