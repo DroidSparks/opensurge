@@ -134,6 +134,7 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
     object_t *object = obj->get_object_instance(obj);
     player_t *player = enemy_get_observed_player(object);
 
+    input_restore(player->actor->input); /* so that non-active players will respond to this command */
     me->callback(player->actor->input, me->button);
 
     decorated_machine->update(decorated_machine, team, team_size, brick_list, item_list, object_list);

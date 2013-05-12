@@ -9,10 +9,6 @@
 
 // quest properties
 name            "Options screen"
-author          "Alexandre"
-version         "1.0"
-description     "Calls the options screen"
-image           "images/null.png"
 hidden
 
 // level list (in order of appearance)

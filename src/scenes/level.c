@@ -1511,7 +1511,6 @@ void level_add_to_score(int score)
     char buf[80];
     int h = image_height(actor_image(player->actor));
 
-    score = max(0, score);
     player_set_score(player_get_score() + score);
 
     sprintf(buf, "%d", score);

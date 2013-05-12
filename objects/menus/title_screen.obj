@@ -6,6 +6,9 @@
 // Last update: 2013-02-13
 //
 
+//
+// logic of the title screen
+//
 object ".title_screen"
 {
     requires 0.2.0
@@ -23,22 +26,24 @@ object ".title_screen"
         add_to_score -score()
         reset_globals
 
-        // entrance animation
+        // spawn entrance animation
         create_child ".title_screen.black_screen" 0 0 black_screen
         create_child ".title_screen.surge" 0 0 surge
 
         // done!
-        change_state frozen
+        change_state "entrance_animation"
     }
 
-    state "frozen"
+    state "entrance_animation"
     {
-        // wait 'til Surge appears
+        // wait until Surge appears completely
         change_child_state surge @finished?
-        unless $_title_screen_surge_finished frozen
+        if not($_title_screen_surge_finished) entrance_animation
+
+        // okay, Surge has appeared. Destroy the black screen now.
         change_child_state black_screen @destroy
 
-        // creating components
+        // creating components...
         create_child ".title_screen.logo"
         create_child ".title_screen.message" 0 0 message
         create_child ".title_screen.version"
@@ -50,10 +55,10 @@ object ".title_screen"
 
     state "idle"
     {
-        on_timeout 0.5 "watch"
+        on_timeout 0.5 "wait_for_input"
     }
 
-    state "watch"
+    state "wait_for_input"
     {
         on_button_pressed "fire1" "done"
         on_button_pressed "fire3" "done"
@@ -70,7 +75,7 @@ object ".title_screen"
         create_child .fade_effect
 
         let $_fademusic_in=0
-        let $_fademusic_duration=0.5
+        let $_fademusic_duration=1.0
         create_child .fademusic
 
         change_state cooldown
@@ -87,6 +92,9 @@ object ".title_screen"
     }
 }
 
+//
+// The "PRESS ENTER" message
+//
 object ".title_screen.message"
 {
     requires 0.2.0
@@ -121,6 +129,9 @@ object ".title_screen.message"
     }
 }
 
+//
+// displays the engine version
+//
 object ".title_screen.version"
 {
     requires 0.2.0
@@ -141,6 +152,9 @@ object ".title_screen.version"
     }
 }
 
+//
+// displays the engine website
+//
 object ".title_screen.website"
 {
     requires 0.2.0
@@ -161,6 +175,9 @@ object ".title_screen.website"
     }
 }
 
+//
+// the big nice Surge
+//
 object ".title_screen.surge"
 {
     requires 0.2.0
@@ -175,25 +192,23 @@ object ".title_screen.surge"
         set_alpha 0
         set_absolute_position (screen_width()-106)/2 screen_height()-height()
 
-        change_state appear1
+        change_state wait_a_bit
     }
 
-    state appear1 {
-        set_alpha "min(1, alpha() + 2.7*dt())"
-        if alpha()>=1 appear2
+    state wait_a_bit {
+        set_alpha "min(1, alpha() + 1*dt())"
+        on_timeout 1.0/2.15 appear
     }
 
-    state appear2 {
+    state appear {
+        set_alpha "min(1, alpha() + 1*dt())"
         set_animation SD_SURGEENTRANCE 1
         on_animation_finished done
     }
 
     state done {
+        set_alpha "min(1, alpha() + 1*dt())"
         let $finished=1
-        change_state frozen
-    }
-
-    state frozen {
     }
 
     // --- callbacks ---
@@ -203,6 +218,9 @@ object ".title_screen.surge"
     }
 }
 
+//
+// a black screen
+//
 object ".title_screen.black_screen"
 {
     requires 0.2.0
@@ -220,6 +238,9 @@ object ".title_screen.black_screen"
     }
 }
 
+//
+// Open Surge Logo!
+//
 object ".title_screen.logo"
 {
     requires 0.2.0

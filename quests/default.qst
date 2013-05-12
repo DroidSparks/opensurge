@@ -8,11 +8,8 @@
 // ---------------------------------------------------------------------------
 
 // quest properties
-name            "$CQ_DEFAULT_NAME"
-author          "Open Surge Team"
-version         "1.0"
-description     "$CQ_DEFAULT_DESC"
-image           "images/null.png"
+name            "Default quest"
+hidden
 
 // level list (in order of appearance)
 <options> // TODO: replace by main menu
