@@ -3364,6 +3364,7 @@ editor_action_t editor_action_spawnpoint_new(int is_changing, v2d_t obj_position
     o.obj_id = 0;
     o.obj_position = obj_position;
     o.obj_old_position = obj_old_position;
+    o.obj_type = EDT_ITEM;
     o.layer = editor_layer;
     return o;
 }

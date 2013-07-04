@@ -187,7 +187,7 @@ void options_update()
             save_preferences();
 
             if(jump_to == storyboard_get_scene(SCENE_STAGESELECT)) {
-                scenestack_push(jump_to, (void*)stageselect_enable_debug);
+                scenestack_push(jump_to, (void*)(stageselect_enable_debug ? TRUE : FALSE));
                 stageselect_enable_debug = FALSE;
             }
             else
