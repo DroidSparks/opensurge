@@ -54,6 +54,9 @@ static float f_cond(float cond, float t, float f) { return fabs(cond)>EPS ? t : 
 /* if val < lo, returns lo. if val > hi, returns hi. Otherwise, returns val */
 static float f_clamp(float val, float lo, float hi) { return lo > hi ? f_clamp(val,hi,lo) : (val>lo ? (val<hi ? val : hi) : lo); }
 
+/* linear interpolation */
+static float f_lerp(float a, float b, float t) { return t * a + (1.0f - t) * b; }
+
 /* returns the maximum between a and b */
 static float f_max(float a, float b) { return a>b?a:b; }
 
@@ -311,6 +314,7 @@ void nanocalc_addons_init()
     /* registering the math BIFs */
     nanocalc_register_bif_arity3("cond", f_cond);
     nanocalc_register_bif_arity3("clamp", f_clamp);
+    nanocalc_register_bif_arity3("lerp", f_lerp);
 
     nanocalc_register_bif_arity2("max", f_max);
     nanocalc_register_bif_arity2("min", f_min);
