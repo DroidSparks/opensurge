@@ -443,7 +443,7 @@ void level_load(const char *filepath)
     spawn_players();
     camera_init();
     camera_set_position(player->actor->position);
-    player_set_rings(0);
+    player_set_collectibles(0);
 
     /* startup objects (2) */
     spawn_startup_objects();

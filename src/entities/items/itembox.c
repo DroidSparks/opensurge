@@ -47,7 +47,7 @@ static void itembox_update(item_t* item, player_t** team, int team_size, brick_l
 static void itembox_render(item_t* item, v2d_t camera_position);
 
 static void lifebox_strategy(item_t *item, player_t *player);
-static void ringbox_strategy(item_t *item, player_t *player);
+static void collectiblebox_strategy(item_t *item, player_t *player);
 static void starbox_strategy(item_t *item, player_t *player);
 static void speedbox_strategy(item_t *item, player_t *player);
 static void glassesbox_strategy(item_t *item, player_t *player);
@@ -69,9 +69,9 @@ item_t* lifebox_create()
     return itembox_create(lifebox_strategy, 0); /* (strategy, animation id) */
 }
 
-item_t* ringbox_create()
+item_t* collectiblebox_create()
 {
-    return itembox_create(ringbox_strategy, 3);
+    return itembox_create(collectiblebox_strategy, 3);
 }
 
 item_t* starbox_create()
@@ -138,10 +138,10 @@ void lifebox_strategy(item_t *item, player_t *player)
     level_override_music( soundfactory_get("1up") );
 }
 
-void ringbox_strategy(item_t *item, player_t *player)
+void collectiblebox_strategy(item_t *item, player_t *player)
 {
     level_add_to_score(100);
-    player_set_rings( player_get_rings()+10 );
+    player_set_collectibles( player_get_collectibles()+10 );
     sound_play( soundfactory_get("ring") );
 }
 

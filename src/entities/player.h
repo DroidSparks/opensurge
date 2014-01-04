@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
  * player.h - player module
- * Copyright (C) 2008-2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * Copyright (C) 2008-2011, 2014  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -152,8 +152,8 @@ int player_is_lookingup(const player_t *player);
 int player_is_waiting(const player_t *player);
 int player_is_winning(const player_t *player);
 
-int player_get_rings();
-void player_set_rings(int r);
+int player_get_collectibles();
+void player_set_collectibles(int c);
 int player_get_lives();
 void player_set_lives(int l);
 int player_get_score();

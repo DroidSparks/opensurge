@@ -34,8 +34,8 @@
 #include "items/animal.h"
 #include "items/animalprison.h"
 #include "items/bigring.h"
-#include "items/bluering.h"
-#include "items/bouncingring.h"
+#include "items/supercollectible.h"
+#include "items/bouncingcollectible.h"
 #include "items/bumper.h"
 #include "items/checkpointorb.h"
 #include "items/crushedbox.h"
@@ -50,7 +50,7 @@
 #include "items/itembox.h"
 #include "items/loop.h"
 #include "items/old_loop.h"
-#include "items/ring.h"
+#include "items/collectible.h"
 #include "items/spikes.h"
 #include "items/spring.h"
 #include "items/switch.h"
@@ -67,11 +67,11 @@ item_t *item_create(int type)
 
     switch(type) {
         case IT_RING:
-            item = ring_create();
+            item = collectible_create();
             break;
 
         case IT_BOUNCINGRING:
-            item = bouncingring_create();
+            item = bouncingcollectible_create();
             break;
 
         case IT_LIFEBOX:
@@ -79,7 +79,7 @@ item_t *item_create(int type)
             break;
 
         case IT_RINGBOX:
-            item = ringbox_create();
+            item = collectiblebox_create();
             break;
 
         case IT_STARBOX:
@@ -271,7 +271,7 @@ item_t *item_create(int type)
             break;
 
         case IT_BLUERING:
-            item = bluering_create();
+            item = supercollectible_create();
             break;
 
         case IT_SWITCH:

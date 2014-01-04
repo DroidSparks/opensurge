@@ -200,12 +200,12 @@ MENU_EXIT                   "EXIT"
 // HUD (Heads-Up Display)
 HUD_SCORE                   "Score:" // === translation notes: ===
 HUD_TIME                    "Time: " // the same amount of characters as HUD_SCORE
-HUD_COLLECTIBLES            "Rings:" // the same amount of characters as HUD_SCORE
+HUD_COLLECTIBLES            "Power:" // the same amount of characters as HUD_SCORE
 HUD_SPACES                  "      " // the same amount of characters as HUD_SCORE
 HUD_CLEARED_LINE1           "YOU HAVE"
 HUD_CLEARED_LINE2           "PASSED"
 HUD_CLEARED_LINE2_ACT       "ACT"
-HUD_CLEARED_COLLECTIBLES    "RING BONUS"
+HUD_CLEARED_COLLECTIBLES    "POWER BONUS"
 HUD_CLEARED_TIME            "TIME BONUS"
 HUD_CLEARED_SECRET          "SECRET BONUS"
 HUD_CLEARED_TOTAL           "TOTAL"

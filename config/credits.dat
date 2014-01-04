@@ -135,6 +135,7 @@ svgmovement & Joao Victor
 --- images/levels/1/boss2x.png
 
 svgmovement
+--- images/collectibles.png
 --- images/levels/1/barrel.png
 --- images/levels/1/waterskimmer.png
 --- images/levels/1/bigwolf-bandage.png
@@ -147,7 +148,7 @@ Brian Zablocky (Celdecea)
 --- images/checkpoint_orb.png
 --- images/desert1.png
 --- images/grassland_template.png
---- images/item_boxes.png
+--- images/item_boxes.png (battery icons by svgmovement)
 --- images/lady_bugsy.png
 --- images/ring_shields.png
 --- images/spikes.png
@@ -329,9 +330,9 @@ Mateus Reis
 --- samples/brake.wav
 --- samples/break.wav
 --- samples/drown.wav
---- samples/ring.wav
---- samples/ringless.wav
---- samples/ringcount.wav
+--- samples/collectible.wav
+--- samples/collectible_loss.wav
+--- samples/collectible_count.wav
 --- samples/select.wav
 --- samples/select_2.wav
 --- samples/return.wav

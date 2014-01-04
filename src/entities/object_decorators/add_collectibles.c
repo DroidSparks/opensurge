@@ -90,7 +90,7 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
     objectmachine_t *decorated_machine = dec->decorated_machine;
     objectdecorator_addcollectibles_t *me = (objectdecorator_addcollectibles_t*)obj;
 
-    player_set_rings( player_get_rings() + (int)expression_evaluate(me->collectibles) );
+    player_set_collectibles( player_get_collectibles() + (int)expression_evaluate(me->collectibles) );
 
     decorated_machine->update(decorated_machine, team, team_size, brick_list, item_list, object_list);
 }

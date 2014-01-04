@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
- * bluering.h - blue ring
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * collectible.h - collectibles
+ * Copyright (C) 2010, 2014  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,12 +19,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _BLUERING_H
-#define _BLUERING_H
+#ifndef _COLLECTIBLE_H
+#define _COLLECTIBLE_H
 
 #include "../item.h"
 
 /* public methods */
-item_t* bluering_create();
+item_t* collectible_create(); /* collectible creator */
 
 #endif

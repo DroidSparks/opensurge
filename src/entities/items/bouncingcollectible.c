@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
- * bouncingring.c - bouncing ring
- * Copyright (C) 2011  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * bouncingcollectible.c - bouncing collectible
+ * Copyright (C) 2011, 2014  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
  */
 
 #include <math.h>
-#include "bouncingring.h"
+#include "bouncingcollectible.h"
 #include "../../scenes/level.h"
 #include "../../core/util.h"
 #include "../../core/timer.h"
@@ -34,36 +34,36 @@
 #include "../enemy.h"
 #include "../actor.h"
 
-/* bouncingring class */
-typedef struct bouncingring_t bouncingring_t;
-struct bouncingring_t {
+/* bouncingcollectible class */
+typedef struct bouncingcollectible_t bouncingcollectible_t;
+struct bouncingcollectible_t {
     item_t item; /* base class */
-    int is_disappearing; /* is this bouncing ring disappearing? */
-    float life_time; /* life time (used to destroy the moving bouncing ring after some time) */
+    int is_disappearing; /* is this bouncing collectible disappearing? */
+    float life_time; /* life time (used to destroy the moving bouncing collectible after some time) */
 };
 
-static void bouncingring_init(item_t *item);
-static void bouncingring_release(item_t* item);
-static void bouncingring_update(item_t* item, player_t** team, int team_size, brick_list_t* brick_list, item_list_t* item_list, enemy_list_t* enemy_list);
-static void bouncingring_render(item_t* item, v2d_t camera_position);
+static void bouncingcollectible_init(item_t *item);
+static void bouncingcollectible_release(item_t* item);
+static void bouncingcollectible_update(item_t* item, player_t** team, int team_size, brick_list_t* brick_list, item_list_t* item_list, enemy_list_t* enemy_list);
+static void bouncingcollectible_render(item_t* item, v2d_t camera_position);
 
 static int hit_test(int x, int y, const image_t *brk_image, int brk_x, int brk_y);
 
 
 /* public methods */
-item_t* bouncingring_create()
+item_t* bouncingcollectible_create()
 {
-    item_t *item = mallocx(sizeof(bouncingring_t));
+    item_t *item = mallocx(sizeof(bouncingcollectible_t));
 
-    item->init = bouncingring_init;
-    item->release = bouncingring_release;
-    item->update = bouncingring_update;
-    item->render = bouncingring_render;
+    item->init = bouncingcollectible_init;
+    item->release = bouncingcollectible_release;
+    item->update = bouncingcollectible_update;
+    item->render = bouncingcollectible_render;
 
     return item;
 }
 
-void bouncingring_set_speed(item_t *item, v2d_t speed)
+void bouncingcollectible_set_speed(item_t *item, v2d_t speed)
 {
     item->actor->speed = speed;
 }
@@ -71,9 +71,9 @@ void bouncingring_set_speed(item_t *item, v2d_t speed)
 
 
 /* private methods */
-void bouncingring_init(item_t *item)
+void bouncingcollectible_init(item_t *item)
 {
-    bouncingring_t *me = (bouncingring_t*)item;
+    bouncingcollectible_t *me = (bouncingcollectible_t*)item;
 
     item->always_active = FALSE;
     item->obstacle = FALSE;
@@ -84,27 +84,27 @@ void bouncingring_init(item_t *item)
     me->is_disappearing = FALSE;
     me->life_time = 0.0f;
 
-    actor_change_animation(item->actor, sprite_get_animation("SD_RING", 0));
+    actor_change_animation(item->actor, sprite_get_animation("SD_COLLECTIBLE", 0));
 }
 
 
 
-void bouncingring_release(item_t* item)
+void bouncingcollectible_release(item_t* item)
 {
     actor_destroy(item->actor);
 }
 
 
 
-void bouncingring_update(item_t* item, player_t** team, int team_size, brick_list_t* brick_list, item_list_t* item_list, enemy_list_t* enemy_list)
+void bouncingcollectible_update(item_t* item, player_t** team, int team_size, brick_list_t* brick_list, item_list_t* item_list, enemy_list_t* enemy_list)
 {
     int i;
     float dt = timer_get_delta();
-    bouncingring_t *me = (bouncingring_t*)item;
+    bouncingcollectible_t *me = (bouncingcollectible_t*)item;
     actor_t *act = item->actor;
-    sound_t *sfx = soundfactory_get("ring");
+    sound_t *sfx = soundfactory_get("collectible");
 
-    /* a player has just got this bouncing ring */
+    /* a player has just got this bouncing collectible */
     for(i=0; i<team_size; i++) {
         player_t *player = team[i];
         if(
@@ -113,7 +113,7 @@ void bouncingring_update(item_t* item, player_t** team, int team_size, brick_lis
             !player_is_dying(player) &&
             actor_collision(act, player->actor)
         ) {
-            player_set_rings(player_get_rings() + 1);
+            player_set_collectibles(player_get_collectibles() + 1);
             me->is_disappearing = TRUE;
             sound_stop(sfx);
             sound_play(sfx);
@@ -124,7 +124,7 @@ void bouncingring_update(item_t* item, player_t** team, int team_size, brick_lis
     /* disappearing animation... */
     if(me->is_disappearing) {
         item->bring_to_back = FALSE;
-        actor_change_animation(act, sprite_get_animation("SD_RING", 1));
+        actor_change_animation(act, sprite_get_animation("SD_COLLECTIBLE", 1));
         if(actor_animation_finished(act))
             item->state = IS_DEAD;
     }
@@ -238,7 +238,7 @@ void bouncingring_update(item_t* item, player_t** team, int team_size, brick_lis
 }
 
 
-void bouncingring_render(item_t* item, v2d_t camera_position)
+void bouncingcollectible_render(item_t* item, v2d_t camera_position)
 {
     actor_render(item->actor, camera_position);
 }

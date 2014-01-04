@@ -32,7 +32,7 @@ sample "damaged"
 
 sample "collectible loss"
 {
-    source_file         "samples/ringless.wav"
+    source_file         "samples/collectible_loss.wav"
 }
 
 sample "drown"
@@ -74,19 +74,24 @@ sample "leave water"
 // ---------------------------------------------------------------------------
 // Items
 // ---------------------------------------------------------------------------
-sample "ring"
-{
-    source_file         "samples/ring.wav"
-}
-
 sample "collectible"
 {
-    source_file         "samples/ring.wav"
+    source_file         "samples/collectible.wav"
+}
+
+sample "super collectible"
+{
+    source_file         "samples/collectible.wav"
+}
+
+sample "ring"
+{
+    source_file         "samples/collectible.wav"
 }
 
 sample "blue ring"
 {
-    source_file         "samples/ring.wav"
+    source_file         "samples/collectible.wav"
 }
 
 sample "big ring"
@@ -212,7 +217,7 @@ sample "explode"
 // ---------------------------------------------------------------------------
 sample "bonus count"
 {
-    source_file         "samples/ringcount.wav"
+    source_file         "samples/collectible_count.wav"
 }
 
 sample "cash"

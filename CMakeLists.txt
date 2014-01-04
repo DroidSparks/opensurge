@@ -313,10 +313,10 @@ SET(
   src/entities/items/animal.c
   src/entities/items/animalprison.c
   src/entities/items/bigring.c
-  src/entities/items/bluering.c
-  src/entities/items/bouncingring.c
+  src/entities/items/bouncingcollectible.c
   src/entities/items/bumper.c
   src/entities/items/checkpointorb.c
+  src/entities/items/collectible.c
   src/entities/items/crushedbox.c
   src/entities/items/danger.c
   src/entities/items/dnadoor.c
@@ -329,9 +329,9 @@ SET(
   src/entities/items/itembox.c
   src/entities/items/loop.c
   src/entities/items/old_loop.c
-  src/entities/items/ring.c
   src/entities/items/spikes.c
   src/entities/items/spring.c
+  src/entities/items/supercollectible.c
   src/entities/items/switch.c
   src/entities/items/teleporter.c
 
@@ -495,10 +495,10 @@ IF(WIN32)
       src/entities/items/animal.h
       src/entities/items/animalprison.h
       src/entities/items/bigring.h
-      src/entities/items/bluering.h
-      src/entities/items/bouncingring.h
+      src/entities/items/bouncingcollectible.h
       src/entities/items/bumper.h
       src/entities/items/checkpointorb.h
+      src/entities/items/collectible.h
       src/entities/items/crushedbox.h
       src/entities/items/danger.h
       src/entities/items/dnadoor.h
@@ -511,9 +511,9 @@ IF(WIN32)
       src/entities/items/itembox.h
       src/entities/items/loop.h
       src/entities/items/old_loop.h
-      src/entities/items/ring.h
       src/entities/items/spikes.h
       src/entities/items/spring.h
+      src/entities/items/supercollectible.h
       src/entities/items/switch.h
       src/entities/items/teleporter.h
 

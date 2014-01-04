@@ -26,7 +26,7 @@
 
 /* public methods */
 item_t* lifebox_create();
-item_t* ringbox_create();
+item_t* collectiblebox_create();
 item_t* starbox_create();
 item_t* speedbox_create();
 item_t* glassesbox_create();

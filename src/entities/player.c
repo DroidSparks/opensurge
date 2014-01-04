@@ -30,8 +30,8 @@
 #include "enemy.h"
 #include "item.h"
 #include "character.h"
-#include "items/ring.h"
-#include "items/bouncingring.h"
+#include "items/collectible.h"
+#include "items/bouncingcollectible.h"
 #include "../core/global.h"
 #include "../core/audio.h"
 #include "../core/util.h"
@@ -70,7 +70,7 @@
 /* private data */
 #define PLAYER_MAX_BLINK            2.0  /* how many seconds does the player must blink if he/she gets hurt? */
 #define PLAYER_UNDERWATER_BREATH    30.0 /* how many seconds does the player can stay underwater before drowning? */
-static int rings, hundred_rings;         /* shared rings */
+static int collectibles, hundred_collectibles;         /* shared collectibles */
 static int lives;                        /* shared lives */
 static int score;                        /* shared score */
 
@@ -170,7 +170,7 @@ player_t *player_create(const char *character_name)
     physicsactor_set_rolldownhillslp(p->pa, physicsactor_get_rolldownhillslp(p->pa) * c->multiplier.rolldownhillslp);
 
     /* success! */
-    hundred_rings = rings = 0;
+    hundred_collectibles = collectibles = 0;
     logfile_message("player_create() ok");
     return p;
 }
@@ -406,7 +406,7 @@ void player_bounce(player_t *player, actor_t *hazard)
 
 /*
  * player_hit()
- * Hits a player. If it has no rings, then
+ * Hits a player. If it has no collectibles, then
  * it must die
  */
 void player_hit(player_t *player, actor_t *hazard)
@@ -417,7 +417,7 @@ void player_hit(player_t *player, actor_t *hazard)
     if(player->invincible || physicsactor_get_state(player->pa) == PAS_GETTINGHIT || player->blinking || player_is_dying(player))
         return;
 
-    if(player_get_rings() > 0 || player->shield_type != SH_NONE) {
+    if(player_get_collectibles() > 0 || player->shield_type != SH_NONE) {
         player->actor->speed.x = 120.0f * sign(player->actor->position.x - hazard_centre.x);
         player->actor->speed.y = -240.0f;
         player->actor->position.y -= 2; /* bugfix */
@@ -431,14 +431,14 @@ void player_hit(player_t *player, actor_t *hazard)
         }
         else if(!player->disable_collectible_loss) {
             float a = 101.25f, spd = 240.0f*2;
-            int i, r = min(32, player_get_rings());
+            int i, r = min(32, player_get_collectibles());
             item_t *b;
-            player_set_rings(0);
+            player_set_collectibles(0);
 
-            /* create rings */
+            /* create collectibles */
             for(i=0; i<r; i++) {
                 b = level_create_item(IT_BOUNCINGRING, player->actor->position);
-                bouncingring_set_speed(b, v2d_new(-sin(a*PI/180.0f)*spd*(1-2*(i%2)), cos(a*PI/180.0f)*spd));
+                bouncingcollectible_set_speed(b, v2d_new(-sin(a*PI/180.0f)*spd*(1-2*(i%2)), cos(a*PI/180.0f)*spd));
                 a += 22.5f * (i%2);
 
                 if(i%16 == 0) {
@@ -865,28 +865,28 @@ int player_is_invincible(const player_t* player)
 
 
 /*
- * player_get_rings()
- * Returns the amount of rings
+ * player_get_collectibles()
+ * Returns the amount of collectibles
  * the player has got so far
  */
-int player_get_rings()
+int player_get_collectibles()
 {
-    return rings;
+    return collectibles;
 }
 
 
 
 /*
- * player_set_rings()
- * Sets a new amount of rings
+ * player_set_collectibles()
+ * Sets a new amount of collectibles
  */
-void player_set_rings(int r)
+void player_set_collectibles(int c)
 {
-    rings = clip(r, 0, 999);
+    collectibles = clip(c, 0, 999);
 
-    /* (100+) * k rings (k integer) = new life! */
-    if(r/100 > hundred_rings) {
-        hundred_rings = r/100;
+    /* (100+) * k collectibles (k integer) = new life! */
+    if(c/100 > hundred_collectibles) {
+        hundred_collectibles = c/100;
         player_set_lives( player_get_lives()+1 );
         level_override_music( soundfactory_get("1up") );
     }

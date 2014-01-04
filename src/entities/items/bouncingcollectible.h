@@ -1,7 +1,7 @@
 /*
  * Open Surge Engine
- * ring.h - rings
- * Copyright (C) 2010  Alexandre Martins <alemartf(at)gmail(dot)com>
+ * bouncingcollectible.h - bouncing collectible
+ * Copyright (C) 2011, 2014  Alexandre Martins <alemartf(at)gmail(dot)com>
  * http://opensnc.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,12 +19,13 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _RING_H
-#define _RING_H
+#ifndef _BOUNCINGCOLLECTIBLE_H
+#define _BOUNCINGCOLLECTIBLE_H
 
 #include "../item.h"
 
 /* public methods */
-item_t* ring_create(); /* ring creator */
+item_t* bouncingcollectible_create();
+void bouncingcollectible_set_speed(item_t *item, v2d_t speed);
 
 #endif

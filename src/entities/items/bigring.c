@@ -86,7 +86,7 @@ void bigring_update(item_t* item, player_t** team, int team_size, brick_list_t* 
         player_t *player = team[i];
         if(!player_is_dying(player) && actor_pixelperfect_collision(player->actor, item->actor)) {
             item->state = IS_DEAD;
-            player_set_rings( player_get_rings() + 50 );
+            player_set_collectibles( player_get_collectibles() + 50 );
             sound_play( soundfactory_get("big ring") );
         }
     }
