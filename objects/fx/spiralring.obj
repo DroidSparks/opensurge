@@ -57,7 +57,7 @@ object .spiralringfx.ring
 
     state main
     {
-        set_animation SD_RING 0
+        set_animation SD_COLLECTIBLE 0
         set_zindex 0.6
         let "$angle = $_spiralringfx_initialangle"
         let "$radius = max(screen_width(), screen_height())/2"
@@ -82,7 +82,7 @@ object .spiralringfx.ring
 
     state collected
     {
-        set_animation SD_RING 1
+        set_animation SD_COLLECTIBLE 1
         play_sample samples/ring.wav
         add_collectibles 1
         change_state wait
