@@ -20,6 +20,16 @@
 #include "camera.inc"
 #include "water.inc"
 
+object uuu
+{
+always_active
+
+state main
+{
+attach_to_player 20 -40
+}
+}
+
 // ----------------------------------------------
 // This object is created by default
 // in every level that contains the
@@ -39,6 +49,7 @@ object ".default_startup"
         create_child ".default_startup.switch_character"
         create_child ".default_startup.camera"
         create_child ".default_startup.water"
+create_child uuu
 
         change_state "cooldown"
     }

@@ -96,7 +96,8 @@ void update(objectmachine_t *obj, player_t **team, int team_size, brick_list_t *
     objectdecorator_attachtoplayer_t *me = (objectdecorator_attachtoplayer_t*)obj;
     object_t *object = obj->get_object_instance(obj);
     player_t *player = enemy_get_observed_player(object);
-    v2d_t offset = v2d_new(expression_evaluate(me->offset_x), expression_evaluate(me->offset_y));
+    float player_direction = (player->actor->mirror & IF_HFLIP) ? -1.0f : 1.0f;
+    v2d_t offset = v2d_new(player_direction * expression_evaluate(me->offset_x), expression_evaluate(me->offset_y));
 
     object->attached_to_player = TRUE;
     object->attached_to_player_offset = v2d_rotate(offset, -old_school_angle(player->actor->angle));
